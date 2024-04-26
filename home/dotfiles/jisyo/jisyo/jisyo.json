@@ -1,0 +1,61 @@
+{
+  "dirPath": "~/.local/share/skk",
+  "jisyos": [
+    {
+      "name": "SKK-JISYO.L",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.L"
+    },
+    {
+      "name": "SKK-JISYO.lisp",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.lisp"
+    },
+    {
+      "name": "SKK-JISYO.jinmei",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.jinmei"
+    },
+    {
+      "name": "SKK-JISYO.fullname",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.fullname"
+    },
+    {
+      "name": "SKK-JISYO.emoji",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.emoji"
+    },
+    {
+      "name": "SKK-JISYO.edict",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.edict"
+    },
+    {
+      "name": "SKK-JISYO.edict2",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.edict2"
+    },
+    {
+      "name": "SKK-JISYO.geo",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.geo"
+    },
+    {
+      "name": "SKK-JISYO.hukugougo",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.hukugougo"
+    },
+    {
+      "name": "SKK-JISYO.mazegaki",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.mazegaki"
+    },
+    {
+      "name": "SKK-JISYO.notes",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.notes"
+    },
+    {
+      "name": "SKK-JISYO.propernoun",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.propernoun"
+    },
+    {
+      "name": "SKK-JISYO.requested",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.requested"
+    },
+    {
+      "name": "SKK-JISYO.station",
+      "url": "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.station"
+    }
+  ]
+}

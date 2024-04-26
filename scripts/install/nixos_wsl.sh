@@ -1,0 +1,26 @@
+#!/etc/profiles/per-user/yanosea/bin/zsh
+# yanosea nixos wsl install packages script
+# confirm install
+if gum confirm "Do you install packages for NixOS WSL?"; then
+	# install new packages
+	# clone ghq repos
+	echo -e $'\n\e[33;1mclone ghq packages!\e[m'
+	xargs -I arg ghq get arg <~/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	# install gh extensions
+	echo -e $'\n\e[33;1minstall gh extensions!\e[m'
+	xargs -I arg gh extension install arg <~/ghq/github.com/yanosea/yanoNixFiles/pkglist/gh/pkglist.txt
+	# install cargo packages
+	echo -e $'\n\e[33;1minstall cargo packages!\e[m'
+	xargs -I arg cargo install arg <~/ghq/github.com/yanosea/yanoNixFiles/pkglist/cargo/pkglist.txt
+	# install go packages
+	echo -e $'\n\e[33;1minstall go packages!\e[m'
+	xargs -I arg go install arg <~/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	# apply nix
+	echo -e $'\n\e[33;1mapply nix!\e[m'
+	cargo make yanoNixOSWsl:apply
+	# done!
+	echo -e $'\n\e[32;1minstall complete!\e[m'
+else
+	# initialize cancelled
+	echo -e $'\n\e[31;1minstall cancelled...\e[m'
+fi

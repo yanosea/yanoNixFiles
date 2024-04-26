@@ -1,0 +1,11 @@
+function show_random_aa() {
+  local dir="$HOME/.config/zsh/aas"
+  local files=($dir/*)
+  local num_files=${#files[@]}
+  local random_file=${files[RANDOM % num_files + 1]}
+  if [[ "$OS" = "Darwin" ]]; then
+    /bin/cat $random_file
+  elif [[ "$OS" = "Linux" ]]; then
+    /run/current-system/sw/bin/cat $random_file
+  fi
+}

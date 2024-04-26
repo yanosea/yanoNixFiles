@@ -1,0 +1,153 @@
+" preferences
+" encoding
+set encoding=utf-8
+set fileencoding=utf-8
+scriptencoding utf-8
+" lang
+let $LANG='en_US.UTF-8'
+set helplang=ja,en
+" .viminfo path
+set viminfo+=n~/.vim/viminfo
+" line number
+set number
+" highlight current line
+set cursorline
+" cursor position
+set ruler
+" sign
+set signcolumn=yes
+" invisible character
+set list
+set listchars=tab:▸-,trail:⋅,nbsp:␣,extends:❯,precedes:❮
+" status line
+set laststatus=3
+" gui setting
+set guifont=PlemolJP\ Console\ NF
+set guifontwide=PlemolJP\ Console\ NF
+set termguicolors
+set mouse-=a
+set guicursor+=i:block,a:-blinkwait175-blinkoff150-blinkon175
+" search
+set hlsearch
+set ignorecase
+set smartcase
+set incsearch
+set noignorecase
+set nowrapscan
+" command history
+set history=1000
+" complement
+set wildmenu
+set completeopt=menuone,noinsert
+" indent
+set autoindent
+set smartindent
+set expandtab
+set tabstop=2
+set shiftwidth=2
+" window split
+set splitbelow
+set splitright
+" syntax highlight
+syntax enable
+" clipboard
+set clipboard+=unnamedplus
+" standard plugin
+filetype plugin on
+let g:netrw_liststyle=1
+let g:netrw_banner=0
+let g:netrw_sizestyle="H"
+let g:netrw_timefmt="%Y/%m/%d %H:%M:%S"
+let g:netrw_preview=1
+" hide highlight search
+nnoremap <silent> <ESC> :nohlsearch<CR>
+" leader
+let g:mapleader = ' '
+let g:maplocalleader = ' '
+" line
+nnoremap j gj
+nnoremap k gk
+nnoremap gj j
+nnoremap gk k
+" tab
+nnoremap <LEADER><C-k> :tabprevious<CR>
+nnoremap <LEADER><C-j> :tabnext<CR>
+nnoremap <LEADER><C-t> :tabnew<CR>
+nnoremap <LEADER><C-c> :tabclose<CR>
+" buffer
+nnoremap <C-k> :bprevious<CR>
+nnoremap <C-j> :bnext<CR>
+nnoremap <C-t> :enew<CR>
+nnoremap <C-c> :bd<CR>
+" visual
+vnoremap <C-p> \"0p<CR>
+" wsl
+if !empty($WSL_DISTRO_NAME)
+  " clipboard sharing
+  if executable('win32yank.exe')
+    augroup WSLYank
+      autocmd!
+      autocmd TextYankPost * :call system('win32yank.exe -i', @")
+    augroup END
+    autocmd VimEnter * nnoremap <silent> p :call setreg('"',system('win32yank.exe -o'))<CR>""p
+  endif
+endif
+" plugins
+call plug#begin()
+  " checkhealth
+  Plug 'rhysd/vim-healthcheck'
+  " colorscheme
+  Plug 'ghifarit53/tokyonight-vim'
+  " copilot
+  Plug 'github/copilot.vim'
+  " file explorer
+  Plug 'ptzz/lf.vim'
+  " terminal
+  Plug 'voldikss/vim-floaterm'
+  " fuzzy-motion
+  Plug 'yuki-yano/fuzzy-motion.vim'
+  Plug 'vim-denops/denops.vim',
+  Plug 'lambdalisue/kensaku.vim',
+  " skkeleton
+  Plug 'vim-skk/skkeleton'
+  Plug 'vim-denops/denops.vim'
+  " yankring
+  Plug 'vim-scripts/YankRing.vim'
+call plug#end()
+" colorscheme
+let g:tokyonight_style = 'storm'
+let g:tokyonight_enable_italic = 1
+colorscheme tokyonight
+" copilot
+let g:copilot_no_tab_map = 1
+inoremap <silent><expr> <C-a><Tab> copilot#Accept("\<CR>")
+" floaterm
+nnoremap <silent> <LEADER>t :FloatermToggle<CR>
+" fuzzy-motion
+nnoremap <silent> <LEADER><SPACE> :FuzzyMotion<CR>
+let g:fuzzy_motion_matchers = ['fzf', 'kensaku']
+" lf
+nnoremap <silent> <LEADER>f :Lf<CR>
+" skkeleton
+inoremap <C-j> <Plug>(skkeleton-toggle)
+cnoremap <C-j> <Plug>(skkeleton-toggle)
+let g:skkeleton_dictionaries = []
+for file in split(glob('$XDG_DATA_HOME/skk/*'), '\n')
+  call add(g:skkeleton_dictionaries, file)
+endfor
+function! SkkeletonConfig()
+  call skkeleton#config({
+  \ 'eggLikeNewline': v:true,
+  \ 'globalDictionaries': g:skkeleton_dictionaries,
+  \ 'immediatelyCancel': v:false,
+  \ 'registerConvertResult': v:true,
+  \ 'showCandidatesCount': 1,
+  \ 'sources': ['skk_dictionary', 'google_japanese_input'],
+  \ 'userDictionary': $XDG_STATE_HOME.'/skk/.skkeleton',
+  \ })
+  call skkeleton#register_keymap('henkan', '<Esc>', 'cancel')
+endfunction
+autocmd User skkeleton-initialize-pre call SkkeletonConfig()
+" yankRing
+let g:yankring_history_dir = "$XDG_STATE_HOME/yankring"
+nnoremap <LEADER>yh :YRShow<CR>
