@@ -1,0 +1,31 @@
+[user]
+    email = myanoshi0626@gmail.com
+    name = yanosea
+[credential]
+    helper = cache --timeout 7200
+    helper = oauth
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[core]
+    pager = delta
+    askpass = ""
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+    dark = true
+    side-by-side = true
+[merge]
+    conflictstyle = diff3
+    ff = false
+[pull]
+    ff = only
+[diff]
+    colorMoved = default
+[init]
+    defaultBranch = main
+[fetch]
+    prune = true

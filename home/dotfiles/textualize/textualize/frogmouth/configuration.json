@@ -1,0 +1,7 @@
+{
+    "light_mode": false,
+    "markdown_extensions": [
+        ".md",
+        ".markdown"
+    ]
+}

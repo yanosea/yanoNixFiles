@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# check git dir
+if ! [ -d ".git" ]; then
+    echo "not a git dir..."
+    exit 1
+fi
+# check already installed
+if [ -f .git/hooks/prepare-commit-msg ]; then
+    echo "already installed..."
+    exit 1
+fi
+# download
+curl https://raw.githubusercontent.com/negokaz/git-fancy-message-prefix/master/prepare-commit-msg.ja -o .git/hooks/prepare-commit-msg
+# change shebang
+sed -i '1s|^.*$|#!/usr/bin/env bash|' .git/hooks/prepare-commit-msg
+# change  permission
+chmod 755 .git/hooks/prepare-commit-msg

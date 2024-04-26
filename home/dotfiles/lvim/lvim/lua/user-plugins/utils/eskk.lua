@@ -1,0 +1,12 @@
+-- -- japanese input method
+-- table.insert(lvim.plugins, {
+--   "vim-skk/eskk.vim",
+--   init = function()
+--     vim.g["eskk#directory"] = "~/.local/state/eskk"
+--     vim.g["eskk#dictionary"] = { path = "~/.local/state/.skk_jisyo", sorted = 1, encoding = "utf-8" }
+--     vim.g["eskk#large_dictionary"] = { path = "~/.local/share/skk/SKK-JISYO.L", sorted = 1, encoding = "euc-jp" }
+
+--     vim.keymap.set("i", "<C-J>", "<Plug>(eskk:toggle)", { silent = true, desc = "Toggle skk" })
+--     vim.keymap.set("c", "<C-J>", "<Plug>(eskk:toggle)", { silent = true, desc = "Toggle skk" })
+--   end,
+-- })

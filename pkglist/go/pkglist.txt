@@ -1,0 +1,9 @@
+github.com/arrow2nd/jisyo@latest
+github.com/clipperhouse/gen@latest
+github.com/giannimassi/trello-tui@latest
+github.com/koki-develop/clive@latest
+github.com/nao1215/gup@latest
+github.com/spf13/cobra-cli@latest
+github.com/sheepla/longgopher@latest
+github.com/sheepla/og@latest
+golang.org/x/tools/cmd/godoc@latest

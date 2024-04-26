@@ -1,0 +1,106 @@
+{
+  "height": 35,
+  "layer": "top",
+  "margin": "10px 10px 0px 10px",
+  "modules-left": [
+    "custom/os_icon",
+    "hyprland/workspaces",
+    "hyprland/window"
+  ],
+  "modules-center": [],
+  "modules-right": [
+    "custom/waybar-media",
+    "cpu",
+    "memory",
+    "temperature",
+    "network",
+    "pulseaudio",
+    "clock",
+  ],
+  "custom/os_icon": {
+    "format": " ",
+    "tooltip": false
+  },
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1"
+  },
+  "hyprland/window": {
+    "max-length": 200,
+    "separate-outputs": true
+  },
+  "custom/media": {
+    "escape": true,
+    "exec": "$HOME/ghq/github.com/yurihs/waybar-media/waybar-media.py status",
+    "format": "{icon} {}",
+    "format-icons": {
+      "spotify": " ",
+      "default": " "
+    },
+    "max-length": 20,
+    "on-click": "$HOME/ghq/github.com/yurihs/waybar-media/waybar-media.py playpause",
+    "on-scroll-up": "$HOME/ghq/github.com/yurihs/waybar-media/waybar-media.py previous",
+    "on-scroll-down": "$HOME/ghq/github.com/yurihs/waybar-media/waybar-media.py next",
+    "return-type": "json",
+  },
+  "cpu": {
+    "interval": 1,
+    "tooltip": false,
+    "format": " {usage}%",
+    "format-alt": " {load}",
+    "states": {
+      "warning": 70,
+      "critical": 90
+    }
+  },
+  "memory": {
+    "interval": 5,
+    "format": " {used:0.1f}G/{total:0.1f}G",
+    "states": {
+      "warning": 70,
+      "critical": 90
+    },
+    "tooltip": false
+  },
+  "temperature": {
+    "critical-threshold": 90,
+    "interval": 5,
+    "format": "{icon} {temperatureC}°",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "tooltip": false
+  },
+  "network": {
+    "interval": 5,
+    "format-wifi": " {essid} ({signalStrength}%)",
+    "format-ethernet": " {ifname}",
+    "format-disconnected": "No connection",
+    "format-alt": " {ipaddr}/{cidr}",
+    "tooltip": false
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-bluetooth": "{icon} {volume}%",
+    "format-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["", ""]
+    },
+    "tooltip": false
+  },
+  "clock": {
+    "format": " {:%Y/%m/%d %H:%M:%S }",
+    "interval": 1
+  },
+}

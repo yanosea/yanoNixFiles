@@ -1,0 +1,7 @@
+function ghf() {
+  local dir=$(ghq list -p | fzf)
+
+  if [ -n "$dir" ]; then
+    eval "cd ${dir}"
+  fi
+}

@@ -1,0 +1,73 @@
+{ pkgs, ... }: {
+  imports = [
+    ../../dotfiles/bash
+    ../../dotfiles/browsh
+    ../../dotfiles/era
+    ../../dotfiles/jisyo
+    ../../dotfiles/lazygit
+    ../../dotfiles/lf
+    ../../dotfiles/neofetch
+    ../../dotfiles/sheldon
+    ../../dotfiles/starship
+    ../../dotfiles/textualize
+    ../../dotfiles/tmux
+    ../../dotfiles/wezterm
+    ../../dotfiles/zellij
+    ../../dotfiles/zsh
+  ];
+  home = {
+    packages = with pkgs; [
+      # tools
+      bat
+      bash
+      broot
+      browsh
+      btop
+      delta
+      duf
+      dust
+      eza
+      fd
+      ffmpeg
+      fontforge
+      frogmouth
+      fzf
+      gum
+      htop
+      hyperfine
+      inshellisense
+      jnv
+      jq
+      killall
+      lf
+      lsd
+      ncdu
+      neofetch
+      rbw
+      ripgrep
+      sheldon
+      starship
+      systemctl-tui
+      tldr
+      tmux
+      trash-cli
+      tree
+      tree-sitter
+      unzip
+      vhs
+      wakatime
+      wezterm
+      zellij
+      zoxide
+      zsh
+      # jokeey
+      cmatrix
+      cowsay
+      figlet
+      genact
+      rig
+      sl
+      unimatrix
+    ];
+  };
+}

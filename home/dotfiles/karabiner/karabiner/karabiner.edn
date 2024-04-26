@@ -1,0 +1,88 @@
+{
+  :layers {
+    :layer-mode {:key :left_command :alone {:key :vk_none}}
+  }
+  :devices {
+    :builtin [{:product_id 641 :vendor_id 1452}]
+  }
+  :main [
+    {
+    :des "layer mode"
+    :rules [:layer-mode
+      ;; vim bind cursor move
+      ;; left arrow
+      [:h :left_arrow]
+      [:!Ch :!Cleft_arrow]
+      [:!Th :!Tleft_arrow]
+      [:!Sh :!Sleft_arrow]
+      [:!Oh :!Oleft_arrow]
+      ;; down arrow
+      [:j :down_arrow]
+      [:!Cj :!Cdown_arrow]
+      [:!Tj :!Tdown_arrow]
+      [:!Sj :!Sdown_arrow]
+      [:!Oj :!Odown_arrow]
+      ;; up arrow
+      [:k :up_arrow]
+      [:!Ck :!Cup_arrow]
+      [:!Tk :!Tup_arrow]
+      [:!Sk :!Sup_arrow]
+      [:!Ok :!Oup_arrow]
+      ;; right arrow
+      [:l :right_arrow]
+      [:!Cl :!Cright_arrow]
+      [:!Tl :!Tright_arrow]
+      [:!Sl :!Sright_arrow]
+      [:!Ol :!Oright_arrow]
+      ;; ime
+      [:spacebar :f13]
+      [:!Cspacebar :!Cf13]
+      [:!Tspacebar :!Tf13]
+      [:!Sspacebar :!Sf13]
+      [:!Ospacebar :!Of13]
+      ;; caps lock
+      [:tab :caps_lock]
+      [:!Ctab :!Ccaps_lock]
+      [:!Ttab :!Tcaps_lock]
+      [:!Stab :!Scaps_lock]
+      [:!Otab :!Ocaps_lock]
+      ;; home
+      [:p :home]
+      [:!Cp :!Chome]
+      [:!Tp :!Thome]
+      [:!Sp :!Shome]
+      [:!Op :!Ohome]
+      ;; end
+      [:r :end]
+      [:!Cr :!Cend]
+      [:!Tr :!Tend]
+      [:!Sr :!Send]
+      [:!Or :!Oend]
+      ;; delete
+      [:delete_or_backspace :delete_forward]
+      [:!Cdelete_or_backspace :!Cdelete_forward]
+      [:!Tdelete_or_backspace :!Tdelete_forward]
+      [:!Sdelete_or_backspace :!Sdelete_forward]
+      [:!Odelete_or_backspace :!Odelete_forward]
+    ]},
+    {
+    :des "built-in keyboard change"
+    :rules [:builtin
+      ;; capslock -> left ctrl
+      [:caps_lock :left_control]
+      [:!Ccaps_lock :!Cleft_control]
+      [:!Scaps_lock :!Sleft_control]
+      [:!Ocaps_lock :!Oleft_control]
+      ;; left option -> left command
+      [:left_option :left_command]
+      [:!Tleft_option :!Tleft_command]
+      [:!Sleft_option :!Sleft_command]
+      [:!Oleft_option :!Oleft_command]
+      ;; left control -> left option
+      [:left_control :left_option]
+      [:!Cleft_control :!Cleft_option]
+      [:!Tleft_control :!Tleft_option]
+      [:!Sleft_control :!Sleft_option]
+    ]},
+  ]
+}

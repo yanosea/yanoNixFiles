@@ -1,0 +1,3 @@
+function zvm_after_init() {
+   [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
+}
