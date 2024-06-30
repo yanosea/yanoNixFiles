@@ -1,3 +1,0 @@
-github/gh-copilot
-koki-develop/gh-grass
-koki-develop/gh-q

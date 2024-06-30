@@ -1,8 +1,2 @@
-# IGNORE FOLDER
-home/dotfiles/lf/lf/lf/
-home/dotfiles/vim/vim/autoload/
-home/dotfiles/vim/vim/plugged/
-# IGNORE FILE
+**/.direnv/
 result
-.DS_Store
-*.log

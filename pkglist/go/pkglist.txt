@@ -1,8 +1,0 @@
-github.com/koki-develop/clive@latest
-github.com/spf13/cobra-cli@latest
-golang.org/x/tools/cmd/godoc@latest
-github.com/nao1215/gup@latest
-github.com/arrow2nd/jisyo@latest
-github.com/sheepla/longgopher@latest
-github.com/sheepla/og@latest
-github.com/giannimassi/trello-tui@latest
