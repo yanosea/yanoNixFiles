@@ -4,10 +4,10 @@
 if gum confirm "Do you initialize nixos wsl env?"; then
 	# make necessary directories
 	mkdir -p ~/.local/bin
-	mkdir -p $XDG_DATA_HOME/skk
-	mkdir -p $XDG_STATE_HOME/skk
-	mkdir -p $XDG_STATE_HOME/yankring
-	mkdir -p $XDG_STATE_HOME/zsh
+	mkdir -p ~/.local/share/skk
+	mkdir -p ~/.local/state/skk
+	mkdir -p ~/.local/state/yankring
+	mkdir -p ~/.local/state/zsh
 	# make necessary symbolic links
 	ln -s ~/ghq/github.com/yanosea/yanoNixFiles/scripts/util/installGitEmojiPrefixTemplate ~/.local/bin/installGitEmojiPrefixTemplate
 	# clone ghq repos
@@ -21,7 +21,7 @@ if gum confirm "Do you initialize nixos wsl env?"; then
 	jisyo d
 	# install vimplug
 	echo -e $'\n\e[33;1minstall vimplug!\e[m'
-	ln -s $XDG_CONFIG_HOME/vim ~/.vim
+	ln -s ~/.config/vim ~/.vim
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	# notify creatting google drive symbolic link
 	echo -e $'\n\e[31;1mYou heve to create google drive symbolic link!\e[m'
