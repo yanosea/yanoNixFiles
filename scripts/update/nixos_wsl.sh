@@ -1,4 +1,4 @@
-#!/etc/profiles/per-user/yanosea/bin/zsh
+#!/run/current-system/sw/bin/zsh
 # yanosea nixos wsl env update script
 # confirm update
 if gum confirm "Do you update nixos env?"; then

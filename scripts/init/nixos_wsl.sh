@@ -1,4 +1,4 @@
-#!/etc/profiles/per-user/yanosea/bin/zsh
+#!/run/current-system/sw/bin/zsh
 # yanosea nixos wsl env initialize script
 # confirm initialize
 if gum confirm "Do you initialize nixos wsl env?"; then

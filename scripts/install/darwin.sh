@@ -1,4 +1,4 @@
-#!/etc/profiles/per-user/yanosea/bin/zsh
+#!/run/current-system/sw/bin/zsh
 # yanosea darwin nix install packages script
 # confirm install
 if gum confirm "Do you install packages for darwin?"; then

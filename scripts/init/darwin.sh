@@ -1,4 +1,4 @@
-#!/etc/profiles/per-user/yanosea/bin/zsh
+#!/run/current-system/sw/bin/zsh
 # yanosea darwin nix env initialize script
 # confirm initialize
 if gum confirm "Do you initialize darwin nix env?"; then

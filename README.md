@@ -214,8 +214,6 @@ wsl -d NixOS --cd ~
 
 # clone this repository and change the directory
 ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
-# setup rust
-rustup default stable
 # init the configuration
 cargo make yanoNixOsWsl:init_after
 ```

@@ -1,4 +1,4 @@
-#!/etc/profiles/per-user/yanosea/bin/zsh
+#!/run/current-system/sw/bin/zsh
 # yanosea darwin nix env update script
 # confirm update
 if gum confirm "Do you update darwin nix env?"; then
