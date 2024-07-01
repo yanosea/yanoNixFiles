@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{ pkgs, ... }: {
   # i18n
   i18n = {
     inputMethod = {

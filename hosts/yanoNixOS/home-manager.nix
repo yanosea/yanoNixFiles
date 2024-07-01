@@ -1,12 +1,6 @@
-{
-  pkgs,
-  username,
-  ...
-}: {
+{ pkgs, username, ... }: {
   imports = [
-    ../../home-manager/cli
-    ../../home-manager/gui
-    ../../home-manager/desktop/hyprland
+    ../../home-manager/os/nixos
   ];
   # wayland
   wayland = {

@@ -1,0 +1,1 @@
+wsl -d NixOS --cd ~

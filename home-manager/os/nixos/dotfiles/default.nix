@@ -9,41 +9,16 @@
     ./waybar
   ];
   home.packages = with pkgs; [
-    adwaita-qt
-    adwaita-qt6
     cron
-    dolphin
-    gnome.adwaita-icon-theme
-    gnome.gnome-themes-extra
+    discord
+    discord-ptb
     fuseiso
-    grim
-    gsettings-desktop-schemas
-    hyprland-protocols
-    hyprpaper
-    hyprpicker
-    hyprshot
-    nvidia-vaapi-driver
-    libva-utils
-    polkit_gnome
-    qt5.qtwayland
-    qt6.qmake
-    qt6.qtwayland
+    localsend
+    parsec-bin
     rclone
+    remmina
     sheldon
-    swayidle
-    swaylock
-    swaynotificationcenter
-    swww
-    udiskie
     vivaldi
-    waybar
-    wl-clipboard
-    wlr-randr
-    wofi
-    xdg-utils
-    xdg-desktop-portal
-    xdg-desktop-portal-gtk
-    xdg-desktop-portal-hyprland
-    ydotool
+    xfce.thunar
   ];
 }

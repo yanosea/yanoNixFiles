@@ -1,7 +1,4 @@
-{
-  username,
-  ...
-}: {
+{ username, ... }: {
   # nix
   nix = {
     gc = {

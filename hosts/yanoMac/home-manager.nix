@@ -1,10 +1,6 @@
-{
-  pkgs,
-  username,
-  ...
-}: {
+{ pkgs, username, ... }: {
   imports = [
-    ../../home-manager/cli
+    ../../home-manager/os/darwin
   ];
   # home
   home = {

@@ -1,8 +1,4 @@
-{
-  inputs,
-  username,
-  ...
-}: {
+{ inputs, username, ... }: {
   imports = [
     inputs.xremap.nixosModules.default
   ];
