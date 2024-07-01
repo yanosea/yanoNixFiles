@@ -71,52 +71,15 @@
     forAllSystems = inputs.nixpkgs.lib.genAttrs allSystems;
   in
   {
-    # pkgs
-    packages = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system});
     # nixos
     nixosConfigurations = (import ./hosts inputs).nixos;
     # darwin
     darwinConfigurations = (import ./hosts inputs).darwin;
     # home-manager
     homeConfigurations = (import ./hosts inputs).home-manager;
-
-    devShells = forAllSystems (
-      system:
-      let
-        pkgs = inputs.nixpkgs.legacyPackages.${system};
-        formatters = with pkgs; [
-          nixfmt-rfc-style
-          rustfmt
-          stylua
-          taplo
-        ];
-        scripts = [
-          (pkgs.writeScriptBin "update-input" ''
-            nix flake lock --override-input "$1" "$2"
-          '')
-        ];
-      in
-      {
-        default = pkgs.mkShell { packages = ([ pkgs.nh ]) ++ formatters ++ scripts; };
-      }
-    );
-
+    # formatter
     formatter = forAllSystems (
-      system:
-      let
-        pkgs = inputs.nixpkgs.legacyPackages.${system};
-        formatters = with pkgs; [
-          nixfmt-rfc-style
-          rustfmt
-          stylua
-          taplo
-        ];
-        format = pkgs.writeScriptBin "format" ''
-          PATH=$PATH:${pkgs.lib.makeBinPath formatters}
-          ${pkgs.treefmt}/bin/treefmt --config-file ${./treefmt.toml}
-        '';
-      in
-      format
+      system: inputs.nixpkgs.legacyPackages.${system}.nixpkgs-fmt
     );
   };
 }

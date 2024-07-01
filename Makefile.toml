@@ -5,9 +5,9 @@ skip_core_tasks = true
 HOST = { script = ["hostname"] }
 
 # nixos wsl
-[tasks."yanoNixOSWsl:init"]
+[tasks."yanoNixOsWsl:init"]
 extend = "nixos_wsl:init"
-env = { HOST = "yanoNixOSWsl" }
+env = { HOST = "yanoNixOsWsl" }
 
 [tasks."nixos_wsl:init"]
 description = "Run nixos-rebuild switch to initialize nixos wsl env"
@@ -16,15 +16,15 @@ sudo nixos-rebuild switch --flake ".#${HOST}" --show-trace
 sudo shutdown -h now
 '''
 
-[tasks."yanoNixOSWsl:init_after"]
+[tasks."yanoNixOsWsl:init_after"]
 description = "Run init script"
 script = '''
 ./scripts/init/nixos_wsl.sh
 '''
 
-[tasks."yanoNixOSWsl:apply"]
+[tasks."yanoNixOsWsl:apply"]
 extend = "nixos_wsl:apply"
-env = { HOST = "yanoNixOSWsl" }
+env = { HOST = "yanoNixOsWsl" }
 
 [tasks."nixos_wsl:apply"]
 description = "Run nixos-rebuild switch to to apply changes to nixos wsl env"
@@ -32,42 +32,42 @@ script = '''
 sudo nixos-rebuild switch --flake ".#${HOST}" --show-trace
 '''
 
-[tasks."yanoNixOSWsl:install"]
+[tasks."yanoNixOsWsl:install"]
 description = "Run install script script"
 script = '''
 ./scripts/install/nixos_wsl.sh
 '''
 
-[tasks."yanoNixOSWsl:update"]
+[tasks."yanoNixOsWsl:update"]
 description = "Run update script script"
 script = '''
 ./scripts/update/nixos_wsl.sh
 '''
 
 # nixos
-[tasks."yanoNixOS:init"]
+[tasks."yanoNixOs:init"]
 description = "Run init script"
 script = '''
 ./scripts/init/nixos.sh
 '''
 
-[tasks."yanoNixOS:apply"]
+[tasks."yanoNixOs:apply"]
 description = "Run nixos-rebuild switch"
 extend = "nixos:apply"
-env = { HOST = "yanoNixOS" }
+env = { HOST = "yanoNixOs" }
 
 [tasks."nixos:apply"]
 script = '''
 sudo nixos-rebuild switch --flake ".#${HOST}" --show-trace
 '''
 
-[tasks."yanoNixOS:install"]
+[tasks."yanoNixOs:install"]
 description = "Run install script script"
 script = '''
 ./scripts/install/nixos.sh
 '''
 
-[tasks."yanoNixOS:update"]
+[tasks."yanoNixOs:update"]
 description = "Run update script script"
 script = '''
 ./scripts/update/nixos.sh

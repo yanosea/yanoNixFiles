@@ -4,19 +4,6 @@
     git = {
       enable = true;
     };
-    git-credential-oauth = {
-      enable = true;
-    };
-    lunarvim = {
-      enable = true;
-      defaultEditor = true;
-    };
-    neovim = {
-      enable = true;
-    };
-    vim = {
-      enable = true;
-    };
     zsh = {
       enable = true;
     };
@@ -31,10 +18,7 @@
       duf
       gcc
       git
-      git-credential-oauth
-      lunarvim
       lsof
-      neovim
       openssl
       openssl.dev
       pciutils

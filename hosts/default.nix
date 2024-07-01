@@ -1,6 +1,6 @@
 inputs:
 let
-  mkNixosSystem = {
+  mkNixOsSystem = {
     system,
     hostname,
     username,
@@ -11,7 +11,7 @@ let
       inherit inputs hostname username;
     };
   };
-  mkNixosWslSystem = {
+  mkNixOsWslSystem = {
     system,
     hostname,
     username,
@@ -39,7 +39,7 @@ let
     username,
     overlays,
     modules,
-  }: inputs.home-manager.lib.homeManagerConfiguration = {
+  }: inputs.home-manager.lib.homeManagerConfiguration {
     pkgs = import inputs.nixpkgs {
       inherit system overlays;
       config = {
@@ -71,18 +71,18 @@ in
   # nixos
   nixos = {
     # nixos
-    yanoNixOS = mkNixosSystem {
+    yanoNixOs = mkNixOsSystem {
       system = "x86_64-linux";
-      hostname = "yanoNixOS";
+      hostname = "yanoNixOs";
       username = "yanosea";
-      modules = [ ./yanoNixOS ];
+      modules = [ ./yanoNixOs ];
     };
     # wsl
-    yanoNixOSWsl = mkNixosWslSystem {
+    yanoNixOsWsl = mkNixOsWslSystem {
       system = "x86_64-linux";
-      hostname = "yanoNixOSWsl";
+      hostname = "yanoNixOsWsl";
       username = "yanosea";
-      modules = [ ./yanoNixOSWsl ];
+      modules = [ ./yanoNixOsWsl ];
     };
   };
   # darwin

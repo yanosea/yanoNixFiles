@@ -1,4 +1,4 @@
-{
+{ pkgs, ... }: {
   imports = [
     ./fcitx5.nix
     ./fonts.nix
@@ -14,6 +14,9 @@
   xdg = {
     portal = {
       enable = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal-hyprland
+      ];
     };
   };
 }
