@@ -37,7 +37,7 @@ ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 
 ```sh
 # execute apply task
-cargo make yanoNixOS:apply
+cargo make yanoNixOs:apply
 ```
 
 6. Reboot NixOS.
@@ -70,7 +70,7 @@ exit
 
 ```sh
 # execute initialize task
-cargo make yanoNixOS:init
+cargo make yanoNixOs:init
 ```
 
 9. Then, you got a new NixOS environment ;)
@@ -88,7 +88,7 @@ cd ghq/github.com/yanosea/yanoNixFiles
 2. Execute apply task.
 ```sh
 # execute apply task
-cargo make yanoNixOS:apply
+cargo make yanoNixOs:apply
 ```
 
 3. If there were no issues, commit, push the changes.
@@ -101,7 +101,7 @@ cargo make yanoNixOS:apply
 # change the directory
 cd ghq/github.com/yanosea/yanoNixFiles
 # execute update task
-cargo make yanoNixOS:update
+cargo make yanoNixOs:update
 ```
 
 ## WSL
@@ -190,7 +190,7 @@ ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 #
 
 # execute initialize task
-cargo make yanoNixOSWsl:init
+cargo make yanoNixOsWsl:init
 ```
 
 9. Terminate the WSL and restart it.
@@ -217,7 +217,7 @@ ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 # setup rust
 rustup default stable
 # init the configuration
-cargo make yanoNixOSWsl:init_after
+cargo make yanoNixOsWsl:init_after
 ```
 
 11. Then, you got a new NixOS WSL environment ;)
@@ -244,7 +244,7 @@ cd ghq/github.com/yanosea/yanoNixFiles
 #
 
 # execute apply task
-cargo make yanoNixOSWsl:apply
+cargo make yanoNixOsWsl:apply
 ```
 
 3. If there were no issues, commit, push the changes.
@@ -261,7 +261,7 @@ cargo make yanoNixOSWsl:apply
 # change the directory
 cd ghq/github.com/yanosea/yanoNixFiles
 # execute update task
-cargo make yanoNixOSWsl:update
+cargo make yanoNixOsWsl:update
 ```
 
 ## MacOS
