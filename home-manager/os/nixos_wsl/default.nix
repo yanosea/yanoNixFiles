@@ -1,6 +1,6 @@
 { ... }: {
   imports = [
-    ../dotfiles
+    ../../dotfiles/
     ./dotfiles
   ];
 }
