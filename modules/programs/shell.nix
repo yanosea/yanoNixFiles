@@ -14,6 +14,7 @@
       acpi
       bottom
       btrfs-progs
+      cargo
       cargo-make
       duf
       gcc
