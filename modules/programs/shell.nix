@@ -17,6 +17,7 @@
       cargo-make
       duf
       gcc
+      ghq
       git
       lsof
       openssl
