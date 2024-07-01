@@ -98,18 +98,18 @@ in
   # home-manager
   home-manager = {
     # nixos
-    "yanosea@yanoNixOS" = mkHomeManagerConfiguration {
+    "yanosea@yanoNixOs" = mkHomeManagerConfiguration {
       system = "x86_64-linux";
       username = "yanosea";
       overlays = [ inputs.fenix.overlays.default ];
-      modules = [ ./yanoNixOS/home-manager.nix ];
+      modules = [ ./yanoNixOs/home-manager.nix ];
     };
     # nixos(wsl)
     "yanosea@yanoNixOsWsl" = mkHomeManagerConfiguration {
       system = "x86_64-linux";
       username = "yanosea";
       overlays = [ inputs.fenix.overlays.default ];
-      modules = [ ./yanoNixOSWsl/home-manager.nix ];
+      modules = [ ./yanoNixOsWsl/home-manager.nix ];
     };
     # darwin
     "yanosea@yanoMac" = mkHomeManagerConfiguration {

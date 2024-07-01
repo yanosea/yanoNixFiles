@@ -4,7 +4,7 @@
   ];
   # home
   home = {
-    username = "yanosea";
+    username = username;
     homeDirectory = "/home/${username}";
     stateVersion = "24.05";
   };
