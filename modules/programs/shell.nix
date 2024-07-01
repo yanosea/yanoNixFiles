@@ -20,6 +20,7 @@
       gcc
       ghq
       git
+      gum
       lsof
       openssl
       openssl.dev
