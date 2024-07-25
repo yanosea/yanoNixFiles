@@ -1,6 +1,6 @@
 {
 	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2024-07-21T04:51:59.117-00:00",
+	"CreationDate" : "2024-07-26T01:38:17.939-00:00",
 	"Sources" : 
 	[
 		{
@@ -20,9 +20,6 @@
 				},
 				{
 					"PackageIdentifier" : "vim.vim"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.PowerShell"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.VCRedist.2010.x64"
@@ -59,6 +56,9 @@
 				},
 				{
 					"PackageIdentifier" : "wez.wezterm"
+				},
+				{
+					"PackageIdentifier" : "Microsoft.PowerShell"
 				},
 				{
 					"PackageIdentifier" : "gerardog.gsudo"
