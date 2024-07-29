@@ -1,6 +1,6 @@
 -- toggleterm
 -- keymap
-lvim.builtin.terminal.open_mapping = "<LEADER>t"
+vim.keymap.set("n", "<LEADER>t", "<CMD>ToggleTerm<CR>", { silent = true, desc = "ToggleTerm" })
 -- direction
 lvim.builtin.terminal.direction = "horizontal"
 -- disable in insert mode
