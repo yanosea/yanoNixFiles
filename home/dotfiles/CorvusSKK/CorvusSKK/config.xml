@@ -160,7 +160,7 @@
     <key name="reconvert" value="" />
   </section>
   <section name="vkeymap">
-    <key name="kana" value="\x76" />
+    <key name="kana" value="\x51" />
     <key name="convchar" value="\x77" />
     <key name="jlatin" value="" />
     <key name="ascii" value="" />
