@@ -6,4 +6,5 @@ github.com/nao1215/gup@latest
 github.com/spf13/cobra-cli@latest
 github.com/sheepla/longgopher@latest
 github.com/sheepla/og@latest
+github.com/Songmu/gocredits/cmd/gocredits@latest
 golang.org/x/tools/cmd/godoc@latest
