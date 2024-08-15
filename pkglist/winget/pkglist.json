@@ -1,6 +1,6 @@
 {
 	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2024-07-26T01:38:17.939-00:00",
+	"CreationDate" : "2024-08-15T17:01:44.684-00:00",
 	"Sources" : 
 	[
 		{
@@ -22,19 +22,16 @@
 					"PackageIdentifier" : "vim.vim"
 				},
 				{
+					"PackageIdentifier" : "GoLang.Go"
+				},
+				{
 					"PackageIdentifier" : "Microsoft.VCRedist.2010.x64"
 				},
 				{
 					"PackageIdentifier" : "OpenShot.OpenShot"
 				},
 				{
-					"PackageIdentifier" : "GoLang.Go"
-				},
-				{
 					"PackageIdentifier" : "Google.GoogleDrive"
-				},
-				{
-					"PackageIdentifier" : "Starship.Starship"
 				},
 				{
 					"PackageIdentifier" : "TheDocumentFoundation.LibreOffice"
@@ -56,6 +53,9 @@
 				},
 				{
 					"PackageIdentifier" : "wez.wezterm"
+				},
+				{
+					"PackageIdentifier" : "Starship.Starship"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.PowerShell"
@@ -85,9 +85,6 @@
 					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.8"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.6"
-				},
-				{
 					"PackageIdentifier" : "nathancorvussolis.corvusskk"
 				},
 				{
@@ -97,10 +94,10 @@
 					"PackageIdentifier" : "Microsoft.VCRedist.2015+.x64"
 				},
 				{
-					"PackageIdentifier" : "Splashtop.SplashtopPersonal"
+					"PackageIdentifier" : "Google.ChromeRemoteDesktopHost"
 				},
 				{
-					"PackageIdentifier" : "Google.ChromeRemoteDesktopHost"
+					"PackageIdentifier" : "Splashtop.SplashtopPersonal"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.XNARedist"
@@ -110,6 +107,9 @@
 				},
 				{
 					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.7"
+				},
+				{
+					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.6"
 				},
 				{
 					"PackageIdentifier" : "BurntSushi.ripgrep.MSVC"
@@ -167,6 +167,9 @@
 				},
 				{
 					"PackageIdentifier" : "Microsoft.PowerToys"
+				},
+				{
+					"PackageIdentifier" : "Microsoft.VisualStudioCode"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.AppInstaller"
