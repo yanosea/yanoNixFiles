@@ -1,6 +1,6 @@
 {
 	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2024-08-15T17:01:44.684-00:00",
+	"CreationDate" : "2024-08-18T01:00:17.410-00:00",
 	"Sources" : 
 	[
 		{
@@ -26,6 +26,9 @@
 				},
 				{
 					"PackageIdentifier" : "Microsoft.VCRedist.2010.x64"
+				},
+				{
+					"PackageIdentifier" : "NickeManarin.ScreenToGif"
 				},
 				{
 					"PackageIdentifier" : "OpenShot.OpenShot"
