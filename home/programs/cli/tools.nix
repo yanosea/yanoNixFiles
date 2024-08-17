@@ -48,6 +48,7 @@
       sheldon
       starship
       systemctl-tui
+      t-rec
       tldr
       tmux
       trash-cli
