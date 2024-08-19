@@ -102,8 +102,6 @@ call plug#begin()
   Plug 'github/copilot.vim'
   " file explorer
   Plug 'ptzz/lf.vim'
-  " terminal
-  Plug 'voldikss/vim-floaterm'
   " fuzzy-motion
   Plug 'yuki-yano/fuzzy-motion.vim'
   Plug 'vim-denops/denops.vim',
@@ -111,6 +109,10 @@ call plug#begin()
   " skkeleton
   Plug 'vim-skk/skkeleton'
   Plug 'vim-denops/denops.vim'
+  " terminal
+  Plug 'voldikss/vim-floaterm'
+  " translate
+  Plug 'skanehira/denops-translate.vim'
   " yankring
   Plug 'vim-scripts/YankRing.vim'
 call plug#end()
