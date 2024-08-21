@@ -1,6 +1,6 @@
 {
 	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2024-08-18T01:00:17.410-00:00",
+	"CreationDate" : "2024-08-22T02:32:35.551-00:00",
 	"Sources" : 
 	[
 		{
@@ -113,6 +113,9 @@
 				},
 				{
 					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.6"
+				},
+				{
+					"PackageIdentifier" : "Bitwarden.Bitwarden"
 				},
 				{
 					"PackageIdentifier" : "BurntSushi.ripgrep.MSVC"
