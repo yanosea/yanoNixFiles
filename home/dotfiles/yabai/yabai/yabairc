@@ -23,5 +23,3 @@ yabai -m config bottom_padding 10
 yabai -m config left_padding 10
 yabai -m config right_padding 10
 yabai -m config window_gap 05
-# borders
-borders active_color=0xff2ac3de inactive_color=0xff3d59a1 width=5.0 &
