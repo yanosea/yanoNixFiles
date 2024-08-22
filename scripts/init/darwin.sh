@@ -53,6 +53,7 @@ curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.
 # init services
 echo -e $'\n\e[33;1minit services!\e[m'
 brew services start sketchybar
+brew services start borders
 skhd --start-service
 yabai --start-service
 # notify creatting google drive symbolic link
