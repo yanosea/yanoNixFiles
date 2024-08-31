@@ -1,6 +1,6 @@
 {
 	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2024-08-22T02:32:35.551-00:00",
+	"CreationDate" : "2024-08-31T17:26:28.533-00:00",
 	"Sources" : 
 	[
 		{
@@ -22,6 +22,9 @@
 					"PackageIdentifier" : "vim.vim"
 				},
 				{
+					"PackageIdentifier" : "TheDocumentFoundation.LibreOffice"
+				},
+				{
 					"PackageIdentifier" : "GoLang.Go"
 				},
 				{
@@ -35,9 +38,6 @@
 				},
 				{
 					"PackageIdentifier" : "Google.GoogleDrive"
-				},
-				{
-					"PackageIdentifier" : "TheDocumentFoundation.LibreOffice"
 				},
 				{
 					"PackageIdentifier" : "Oracle.VirtualBox"
@@ -170,6 +170,9 @@
 				},
 				{
 					"PackageIdentifier" : "lsd-rs.lsd"
+				},
+				{
+					"PackageIdentifier" : "WinSCP.WinSCP"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.PowerToys"
