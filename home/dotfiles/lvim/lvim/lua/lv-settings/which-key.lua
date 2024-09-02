@@ -24,6 +24,12 @@ lvim.builtin.which_key.mappings["C"] = {
   s = { "<CMD>CopilotChatSave<CR>", "CopilotChat save" },
   -- CopilotChatLoad
   l = { "<CMD>CopilotChatLoad<CR>", "CopilotChat load" },
+  -- CopilotChatDocs
+  d = { "<CMD>CopilotChatDocs<CR>", "CopilotChat docs" },
+  -- CopilotChatFix
+  f = { "<CMD>CopilotChatFix<CR>", "CopilotChat fix" },
+  -- CopilotChatReview
+  r = { "<CMD>CopilotChatReview<CR>", "CopilotChat review" },
   -- CopilotChatBuffer
   q = { "<CMD>lua CopilotChatBuffer()<CR>", "CopilotChat quick chat" },
 }
