@@ -210,7 +210,7 @@ lvim.builtin.nvimtree.setup = {
     },
   },
   trash = {
-    cmd = "gio trash",
+    cmd = "trash",
   },
   tab = {
     sync = {
