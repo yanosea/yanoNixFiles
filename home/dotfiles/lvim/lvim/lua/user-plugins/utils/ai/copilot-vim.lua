@@ -1,14 +1,14 @@
 -- github copilot for vim
 table.insert(lvim.plugins, {
   "github/copilot.vim",
-  event = "InsertEnter",
+  event = { "BufRead", "BufEnter" },
   init = function()
     vim.g.copilot_no_tab_map = true
 
     vim.api.nvim_set_keymap(
       "i",
       "<C-a><C-a>",
-      'copilot#Accept("<CR>")',
+      'copilot#Accept("<CR>") . "\\<Esc>"',
       { silent = true, desc = "Copilot accept", expr = true }
     )
     vim.keymap.set("i", "<C-a>n", "<Plug>(copilot-next)", { silent = true, desc = "Copilot next" })
