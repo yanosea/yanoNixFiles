@@ -52,8 +52,6 @@ table.insert(lvim.plugins, {
   end,
 })
 -- lsp
--- github copilot
-require("lvim.lsp.manager").setup("copilot")
 -- go
 require("lvim.lsp.manager").setup("gopls")
 -- nix
