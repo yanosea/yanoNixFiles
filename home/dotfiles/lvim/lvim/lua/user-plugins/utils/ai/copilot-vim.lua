@@ -8,7 +8,7 @@ table.insert(lvim.plugins, {
     vim.api.nvim_set_keymap(
       "i",
       "<C-a><C-a>",
-      'copilot#Accept("<CR>")',
+      'copilot#Accept("<CR>") . "\\<Esc>"',
       { silent = true, desc = "Copilot accept", expr = true }
     )
     vim.keymap.set("i", "<C-a>n", "<Plug>(copilot-next)", { silent = true, desc = "Copilot next" })
