@@ -1,7 +1,7 @@
 -- github copilot for vim
 table.insert(lvim.plugins, {
   "github/copilot.vim",
-  event = "InsertEnter",
+  event = { "BufRead", "BufEnter" },
   init = function()
     vim.g.copilot_no_tab_map = true
 
