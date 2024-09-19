@@ -47,6 +47,7 @@ if [[ "$OS" = "Darwin" ]]; then
 elif [[ "$OS" = "Linux" ]]; then
 	alias rrm="/run/current-system/sw/bin/rm"
 fi
+alias rtty='rtty run zellij --font "PlemolJP Console NF"'
 alias shutdown="sudo systemctl poweroff"
 alias st="systemctl-tui"
 alias tree="$(which eza) --tree"
