@@ -7,7 +7,7 @@ table.insert(lvim.plugins, {
 
     vim.api.nvim_set_keymap(
       "i",
-      "<C-a><TAB>",
+      "<C-a><C-a>",
       'copilot#Accept("<CR>")',
       { silent = true, desc = "Copilot accept", expr = true }
     )
