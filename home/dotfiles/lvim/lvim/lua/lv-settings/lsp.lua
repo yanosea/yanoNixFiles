@@ -54,6 +54,7 @@ table.insert(lvim.plugins, {
 -- lsp
 -- go
 require("lvim.lsp.manager").setup("gopls")
+require("lvim.lsp.manager").setup("golangci_lint_ls")
 -- nix
 require("lvim.lsp.manager").setup("rnix")
 -- lua
