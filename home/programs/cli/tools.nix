@@ -41,6 +41,7 @@
       killall
       lf
       lsd
+      mermaid-cli
       ncdu
       neofetch
       rbw
