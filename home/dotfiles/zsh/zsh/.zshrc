@@ -36,6 +36,7 @@ alias cat="$(which bat)"
 alias dot="cd $HOME/ghq/github.com/yanosea/yanoNixFiles"
 alias gbp='git branch --merged | grep -v "\* $(git rev-parse --abbrev-ref HEAD)" | grep -v "^\s*$" | xargs -r git branch -d'
 alias gsf='git switch $(git branch -l | fzf | tr -d "* ")'
+alias gitgraph='git log --graph --all --oneline --decorate'
 alias ls="$(which lsd)"
 alias nvimdiff="$(which nvim) -d"
 alias lg="lazygit"
