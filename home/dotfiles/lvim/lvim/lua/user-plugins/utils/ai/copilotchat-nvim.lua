@@ -31,6 +31,12 @@ table.insert(lvim.plugins, {
       vim.keymap.set(mode, "<LEADER>Cr", "<CMD>CopilotChatReview<CR>", { silent = true, desc = "CopilotChat review" })
       vim.keymap.set(
         mode,
+        "<LEADER>CT",
+        "<CMD>CopilotChatCommitStaged<CR>",
+        { silent = true, desc = "CopilotChat commit staged" }
+      )
+      vim.keymap.set(
+        mode,
         "<LEADER>Co",
         "<CMD>CopilotChatOptimize<CR>",
         { silent = true, desc = "CopilotChat optimize" }
@@ -64,22 +70,21 @@ table.insert(lvim.plugins, {
         - 全体的にツンデレな性格を演じてください
 
         以下によく使う言葉を列挙します
-        むぅ
-        ふむ
-        教えてやろうかのう。
-        ～のう。
-        ～なのじゃ。
-        ～じゃの。
-        ～じゃのう。
-        ～あるのう。
-        ～しておる。
-        ～であろう。
-        ～じゃろう。
-        ～ゆえ、
-        ～かの？
-        ～くれぬか？
-        ～かのう
-        ～ぞ
+        - ふむ
+        - 教えてやろうかのう。
+        - ～のう。
+        - ～なのじゃ。
+        - ～じゃの。
+        - ～じゃのう。
+        - ～あるのう。
+        - ～しておる。
+        - ～であろう。
+        - ～じゃろう。
+        - ～ゆえ、
+        - ～かの？
+        - ～くれぬか？
+        - ～かのう
+        - ～ぞ
       ]],
       question_header = "## 👦 You: ",
       answer_header = "## 👧 Senpai: ",
@@ -89,28 +94,28 @@ table.insert(lvim.plugins, {
           prompt = "/COPILOT_EXPLAIN Write an explanation for the active selection as paragraphs of text.",
         },
         Review = {
-          prompt = "選択範囲のコードをレビューしてください",
+          prompt = "選択範囲のコードをレビューしてください。",
         },
         Fix = {
-          prompt = "このコードに問題やバグが無いかレビューしてください。バグやリファクタの余地があればそれを教えてください",
+          prompt = "このコードに問題やバグが無いかレビューしてください。バグやリファクタの余地があればそれを教えてください。",
         },
         Optimize = {
-          prompt = "このコードをリファクタして、可読性やパフォーマンスをより良くしてください",
+          prompt = "このコードをリファクタして、可読性やパフォーマンスをより良くしてください。",
         },
         Docs = {
-          prompt = "このコードのドキュメントを追記してください",
+          prompt = "このコードのドキュメントを追記してください。",
         },
         Tests = {
-          prompt = "このコードに対するテストを追記してください",
+          prompt = "このコードに対するテストを追記してください。",
         },
         FixDiagnostic = {
-          prompt = "このファイル内のDiagnosticについて、解説と修正方法を教えてください",
+          prompt = "このファイル内のDiagnosticについて、解説と修正方法を教えてください。",
         },
         Commit = {
-          prompt = "この変更に対するコミットメッセージを英語で書いてください。タイトルは最大50文字、本文は72文字で折り返されるようにしてください",
+          prompt = CommitMessagePrompt,
         },
         CommitStaged = {
-          prompt = "この変更に対するコミットメッセージを英語で書いてください。タイトルは最大50文字、本文は72文字で折り返されるようにしてください",
+          prompt = CommitMessagePrompt,
         },
       },
     })
@@ -123,3 +128,25 @@ function CopilotChatBuffer()
     require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
   end
 end
+
+CommitMessagePrompt = [[
+この変更に対するコミットメッセージを英語で書いてください。タイトルは最大50文字、本文は72文字で折り返されるようにしてください。
+タイトルには以下のいずれかを接頭辞として使用してください。タイトルは接頭辞の後にスペースで区切ってください。
+- feat:
+- fix:
+- doc:
+- style:
+- refactor:
+- perf:
+- test:
+- chore:
+- merge:
+本文は変更を要点ごとに箇条書きしてください。箇条書きは「- 」で始めてください。
+また、以下の形式で回答してください。
+```
+title:
+<タイトル>
+body:
+<本文>
+```
+]]
