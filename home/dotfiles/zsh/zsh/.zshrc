@@ -42,12 +42,8 @@ alias nvimdiff="$(which nvim) -d"
 alias lg="lazygit"
 alias lvimdiff="$(which lvim) -d"
 alias reboot="sudo systemctl reboot"
+alias rrm="$(which rm)"
 alias rm="$(which trash)"
-if [[ "$OS" = "Darwin" ]]; then
-	alias rrm="/bin/rm"
-elif [[ "$OS" = "Linux" ]]; then
-	alias rrm="/run/current-system/sw/bin/rm"
-fi
 alias rtty='rtty run zellij --font "PlemolJP Console NF"'
 alias shutdown="sudo systemctl poweroff"
 alias st="systemctl-tui"
