@@ -44,6 +44,7 @@
       mermaid-cli
       ncdu
       neofetch
+      onefetch
       rbw
       ripgrep
       sheldon
