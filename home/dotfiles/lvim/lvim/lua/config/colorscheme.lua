@@ -11,18 +11,18 @@ lvim.colorscheme = "tokyonight"
 -- <C-c>f everforest
 vim.keymap.set(
   "n",
-  "<C-C>f",
+  "<C-c>f",
   "<CMD>colorscheme everforest<CR>",
   { silent = true, desc = "Toggle colorscheme Everforest" }
 )
 -- <C-c>n nord
-vim.keymap.set("n", "<C-C>n", "<CMD>colorscheme nord<CR>", { silent = true, desc = "Toggle colorscheme Nord" })
+vim.keymap.set("n", "<C-c>n", "<CMD>colorscheme nord<CR>", { silent = true, desc = "Toggle colorscheme Nord" })
 -- <C-c>l lunar
-vim.keymap.set("n", "<C-C>l", "<CMD>colorscheme lunar<CR>", { silent = true, desc = "Toggle colorscheme Lunar" })
+vim.keymap.set("n", "<C-c>l", "<CMD>colorscheme lunar<CR>", { silent = true, desc = "Toggle colorscheme Lunar" })
 -- <C-c>t tokyonight
 vim.keymap.set(
   "n",
-  "<C-C>t",
+  "<C-c>t",
   "<CMD>colorscheme tokyonight<CR>",
   { silent = true, desc = "Toggle colorscheme TokyoNight" }
 )
