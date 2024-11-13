@@ -32,6 +32,7 @@
       fontforge
       frogmouth
       fzf
+      fzf-make
       gum
       htop
       hyperfine
