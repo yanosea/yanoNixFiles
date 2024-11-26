@@ -124,7 +124,7 @@ table.insert(lvim.plugins, {
           prompt = CommitMessagePrompt,
         },
       },
-      model = "claude-3.5-sonnet",
+      model = "gpt-4o",
       window = {
         layout = "vertical", -- 'vertical', 'horizontal', 'float', 'replace'
         width = 0.5, -- fractional width of parent, or absolute width in columns when > 1
