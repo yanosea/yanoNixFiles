@@ -58,7 +58,6 @@ return {
           "powershell_es",
           "pyright",
           "rust_analyzer",
-          "spectral",
           "sqlls",
           "tailwindcss",
           "taplo",

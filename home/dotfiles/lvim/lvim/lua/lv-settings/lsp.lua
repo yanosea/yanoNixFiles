@@ -36,7 +36,6 @@ table.insert(lvim.plugins, {
         "pyright",
         "rnix",
         "rust_analyzer",
-        "spectral",
         "sqlls",
         "tailwindcss",
         "taplo",
