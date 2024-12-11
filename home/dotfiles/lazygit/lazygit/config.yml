@@ -54,16 +54,21 @@ git:
         # only applicable to unix users
         manualCommit: false
         # extra args passed to `git merge`, e.g. --no-ff
+
         args: ''
     log:
         # one of date-order, author-date-order, topo-order or default.
+
         # topo-order makes it easier to read the git log graph, but commits may not
+
         # appear chronologically. See https://git-scm.com/docs/git-log#_commit_ordering
         order: 'topo-order'
         # one of always, never, when-maximised
+
         # this determines whether the git graph is rendered in the commits panel
         showGraph: 'when-maximised'
         # displays the whole git graph by default in the commits panel (equivalent to passing the `--all` argument to `git log`)
+
         showWholeGraph: false
     skipHookPrefix: WIP
     autoFetch: true
@@ -86,6 +91,7 @@ update:
     days: 14 # how often an update is checked for
 confirmOnQuit: false
 # determines whether hitting 'esc' will quit the application when there is nothing to cancel/close
+
 quitOnTopLevelReturn: false
 disableStartupPopups: false
 notARepository: 'prompt' # one of: 'prompt' | 'create' | 'skip' | 'quit'
@@ -96,6 +102,7 @@ keybinding:
         quit-alt1: '<c-c>' # alternative/alias of quit
         return: '<esc>' # return to previous menu, will quit if there's nowhere to return
         # When set to a printable character, this will work for returning from non-prompt panels
+
         return-alt1: <disabled>
         quitWithoutChangingDirectory: 'Q'
         togglePanel: '<tab>' # goto the next panel
@@ -133,7 +140,7 @@ keybinding:
         scrollDownMain-alt1: 'J' # main panel scroll down
         scrollUpMain-alt2: '<c-u>' # main panel scroll up
         scrollDownMain-alt2: '<c-d>' # main panel scroll down
-        executeCustomCommand: ':'
+        executeShellCommand: ':'
         createRebaseOptionsMenu: 'm'
         pushFiles: 'P'
         pullFiles: 'p'
@@ -225,9 +232,9 @@ keybinding:
 customCommands:
     - key: "N"
       prompts:
-          - type: "input"
-            title: "What is the new orphan branch name?"
-            initialValue: ""
+        - type: "input"
+          title: "What is the new orphan branch name?"
+          initialValue: ""
       command: "git checkout --orphan {{index .PromptResponses 0}}"
       context: "localBranches"
       loadingText: "creating orphan branch"
