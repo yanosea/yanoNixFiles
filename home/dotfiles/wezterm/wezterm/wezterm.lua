@@ -17,7 +17,7 @@ if string.find(target, "windows") then
   default_domain = "local"
   font_size = 10
   ctrl_key = "CTRL"
-  window_style = "TITLE | RESIZE"
+  window_style = "RESIZE"
 elseif string.find(target, "darwin") then
   default_domain = "local"
   font_size = 14
