@@ -1,6 +1,6 @@
 {
 	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2024-08-31T17:26:28.533-00:00",
+	"CreationDate" : "2024-12-11T22:28:13.644-00:00",
 	"Sources" : 
 	[
 		{
@@ -22,13 +22,13 @@
 					"PackageIdentifier" : "vim.vim"
 				},
 				{
-					"PackageIdentifier" : "TheDocumentFoundation.LibreOffice"
-				},
-				{
-					"PackageIdentifier" : "GoLang.Go"
-				},
-				{
 					"PackageIdentifier" : "Microsoft.VCRedist.2010.x64"
+				},
+				{
+					"PackageIdentifier" : "RealVNC.VNCViewer"
+				},
+				{
+					"PackageIdentifier" : "TortoiseGit.TortoiseGit"
 				},
 				{
 					"PackageIdentifier" : "NickeManarin.ScreenToGif"
@@ -40,67 +40,58 @@
 					"PackageIdentifier" : "Google.GoogleDrive"
 				},
 				{
-					"PackageIdentifier" : "Oracle.VirtualBox"
-				},
-				{
-					"PackageIdentifier" : "VirtualDesktop.Streamer"
-				},
-				{
 					"PackageIdentifier" : "icsharpcode.ILSpy"
-				},
-				{
-					"PackageIdentifier" : "Nvidia.GeForceExperience"
-				},
-				{
-					"PackageIdentifier" : "TortoiseGit.TortoiseGit"
-				},
-				{
-					"PackageIdentifier" : "wez.wezterm"
-				},
-				{
-					"PackageIdentifier" : "Starship.Starship"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.PowerShell"
 				},
 				{
-					"PackageIdentifier" : "gerardog.gsudo"
+					"PackageIdentifier" : "Nvidia.GeForceExperience"
 				},
 				{
-					"PackageIdentifier" : "RealVNC.VNCViewer"
+					"PackageIdentifier" : "Starship.Starship"
+				},
+				{
+					"PackageIdentifier" : "wez.wezterm"
+				},
+				{
+					"PackageIdentifier" : "VirtualDesktop.Streamer"
+				},
+				{
+					"PackageIdentifier" : "TheDocumentFoundation.LibreOffice"
+				},
+				{
+					"PackageIdentifier" : "GoLang.Go"
+				},
+				{
+					"PackageIdentifier" : "gerardog.gsudo"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.Edge"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.EdgeWebView2Runtime"
-				},
-				{
-					"PackageIdentifier" : "OBSProject.OBSStudio"
-				},
-				{
 					"PackageIdentifier" : "Valve.Steam"
+				},
+				{
+					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.6"
 				},
 				{
 					"PackageIdentifier" : "EpicGames.EpicGamesLauncher"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.8"
-				},
-				{
 					"PackageIdentifier" : "nathancorvussolis.corvusskk"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.VCRedist.2015+.x86"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.VCRedist.2015+.x64"
 				},
 				{
 					"PackageIdentifier" : "Google.ChromeRemoteDesktopHost"
 				},
 				{
+					"PackageIdentifier" : "Microsoft.VCRedist.2015+.x64"
+				},
+				{
 					"PackageIdentifier" : "Splashtop.SplashtopPersonal"
+				},
+				{
+					"PackageIdentifier" : "Python.Launcher"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.XNARedist"
@@ -112,7 +103,10 @@
 					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.7"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.6"
+					"PackageIdentifier" : "Microsoft.DotNet.DesktopRuntime.8"
+				},
+				{
+					"PackageIdentifier" : "Microsoft.VCRedist.2015+.x86"
 				},
 				{
 					"PackageIdentifier" : "Bitwarden.Bitwarden"
@@ -175,10 +169,19 @@
 					"PackageIdentifier" : "WinSCP.WinSCP"
 				},
 				{
+					"PackageIdentifier" : "Microsoft.VisualStudioCode"
+				},
+				{
 					"PackageIdentifier" : "Microsoft.PowerToys"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.VisualStudioCode"
+					"PackageIdentifier" : "Python.Python.3.10"
+				},
+				{
+					"PackageIdentifier" : "Python.Python.3.12"
+				},
+				{
+					"PackageIdentifier" : "Microsoft.Teams"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.AppInstaller"
@@ -199,6 +202,9 @@
 					"PackageIdentifier" : "Microsoft.WindowsTerminal"
 				},
 				{
+					"PackageIdentifier" : "Microsoft.WSL"
+				},
+				{
 					"PackageIdentifier" : "TheBrowserCompany.Arc"
 				}
 			],
@@ -211,5 +217,5 @@
 			}
 		}
 	],
-	"WinGetVersion" : "1.8.1911"
+	"WinGetVersion" : "1.9.25200"
 }
