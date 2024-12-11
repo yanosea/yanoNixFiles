@@ -131,10 +131,10 @@
                   ))}
                 </div>
               )}
-              {output.glazewm && (
+              {output.glazewm && output.glazewm.allWindows && (
                 <div className="focused-window-title">
                   {output.glazewm.allWindows.map(window => (
-                    window.hasFocus ? (
+                    window && window.hasFocus ? (
                       <div>
                         {truncateText(window.title, 100)}
                       </div>
@@ -170,18 +170,16 @@
                 </>
               )}
 
-              {output.media && (
+              {output.media && output.media.currentSession && (
                 <div className="media">
-                  {getMediaPlayingIcon(output.media.currentSession.isPlaying)}
-                  {`${truncateText(output.media.currentSession.title, 20)} - ${truncateText(output.media.currentSession.artist, 20)}`}
+                  {getMediaPlayingIcon(output.media.currentSession?.isPlaying)}
+                  {`${truncateText(output.media.currentSession?.title, 20)} - ${truncateText(output.media.currentSession?.artist, 20)}`}
                 </div>
               )}
 
               {output.cpu && (
                 <div className="cpu">
-                  <i className="nf nf-oct-cpu"></i>
-
-                  {/* Change the text color if the CPU usage is high. */}
+                  <i className={`nf nf-oct-cpu ${output.cpu.usage > 85 ? 'high-usage' : ''}`}></i>
                   <span
                     className={output.cpu.usage > 85 ? 'high-usage' : ''}
                   >
