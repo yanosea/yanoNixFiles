@@ -1,11 +1,5 @@
 { pkgs, ... }: {
-  imports = [
-    ../dotfiles/CorvusSKK
-    ../dotfiles/glaze-wm
-    ../dotfiles/PowerShell
-    ../dotfiles/scoop
-    ../dotfiles/UniGetUI
-  ];
+  imports = [ ../dotfiles/CorvusSKK ../dotfiles/glzr ../dotfiles/PowerShell ];
   home = {
     packages = with pkgs; [
       # cli
