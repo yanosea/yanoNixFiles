@@ -1,6 +1,6 @@
 {
 	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2024-12-11T22:28:13.644-00:00",
+	"CreationDate" : "2024-12-11T23:35:00.623-00:00",
 	"Sources" : 
 	[
 		{
@@ -20,6 +20,9 @@
 				},
 				{
 					"PackageIdentifier" : "vim.vim"
+				},
+				{
+					"PackageIdentifier" : "glzr-io.zebar"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.VCRedist.2010.x64"
@@ -47,6 +50,9 @@
 				},
 				{
 					"PackageIdentifier" : "Nvidia.GeForceExperience"
+				},
+				{
+					"PackageIdentifier" : "glzr-io.glazewm"
 				},
 				{
 					"PackageIdentifier" : "Starship.Starship"
@@ -149,9 +155,6 @@
 				},
 				{
 					"PackageIdentifier" : "equalsraf.win32yank"
-				},
-				{
-					"PackageIdentifier" : "glzr-io.glazewm"
 				},
 				{
 					"PackageIdentifier" : "gokcehan.lf"
