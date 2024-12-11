@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- base styles for better consistency across platforms (aka. CSS reset). -->
+    <link rel="stylesheet" type="text/css" href="../normalize.css" />
+
+    <!-- custom styles. -->
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+
+    <!-- add empty favicon to suppress not found errors. -->
+    <link rel="icon" href="data:;" />
+
+    <!-- allows React to be run buildless via "text/babel" script below. -->
+    <script
+      src="https://unpkg.com/@babel/standalone@7.25.6/babel.min.js"
+      integrity="sha256-aS0B0wnsaDByLfE16h4MDCP1fQFccysd1YWOcV+gbBo="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+      import React, {
+        useState,
+        useEffect,
+      } from 'https://esm.sh/react@18?dev';
+      import { createRoot } from 'https://esm.sh/react-dom@18/client?dev';
+      import * as zebar from 'https://esm.sh/zebar@2';
+
+      const providers = zebar.createProviderGroup({
+        glazewm: { type: 'glazewm' },
+        media: { type: 'media' },
+        cpu: { type: 'cpu', refreshInterval: 1000 },
+        memory: { type: 'memory', refreshInterval: 1000 },
+        network: { type: 'network' },
+        audio: { type: 'audio' },
+        date: { type: 'date', formatting: 'yyyy/MM/dd HH:mm:ss' },
+      });
+
+      createRoot(document.getElementById('root')).render(<App />);
+
+      function App() {
+        const [output, setOutput] = useState(providers.outputMap);
+
+        useEffect(() => {
+          providers.onOutput(() => setOutput(providers.outputMap));
+        }, []);
+
+        // Truncate text if it's longer than maxLength.
+        function truncateText(text, maxLength) {
+          if (text.length > maxLength) {
+            return text.substring(0, maxLength) + '...';
+          }
+          return text;
+        }
+
+        // Get icon to show for current audio volume.
+        function getMediaPlayingIcon(isPlaying) {
+          if (isPlaying) {
+            return <i className="nf nf-fa-play"></i>;
+          } else {
+            return <i className="nf nf-fa-pause"></i>;
+          }
+        }
+
+        // Get icon to show for current network status.
+        function getNetworkIcon(networkOutput) {
+          switch (networkOutput.defaultInterface?.type) {
+            case 'ethernet':
+              return <i className="nf nf-md-ethernet_cable"></i>;
+            case 'wifi':
+              if (networkOutput.defaultGateway?.signalStrength >= 80) {
+                return <i className="nf nf-md-wifi_strength_4"></i>;
+              } else if (
+                networkOutput.defaultGateway?.signalStrength >= 65
+              ) {
+                return <i className="nf nf-md-wifi_strength_3"></i>;
+              } else if (
+                networkOutput.defaultGateway?.signalStrength >= 40
+              ) {
+                return <i className="nf nf-md-wifi_strength_2"></i>;
+              } else if (
+                networkOutput.defaultGateway?.signalStrength >= 25
+              ) {
+                return <i className="nf nf-md-wifi_strength_1"></i>;
+              } else {
+                return <i className="nf nf-md-wifi_strength_outline"></i>;
+              }
+            default:
+              return (
+                <i className="nf nf-md-wifi_strength_off_outline"></i>
+              );
+          }
+        }
+
+        // Get icon to show for current audio volume.
+        function getAudioVolumeIcon(audioVolume) {
+          if (audioVolume === 0) {
+            return <i className="nf nf-fa-volume_xmark"></i>;
+          } else if (audioVolume > 0 && audioVolume <= 33) {
+            return <i className="nf nf-md-volume_low"></i>;
+          } else if (audioVolume > 33 && audioVolume <= 66) {
+            return <i className="nf nf-md-volume_medium"></i>;
+          } else {
+            return <i className="nf nf-md-volume_high"></i>;
+          }
+        }
+
+        return (
+          <div className="app">
+            <div className="left">
+              <i className="logo nf nf-fa-windows"></i>
+              {output.glazewm && (
+                <div className="workspaces">
+                  {output.glazewm.currentWorkspaces.map(workspace => (
+                    <button
+                      className={`workspace ${workspace.hasFocus && 'focused'} ${workspace.isDisplayed && 'displayed'}`}
+                      onClick={() =>
+                        output.glazewm.runCommand(
+                          `focus --workspace ${workspace.name}`,
+                        )
+                      }
+                      key={workspace.name}
+                    >
+                      {workspace.displayName ?? workspace.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {output.glazewm && (
+                <div className="focused-window-title">
+                  {output.glazewm.allWindows.map(window => (
+                    window.hasFocus ? (
+                      <div>
+                        {truncateText(window.title, 100)}
+                      </div>
+                    ) : null
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="right">
+              {output.glazewm && (
+                <>
+                  {output.glazewm.bindingModes.map(bindingMode => (
+                    <button
+                      className="binding-mode"
+                      key={bindingMode.name}
+                      onClick={() =>
+                        output.glazewm.runCommand(
+                          `wm-disable-binding-mode --name ${bindingMode.name}`,
+                        )
+                      }
+                    >
+                      {bindingMode.displayName ?? bindingMode.name}
+                    </button>
+                  ))}
+
+                  <button
+                    className={`tiling-direction nf ${output.glazewm.tilingDirection === 'horizontal' ? 'nf-md-swap_horizontal' : 'nf-md-swap_vertical'}`}
+                    onClick={() =>
+                      output.glazewm.runCommand('toggle-tiling-direction')
+                    }
+                  ></button>
+                </>
+              )}
+
+              {output.media && (
+                <div className="media">
+                  {getMediaPlayingIcon(output.media.currentSession.isPlaying)}
+                  {`${truncateText(output.media.currentSession.title, 20)} - ${truncateText(output.media.currentSession.artist, 20)}`}
+                </div>
+              )}
+
+              {output.cpu && (
+                <div className="cpu">
+                  <i className="nf nf-oct-cpu"></i>
+
+                  {/* Change the text color if the CPU usage is high. */}
+                  <span
+                    className={output.cpu.usage > 85 ? 'high-usage' : ''}
+                  >
+                    {Math.round(output.cpu.usage)}%
+                  </span>
+                </div>
+              )}
+
+              {output.memory && (
+                <div className="memory">
+                  <i className="nf nf-fae-chip"></i>
+                  {Math.round(output.memory.usage)}%
+                </div>
+              )}
+
+              {output.network && (
+                <div className="network">
+                  {getNetworkIcon(output.network)}
+                  {output.network.defaultGateway?.ssid}
+                </div>
+              )}
+
+              {output.audio && (
+                <div className="audio">
+                  {getAudioVolumeIcon(output.audio.defaultPlaybackDevice.volume)}
+                  {output.audio.defaultPlaybackDevice.volume} %
+                </div>
+              )}
+
+              <div className="date">
+                <i className="nf nf-md-clock_time_three"></i>
+                {output.date?.formatted}
+              </div>
+
+            </div>
+          </div>
+        );
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://github.com/glzr-io/zebar/raw/v2.4.0/resources/widget-schema.json",
+  "htmlPath": "./with-glazewm.html",
+  "zOrder": "top_most",
+  "shownInTaskbar": false,
+  "focused": false,
+  "resizable": false,
+  "transparent": false,
+  "presets": [
+    {
+      "name": "default",
+      "anchor": "top_center",
+      "offsetX": "0px",
+      "offsetY": "10px",
+      "width": "99%",
+      "height": "35px",
+      "monitorSelection": {
+        "type": "all"
+      },
+      "dockToEdge": {
+        "enabled": false,
+        "edge": null,
+        "windowMargin": "0px"
+      }
+    }
+  ]
+}

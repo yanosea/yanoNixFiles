@@ -1,8 +1,8 @@
 { ... }: {
   xdg = {
     configFile = {
-      "glaze-wm" = {
-        source = ./glaze-wm;
+      "glzr" = {
+        source = ./glzr;
         recursive = true;
       };
     };
