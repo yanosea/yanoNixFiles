@@ -16,8 +16,8 @@ lvim.builtin.which_key.mappings["a"] = {
 -- copilot chat
 lvim.builtin.which_key.mappings["C"] = {
   name = "+CopilotChat",
-  -- CopilotChatCommitStaged
-  c = { "<CMD>CopilotChatCommitStaged<CR>", "CopilotChat commit staged" },
+  -- CopilotChatCommit
+  c = { "<CMD>CopilotChatCommit<CR>", "CopilotChat commit" },
   -- CopilotChatDocs
   d = { "<CMD>CopilotChatDocs<CR>", "CopilotChat docs" },
   -- CopilotChatExplain
