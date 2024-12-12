@@ -20,6 +20,41 @@ table.insert(lvim.plugins, {
     "CopilotChatTests",
     "CopilotChatToggle",
   },
+  init = function()
+    for _, mode in ipairs({ "n", "x" }) do
+      vim.keymap.set(
+        mode,
+        "<LEADER>Cc",
+        "<CMD>CopilotChatCommitStaged<CR>",
+        { silent = true, desc = "CopilotChat commit staged" }
+      )
+      vim.keymap.set(mode, "<LEADER>Cd", "<CMD>CopilotChatDocs<CR>", { silent = true, desc = "CopilotChat docs" })
+      vim.keymap.set(mode, "<LEADER>Ce", "<CMD>CopilotChatExplain<CR>", { silent = true, desc = "CopilotChat explain" })
+      vim.keymap.set(mode, "<LEADER>Cf", "<CMD>CopilotChatFix<CR>", { silent = true, desc = "CopilotChat fix" })
+      vim.keymap.set(mode, "<LEADER>Cl", "<CMD>CopilotChatLoad<CR>", { silent = true, desc = "CopilotChat load" })
+      vim.keymap.set(
+        mode,
+        "<LEADER>Co",
+        "<CMD>CopilotChatOptimize<CR>",
+        { silent = true, desc = "CopilotChat optimize" }
+      )
+      vim.keymap.set(
+        mode,
+        "<LEADER>Cq",
+        "<CMD>lua CopilotChatBuffer()<CR>",
+        { noremap = true, silent = true, desc = "CopilotChat quick chat" }
+      )
+      vim.keymap.set(mode, "<LEADER>Cr", "<CMD>CopilotChatReview<CR>", { silent = true, desc = "CopilotChat review" })
+      vim.keymap.set(mode, "<LEADER>Cs", "<CMD>CopilotChatSave<CR>", { silent = true, desc = "CopilotChat save" })
+      vim.keymap.set(
+        mode,
+        "<LEADER>Ct",
+        "<CMD>CopilotChatToggle<CR>",
+        { silent = true, desc = "CopilotChat chat toggle" }
+      )
+      vim.keymap.set(mode, "<LEADER>CT", "<CMD>CopilotChatTests<CR>", { silent = true, desc = "CopilotChat tests" })
+    end
+  end,
   opts = {
     system_prompt = [[
 あなたはプログラミングに特化したAIアシスタントです。
@@ -58,14 +93,14 @@ table.insert(lvim.plugins, {
     prompts = {
       Explain = {
         prompt = [[
-/COPILOT_EXPLAIN
+/COPILOT_GENERATE
 
 選択範囲のコードの説明をしてください。
 ]],
       },
       Review = {
         prompt = [[
-/COPILOT_REVIEW
+/COPILOT_GENERATE
 
 選択範囲のコードをレビューしてください。
 ]],
@@ -163,28 +198,4 @@ function CopilotChatBuffer()
   if input ~= "" then
     require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
   end
-end
-
-for _, mode in ipairs({ "n", "x" }) do
-  vim.keymap.set(
-    mode,
-    "<LEADER>Cc",
-    "<CMD>CopilotChatCommitStaged<CR>",
-    { silent = true, desc = "CopilotChat commit staged" }
-  )
-  vim.keymap.set(mode, "<LEADER>Cd", "<CMD>CopilotChatDocs<CR>", { silent = true, desc = "CopilotChat docs" })
-  vim.keymap.set(mode, "<LEADER>Ce", "<CMD>CopilotChatExplain<CR>", { silent = true, desc = "CopilotChat explain" })
-  vim.keymap.set(mode, "<LEADER>Cf", "<CMD>CopilotChatFix<CR>", { silent = true, desc = "CopilotChat fix" })
-  vim.keymap.set(mode, "<LEADER>Cl", "<CMD>CopilotChatLoad<CR>", { silent = true, desc = "CopilotChat load" })
-  vim.keymap.set(mode, "<LEADER>Co", "<CMD>CopilotChatOptimize<CR>", { silent = true, desc = "CopilotChat optimize" })
-  vim.keymap.set(
-    mode,
-    "<LEADER>Cq",
-    "<CMD>lua CopilotChatBuffer()<CR>",
-    { noremap = true, silent = true, desc = "CopilotChat quick chat" }
-  )
-  vim.keymap.set(mode, "<LEADER>Cr", "<CMD>CopilotChatReview<CR>", { silent = true, desc = "CopilotChat review" })
-  vim.keymap.set(mode, "<LEADER>Cs", "<CMD>CopilotChatSave<CR>", { silent = true, desc = "CopilotChat save" })
-  vim.keymap.set(mode, "<LEADER>Ct", "<CMD>CopilotChatToggle<CR>", { silent = true, desc = "CopilotChat chat toggle" })
-  vim.keymap.set(mode, "<LEADER>CT", "<CMD>CopilotChatTests<CR>", { silent = true, desc = "CopilotChat tests" })
 end
