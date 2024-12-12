@@ -52,10 +52,10 @@
 
         // Truncate text if it's longer than maxLength.
         function truncateText(text, maxLength) {
-          if (text.length > maxLength) {
-            return text.substring(0, maxLength) + '...';
-          }
-          return text;
+          if (!text) return text;
+            return text.length > maxLength
+            ? text.substring(0, maxLength) + '...'
+            : text;
         }
 
         // Get icon to show for current audio volume.

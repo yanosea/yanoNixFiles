@@ -5,7 +5,7 @@ general:
   focus_follows_cursor: true
   toggle_workspace_on_refocus: true
   cursor_jump:
-    enabled: true
+    enabled: false
     trigger: "window_focus"
   hide_method: "cloak"
   show_all_in_taskbar: false
