@@ -8,6 +8,7 @@ github.com/sheepla/longgopher@latest
 github.com/sheepla/og@latest
 github.com/skanehira/rtty@latest
 github.com/Songmu/gocredits/cmd/gocredits@latest
+github.com/wadey/gocovmerge@latest
 github.com/yanosea/jrp@latest
 github.com/yanosea/mindnum@latest
 golang.org/x/tools/cmd/godoc@latest
