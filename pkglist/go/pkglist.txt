@@ -10,5 +10,5 @@ github.com/skanehira/rtty@latest
 github.com/Songmu/gocredits/cmd/gocredits@latest
 github.com/wadey/gocovmerge@latest
 github.com/yanosea/jrp@latest
-github.com/yanosea/mindnum@latest
+github.com/yanosea/mindnum/app/presentation/cli/mindnum@latest
 golang.org/x/tools/cmd/godoc@latest
