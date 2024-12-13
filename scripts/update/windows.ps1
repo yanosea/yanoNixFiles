@@ -21,7 +21,11 @@ if ($LASTEXITCODE -eq 0) {
     winget import "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
     # export winget packages
     Write-Host "`nexport winget packages!" -ForegroundColor Yellow
-    winget export -o "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+    $exportPath = "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+    winget export -o $exportPath
+    # sort the exported packages
+    $sortedPackages = Get-Content -Path $exportPath | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)'
+    $sortedPackages | Set-Content -Path $exportPath
 
 } else {
     # update cancelled
