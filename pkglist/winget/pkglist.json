@@ -1,6 +1,6 @@
 {
 	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2024-12-11T23:35:00.623-00:00",
+	"CreationDate" : "2024-12-13T10:40:37.058-00:00",
 	"Sources" : 
 	[
 		{
@@ -161,6 +161,9 @@
 				},
 				{
 					"PackageIdentifier" : "hickford.git-credential-oauth"
+				},
+				{
+					"PackageIdentifier" : "jqlang.jq"
 				},
 				{
 					"PackageIdentifier" : "junegunn.fzf"
