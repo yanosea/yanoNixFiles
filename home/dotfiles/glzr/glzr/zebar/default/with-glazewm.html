@@ -145,6 +145,13 @@
             </div>
 
             <div className="right">
+              {output.media && output.media.currentSession && (
+                <div className="media">
+                  {getMediaPlayingIcon(output.media.currentSession?.isPlaying)}
+                  {`${truncateText(output.media.currentSession?.title, 15)} - ${truncateText(output.media.currentSession?.artist, 15)}`}
+                </div>
+              )}
+
               {output.glazewm && (
                 <>
                   {output.glazewm.bindingModes.map(bindingMode => (
@@ -168,13 +175,6 @@
                     }
                   ></button>
                 </>
-              )}
-
-              {output.media && output.media.currentSession && (
-                <div className="media">
-                  {getMediaPlayingIcon(output.media.currentSession?.isPlaying)}
-                  {`${truncateText(output.media.currentSession?.title, 20)} - ${truncateText(output.media.currentSession?.artist, 20)}`}
-                </div>
               )}
 
               {output.cpu && (
