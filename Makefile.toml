@@ -93,6 +93,8 @@ sudo darwin-rebuild switch --flake .#yanoMac
 [tasks."darwin.apply.home"]
 description = "yanoMac config apply"
 script = '''
+# remove karabiner config first to avoid conflict
+rm -fr ~/.config/karabiner/karabiner.json
 export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
 home-manager switch --flake .#yanosea@yanoMac --extra-experimental-features "nix-command flakes" --impure
 '''
