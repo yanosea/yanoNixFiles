@@ -198,7 +198,7 @@
               {output.network && (
                 <div className="network">
                   {getNetworkIcon(output.network)}
-                  {output.network.defaultGateway?.ssid}
+                  {truncateText(output.network.defaultGateway?.ssid, 10)}
                 </div>
               )}
 
