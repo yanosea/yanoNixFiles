@@ -73,6 +73,10 @@ window_rules:
       - window_process: { equals: "Terraria" }
       # ignore HakkoAI
       - window_process: { equals: "HakkoAI" }
+      # ignore nier:automata
+      - window_process: { equals: "NieRAutomata"}
+      # ignore desktop mate
+      - window_process: { equals: "DesktopMate"}
       # ignore PIP
       - window_title: { regex: "[Pp]icture.in.[Pp]icture" }
         window_class: { regex: "Chrome_WidgetWin_1|MozillaDialogClass" }
@@ -136,10 +140,9 @@ keybindings:
   - commands: ["wm-enable-binding-mode --name resize"]
     bindings: ["alt+shift+s"]
 
-  # disables window management and all other keybindings until alt+shift+p
-  # is pressed again.
-  # - commands: ["wm-toggle-pause"]
-  #   bindings: ["alt+shift+p"]
+  # disables window management and all other keybindings
+  - commands: ["wm-toggle-pause"]
+    bindings: ["alt+shift+/"]
 
   # change tiling direction. This determines where new tiling windows will be inserted.
   - commands: ["toggle-tiling-direction"]
@@ -154,8 +157,8 @@ keybindings:
     bindings: ["alt+shift+space"]
 
   # change the focused window to be tiling.
-  # - commands: ["toggle-tiling"]
-  #   bindings: ["alt+t"]
+  - commands: ["toggle-tiling"]
+    bindings: ["alt+shift+."]
 
   # change the focused window to be maximized / unmaximized.
   - commands: ["toggle-fullscreen"]
