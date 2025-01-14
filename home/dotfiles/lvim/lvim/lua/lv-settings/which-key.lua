@@ -1,17 +1,31 @@
 -- which-key.nvim
--- chatgpt
+-- avante
 lvim.builtin.which_key.mappings["a"] = {
+  name = "+Avante",
+  -- Avante
+  a = { "<CMD>AvanteAsk<CR>", "AvanteAsk" },
+  -- AvanteChat
+  c = { "<CMD>AvanteChat<CR>", "AvanteChat" },
+  -- AvanteEdit
+  e = { "<CMD>AvanteEdit<CR>", "AvanteEdit" },
+  -- AvanteRefresh
+  r = { "<CMD>AvanteRefresh<CR>", "AvanteRefresh" },
+  -- AvanteToggle
+  t = { "<CMD>AvanteToggle<CR>", "AvanteToggle" },
+}
+-- chatgpt
+lvim.builtin.which_key.mappings["A"] = {
   name = "+Chatgpt",
   -- GpChatFinder
-  e = { "<CMD>GpChatFinder<CR>", "GpChatFinder" },
+  E = { "<CMD>GpChatFinder<CR>", "GpChatFinder" },
   -- GpChatNew popup
-  p = { "<CMD>GpChatNew popup<CR>", "GpChatNew popup" },
+  P = { "<CMD>GpChatNew popup<CR>", "GpChatNew popup" },
   -- GpChatNew split
-  s = { "<CMD>GpChatNew split<<CR>", "GpChatNew split" },
+  S = { "<CMD>GpChatNew split<<CR>", "GpChatNew split" },
   -- GpChatNew tabnew
-  t = { "<CMD>GpChatNew tabnew<CR>", "GpChatNew tabnew" },
+  T = { "<CMD>GpChatNew tabnew<CR>", "GpChatNew tabnew" },
   -- GpChatNew vsplit
-  v = { "<CMD>GpChatNew vsplit<CR>", "GpChatNew vsplit" },
+  V = { "<CMD>GpChatNew vsplit<CR>", "GpChatNew vsplit" },
 }
 -- copilot chat
 lvim.builtin.which_key.mappings["C"] = {
