@@ -4,8 +4,10 @@ lvim.builtin.which_key.mappings["a"] = {
   name = "+Avante",
   -- Avante
   a = { "<CMD>AvanteAsk<CR>", "AvanteAsk" },
+  -- AvanteClear
+  c = { "<CMD>AvanteClear<CR>", "AvanteClear" },
   -- AvanteChat
-  c = { "<CMD>AvanteChat<CR>", "AvanteChat" },
+  C = { "<CMD>AvanteChat<CR>", "AvanteChat" },
   -- AvanteEdit
   e = { "<CMD>AvanteEdit<CR>", "AvanteEdit" },
   -- AvanteRefresh
