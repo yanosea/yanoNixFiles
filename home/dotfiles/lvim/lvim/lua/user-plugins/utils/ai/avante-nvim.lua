@@ -34,7 +34,9 @@ table.insert(lvim.plugins, {
     },
     -- auto_suggestions_provider = "copilot",
     behaviour = {
-      auto_suggestions = false,
+      auto_focus_sidebar = false,
+      auto_suggestions = true,
+      auto_suggestions_respect_ignore = true,
       auto_set_highlight_group = true,
       auto_set_keymaps = true,
       auto_apply_diff_after_generation = false,
@@ -45,6 +47,24 @@ table.insert(lvim.plugins, {
       position = "right",
       wrap = true,
       width = 30,
+      sidebar_header = {
+        enabled = true,
+        align = "center",
+        rounded = false,
+      },
+      input = {
+        prefix = "",
+        height = 8,
+      },
+      edit = {
+        border = "rounded",
+        start_insert = false,
+      },
+      ask = {
+        floating = false,
+        border = "rounded",
+        start_insert = false,
+      },
     },
   },
 })

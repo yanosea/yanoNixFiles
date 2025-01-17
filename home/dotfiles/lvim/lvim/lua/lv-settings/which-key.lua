@@ -5,13 +5,15 @@ lvim.builtin.which_key.mappings["a"] = {
   -- Avante
   a = { "<CMD>AvanteAsk<CR>", "AvanteAsk" },
   -- AvanteClear
-  c = { "<CMD>AvanteClear<CR>", "AvanteClear" },
-  -- AvanteChat
-  C = { "<CMD>AvanteChat<CR>", "AvanteChat" },
+  C = { "<CMD>AvanteClear<CR>", "AvanteClear" },
   -- AvanteEdit
   e = { "<CMD>AvanteEdit<CR>", "AvanteEdit" },
+  -- AvanteFocus
+  f = { "<CMD>AvanteFocus<CR>", "AvanteFocus" },
   -- AvanteRefresh
   r = { "<CMD>AvanteRefresh<CR>", "AvanteRefresh" },
+  -- AvanteRepoMap
+  R = { "<CMD>AvanteRepoMap<CR>", "AvanteRepoMap" },
   -- AvanteToggle
   t = { "<CMD>AvanteToggle<CR>", "AvanteToggle" },
 }
