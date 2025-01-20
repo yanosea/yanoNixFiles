@@ -35,6 +35,7 @@ source <(fzf --zsh)
 alias cat="$(which bat)"
 alias dot="cd $HOME/ghq/github.com/yanosea/yanoNixFiles"
 alias gbp='git branch --merged | grep -v "\* $(git rev-parse --abbrev-ref HEAD)" | grep -v "^\s*$" | xargs -r git branch -d'
+alias ghd='gh-dash'
 alias gsf='git switch $(git branch -l | fzf | tr -d "* ")'
 alias gitgraph='git log --graph --all --oneline --decorate'
 alias ls="$(which lsd)"
