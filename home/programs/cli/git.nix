@@ -9,6 +9,7 @@
   home = {
     packages = with pkgs; [
       gh
+      gh-dash
       ghq
       git-credential-oauth
       git-lfs
