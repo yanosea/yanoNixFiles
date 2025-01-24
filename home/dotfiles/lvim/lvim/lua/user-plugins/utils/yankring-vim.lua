@@ -5,7 +5,7 @@ table.insert(lvim.plugins, {
   init = function()
     vim.g.yankring_history_dir = os.getenv("XDG_STATE_HOME") .. "/yankring"
 
-    vim.keymap.set("n", "<LEADER>yh", "<CMD>YRShow<CR>", { silent = true, desc = "YankRing show" })
+    vim.keymap.set("n", "<LEADER>yh", "<CMD>YRShow<CR>", { silent = true, desc = "YankRing Show" })
     vim.g.yankring_replace_n_pkey = "<C-y><C-p>"
     vim.g.yankring_replace_n_nkey = "<C-y><C-n>"
   end,

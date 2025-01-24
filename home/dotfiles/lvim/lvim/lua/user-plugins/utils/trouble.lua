@@ -4,34 +4,34 @@ table.insert(lvim.plugins, {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   event = { "BufRead", "BufEnter" },
   keys = {
-    {
-      "<LEADER>xx",
-      "<CMD>Trouble diagnostics toggle<cr>",
-      desc = "Diagnostics (Trouble)",
-    },
+    -- {
+    --   "<LEADER>xx",
+    --   "<CMD>Trouble diagnostics toggle<CR>",
+    --   desc = "Diagnostics (Trouble)",
+    -- },
     {
       "<LEADER>xX",
-      "<CMD>Trouble diagnostics toggle filter.buf=0<cr>",
+      "<CMD>Trouble diagnostics toggle filter.buf=0<CR>",
       desc = "Buffer Diagnostics (Trouble)",
     },
-    {
-      "<LEADER>cs",
-      "<CMD>Trouble symbols toggle focus=false<cr>",
-      desc = "Symbols (Trouble)",
-    },
+    -- {
+    --   "<LEADER>cs",
+    --   "<CMD>Trouble symbols toggle focus=false<CR>",
+    --   desc = "Symbols (Trouble)",
+    -- },
     {
       "<LEADER>cl",
-      "<CMD>Trouble lsp toggle focus=false win.position=right<cr>",
+      "<CMD>Trouble lsp toggle focus=false win.position=right<CR>",
       desc = "LSP Definitions / references / ... (Trouble)",
     },
     {
       "<LEADER>xL",
-      "<CMD>Trouble loclist toggle<cr>",
+      "<CMD>Trouble loclist toggle<CR>",
       desc = "Location List (Trouble)",
     },
     {
       "<LEADER>xQ",
-      "<CMD>Trouble qflist toggle<cr>",
+      "<CMD>Trouble qflist toggle<CR>",
       desc = "Quickfix List (Trouble)",
     },
   },
@@ -68,8 +68,8 @@ table.insert(lvim.plugins, {
       R = "toggle_refresh",
       q = "close",
       o = "jump_close",
-      ["<esc>"] = "cancel",
-      ["<cr>"] = "jump",
+      ["<ESC>"] = "cancel",
+      ["<CR>"] = "jump",
       ["<2-leftmouse>"] = "jump",
       ["<c-s>"] = "jump_split",
       ["<c-v>"] = "jump_vsplit",
@@ -173,7 +173,4 @@ table.insert(lvim.plugins, {
       },
     },
   },
-  init = function()
-    vim.keymap.set("n", "<LEADER>lT", "<CMD>Trouble diagnostics toggle<CR>", { silent = true, desc = "Trouble" })
-  end,
 })
