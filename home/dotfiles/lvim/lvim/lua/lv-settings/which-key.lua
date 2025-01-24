@@ -61,20 +61,22 @@ lvim.builtin.which_key.mappings["C"] = {
 lvim.builtin.which_key.mappings["<SPACE>"] = { "<CMD>FuzzyMotion<CR>", "FuzzyMotion" }
 -- lsp
 table.insert(lvim.builtin.which_key.mappings["l"], {
-  -- todo-comments
-  -- TodoLocList
-  t = { "<CMD>TodoLocList<CR>", "TodoLocList" },
+  name = "+LSP",
+  -- outline
+  -- Outline
+  o = { "<CMD>Outline<CR>", "Outline" },
   -- trouble
   -- Trouble diagnostics toggle
-  T = { "<CMD>Trouble diagnostics toggle<CR>", "TroubleDiagnostics" },
+  t = { "<CMD>Trouble diagnostics toggle<CR>", "TroubleDiagnostics" },
+  -- todo-comments
+  -- TodoLocList
+  T = { "<CMD>TodoLocList<CR>", "TodoLocList" },
 })
--- outline
-lvim.builtin.which_key.mappings["o"] = { "<CMD>Outline<CR>", "Outline" }
 -- toggleterm
 lvim.builtin.which_key.mappings["t"] = { "<CMD>ToggleTerm<CR>", "ToggleTerm" }
 -- yankring
 lvim.builtin.which_key.mappings["y"] = {
   name = "+Yankring",
   -- YRShow
-  h = { "<CMD>YRShow<CR>", "YankRing show" },
+  h = { "<CMD>YRShow<CR>", "YankRing Show" },
 }
