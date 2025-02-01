@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2024-12-13T10:49:36.340-00:00",
+  "CreationDate": "2025-02-01T22:25:33.674-00:00",
   "Sources": [
     {
       "Packages": [
@@ -125,6 +125,9 @@
           "PackageIdentifier": "Microsoft.VCRedist.2010.x86"
         },
         {
+          "PackageIdentifier": "Microsoft.VCRedist.2013.x64"
+        },
+        {
           "PackageIdentifier": "Microsoft.VCRedist.2015+.x64"
         },
         {
@@ -150,6 +153,9 @@
         },
         {
           "PackageIdentifier": "Nvidia.GeForceExperience"
+        },
+        {
+          "PackageIdentifier": "OBSProject.OBSStudio"
         },
         {
           "PackageIdentifier": "OpenShot.OpenShot"
