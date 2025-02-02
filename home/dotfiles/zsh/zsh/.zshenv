@@ -106,3 +106,5 @@ if [[ "$OS" = "Darwin" ]]; then
 	export CPLUS_INCLUDE_PATH=$CPATH
 	export CGO_ENABLED=0
 fi
+# yazi
+export YAZI_CONFIG_HOME=$XDG_CONFIG_HOME/yazi-alt

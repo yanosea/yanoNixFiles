@@ -12,6 +12,7 @@
     ../../dotfiles/textualize
     ../../dotfiles/tmux
     ../../dotfiles/wezterm
+    ../../dotfiles/yazi-alt
     ../../dotfiles/zellij
     ../../dotfiles/zsh
   ];
@@ -61,6 +62,7 @@
       vhs
       wakatime
       wezterm
+      yazi
       zellij
       zoxide
       zsh
