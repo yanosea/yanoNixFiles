@@ -12,7 +12,7 @@
     ../../dotfiles/textualize
     ../../dotfiles/tmux
     ../../dotfiles/wezterm
-    ../../dotfiles/yazi-alt
+    ../../dotfiles/yazi
     ../../dotfiles/zellij
     ../../dotfiles/zsh
   ];

@@ -10,6 +10,7 @@
 # : Flavor {{{
 
 [flavor]
+use = "everforest-medium"
 dark = ""
 light = ""
 
