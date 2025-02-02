@@ -6,7 +6,7 @@ table.insert(lvim.plugins, {
   "neanias/everforest-nvim",
 })
 -- default colorscheme
-lvim.colorscheme = "tokyonight"
+lvim.colorscheme = "everforest"
 -- change colorscheme keymap
 -- <C-c>f everforest
 vim.keymap.set(

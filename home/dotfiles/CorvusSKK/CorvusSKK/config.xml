@@ -61,15 +61,14 @@
     <key name="italic" value="0" />
   </section>
   <section name="display">
-    <key name="maxwidth" value="320" />
-    <key name="colorbg" value="0xFFFFFF" />
-    <key name="colorfr" value="0x000000" />
-    <key name="colorse" value="0xFF0000" />
-    <key name="colorco" value="0x808080" />
-    <key name="colorca" value="0x000000" />
-    <key name="colorsc" value="0x808080" />
-    <key name="coloran" value="0x808080" />
-    <key name="colorno" value="0x000000" />
+    <key name="colorbg" value="0x2D353B" />
+    <key name="colorfr" value="0xD3C6AA" />
+    <key name="colorse" value="0xE67E80" />
+    <key name="colorco" value="0x859289" />
+    <key name="colorca" value="0xA7C080" />
+    <key name="colorsc" value="0x83C092" />
+    <key name="coloran" value="0x7FBBB3" />
+    <key name="colorno" value="0xD699B6" />
     <key name="drawapi" value="1" />
     <key name="colorfont" value="1" />
     <key name="untilcandlist" value="3" />
@@ -83,23 +82,23 @@
     <key name="showromanjlat" value="0" />
     <key name="showmodeinl" value="1" />
     <key name="showmodeinltm" value="3000" />
-    <key name="colormc" value="0xFFFFFF" />
-    <key name="colormf" value="0x000000" />
-    <key name="colorhr" value="0x0000C0" />
-    <key name="colorkt" value="0x00C000" />
-    <key name="colorka" value="0xC00080" />
-    <key name="colorjl" value="0xC00000" />
-    <key name="colorac" value="0xC08000" />
-    <key name="colordr" value="0x808080" />
+    <key name="colormc" value="0x374247" />
+    <key name="colormf" value="0xD3C6AA" />
+    <key name="colorhr" value="0x7FBBB3" />
+    <key name="colorkt" value="0xA7C080" />
+    <key name="colorka" value="0xD699B6" />
+    <key name="colorjl" value="0xE67E80" />
+    <key name="colorac" value="0xDBBC7F" />
+    <key name="colordr" value="0x859289" />
   </section>
   <section name="displayattr">
-    <key name="inputmark" value="0,0,0x000000,0,0xFFFFFF,2,0,0,0x000000,0" />
-    <key name="inputtext" value="1,0,0x000000,0,0xFFFFFF,2,0,0,0x000000,0" />
-    <key name="inputokuri" value="1,0,0x000000,0,0xFFFFFF,3,0,0,0x000000,5" />
-    <key name="convmark" value="0,0,0x000000,0,0xFFFFFF,1,0,0,0x000000,1" />
-    <key name="convtext" value="1,0,0x000000,0,0xFFFFFF,0,0,0,0x000000,1" />
-    <key name="convokuri" value="1,0,0x000000,0,0xFFFFFF,1,0,0,0x000000,5" />
-    <key name="convannot" value="1,0,0x000000,0,0xFFFFFF,3,0,0,0x000000,2" />
+    <key name="inputmark" value="0,0,0x2D353B,0,0xD3C6AA,2,0,0,0x2D353B,0" />
+    <key name="inputtext" value="1,0,0x2D353B,0,0xD3C6AA,2,0,0,0x2D353B,0" />
+    <key name="inputokuri" value="1,0,0x2D353B,0,0xD3C6AA,3,0,0,0x2D353B,5" />
+    <key name="convmark" value="0,0,0x374247,0,0xD3C6AA,1,0,0,0x374247,1" />
+    <key name="convtext" value="1,0,0x374247,0,0xD3C6AA,0,0,0,0x374247,1" />
+    <key name="convokuri" value="1,0,0x374247,0,0xD3C6AA,1,0,0,0x374247,5" />
+    <key name="convannot" value="1,0,0x374247,0,0x859289,3,0,0,0x374247,2" />
   </section>
   <section name="selkey">
     <key name="1" value="ＡAa" />

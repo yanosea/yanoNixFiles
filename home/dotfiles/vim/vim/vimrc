@@ -97,6 +97,7 @@ call plug#begin()
   " checkhealth
   Plug 'rhysd/vim-healthcheck'
   " colorscheme
+  Plug 'sainnhe/everforest'
   Plug 'ghifarit53/tokyonight-vim'
   " copilot
   Plug 'github/copilot.vim'
@@ -116,10 +117,31 @@ call plug#begin()
   " yankring
   Plug 'vim-scripts/YankRing.vim'
 call plug#end()
-" colorscheme
+" colorscheme settings
+" everforest settings
+let g:everforest_background = 'hard'
+let g:everforest_better_performance = 1
+let g:everforest_enable_italic = 1
+let g:everforest_diagnostic_text_highlight = 1
+let g:everforest_diagnostic_line_highlight = 1
+let g:everforest_diagnostic_virtual_text = 'colored'
+" tokyonight settings
 let g:tokyonight_style = 'storm'
 let g:tokyonight_enable_italic = 1
-colorscheme tokyonight
+" colorscheme switching function
+function! SwitchColorScheme(scheme)
+  if a:scheme == 'everforest'
+    let g:everforest_background = 'hard'
+    colorscheme everforest
+  elseif a:scheme == 'tokyonight'
+    colorscheme tokyonight
+  endif
+endfunction
+" set default colorscheme
+call SwitchColorScheme('everforest')
+" colorscheme keymaps
+nnoremap <C-c>f :call SwitchColorScheme('everforest')<CR>
+nnoremap <C-c>t :call SwitchColorScheme('tokyonight')<CR>
 " copilot
 let g:copilot_no_tab_map = 1
 inoremap <silent><expr> <C-a><Tab> copilot#Accept("\<CR>")

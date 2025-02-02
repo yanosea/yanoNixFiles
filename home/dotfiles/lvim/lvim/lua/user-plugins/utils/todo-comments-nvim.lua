@@ -38,12 +38,12 @@ table.insert(lvim.plugins, {
       exclude = {},
     },
     colors = {
-      error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-      warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
-      info = { "DiagnosticInfo", "#2563EB" },
-      hint = { "DiagnosticHint", "#10B981" },
-      default = { "Identifier", "#7C3AED" },
-      test = { "Identifier", "#FF00FF" },
+      error = { "DiagnosticError", "ErrorMsg", "#e67e80" }, -- Everforest red
+      warning = { "DiagnosticWarn", "WarningMsg", "#dbbc7f" }, -- Everforest yellow
+      info = { "DiagnosticInfo", "#7fbbb3" }, -- Everforest blue
+      hint = { "DiagnosticHint", "#83c092" }, -- Everforest sage green
+      default = { "Identifier", "#d699b6" }, -- Everforest purple
+      test = { "Identifier", "#e69875" }, -- Everforest orange
     },
     search = {
       command = "rg",

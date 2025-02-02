@@ -5,12 +5,12 @@
 @import 'https://www.nerdfonts.com/assets/css/webfont.css';
 
 i {
-  color: #c0caf5;
+  color: #d3c6aa;
   margin-right: 7px;
 }
 
 body {
-  color: #c0caf5;
+  color: #d3c6aa;
   font-family: "PlemolJP Console NF";
   font-size: 12px;
   overflow: hidden;
@@ -23,8 +23,8 @@ body,
 }
 
 #root {
-  border: 1px solid #a9b1d6;
-  background: #1a1b26;
+  border: 1px solid #83c092;
+  background: #2d353b;
 }
 
 .app {
@@ -54,9 +54,9 @@ body,
 .network,
 .audio,
 .date {
-  background: #292e42;
+  background: #374247;
   padding: 4px 8px;
-  color: #c0caf5;
+  color: #d3c6aa;
   border: none;
   margin-right: 10px;
 }
@@ -68,49 +68,49 @@ body,
 }
 
 .workspace {
-  background: #292e42;
+  background: #374247;
   margin-right: 4px;
   padding: 4px 8px;
-  color: #c0caf5;
+  color: #d3c6aa;
   border: none;
   cursor: pointer;
 
   &.displayed {
-    background: #292e42;
-    color: #7aa2f7;
+    background: #374247;
+    color: #7fbbb3;
   }
 
   &.focused{
-    background: #292e42;
-    color: #2ac3de;
+    background: #374247;
+    color: #83c092;
   }
 
   &:hover {
-    background: #3a3f54;
-    color: #7aa2f7;
+    background: #475266;
+    color: #7fbbb3;
   }
 }
 
 .focused-window-title {
-  background: #292e42;
+  background: #374247;
   padding: 4px 8px;
-  color: #c0caf5;
+  color: #d3c6aa;
   border: none;
   white-space: nowrap;
 }
 
 .binding-mode,
 .tiling-direction {
-  background: #292e42;
-  color: #c0caf5;
+  background: #374247;
+  color: #d3c6aa;
   line-height: 1;
   padding: 4px 8px;
   border: none;
   cursor: pointer;
 
   &:hover {
-    background: #3a3f54;
-    color: #7aa2f7;
+    background: #475266;
+    color: #7fbbb3;
   }
 }
 
@@ -119,9 +119,9 @@ body,
 }
 
 .cpu .high-usage {
-  color: #f7768e;
+  color: #e67e80;
 }
 
 .memory .high-usage {
-  color: #f7768e;
+  color: #e67e80;
 }

@@ -62,8 +62,8 @@ table.insert(lvim.plugins, {
           right_arrow = ">",
         },
         style = {
-          { fg = "#7aa2f7" },
-          { fg = "#f7768e" },
+          { fg = "#83c092" }, -- Everforest sage green
+          { fg = "#e67e80" }, -- Everforest red
         },
         textobject = "",
         max_file_size = 1024 * 1024,
@@ -82,7 +82,7 @@ table.insert(lvim.plugins, {
       line_num = {
         enable = true,
         use_treesitter = true,
-        style = "#7aa2f7",
+        style = "#83c092", -- Everforest sage green
       },
       blank = {
         enable = true,
