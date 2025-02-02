@@ -76,8 +76,8 @@ unset_alt = { fg = "red", bg = "gray" }
 # : Status bar {{{
 
 [status]
-separator_open = ""
-separator_close = ""
+separator_open = ""
+separator_close = ""
 
 # Progress
 progress_label = { bold = true }
