@@ -33,11 +33,11 @@ end
 local background_opacity = 0.8
 -- tab bar left
 wezterm.on("format-tab-title", function(tab, tabs)
-  local TAB_BAR_BG = "#1f2335"
-  local ACTIVE_TAB_BG = "#7aa2f7"
-  local ACTIVE_TAB_FG = "#000000"
-  local NORMAL_TAB_BG = "#3b4261"
-  local NORMAL_TAB_FG = "#7aa2f7"
+  local TAB_BAR_BG = "#2d353b"
+  local ACTIVE_TAB_BG = "#83c092"
+  local ACTIVE_TAB_FG = "#2d353b"
+  local NORMAL_TAB_BG = "#374247"
+  local NORMAL_TAB_FG = "#83c092"
   local background = NORMAL_TAB_BG
   local foreground = NORMAL_TAB_FG
   local is_first = tab.tab_id == tabs[1].tab_id
@@ -110,23 +110,23 @@ end)
 -- tab bar right
 wezterm.on("update-right-status", function(window)
   window:set_right_status(wezterm.format({
-    { Foreground = { Color = "#a9b1d6" } },
-    { Background = { Color = "#1f2335" } },
+    { Foreground = { Color = "#d3c6aa" } },
+    { Background = { Color = "#2d353b" } },
     { Text = "" },
-    { Foreground = { Color = "#a9b1d6" } },
-    { Background = { Color = "#1f2335" } },
+    { Foreground = { Color = "#d3c6aa" } },
+    { Background = { Color = "#2d353b" } },
     { Text = " " .. Basename(wezterm.home_dir) .. " " },
-    { Foreground = { Color = "#3b4261" } },
-    { Background = { Color = "#1f2335" } },
+    { Foreground = { Color = "#374247" } },
+    { Background = { Color = "#2d353b" } },
     { Text = "" },
-    { Foreground = { Color = "#7aa2f7" } },
-    { Background = { Color = "#3b4261" } },
+    { Foreground = { Color = "#83c092" } },
+    { Background = { Color = "#374247" } },
     { Text = " " .. wezterm.hostname() .. " " },
-    { Foreground = { Color = "#7aa2f7" } },
-    { Background = { Color = "#3b4261" } },
+    { Foreground = { Color = "#83c092" } },
+    { Background = { Color = "#374247" } },
     { Text = "" },
-    { Foreground = { Color = "#000000" } },
-    { Background = { Color = "#7aa2f7" } },
+    { Foreground = { Color = "#2d353b" } },
+    { Background = { Color = "#83c092" } },
     { Text = " " .. wezterm.strftime("  %Y/%m/%d %H:%M:%S") .. " " },
   }))
 end)
@@ -147,17 +147,17 @@ return {
   default_domain = default_domain,
   default_prog = default_prog,
   -- colorscheme
-  color_scheme = "tokyonight",
+  color_scheme = "Everforest Dark (Gogh)",
   colors = {
     tab_bar = {
-      background = "#1f2335",
+      background = "#2d353b",
       active_tab = {
-        bg_color = "#7aa2f7",
-        fg_color = "#000000",
+        bg_color = "#83c092",
+        fg_color = "#2d353b",
       },
       inactive_tab = {
-        bg_color = "#3b4261",
-        fg_color = "#7aa2f7",
+        bg_color = "#374247",
+        fg_color = "#83c092",
       },
     },
   },

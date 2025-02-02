@@ -1,14 +1,14 @@
 # global
 [global]
-background = "#292e42"
+background = "#2d353b"
 corner_radius = 0
-frame_color = "#a9b1d6"
+frame_color = "#83c092"
 font = "plemoljp-nf"
-foreground = "#c8d3f5"
+foreground = "#d3c6aa"
 monitor = 0
 offset = "30x30"
 timeout = 10
 transparency = 10
 # urgency_critical
 [urgency_critical]
-frame_color = "##f7768e"
+frame_color = "#e67e80"

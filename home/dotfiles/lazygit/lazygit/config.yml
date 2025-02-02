@@ -1,6 +1,6 @@
 gui:
     # stuff relating to the UI
-    windowSize: 'normal' # one of 'normal' | 'half' | 'full' default is 'normal'
+    screenMode: 'normal' # one of 'normal' | 'half' | 'full' default is 'normal'
     scrollHeight: 2 # how many lines you scroll by
     scrollPastBottom: true # enable scrolling past the bottom
     sidePanelWidth: 0.3333 # number from 0 to 1
@@ -10,24 +10,24 @@ gui:
     timeFormat: '02 Jan 06 15:04 MST' # https://pkg.go.dev/time#Time.Format
     theme:
         activeBorderColor:
-            - green
+            - "#83c092"
             - bold
         inactiveBorderColor:
-            - white
+            - "#475266"
         optionsTextColor:
-            - blue
+            - "#7fbbb3"
         selectedLineBgColor:
-            - blue # set to `default` to have no background colour
+            - "#374247"
         selectedRangeBgColor:
-            - blue
+            - "#475266"
         cherryPickedCommitBgColor:
-            - cyan
+            - "#7fbbb3"
         cherryPickedCommitFgColor:
-            - blue
+            - "#83c092"
         unstagedChangesColor:
-            - red
+            - "#e67e80"
         defaultFgColor:
-            - default
+            - "#d3c6aa"
     commitLength:
         show: true
     mouseEvents: true

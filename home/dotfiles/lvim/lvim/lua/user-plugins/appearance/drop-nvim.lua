@@ -4,7 +4,7 @@ table.insert(lvim.plugins, {
   event = "VimEnter",
   init = function()
     require("drop").setup({
-      theme = "stars",
+      theme = "leaves",
       max = 20,
       interval = 250,
     })

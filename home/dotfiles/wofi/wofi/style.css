@@ -3,7 +3,7 @@ window {
   font-weight: bold;
   margin: 0px;
   border-radius: 10px;
-  background-color: rgba(27, 30, 43, 0.9);
+  background-color: rgba(45, 53, 59, 0.9);
 }
 
 #input {
@@ -11,8 +11,8 @@ window {
   padding: 2px;
   border-radius: 6px; margin: 5px;
   border: none;
-  color: #c8d3f5;
-  background-color: rgba(200, 211, 245, 0.2);
+  color: #d3c6aa;
+  background-color: rgba(211, 198, 170, 0.2);
 }
 
 #inner-box {
@@ -35,7 +35,7 @@ window {
 #text {
   margin: 5px;
   border: none;
-  color: #c8d3f5;
+  color: #d3c6aa;
 }
 
 #entry {
@@ -47,7 +47,7 @@ window {
 }
 
 #entry:selected {
-  background-color: rgba(200, 211, 245, 0.2);
+  background-color: rgba(131, 192, 146, 0.2);
   border-radius: 5px;
   border: none;
 }
