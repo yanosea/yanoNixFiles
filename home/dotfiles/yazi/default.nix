@@ -2,7 +2,7 @@
   xdg = {
     configFile = {
       "yazi-alt" = {
-        source = ./yazi-alt;
+        source = ./yazi;
         recursive = true;
       };
     };
