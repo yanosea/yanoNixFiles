@@ -30,6 +30,7 @@ Set-Alias dot "$HOME\.local\bin\dot.ps1"
 Set-Alias grep rg
 Set-Alias ls lsd
 Set-Alias lg lazygit
+Set-Alias yz yazi
 # starship
 $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 Invoke-Expression (&starship init powershell)

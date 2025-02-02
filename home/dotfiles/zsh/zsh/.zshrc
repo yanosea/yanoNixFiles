@@ -50,6 +50,7 @@ alias shutdown="sudo systemctl poweroff"
 alias st="systemctl-tui"
 alias tree="$(which eza) --tree"
 alias trl="trello-tui -board yanoBoard"
+alias yz="$(which yazi)"
 alias zmv="noglob zmv -W"
 # make state directory
 if [[ ! -d "$XDG_STATE_HOME/zsh" ]]; then
