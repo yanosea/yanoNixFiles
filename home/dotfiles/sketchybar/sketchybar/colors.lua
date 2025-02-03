@@ -25,7 +25,6 @@ return {
     if alpha > 1.0 or alpha < 0.0 then
       return color
     end
-    local bit = require("bit")
-    return bit.bor(bit.band(color, 0x00ffffff), bit.lshift(math.floor(alpha * 255.0), 24))
+    return (color & 0x00ffffff) | (math.floor(alpha * 255.0) << 24)
   end,
 }
