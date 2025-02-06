@@ -80,13 +80,6 @@ window_rules:
       # ignore PIP
       - window_title: { regex: "[Pp]icture.in.[Pp]icture" }
         window_class: { regex: "Chrome_WidgetWin_1|MozillaDialogClass" }
-      # ignore power toys
-      - window_process: { equals: "PowerToys" }
-        window_class: { regex: 'HwndWrapper\[PowerToys\.PowerAccent.*?\]' }
-      - window_process: { equals: "PowerToys" }
-        window_title: { regex: ".*? - Peek" }
-      - window_process: { equals: "Lively" }
-        window_class: { regex: "HwndWrapper" }
 
 binding_modes:
   - name: "resize"
@@ -107,13 +100,13 @@ binding_modes:
 keybindings:
   # shift focus in a given direction.
   - commands: ["focus --direction left"]
-    bindings: ["alt+h", "alt+left"]
+    bindings: ["alt+h"]
   - commands: ["focus --direction right"]
-    bindings: ["alt+L", "alt+right"]
+    bindings: ["alt+L"]
   - commands: ["focus --direction up"]
-    bindings: ["alt+k", "alt+up"]
+    bindings: ["alt+k"]
   - commands: ["focus --direction down"]
-    bindings: ["alt+j", "alt+down"]
+    bindings: ["alt+j"]
 
   # move focused window in a given direction.
   - commands: ["move --direction left"]
@@ -127,30 +120,30 @@ keybindings:
 
   # resize focused window by a percentage or pixel amount.
   - commands: ["resize --width -2%"]
-    bindings: ["alt+shift+left"]
+    bindings: ["alt+left"]
   - commands: ["resize --width +2%"]
-    bindings: ["alt+shift+right"]
+    bindings: ["alt+right"]
   - commands: ["resize --height +2%"]
-    bindings: ["alt+shift+down"]
+    bindings: ["alt+down"]
   - commands: ["resize --height -2%"]
-    bindings: ["alt+shift+up"]
+    bindings: ["alt+up"]
 
-  # as an alternative to the resize keybindings above, resize mode enables resizing via
-  # HJKL or arrow keys. The binding mode is defined above with the name "resize".
-  - commands: ["wm-enable-binding-mode --name resize"]
-    bindings: ["alt+shift+s"]
+  # # as an alternative to the resize keybindings above, resize mode enables resizing via
+  # # HJKL or arrow keys. The binding mode is defined above with the name "resize".
+  # - commands: ["wm-enable-binding-mode --name resize"]
+  #   bindings: ["alt+shift+s"]
 
   # disables window management and all other keybindings
   - commands: ["wm-toggle-pause"]
-    bindings: ["alt+shift+/"]
+    bindings: ["alt+/"]
 
   # change tiling direction. This determines where new tiling windows will be inserted.
   - commands: ["toggle-tiling-direction"]
-    bindings: ["alt+v"]
+    bindings: ["alt+s"]
 
-  # change focus between floating / tiling windows.
-  # - command: "toggle focus mode"
-  #   binding: "alt+Space"
+  # change focus from tiling windows -> floating -> fullscreen.
+  - commands: ["wm-cycle-focus"]
+    bindings: ["alt+,"]
 
   # change the focused window to be floating / tiling.
   - commands: ["toggle-floating --centered"]
@@ -158,7 +151,7 @@ keybindings:
 
   # change the focused window to be tiling.
   - commands: ["toggle-tiling"]
-    bindings: ["alt+shift+."]
+    bindings: ["alt+."]
 
   # change the focused window to be maximized / unmaximized.
   - commands: ["toggle-fullscreen"]
@@ -170,24 +163,21 @@ keybindings:
 
   # close focused window.
   - commands: ["close"]
-    bindings: ["alt+shift+f2"]
-
-  # kill GlazeWM process safely.
-  - commands: ["wm-exit"]
     bindings: ["alt+shift+f1"]
 
   # re-evaluate configuration file.
   - commands: ["wm-reload-config"]
     bindings: ["alt+shift+f4"]
 
-  # launch CMD terminal (alternatively `exec wt` or `exec %ProgramFiles%/Git/git-bash.exe`
-  # to start Windows Terminal and Git Bash respectively.
-  # - command: "exec wezterm-gui.exe"
-  #   binding: "alt+Enter"
+  # Launch CMD terminal. Alternatively, use `shell-exec wt` or
+  # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
+  # Terminal and Git Bash respectively.
+  - commands: ["shell-exec wezterm-gui.exe"]
+    bindings: ["alt+enter"]
 
-  # focus the workspace that last had focus.
-  - commands: ["focus --recent-workspace"]
-    bindings: ["alt+shift+z"]
+  # # focus the workspace that last had focus.
+  # - commands: ["focus --recent-workspace"]
+  #   bindings: ["alt+shift+z"]
 
   # focus the next/previous workspace defined in `workspaces` config.
   - commands: ["focus --next-active-workspace"]
