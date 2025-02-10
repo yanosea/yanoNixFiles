@@ -4,6 +4,6 @@ table.insert(lvim.plugins, {
   cmd = { "Outline" },
   init = function()
     require("outline").setup({})
-    vim.keymap.set("n", "<LEADER>o", "<CMD>Outline<CR>", { silent = true, desc = "Outline" })
+    vim.keymap.set("n", "<LEADER>lo", "<CMD>Outline<CR>", { silent = true, desc = "Outline" })
   end,
 })
