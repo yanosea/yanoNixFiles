@@ -72,6 +72,8 @@ table.insert(lvim.builtin.which_key.mappings["l"], {
   -- TodoLocList
   T = { "<CMD>TodoLocList<CR>", "TodoLocList" },
 })
+-- oil filer
+lvim.builtin.which_key.mappings["o"] = { "<CMD>Oil<CR>", "Oil" }
 -- toggleterm
 lvim.builtin.which_key.mappings["t"] = { "<CMD>ToggleTerm<CR>", "ToggleTerm" }
 -- yankring
