@@ -173,7 +173,7 @@ keybindings:
   # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
   # Terminal and Git Bash respectively.
   - commands: ["shell-exec wezterm-gui.exe"]
-    bindings: ["alt+enter"]
+    bindings: ["ctrl+shift+alt+t"]
 
   # # focus the workspace that last had focus.
   # - commands: ["focus --recent-workspace"]
