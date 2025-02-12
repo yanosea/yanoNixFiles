@@ -8,6 +8,7 @@ table.insert(lvim.plugins, {
     "hrsh7th/nvim-cmp",
     "nvim-tree/nvim-web-devicons",
     "zbirenbaum/copilot.lua",
+    "MeanderingProgrammer/render-markdown.nvim",
     {
       "HakonHarnes/img-clip.nvim",
       event = "VeryLazy",
@@ -27,6 +28,20 @@ table.insert(lvim.plugins, {
   lazy = false,
   build = "make",
   version = false,
+  init = function()
+    local Path = require("plenary.path")
+    local avante_path = require("avante.path")
+    local cache_path = vim.fn.expand(os.getenv("XDG_CONFIG_HOME") .. "/lvim/lua/user-plugins/utils/ai/avanterules")
+    avante_path.prompts.get = function()
+      local static_dir = Path:new(cache_path)
+
+      if not static_dir:exists() then
+        error("Static directory does not exist: " .. static_dir:absolute(), 2)
+      end
+
+      return static_dir:absolute()
+    end
+  end,
   opts = {
     provider = "copilot",
     copilot = {
