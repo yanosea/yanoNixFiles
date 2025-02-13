@@ -58,6 +58,18 @@
       [:!Tr :!Tend]
       [:!Sr :!Send]
       [:!Or :!Oend]
+      ;; page up
+      [:b :page_up]
+      [:!Cb :!Cpage_up]
+      [:!Tb :!Tpage_up]
+      [:!Sb :!Spage_up]
+      [:!Ob :!Opage_up]
+      ;; page down
+      [:f :page_down]
+      [:!Cf :!Cpage_down]
+      [:!Tf :!Tpage_down]
+      [:!Sf :!Spage_down]
+      [:!Of :!Opage_down]
       ;; delete
       [:delete_or_backspace :delete_forward]
       [:!Cdelete_or_backspace :!Cdelete_forward]
