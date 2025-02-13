@@ -1,3 +1,4 @@
+candid82/brew/joker
 felixkratz/formulae/borders
 felixkratz/formulae/sketchybar
 koekeishiya/formulae/skhd
@@ -30,6 +31,8 @@ launchpad-manager
 libreoffice
 libreoffice-language-pack
 menubar-stats
+microsoft-auto-update
+microsoft-teams
 obs
 omnidisksweeper
 onyx

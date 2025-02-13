@@ -82,6 +82,12 @@ description = "yanoMac update all (config, packages)"
 script = '''
 ./scripts/update/darwin.sh
 '''
+## update brew pkglist
+[tasks."darwin.update.brewpkglist"]
+description = "yanoMac update brew pkglist"
+script = '''
+./scripts/util/updateBrewPkglist.sh
+'''
 ## apply system
 [tasks."darwin.apply.system"]
 description = "yanoMac system config apply"
