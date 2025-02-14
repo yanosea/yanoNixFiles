@@ -51,6 +51,7 @@ alias st="systemctl-tui"
 alias tree="$(which eza) --tree"
 alias trl="trello-tui -board yanoBoard"
 alias zmv="noglob zmv -W"
+alias zz="z -"
 # make state directory
 if [[ ! -d "$XDG_STATE_HOME/zsh" ]]; then
 	mkdir -p "$XDG_STATE_HOME/zsh"
