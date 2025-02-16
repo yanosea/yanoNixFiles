@@ -1,4 +1,5 @@
 # ignore folders
+home/dotfiles/glzr/glzr/zebar/tmp*
 
 # ignore files
 .DS_Store

@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-02-03T04:04:20.526-00:00",
+  "CreationDate": "2025-02-16T21:02:46.229-00:00",
   "Sources": [
     {
       "Packages": [
@@ -8,10 +8,10 @@
           "PackageIdentifier": "7zip.7zip"
         },
         {
-          "PackageIdentifier": "Bitwarden.Bitwarden"
+          "PackageIdentifier": "ajeetdsouza.zoxide"
         },
         {
-          "PackageIdentifier": "BlueStack.BlueStacks"
+          "PackageIdentifier": "Bitwarden.Bitwarden"
         },
         {
           "PackageIdentifier": "BurntSushi.ripgrep.MSVC"
@@ -83,13 +83,13 @@
           "PackageIdentifier": "lsd-rs.lsd"
         },
         {
+          "PackageIdentifier": "Meta.Oculus"
+        },
+        {
           "PackageIdentifier": "Microsoft.AppInstaller"
         },
         {
           "PackageIdentifier": "Microsoft.DevHome"
-        },
-        {
-          "PackageIdentifier": "Microsoft.DotNet.DesktopRuntime.6"
         },
         {
           "PackageIdentifier": "Microsoft.DotNet.DesktopRuntime.7"
@@ -99,6 +99,9 @@
         },
         {
           "PackageIdentifier": "Microsoft.Edge"
+        },
+        {
+          "PackageIdentifier": "Microsoft.OneDrive"
         },
         {
           "PackageIdentifier": "Microsoft.PowerShell"
@@ -128,10 +131,10 @@
           "PackageIdentifier": "Microsoft.VCRedist.2013.x64"
         },
         {
-          "PackageIdentifier": "Microsoft.VCRedist.2015+.x64"
+          "PackageIdentifier": "Microsoft.VCRedist.2013.x86"
         },
         {
-          "PackageIdentifier": "Microsoft.VCRedist.2015+.x86"
+          "PackageIdentifier": "Microsoft.VCRedist.2015+.x64"
         },
         {
           "PackageIdentifier": "Microsoft.VisualStudioCode"
@@ -143,16 +146,10 @@
           "PackageIdentifier": "Microsoft.WSL"
         },
         {
-          "PackageIdentifier": "Microsoft.XNARedist"
-        },
-        {
           "PackageIdentifier": "nathancorvussolis.corvusskk"
         },
         {
           "PackageIdentifier": "NickeManarin.ScreenToGif"
-        },
-        {
-          "PackageIdentifier": "Nvidia.GeForceExperience"
         },
         {
           "PackageIdentifier": "OBSProject.OBSStudio"
@@ -203,7 +200,7 @@
           "PackageIdentifier": "Valve.Steam"
         },
         {
-          "PackageIdentifier": "vim.vim"
+          "PackageIdentifier": "vim.vim.nightly"
         },
         {
           "PackageIdentifier": "VirtualDesktop.Streamer"
