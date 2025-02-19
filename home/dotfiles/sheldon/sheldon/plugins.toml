@@ -37,6 +37,10 @@ apply = ["defer"]
 github = "zsh-users/zsh-completions"
 apply = ["defer"]
 
+[plugins.per-directory-history]
+github = "jimhester/per-directory-history"
+apply = ["defer"]
+
 [plugins.zsh-you-should-use]
 github = "MichaelAquilina/zsh-you-should-use"
 apply = ["defer"]
