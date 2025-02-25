@@ -6,7 +6,6 @@ table.insert(lvim.plugins, {
     require("render-markdown").setup({
       heading = {
         position = "inline",
-        icons = { "󰼏  ", "󰎨  " },
       },
       code = {
         left_pad = 2,
