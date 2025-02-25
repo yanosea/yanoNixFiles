@@ -175,9 +175,6 @@ body:
 <本文>
 ```
 ]],
-        selection = function(source)
-          return require("CopilotChat.select").gitdiff(source, true)
-        end,
       },
     },
     model = "claude-3.5-sonnet",
