@@ -143,15 +143,15 @@ keybindings:
 
   # change focus from tiling windows -> floating -> fullscreen.
   - commands: ["wm-cycle-focus"]
-    bindings: ["alt+,"]
+    bindings: ["alt+."]
 
-  # change the focused window to be floating / tiling.
+  # change the focused window to be floating.
   - commands: ["toggle-floating --centered"]
     bindings: ["alt+shift+space"]
 
   # change the focused window to be tiling.
   - commands: ["toggle-tiling"]
-    bindings: ["alt+."]
+    bindings: ["alt+,"]
 
   # change the focused window to be maximized / unmaximized.
   - commands: ["toggle-fullscreen"]
@@ -165,6 +165,10 @@ keybindings:
   - commands: ["close"]
     bindings: ["alt+shift+f1"]
 
+  # # kill GlazeWM process safely.
+  # - commands: ["wm-exit"]
+  #   bindings: ["alt+shift+e"]
+
   # re-evaluate configuration file.
   - commands: ["wm-reload-config"]
     bindings: ["alt+shift+f4"]
@@ -175,15 +179,19 @@ keybindings:
   - commands: ["shell-exec wezterm-gui.exe"]
     bindings: ["ctrl+shift+alt+t"]
 
-  # # focus the workspace that last had focus.
-  # - commands: ["focus --recent-workspace"]
-  #   bindings: ["alt+shift+z"]
-
   # focus the next/previous workspace defined in `workspaces` config.
   - commands: ["focus --next-active-workspace"]
     bindings: ["alt+n"]
   - commands: ["focus --prev-active-workspace"]
     bindings: ["alt+shift+n"]
+
+  # # focus the workspace that last had focus.
+  # - commands: ["focus --recent-workspace"]
+  #   bindings: ["alt+shift+z"]
+
+  # Redraw all windows.
+  - commands: ["wm-redraw"]
+    bindings: ["alt+shift+d"]
 
   # change focus to a workspace defined in `workspaces` config.
   - commands: ["focus --workspace 01"]
