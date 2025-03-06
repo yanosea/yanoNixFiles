@@ -177,7 +177,7 @@ body:
 ]],
       },
     },
-    model = "claude-3.5-sonnet",
+    model = "claude-3.7-sonnet",
     selection = function(source)
       return require("CopilotChat.select").visual(source) or require("CopilotChat.select").buffer(source)
     end,
