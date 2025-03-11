@@ -82,3 +82,5 @@ lvim.builtin.which_key.mappings["y"] = {
   -- YRShow
   h = { "<CMD>YRShow<CR>", "YankRing Show" },
 }
+-- search
+lvim.builtin.which_key.mappings["s"]["n"] = { "<CMD>Nerdy<CR>", "Nerdy" }
