@@ -46,6 +46,9 @@ table.insert(lvim.plugins, {
     provider = "copilot",
     copilot = {
       model = "claude-3.7-sonnet",
+      disabled_tools = {
+        "python",
+      },
     },
     -- auto_suggestions_provider = "copilot",
     behaviour = {
