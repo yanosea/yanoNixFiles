@@ -80,6 +80,8 @@ window_rules:
       # ignore PIP
       - window_title: { regex: "[Pp]icture.in.[Pp]icture" }
         window_class: { regex: "Chrome_WidgetWin_1|MozillaDialogClass" }
+      # ignore setup wizard
+      - window_class: { equals: "TWizardForm" }
 
 binding_modes:
   - name: "resize"
