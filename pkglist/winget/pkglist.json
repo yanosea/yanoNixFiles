@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-02-25T21:15:18.524-00:00",
+  "CreationDate": "2025-03-24T20:41:09.834-00:00",
   "Sources": [
     {
       "Packages": [
@@ -12,6 +12,9 @@
         },
         {
           "PackageIdentifier": "Bitwarden.Bitwarden"
+        },
+        {
+          "PackageIdentifier": "BlenderFoundation.Blender"
         },
         {
           "PackageIdentifier": "BurntSushi.ripgrep.MSVC"
@@ -232,5 +235,5 @@
       }
     }
   ],
-  "WinGetVersion": "1.9.25200"
+  "WinGetVersion": "1.10.340"
 }
