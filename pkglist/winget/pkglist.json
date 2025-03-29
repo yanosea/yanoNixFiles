@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-03-24T20:41:09.834-00:00",
+  "CreationDate": "2025-03-29T21:50:54.732-00:00",
   "Sources": [
     {
       "Packages": [
@@ -9,6 +9,12 @@
         },
         {
           "PackageIdentifier": "ajeetdsouza.zoxide"
+        },
+        {
+          "PackageIdentifier": "Amazon.Kindle"
+        },
+        {
+          "PackageIdentifier": "Apple.Bonjour"
         },
         {
           "PackageIdentifier": "Bitwarden.Bitwarden"
@@ -72,6 +78,9 @@
         },
         {
           "PackageIdentifier": "icsharpcode.ILSpy"
+        },
+        {
+          "PackageIdentifier": "iZotope.ProductPortal"
         },
         {
           "PackageIdentifier": "JesseDuffield.lazygit"
