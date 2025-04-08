@@ -11,6 +11,7 @@ ableton-live-suite
 android-file-transfer
 appcleaner
 aquaskk
+arc
 bitwarden
 blackhole-16ch
 blender
