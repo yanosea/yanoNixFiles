@@ -114,8 +114,6 @@ call plug#begin()
   Plug 'voldikss/vim-floaterm'
   " translate
   Plug 'skanehira/denops-translate.vim'
-  " yankring
-  Plug 'vim-scripts/YankRing.vim'
 call plug#end()
 " colorscheme settings
 " everforest settings
@@ -172,6 +170,3 @@ function! SkkeletonConfig()
   call skkeleton#register_keymap('henkan', '<Esc>', 'cancel')
 endfunction
 autocmd User skkeleton-initialize-pre call SkkeletonConfig()
-" yankRing
-let g:yankring_history_dir = "$XDG_STATE_HOME/yankring"
-nnoremap <LEADER>yh :YRShow<CR>

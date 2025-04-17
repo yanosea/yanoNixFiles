@@ -12,7 +12,6 @@ echo -e $'\n\e[33;1make necessary directories!\e[m'
 mkdir -p $HOME/.local/bin
 mkdir -p $XDG_DATA_HOME/skk
 mkdir -p $XDG_STATE_HOME/skk
-mkdir -p $XDG_STATE_HOME/yankring
 mkdir -p $XDG_STATE_HOME/zsh
 mkdir -p $XDG_CONFIG_HOME/wakatime
 # make necessary symbolic links
@@ -45,7 +44,7 @@ echo -e $'\e[33;1mln -s GOOGLE_DRIVE_PATH $HOME/google_drive\e[m'
 # notify creatting credentials symbolic link
 echo -e $'\n\e[31;1mYou have to create credentials symbolic link!\e[m'
 echo -e $'\e[33;1mln -s $HOME/google_drive/credentials $XDG_DATA_HOME/credentials\e[m'
-echo -e $'\e[33;1mln -s $XDG_DATA_HOME/credentials/github-copilot/hosts.json $XDG_CONFIG_HOME/github-copilot/hosts.json\e[m'
+echo -e $'\e[33;1mln -s $XDG_DATA_HOME/credentials/github-copilot/apps.json $XDG_CONFIG_HOME/github-copilot/apps.json\e[m'
 echo -e $'\e[33;1mln -s $XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $XDG_CONFIG_HOME/wakatime/.wakatime.cfg\e[m'
 # notify creatting windows home symbolic link
 echo -e $'\n\e[31;1mYou have to windows home symbolic link!\e[m'

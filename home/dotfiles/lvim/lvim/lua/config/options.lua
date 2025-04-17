@@ -1,4 +1,4 @@
--- options
+-- vim options
 -- encoding
 vim.opt.encoding = "utf-8"
 vim.opt.fileencoding = "utf-8"
@@ -64,3 +64,13 @@ vim.opt.whichwrap = vim.opt.whichwrap - "h" - "l"
 -- display
 vim.opt.cmdheight = 0
 vim.opt.display = "lastline"
+
+-- lunarvim options
+-- transparent window
+-- lvim.transparent_window = true
+-- format on save
+lvim.format_on_save = true
+-- hide highlight search
+vim.keymap.set("n", "<ESC>", "<CMD>nohlsearch<CR>", { silent = true, desc = "No Highlight" })
+-- paste without affecting clipboard in visual mode
+vim.keymap.set("v", "p", '"_dP', { silent = true, desc = "Paste without affecting clipboard" })
