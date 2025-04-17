@@ -12,6 +12,7 @@ table.insert(lvim.plugins, {
         -- common
         "proselint",
         -- languages
+        "golangci-lint", -- go (configuration in ../../../after/ftplugin/go.lua)
         "shellcheck", -- shell
       },
     })
