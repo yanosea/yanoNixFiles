@@ -1,15 +1,9 @@
--- yanosea lvim initialize
--- lvim core plugin setting
-require("lv-settings")
--- preferences
-require("config.options")
--- autocommands
-require("config.autocommands")
--- colorscheme
-require("config.colorscheme")
--- keymaps
-require("config.keymaps")
--- wsl
-require("config.wsl")
+-- lunarvim config entry point
+-- common config
+require("helper.loader").load_lua_files(vim.fn.stdpath("config") .. "/lua/config")
+-- core plugins
+require("helper.loader").load_lua_files(vim.fn.stdpath("config") .. "/lua/core")
 -- user plugins
-require("user-plugins")
+require("helper.loader").load_lua_files(vim.fn.stdpath("config") .. "/lua/user")
+-- language plugins
+require("helper.loader").load_lua_files(vim.fn.stdpath("config") .. "/lua/language")

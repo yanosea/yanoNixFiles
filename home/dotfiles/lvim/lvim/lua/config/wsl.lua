@@ -1,4 +1,4 @@
--- wsl
+-- wsl config
 if os.getenv("WSL_DISTRO_NAME") ~= nil then
   -- clipboard sharing
   if vim.fn.executable("win32yank.exe") ~= 0 then

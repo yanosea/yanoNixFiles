@@ -12,7 +12,6 @@ echo -e $'\n\e[33;1make necessary directories!\e[m'
 mkdir -p $HOME/.local/bin
 mkdir -p $XDG_DATA_HOME/skk
 mkdir -p $XDG_STATE_HOME/skk
-mkdir -p $XDG_STATE_HOME/yankring
 mkdir -p $XDG_STATE_HOME/zsh
 mkdir -p $XDG_CONFIG_HOME/wakatime
 # initialize rclone
@@ -26,7 +25,7 @@ ln -s $HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/util/ime $HOME/.local/bi
 ln -s $HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/util/installGitEmojiPrefixTemplate $HOME/.local/bin/installGitEmojiPrefixTemplate
 ln -s /mnt/google_drive/yanosea $HOME/google_drive
 ln -s $HOME/google_drive/credentials $XDG_DATA_HOME/credentials
-ln -s $XDG_DATA_HOME/credentials/github-copilot/hosts.json $XDG_CONFIG_HOME/github-copilot/hosts.json
+ln -s $XDG_DATA_HOME/credentials/github-copilot/apps.json $XDG_CONFIG_HOME/github-copilot/apps.json
 ln -s $XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $XDG_CONFIG_HOME/wakatime/.wakatime.cfg
 # clone ghq repos
 echo -e $'\n\e[33;1mclone ghq packages!\e[m'

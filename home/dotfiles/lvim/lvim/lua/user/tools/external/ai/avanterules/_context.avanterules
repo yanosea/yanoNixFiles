@@ -1,0 +1,23 @@
+{% if selected_files -%}
+<selected_files>
+{%- for file in selected_files %}
+<file path="{{file.path}}" language="{{file.file_type}}">
+{{file.content}}
+</file>
+{%- endfor %}
+</selected_files>
+{%- endif %}
+
+{% if selected_code -%}
+<selected_code path="{{selected_code.path}}" language="{{selected_code.file_type}}">
+{{selected_code.content}}
+</selected_code>
+{%- endif %}
+
+{% if recently_viewed_files -%}
+<recently_viewed_files>
+{%- for file in recently_viewed_files %}
+{{loop.index}}. {{file}}
+{%- endfor %}
+</recently_viewed_files>
+{%- endif %}

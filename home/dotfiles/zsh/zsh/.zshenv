@@ -93,6 +93,8 @@ export TRELLO_TOKEN=$(cat $XDG_DATA_HOME/credentials/trello/TRELLO_TOKEN)
 export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
 # wakatime
 export WAKATIME_HOME=$XDG_CONFIG_HOME/wakatime
+# tavily
+export TAVILY_API_KEY=$(cat $XDG_DATA_HOME/credentials/tavily/TAVILY_API_KEY)
 # darwin
 if [[ "$OS" = "Darwin" ]]; then
 	# model
