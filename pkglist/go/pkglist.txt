@@ -12,5 +12,5 @@ github.com/swaggo/swag/cmd/swag@latest
 github.com/wadey/gocovmerge@latest
 github.com/yanosea/jrp/v2/app/presentation/cli/jrp@latest
 github.com/yanosea/jrp/v2/app/presentation/api/jrp-server@latest
-github.com/yanosea/mindnum/app/presentation/cli/mindnum@latest
+github.com/yanosea/mindnum/v2/app/presentation/cli/mindnum@latest
 golang.org/x/tools/cmd/godoc@latest
