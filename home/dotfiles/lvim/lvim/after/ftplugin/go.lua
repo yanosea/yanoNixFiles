@@ -5,23 +5,23 @@ require("lvim.lsp.manager").setup("gopls", {
   filetypes = { "go", "gomod" },
   root_markers = {
     ".git",
-    "go.work",
     "go.mod",
+    "go.work",
   },
   init_options = {
     usePlaceholders = true,
-    completeUnimported = true,
-    staticcheck = true,
     analyses = {
-      unusedparams = true,
-      nilness = true,
       shadow = true,
-      unusedwrite = true,
-      fieldalignment = true,
-      unreachable = true,
-      useany = true,
-      useanytypeassertion = true,
-      useanytypeassertiontypeparams = true,
+    },
+    staticcheck = true,
+    hints = {
+      assignVariableTypes = true,
+      compositeLiteralFields = true,
+      compositeLiteralTypes = true,
+      constantValues = true,
+      functionTypeParameters = true,
+      parameterNames = true,
+      rangeVariableTypes = true,
     },
   },
 })
@@ -34,9 +34,9 @@ require("lvim.lsp.manager").setup("golangci_lint_ls", {
     ".golangci.yaml",
     ".golangci.toml",
     ".golangci.json",
-    "go.work",
-    "go.mod",
     ".git",
+    "go.mod",
+    "go.work",
   },
   init_options = {
     command = {

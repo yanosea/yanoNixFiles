@@ -25,6 +25,12 @@ return {
     if alpha > 1.0 or alpha < 0.0 then
       return color
     end
-    return (color & 0x00ffffff) | (math.floor(alpha * 255.0) << 24)
+
+    -- ビットライブラリを使わずに同等の処理を行う
+    local alpha_byte = math.floor(alpha * 255.0)
+    local rgb_part = color % 0x1000000 -- 下位24ビットを取得（RGBの部分）
+    local alpha_part = alpha_byte * 0x1000000 -- 上位8ビットにアルファ値を設定
+
+    return rgb_part + alpha_part -- 両方を足し合わせる
   end,
 }

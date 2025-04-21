@@ -1,7 +1,7 @@
 -- jump to fuzzy match word
 table.insert(lvim.plugins, {
   "yuki-yano/fuzzy-motion.vim",
-  cmd = { "FuzzyMotion" },
+  event = "VeryLazy",
   dependencies = {
     "vim-denops/denops.vim",
     "lambdalisue/kensaku.vim",

@@ -1,7 +1,7 @@
 -- highlight and search for todo comments
 table.insert(lvim.plugins, {
   "folke/todo-comments.nvim",
-  event = { "CursorHold", "CursorHoldI" },
+  event = { "VeryLazy" },
   dependencies = { "nvim-lua/plenary.nvim" },
   opts = {
     signs = true,

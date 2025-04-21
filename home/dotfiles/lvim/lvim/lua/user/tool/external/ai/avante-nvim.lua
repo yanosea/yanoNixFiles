@@ -91,7 +91,7 @@ table.insert(lvim.plugins, {
     local Path = require("plenary.path")
     local avante_path = require("avante.path")
     local config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
-    local cache_path = config_home .. "/lvim/lua/user/tools/external/ai/avanterules"
+    local cache_path = config_home .. "/lvim/lua/user/tool/external/ai/avanterules"
     -- override the get_templates_dir function to use our custom path
     avante_path.prompts.get_templates_dir = function()
       -- ignore the project_root parameter and return our custom path

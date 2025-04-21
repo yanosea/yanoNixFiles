@@ -1,15 +1,12 @@
+-- japanese input method
 return {
   {
-    -- https://github.com/vim-skk/skkeleton
     "vim-skk/skkeleton",
-    lazy = false,
-    -- https://github.com/vim-denops/denops.vim
+    event = "VeryLazy",
     dependencies = { "vim-denops/denops.vim" },
-    init = function()
-      vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-toggle)")
-      vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-toggle)")
+    config = function()
       local dictionaries = {}
-      local handle = io.popen("ls ~/.local/share/skk/*")
+      local handle = io.popen("ls $XDG_DATA_HOME/skk/*")
       if handle then
         for file in handle:lines() do
           table.insert(dictionaries, file)
@@ -27,11 +24,14 @@ return {
             registerConvertResult = true,
             showCandidatesCount = 1,
             sources = src,
-            userDictionary = "~/.local/state/skk/.skkeleton",
+            userDictionary = os.getenv("XDG_STATE_HOME") .. "/skk/.skkeleton",
           })
           vim.fn["skkeleton#register_keymap"]("henkan", "<Esc>", "cancel")
         end,
       })
+
+      vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-toggle)", { silent = true, desc = "Toggle skkeleton" })
+      vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-toggle)", { silent = true, desc = "Toggle skkeleton" })
     end,
   },
 }

@@ -1,4 +1,3 @@
--- plugins
 -- initialize lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -17,10 +16,16 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   defaults = { lazy = true },
   spec = {
-    { import = "plugins.util" },
+    {
+      "neanias/everforest-nvim",
+      init = function()
+        vim.cmd("colorscheme everforest")
+      end,
+    },
+    { import = "plugin" },
   },
   concurrency = 10,
-  install = { colorscheme = { "nord" } },
+  install = { colorscheme = { "everforest" } },
   performance = {
     cache = { enabled = true },
     disable_events = { "VimEnter", "BufReadPre" },

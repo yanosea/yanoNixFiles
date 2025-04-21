@@ -1,7 +1,8 @@
 {
   "diagnostics.globals": [
+    "hs",
+    "lvim",
     "vim",
-    "hs"
   ],
   "diagnostics.disable": [
     "undefined-field"

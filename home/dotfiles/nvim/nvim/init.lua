@@ -1,13 +1,3 @@
--- yanosea nvim initialize
--- fast loader
-if vim.loader then
-  vim.loader.enable()
-end
--- preferences
-require("config.options")
--- keymaps
-require("config.keymaps")
--- auto commands
-require("config.autocmds")
--- plugins
-require("config.lazy")
+-- neovim config entry point (for ime usage)
+-- common config
+require("helper.loader").load_lua_files(vim.fn.stdpath("config") .. "/lua/config")

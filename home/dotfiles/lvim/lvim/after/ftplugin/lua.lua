@@ -6,23 +6,20 @@ require("lvim.lsp.manager").setup("lua_ls", {
   root_markers = {
     ".git",
     ".luacheckrc",
+    ".luarc.json",
     ".stylua.toml",
     "stylua.toml",
   },
   init_options = {
     settings = {
       Lua = {
-        runtime = {
-          version = "LuaJIT",
-          path = vim.split(package.path, ";"),
+        completion = {
+          callSnippet = "Both",
+          displayContext = 1,
+          keywordSnippet = "Both",
         },
-        diagnostics = {
-          globals = { "hs", "vim", "lvim" },
-        },
-        workspace = {
-          library = vim.api.nvim_get_runtime_file("", true),
-          maxPreload = 1000,
-          preloadFileSize = 1000,
+        hint = {
+          enable = true,
         },
         telemetry = { enable = false },
       },
