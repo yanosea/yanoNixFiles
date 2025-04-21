@@ -1,7 +1,7 @@
--- preferences
+-- vim options
 -- encoding
 vim.opt.encoding = "utf-8"
-vim.fileencoding = "utf-8"
+vim.opt.fileencoding = "utf-8"
 vim.scriptencoding = "utf-8"
 -- lang
 vim.opt.helplang = "ja"
@@ -15,9 +15,9 @@ vim.opt.updatetime = 200
 vim.opt.number = true
 -- highlight current line
 vim.opt.cursorline = true
--- cuesor position
+-- cursor position
 vim.opt.ruler = true
--- sign column
+-- sign coolumn
 vim.opt.signcolumn = "yes"
 -- invisible character
 vim.opt.list = true
@@ -35,7 +35,6 @@ vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.incsearch = true
-vim.cmd([[set noignorecase]])
 vim.cmd([[set nowrapscan]])
 -- command history
 vim.opt.history = 1000
@@ -51,12 +50,17 @@ vim.opt.shiftwidth = 2
 -- window split
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+-- shell
+vim.opt.shell = os.getenv("SHELL")
 -- syntax highlight
 vim.opt.syntax = "enable"
--- clipboaed
+-- clipboard
 vim.opt.clipboard:append("unnamedplus")
 -- ignore auto format
 vim.api.nvim_create_user_command("W", "noautocmd w", {})
 vim.api.nvim_create_user_command("Wq", "noautocmd wq", {})
--- nowrap
-vim.opt.wrap = false
+-- disable line move with h and l
+vim.opt.whichwrap = vim.opt.whichwrap - "h" - "l"
+-- display
+vim.opt.cmdheight = 0
+vim.opt.display = "lastline"

@@ -1,6 +1,6 @@
 -- peeks lines of the buffer in non-obtrusive way
 table.insert(lvim.plugins, {
-  "/nacro90/numb.nvim",
+  "nacro90/numb.nvim",
   event = { "CmdlineEnter" },
   config = function()
     require("numb").setup({
