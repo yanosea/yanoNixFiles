@@ -21,6 +21,7 @@ sudo rclone config
 # make necessary symbolic links
 echo -e $'\n\e[33;1make necessary symbolic links!\e[m'
 sudo ln -s /root/.config/rclone/rclone.conf /.rclone.conf
+ln -s $HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/util/clipboard-history $HOME/.local/bin/clipboard-history
 ln -s $HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/util/ime $HOME/.local/bin/ime
 ln -s $HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/util/installGitEmojiPrefixTemplate $HOME/.local/bin/installGitEmojiPrefixTemplate
 ln -s /mnt/google_drive/yanosea $HOME/google_drive
