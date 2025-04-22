@@ -9,6 +9,7 @@
   home = {
     packages = with pkgs; [
       # cli
+      clipse
       cron
       fuseiso
       rclone

@@ -6,7 +6,7 @@ return {
     dependencies = { "vim-denops/denops.vim" },
     config = function()
       local dictionaries = {}
-      local handle = io.popen("ls $XDG_DATA_HOME/skk/*")
+      local handle = io.popen("ls ~/.local/share/skk/*")
       if handle then
         for file in handle:lines() do
           table.insert(dictionaries, file)
@@ -24,7 +24,7 @@ return {
             registerConvertResult = true,
             showCandidatesCount = 1,
             sources = src,
-            userDictionary = os.getenv("XDG_STATE_HOME") .. "/skk/.skkeleton",
+            userDictionary = "~/.local/state/skk/.skkeleton",
           })
           vim.fn["skkeleton#register_keymap"]("henkan", "<Esc>", "cancel")
         end,
