@@ -11,6 +11,7 @@ table.insert(lvim.plugins, {
       ensure_installed = {
         -- web
         "prettier",
+        -- languages
         "nixfmt", -- nix
         "shfmt", -- shell
         "stylua", -- lua

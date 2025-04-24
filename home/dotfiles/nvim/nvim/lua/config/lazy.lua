@@ -22,7 +22,7 @@ require("lazy").setup({
         vim.cmd("colorscheme everforest")
       end,
     },
-    { import = "plugin" },
+    { import = "plugins" },
   },
   concurrency = 10,
   install = { colorscheme = { "everforest" } },
