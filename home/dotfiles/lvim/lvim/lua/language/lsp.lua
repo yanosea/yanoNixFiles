@@ -56,4 +56,8 @@ vim.list_extend(lvim.lsp.automatic_configuration.skipped_filetypes, {
 -- common
 require("lvim.lsp.manager").setup("ast_grep") -- AST
 require("lvim.lsp.manager").setup("diagnosticls") -- diagnostic
-require("lvim.lsp.manager").setup("typos_lsp") -- typos
+require("lvim.lsp.manager").setup("typos_lsp", { -- typos
+  init_options = {
+    config = os.getenv("XDG_CONFIG_HOME") .. "/lvim/lua/language/config/typos.toml",
+  },
+})
