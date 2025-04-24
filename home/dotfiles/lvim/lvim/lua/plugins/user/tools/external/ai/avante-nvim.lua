@@ -88,14 +88,11 @@ table.insert(lvim.plugins, {
     },
   },
   init = function()
-    local Path = require("plenary.path")
-    local avante_path = require("avante.path")
-    local config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
-    local cache_path = config_home .. "/lvim/lua/user/tools/external/ai/avanterules"
     -- override the get_templates_dir function to use our custom path
-    avante_path.prompts.get_templates_dir = function()
-      -- ignore the project_root parameter and return our custom path
-      local static_dir = Path:new(cache_path)
+    require("avante.path").prompts.get_templates_dir = function()
+      local static_dir = require("plenary.path"):new(
+        os.getenv("XDG_CONFIG_HOME") .. "/lvim/lua/plugins/user/tools/external/ai/avanterules"
+      )
 
       if not static_dir:exists() then
         error("Static directory does not exist: " .. static_dir:absolute(), 2)
