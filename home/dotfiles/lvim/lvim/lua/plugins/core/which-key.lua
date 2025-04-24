@@ -73,6 +73,8 @@ table.insert(lvim.builtin.which_key.mappings["l"], {
   -- TodoLocList
   T = { "<CMD>TodoLocList<CR>", "TodoLocList" },
 })
+-- noice
+lvim.builtin.which_key.mappings["n"] = { "<CMD>NoiceTelescope<CR>", "NoiceTelescope" }
 -- oil filer
 lvim.builtin.which_key.mappings["o"] = { "<CMD>Oil<CR>", "Oil" }
 -- search

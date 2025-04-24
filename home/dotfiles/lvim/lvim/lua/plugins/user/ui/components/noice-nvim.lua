@@ -7,25 +7,6 @@ table.insert(lvim.plugins, {
     "rcarriga/nvim-notify",
   },
   config = function()
-    vim.notify = require("notify")
-    require("notify").setup({
-      background_colour = "#000000",
-      stages = "fade",
-      icons = {
-        ERROR = "",
-        WARN = "",
-        INFO = "",
-        DEBUG = "",
-        TRACE = "✎",
-      },
-      colors = {
-        error = "#e67e80", -- Everforest red
-        warn = "#dbbc7f", -- Everforest yellow
-        info = "#83c092", -- Everforest sage green
-        debug = "#7fbbb3", -- Everforest blue
-        trace = "#d3c6aa", -- Everforest foreground
-      },
-    })
     require("noice").setup({
       cmdline = {
         enabled = true, -- enables the Noice cmdline UI
