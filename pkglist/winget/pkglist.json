@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-03-29T21:50:54.732-00:00",
+  "CreationDate": "2025-04-30T19:29:08.459-00:00",
   "Sources": [
     {
       "Packages": [
@@ -152,6 +152,9 @@
           "PackageIdentifier": "Microsoft.VCRedist.2015+.x86"
         },
         {
+          "PackageIdentifier": "Microsoft.VisualStudio.2022.BuildTools"
+        },
+        {
           "PackageIdentifier": "Microsoft.VisualStudioCode"
         },
         {
@@ -244,5 +247,5 @@
       }
     }
   ],
-  "WinGetVersion": "1.10.340"
+  "WinGetVersion": "1.10.390"
 }
