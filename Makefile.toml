@@ -110,6 +110,13 @@ rm -fr ~/.config/karabiner/karabiner.json
 export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
 home-manager switch --flake .#yanosea@yanoMac --extra-experimental-features "nix-command flakes" --impure
 '''
+# windows
+## update
+[tasks."windows.update"]
+description = "yanoWindows update all (config, packages)"
+script = '''
+.\scripts\update\windows.ps1
+'''
 # misc
 ## check
 [tasks."misc.check"]

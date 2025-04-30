@@ -21,5 +21,7 @@ Get-Content -Path $filePath | ForEach-Object {
 # install winget packages
 Write-Host "`ninstall winget packages!" -ForegroundColor Yellow
 winget import "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+# install cargo-make
+cargo install --force cargo-make
 # done!
 Write-Host "`ninitializing done!" -ForegroundColor Green
