@@ -1,4 +1,4 @@
 -- load editor navigation plugins
 return {
-  require("plugins.editor.navigation.in-and-out-nvim"),
+  require("plugins.editor.navigation.in_and_out_nvim"),
 }

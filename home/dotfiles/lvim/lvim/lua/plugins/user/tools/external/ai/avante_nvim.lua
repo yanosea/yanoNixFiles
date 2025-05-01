@@ -88,17 +88,8 @@ table.insert(lvim.plugins, {
     },
   },
   init = function()
-    -- override the get_templates_dir function to use our custom path
-    require("avante.path").prompts.get_templates_dir = function()
-      local static_dir = require("plenary.path"):new(
-        os.getenv("XDG_CONFIG_HOME") .. "/lvim/lua/plugins/user/tools/external/ai/avanterules"
-      )
-
-      if not static_dir:exists() then
-        error("Static directory does not exist: " .. static_dir:absolute(), 2)
-      end
-
-      return static_dir:absolute()
-    end
+    require("avante.config").override({
+      system_prompt = require("plugins.user.tools.external.ai.system_prompt").SystemPrompt,
+    })
   end,
 })

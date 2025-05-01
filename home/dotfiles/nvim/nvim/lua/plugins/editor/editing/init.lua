@@ -1,5 +1,5 @@
 -- load editor editing plugins
 return {
-  require("plugins.editor.editing.dial-nvim"),
-  require("plugins.editor.editing.vim-matchup"),
+  require("plugins.editor.editing.dial_nvim"),
+  require("plugins.editor.editing.vim_matchup"),
 }

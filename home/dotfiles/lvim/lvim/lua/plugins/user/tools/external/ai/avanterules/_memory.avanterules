@@ -1,5 +1,0 @@
-{%- if memory -%}
-<memory>
-{{memory}}
-</memory>
-{%- endif %}
