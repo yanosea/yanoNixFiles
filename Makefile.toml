@@ -88,9 +88,9 @@ description = "yanoMac update brew pkglist"
 script = '''
 ./scripts/util/updateBrewPkglist.sh
 '''
-## restart window manager services
-[tasks."darwin.restart.windowmanager"]
-description = "yanoMac restart window manager services"
+## restart services
+[tasks."darwin.restart.services"]
+description = "yanoMac restart services"
 script = '''
 ./scripts/util/restartServices.sh
 '''
