@@ -12,7 +12,6 @@
       ghq
       git
       gnumake
-      gum
       lf
       libiconv
       lsof
