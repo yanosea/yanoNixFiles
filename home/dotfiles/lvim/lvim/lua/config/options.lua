@@ -32,10 +32,10 @@ vim.opt.mouse = ""
 vim.opt.guicursor:append("i:block,a:-blinkwait175-blinkoff150-blinkon175")
 -- search
 vim.opt.hlsearch = true
-vim.opt.ignorecase = true
+vim.opt.ignorecase = false
 vim.opt.smartcase = true
 vim.opt.incsearch = true
-vim.cmd([[set nowrapscan]])
+vim.opt.wrapscan = false
 -- command history
 vim.opt.history = 1000
 -- complement
