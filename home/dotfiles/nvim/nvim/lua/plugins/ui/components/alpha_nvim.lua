@@ -1,0 +1,116 @@
+-- dashboard config
+return {
+  {
+    "goolord/alpha-nvim",
+    lazy = true,
+    event = "VimEnter",
+    config = function()
+      local dashboard = require("alpha.themes.dashboard")
+      -- header
+      local header_large = {
+        "            ⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀            ",
+        "            ⠀⠀⠀⣰⣿⣿⣿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠛⠛⠛⠻⢿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀            ",
+        "            ⠀⠀⢠⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀            ",
+        "            ⠀⢀⣾⣿⣿⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣹⣿⡇⠀⠀⠀⠀⠀⠀⠀            ",
+        "            ⠀⣼⣿⣿⣿⣿⣿⣤⣤⣤⣤⣤⣴⣶⠆⠀⠀⠀⠀⠀⠀⢀⣴⣶⣶⡶⠂⠀⠀⠀⠀⠀⠀⣼⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀            ",
+        "            ⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⣠⣿⣿⣿⡟⠁⠀⠀⠀⠀⠀⢀⣾⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀            ",
+        "            ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⢠⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀            ",
+        "            ⢻⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣶⣶⣾⣿⣶⡄⠀⠀⠀⠀⠀            ",
+        "            ⢸⣿⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⣼⡿⠋⠉⠉⠉⠁⠀⠈⣿⣷⠀⠀⠀⠀⠀            ",
+        "            ⠀⣿⣿⣿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⡟⠁⠀⠀⠀⠀⠀⠀⠀⢹⣿⡆⠀⠀⠀⠀            ",
+        "            ⠀⠹⠟⠛⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣷⠀⠀⠀⠀            ",
+        "            ⠀⠀⠀⣼⣿⣿⣿⣿⣿⣇⣀⣠⣤⣤⣤⣤⡄⠀⠀⠀⠀⠀⠀⠀⣠⣿⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⣰⣿⡟⠀⠀⠀⠀            ",
+        "            ⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⣰⣿⡟⠀⠀⠀⠀⠀            ",
+        "            ⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⣿⣿⡟⠁⠀⠀⠀⠀⠀⠀⣰⣿⣿⣁⣀⡀⠀⠀⠀            ",
+        "            ⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⣠⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣧⠀⠀            ",
+        "            ⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠰⠿⠿⠿⠿⠟⠛⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⠀⠀⠀⣿⣿⡆⠀            ",
+        "            ⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⠀            ",
+        "            ⠀⠀⠀⠈⠛⠋⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿⣿⡆            ",
+        "            ⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⣠⣤⣤⣤⣤⣤⣶⣶⣶⣶⣶⣶⣿⣿⣿⣿⣿⣿⡿⠃            ",
+        "            ⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀            ",
+        "            ⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀            ",
+        "            ⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀            ",
+        "            ⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⠟⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀            ",
+        "            ⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⠿⠿⠿⠟⠛⠛⠛⠛⠛⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀            ",
+        "                                                                    ",
+      }
+      local header_small = {
+        "███╗   ██╗ ██████╗         ███████╗███████╗ █████╗         ",
+        "████╗  ██║██╔═══██╗        ██╔════╝██╔════╝██╔══██╗        ",
+        "██╔██╗ ██║██║   ██║        ███████╗█████╗  ███████║        ",
+        "██║╚██╗██║██║   ██║        ╚════██║██╔══╝  ██╔══██║        ",
+        "██║ ╚████║╚██████╔╝███████╗███████║███████╗██║  ██║███████╗",
+        "╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝",
+      }
+      local function get_header()
+        local win_width = vim.api.nvim_win_get_width(0)
+        local max_header_width = 0
+        for _, line in ipairs(header_large) do
+          max_header_width = math.max(max_header_width, #line)
+        end
+        if win_width >= max_header_width + 10 then
+          return header_large
+        else
+          return header_small
+        end
+      end
+      local header = {
+        type = "text",
+        val = get_header(),
+        opts = {
+          position = "center",
+          hl = "Label",
+        },
+      }
+      vim.api.nvim_create_autocmd("VimResized", {
+        callback = function()
+          if vim.bo.filetype == "alpha" then
+            dashboard.section.header.val = get_header()
+            require("alpha").redraw()
+          end
+        end,
+      })
+      -- footer
+      local footer = {
+        type = "text",
+        val = {
+          "yanosea.org",
+        },
+        opts = {
+          position = "center",
+          hl = "Number",
+        },
+      }
+      -- buttons
+      dashboard.section.buttons.val = {
+        dashboard.button("n", "  new file", "<CMD>ene!<CR>"),
+        dashboard.button("f", "󰈞  find file", "<CMD>Telescope find_files<CR>"),
+        dashboard.button("t", "󰊄  find text", "<CMD>Telescope live_grep<CR>"),
+        dashboard.button("r", "  recent files", "<CMD>Telescope oldfiles<CR>"),
+        dashboard.button("e", "  explorer","<CMD>Telescope file_browser cwd=" .. vim.fn.expand('%:p:h') .. "<CR>"),
+        dashboard.button("l", "󰒲  lazy", "<CMD>Lazy<CR>"),
+        dashboard.button("m", "󱌣  mason Lsp", "<CMD>Mason<CR>"),
+        dashboard.button("T", "󰔱  sync tree-sitter parser", "<CMD>TSUpdateSync<CR>"),
+        dashboard.button("q", "󰅖  quit", "<CMD>quit<CR>"),
+      }
+      -- layout
+      dashboard.section.header = header
+      dashboard.section.buttons.opts = {
+        spacing = 1,
+        hl_shortcut = "Include",
+      }
+      dashboard.section.footer = footer
+      -- apply config
+      dashboard.config.opts.noautocmd = true
+      dashboard.config.layout = {
+        { type = "padding", val = 2 },
+        dashboard.section.header,
+        { type = "padding", val = 2 },
+        dashboard.section.buttons,
+        { type = "padding", val = 2 },
+        dashboard.section.footer,
+      }
+      require("alpha").setup(dashboard.config)
+    end,
+  },
+}

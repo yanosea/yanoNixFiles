@@ -3,7 +3,7 @@
   inputs = {
     # nixpkgs
     nixpkgs = { url = "github:nixos/nixpkgs/nixos-unstable"; };
-    nixpkgs-stable = { url = "github:nixos/nixpkgs/nixos-24.05"; };
+    nixpkgs-stable = { url = "github:nixos/nixpkgs/nixos-24.11"; };
     # nixos hardware
     nixos-hardware = { url = "github:NixOS/nixos-hardware/master"; };
     # nixos wsl
@@ -12,7 +12,7 @@
       inputs = { nixpkgs = { follows = "nixpkgs"; }; };
     };
     # darwin
-    nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin"; };
+    nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin"; };
     darwin = {
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs-darwin";

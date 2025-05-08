@@ -1,0 +1,12 @@
+-- quickly navigate in and out of surrounding character
+return {
+  {
+    "ysmb-wtsg/in-and-out.nvim",
+    event = "InsertEnter",
+    init = function()
+      vim.keymap.set("i", "<C-l>", function()
+        require("in-and-out").in_and_out()
+      end, { desc = "In and Out" })
+    end,
+  },
+}

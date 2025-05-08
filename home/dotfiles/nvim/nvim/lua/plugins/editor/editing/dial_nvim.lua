@@ -2,7 +2,29 @@
 return {
   {
     "monaqa/dial.nvim",
+    lazy = true,
     keys = { "<C-a>", "<C-x>" },
+    init = function()
+      -- keymaps
+      -- increment
+      vim.keymap.set(
+        "n",
+        "<C-a>",
+        function()
+          require("dial.map").inc_normal()
+        end,
+        { desc = "dial increment", silent = true }
+      )
+      -- decrement
+      vim.keymap.set(
+        "n",
+        "<C-x>",
+        function()
+          require("dial.map").dec_normal()
+        end,
+        { desc = "dial decrement", silent = true }
+      )
+    end,
     config = function()
       require("dial.config").augends:register_group({
         default = {
@@ -16,19 +38,6 @@ return {
           require("dial.augend").date.alias["%m月%d日"],
         },
       })
-
-      vim.keymap.set(
-        "n",
-        "<C-a>",
-        require("dial.map").inc_normal(),
-        { noremap = true, silent = true, desc = "Dial Increment" }
-      )
-      vim.keymap.set(
-        "n",
-        "<C-x>",
-        require("dial.map").dec_normal(),
-        { noremap = true, silent = true, desc = "Dial Decrement" }
-      )
     end,
   },
 }

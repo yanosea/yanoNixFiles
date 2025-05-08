@@ -2,6 +2,7 @@
 return {
   {
     "nacro90/numb.nvim",
+    lazy = true,
     event = { "CmdlineEnter" },
     config = function()
       require("numb").setup({

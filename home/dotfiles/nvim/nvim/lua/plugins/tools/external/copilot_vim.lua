@@ -2,20 +2,29 @@
 return {
   {
     "github/copilot.vim",
+    lazy = true,
     event = "InsertEnter",
-    config = function()
-      vim.g.copilot_no_tab_map = true
-
+    init = function()
+      -- keymaps
+      -- accept suggestion
       vim.api.nvim_set_keymap(
         "i",
         "<C-a><C-a>",
         'copilot#Accept("<CR>") . "\\<Esc>"',
-        { silent = true, desc = "Copilot accept", expr = true }
+        { desc = "copilot accept", silent = true, expr = true }
       )
-      vim.keymap.set("i", "<C-a>n", "<Plug>(copilot-next)", { silent = true, desc = "Copilot next" })
-      vim.keymap.set("i", "<C-a>b", "<Plug>(copilot-previous)", { silent = true, desc = "Copilot previous" })
-      vim.keymap.set("i", "<C-a>d", "<Plug>(copilot-dismiss)", { silent = true, desc = "Copilot dismiss" })
-      vim.keymap.set("i", "<C-a><Space>", "<Plug>(copilot-suggest)", { silent = true, desc = "Copilot suggest" })
+      -- next suggestion
+      vim.keymap.set("i", "<C-a>n", "<Plug>(copilot-next)", { desc = "copilot next", silent = true })
+      -- previous suggestion
+      vim.keymap.set("i", "<C-a>b", "<Plug>(copilot-previous)", { desc = "copilot previous", silent = true })
+      -- dismiss suggestion
+      vim.keymap.set("i", "<C-a>d", "<Plug>(copilot-dismiss)", { desc = "copilot dismiss", silent = true })
+      -- show suggestion
+      vim.keymap.set("i", "<C-a><Space>", "<Plug>(copilot-suggest)", { desc = "copilot suggest", silent = true })
+    end,
+    config = function()
+      -- disable default keymap
+      vim.g.copilot_no_tab_map = true
     end,
   },
 }

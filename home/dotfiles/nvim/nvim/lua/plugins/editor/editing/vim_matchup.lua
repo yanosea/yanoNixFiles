@@ -4,6 +4,7 @@ return {
     "andymass/vim-matchup",
     keys = { "%" },
     config = function()
+      -- matchup matchparen offscreen method
       vim.g.matchup_matchparen_offscreen = { method = "popup" }
     end,
   },

@@ -37,6 +37,7 @@ let
         home = {
           inherit username;
           homeDirectory = "${homePath}/${username}";
+          # this is not latest but ok because this option have to set the first version of Nix configured for me
           stateVersion = "24.05";
         };
         programs = {
