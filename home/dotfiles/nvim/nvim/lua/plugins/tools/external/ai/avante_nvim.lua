@@ -34,7 +34,7 @@ return {
         temperature = 0,
         max_tokens = 50960,
       },
-      system_prompt = require("plugins.tools.external.ai.prompts").system_prompt,
+      system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").system_prompt,
       rag_service = {
         enabled = false, -- Enables the rag service, requires OPENAI_API_KEY to be set
         host_mount = os.getenv("HOME"), -- Host mount path for the rag service (docker will mount this path)

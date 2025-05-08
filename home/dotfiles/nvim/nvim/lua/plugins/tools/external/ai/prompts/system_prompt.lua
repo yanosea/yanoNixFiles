@@ -94,5 +94,5 @@ function M.build_prompt(options)
   return table.concat(parts, "\n\n")
 end
 -- set default prompt
-M.system_prompt = M.build_prompt()
+M.prompt = M.build_prompt()
 return M

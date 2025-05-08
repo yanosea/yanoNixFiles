@@ -14,39 +14,58 @@ return {
         vim.keymap.set(
           mode,
           "<LEADER>Cc",
-          "<CMD>CopilotChatCommitStaged<CR>",
-          { silent = true, desc = "CopilotChat commit staged" }
+          "<CMD>CopilotChatCommit<CR>",
+          { silent = true, desc = "copilotchat commit" }
         )
-        vim.keymap.set(mode, "<LEADER>Cd", "<CMD>CopilotChatDocs<CR>", { silent = true, desc = "CopilotChat docs" })
-        vim.keymap.set(mode, "<LEADER>Ce", "<CMD>CopilotChatExplain<CR>", { silent = true, desc = "CopilotChat explain" })
-        vim.keymap.set(mode, "<LEADER>Cf", "<CMD>CopilotChatFix<CR>", { silent = true, desc = "CopilotChat fix" })
-        vim.keymap.set(mode, "<LEADER>Cl", "<CMD>CopilotChatLoad<CR>", { silent = true, desc = "CopilotChat load" })
+        vim.keymap.set(mode, "<LEADER>Cd", "<CMD>CopilotChatDocs<CR>", { silent = true, desc = "copilotchat docs" })
+        vim.keymap.set(mode, "<LEADER>Ce", "<CMD>CopilotChatExplain<CR>", { silent = true, desc = "copilotchat explain" })
+        vim.keymap.set(mode, "<LEADER>Cf", "<CMD>CopilotChatFix<CR>", { silent = true, desc = "copilotchat fix" })
+        vim.keymap.set(mode, "<LEADER>Cl", "<CMD>CopilotChatLoad<CR>", { silent = true, desc = "copilotchat load" })
         vim.keymap.set(
           mode,
           "<LEADER>Co",
           "<CMD>CopilotChatOptimize<CR>",
-          { silent = true, desc = "CopilotChat optimize" }
+          { silent = true, desc = "copilotchat optimize" }
         )
-        vim.keymap.set(
-          mode,
-          "<LEADER>Cq",
-          "<CMD>lua CopilotChatBuffer()<CR>",
-          { noremap = true, silent = true, desc = "CopilotChat quick chat" }
-        )
-        vim.keymap.set(mode, "<LEADER>Cr", "<CMD>CopilotChatReview<CR>", { silent = true, desc = "CopilotChat review" })
-        vim.keymap.set(mode, "<LEADER>Cs", "<CMD>CopilotChatSave<CR>", { silent = true, desc = "CopilotChat save" })
+        vim.keymap.set(mode, "<LEADER>Cr", "<CMD>CopilotChatReview<CR>", { silent = true, desc = "copilotchat review" })
+        vim.keymap.set(mode, "<LEADER>Cs", "<CMD>CopilotChatSave<CR>", { silent = true, desc = "copilotchat save" })
         vim.keymap.set(
           mode,
           "<LEADER>Ct",
           "<CMD>CopilotChatToggle<CR>",
-          { silent = true, desc = "CopilotChat chat toggle" }
+          { silent = true, desc = "copilotchat chat toggle" }
         )
-        vim.keymap.set(mode, "<LEADER>CT", "<CMD>CopilotChatTests<CR>", { silent = true, desc = "CopilotChat tests" })
+        vim.keymap.set(mode, "<LEADER>CT", "<CMD>CopilotChatTests<CR>", { silent = true, desc = "copilotchat tests" })
       end
     end,
     opts = {
-      system_prompt = require("plugins.tools.external.ai.prompts").system_prompt,
-      prompts = require("plugins.tools.external.ai.prompts").user_prompts,
+      system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").prompt,
+      prompts = {
+        Commit = {
+          prompt = require("plugins.tools.external.ai.prompts.user_prompts.commit").prompt,
+        },
+        Docs = {
+          prompt = require("plugins.tools.external.ai.prompts.user_prompts.docs").prompt,
+        },
+        Explain = {
+          prompt = require("plugins.tools.external.ai.prompts.user_prompts.explain").prompt,
+        },
+        Fix = {
+          prompt = require("plugins.tools.external.ai.prompts.user_prompts.fix").prompt,
+        },
+        FixDiagnostic = {
+          prompt = require("plugins.tools.external.ai.prompts.user_prompts.fix_diagnostic").prompt,
+        },
+        Optimize = {
+          prompt = require("plugins.tools.external.ai.prompts.user_prompts.optimize").prompt,
+        },
+        Review = {
+          prompt = require("plugins.tools.external.ai.prompts.user_prompts.review").prompt,
+        },
+        Tests = {
+          prompt = require("plugins.tools.external.ai.prompts.user_prompts.tests").prompt,
+        },
+      },
       model = "claude-3.7-sonnet",
       selection = function(source)
         return require("CopilotChat.select").visual(source) or require("CopilotChat.select").buffer(source)
