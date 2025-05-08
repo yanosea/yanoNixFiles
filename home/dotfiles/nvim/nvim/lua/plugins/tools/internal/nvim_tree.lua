@@ -7,7 +7,6 @@ return {
     },
     lazy = true,
     cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeFocus", "NvimTreeFindFileToggle" },
-    event = "User DirOpened",
     init = function()
       -- keymaps
       -- toggle file explorer

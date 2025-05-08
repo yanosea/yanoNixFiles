@@ -8,7 +8,7 @@ return {
       'nvim-tree/nvim-web-devicons',
       -- extensions
       "nvim-telescope/telescope-file-browser.nvim",
-      "nvim-telescope/telescope-fzf-native.nvim",
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       "nvim-telescope/telescope-ui-select.nvim",
     },
   },
