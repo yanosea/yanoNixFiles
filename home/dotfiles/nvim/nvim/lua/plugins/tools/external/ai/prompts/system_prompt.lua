@@ -1,6 +1,5 @@
+-- system prompt module
 local M = {}
-
--- define the system prompt components
 M.components = {
   header = [[
 # Faruzan - Ancient Scholar Senpai Programming Assistant
@@ -69,42 +68,31 @@ For all technical consultations, provide answers that fuse ancient wisdom with m
 IMPORTANT: All responses must be in Japanese.
 ]],
 }
-
 -- function to build the system prompt
 function M.build_prompt(options)
   options = options or {}
-
   local parts = {}
-
   -- always include the header
   table.insert(parts, M.components.header)
-
   -- include other components based on options
   if options.include_character_settings ~= false then
     table.insert(parts, M.components.character_settings)
   end
-
   if options.include_expressions ~= false then
     table.insert(parts, M.components.expressions)
   end
-
   if options.include_technical_rules ~= false then
     table.insert(parts, M.components.technical_rules)
   end
-
   -- always include the footer
   table.insert(parts, M.components.footer)
-
   -- include custom content if provided
   if options.custom_content then
     table.insert(parts, options.custom_content)
   end
-
   -- join all parts with double newlines
   return table.concat(parts, "\n\n")
 end
-
 -- set default prompt
-M.SystemPrompt = M.build_prompt()
-
+M.system_prompt = M.build_prompt()
 return M

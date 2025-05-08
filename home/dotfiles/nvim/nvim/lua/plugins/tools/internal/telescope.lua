@@ -4,11 +4,12 @@ return {
   "nvim-telescope/telescope.nvim",
   dependencies = {
     {
-      'nvim-lua/plenary.nvim',
-      'nvim-tree/nvim-web-devicons',
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
       -- extensions
       "nvim-telescope/telescope-file-browser.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      { "2kabhishek/nerdy.nvim", dependencies = { "folke/snacks.nvim" } },
       "nvim-telescope/telescope-ui-select.nvim",
     },
   },
@@ -106,9 +107,10 @@ return {
       },
     })
     -- load extensions
+    require("telescope").load_extension("file_browser")
     require("telescope").load_extension("fzf")
-    require("telescope").load_extension('file_browser')
-    require("telescope").load_extension('ui-select')
+    require("telescope").load_extension("nerdy")
+    require("telescope").load_extension("ui-select")
   end,
   },
 }
