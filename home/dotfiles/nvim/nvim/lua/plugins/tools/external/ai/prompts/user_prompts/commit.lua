@@ -1,8 +1,6 @@
 -- Prompt for commit message generation
 return {
   prompt = [[
-#git:staged
-
 Please write a commit message in English for these changes.
 The title should be at most 50 characters, and the body should be wrapped at 72 characters.
 For the title, use one of the following prefixes, separated from the title by a space:
@@ -38,5 +36,7 @@ title:
 body:
 <body>
 ```
+
+# IMPORTANT: Commit messages must be in English.
 ]],
 }

@@ -28,7 +28,7 @@ return {
             chat = true,
             command = false,
             model = { model = "gpt-4o", temperature = 1.1, top_p = 1 },
-            system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").system_prompt,
+            system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").prompt,
           },
           {
             name = "ChatGPT3-5",
