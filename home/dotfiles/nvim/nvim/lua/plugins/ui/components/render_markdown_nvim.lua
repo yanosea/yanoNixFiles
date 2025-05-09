@@ -1,4 +1,5 @@
 -- render markdown
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
@@ -9,21 +10,22 @@ return {
     },
     config = function()
       require("render-markdown").setup({
-        heading = {
-          position = "inline",
-        },
-        code = {
-          left_pad = 2,
-          right_pad = 4,
-          highlight = "RenderMarkdownCode",
-          highlight_inline = "RenderMarkdownCodeInline",
-        },
-        sign = {
-          enabled = false,
-        },
+        -- render-markdown.nvim config
         file_types = {
           "Avante",
           "markdown",
+        },
+        render_modes = { "n", "c", "t", },
+        -- components config
+        heading = {
+          border = true,
+          border_virtual = true,
+          width = "block",
+          min_width = 30,
+        },
+        code = {
+          width = "block",
+          right_pad = 2,
         },
       })
     end,

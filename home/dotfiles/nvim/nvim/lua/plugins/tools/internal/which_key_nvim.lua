@@ -13,8 +13,8 @@ return {
       -- which-key mappings (start with <LEADER>)
       require("which-key").add({
         {
-          -- normal and visual
-          mode = {"n", "v"},
+          -- normal
+          mode = "n",
           -- avante
           { "<LEADER>a", group = "avante" },
           { "<LEADER>aa", "<CMD>AvanteAsk<CR>", desc = "avante ask" },
@@ -89,6 +89,8 @@ return {
           { "<LEADER>lo", "<CMD>Outline<CR>", desc = "outline" },
           { "<LEADER>lt", "<CMD>Trouble diagnostics toggle<CR>", desc = "diagnostics list" },
           { "<LEADER>lT", "<CMD>TodoLocList<CR>", desc = "todo location list" },
+          -- markdown
+          { "<LEADER>m", "<CMD>RenderMarkdown toggle<CR>", desc = "markdown preview toggle" },
           -- noice
           { "<LEADER>n", group = "noice" },
           { "<LEADER>na", "<CMD>Noice<CR>", desc = "noice" },
@@ -132,22 +134,20 @@ return {
           { "<LEADER>st", "<CMD>Telescope live_grep<CR>", desc = "search text" },
           -- terminal
           { "<LEADER>t", "<CMD>ToggleTerm<CR>", desc = "terminal" },
+          -- translate
+          { "<LEADER>T", "<CMD>Translate<CR>", desc = "translate current line" },
+          -- comment
+          { "<LEADER>/", "<Plug>(comment_toggle_linewise_current)", desc = "comment toggle current line" },
           -- fuzzymotion
           { "<LEADER><SPACE>", "<CMD>FuzzyMotion<CR>", desc = "fuzzymotion" },
           -- dashboard
           { "<LEADER>;", "<CMD>Alpha<CR>", desc = "dashboard" },
         },
         {
-          -- normal
-          -- translate
-          { "<LEADER>T", "<CMD>Translate<CR>", desc = "translate current line" },
-          -- comment
-          { "<LEADER>/", "<Plug>(comment_toggle_linewise_current)", desc = "comment toggle current line" },
-
-        },
-        {
           -- visual
           mode = "v",
+          -- avante
+          { "<LEADER>a", group = "avante" },
           -- git
           { "<LEADER>g", group = "git" },
           { "<LEADER>gr", "<CMD>Gitsigns reset_hunk<CR>", desc = "reset hunk" },
