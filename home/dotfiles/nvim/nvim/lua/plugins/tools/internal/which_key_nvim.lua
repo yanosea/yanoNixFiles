@@ -134,8 +134,6 @@ return {
           { "<LEADER>t", "<CMD>ToggleTerm<CR>", desc = "terminal" },
           -- fuzzymotion
           { "<LEADER><SPACE>", "<CMD>FuzzyMotion<CR>", desc = "fuzzymotion" },
-          -- comment
-          { "<LEADER>/", "<Plug>(comment_toggle_linewise_current)", desc = "comment toggle current line" },
           -- dashboard
           { "<LEADER>;", "<CMD>Alpha<CR>", desc = "dashboard" },
         },
@@ -143,6 +141,9 @@ return {
           -- normal
           -- translate
           { "<LEADER>T", "<CMD>Translate<CR>", desc = "translate current line" },
+          -- comment
+          { "<LEADER>/", "<Plug>(comment_toggle_linewise_current)", desc = "comment toggle current line" },
+
         },
         {
           -- visual
