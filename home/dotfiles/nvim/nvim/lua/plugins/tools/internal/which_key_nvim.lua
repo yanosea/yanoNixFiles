@@ -99,11 +99,7 @@ return {
           { "<LEADER>nh", "<CMD>NoiceHistory<CR>", desc = "message history" },
           { "<LEADER>nl", "<CMD>NoiceLast<CR>", desc = "last message" },
           -- oil explorer
-          { "<LEADER>o", group = "oil" },
-          { "<LEADER>of", "<CMD>Oil float<CR>", desc = "oil float" },
-          { "<LEADER>oF", "<CMD>Oil float cwd=%:p:h<CR>", desc = "oil float (cwd)" },
-          { "<LEADER>oO", "<CMD>Oil<CR>", desc = "oil" },
-          { "<LEADER>oC", "<CMD>Oil cd<CR>", desc = "oil cd" },
+          { "<LEADER>o", "<CMD>Oil<CR>", desc = "oil" },
           -- plugins
           { "<LEADER>p", group = "plugins" },
           { "<LEADER>pc", "<CMD>Lazy clean<CR>", desc = "clean plugins" },
