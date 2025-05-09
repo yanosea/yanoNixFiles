@@ -15,7 +15,7 @@ return {
           "Avante",
           "markdown",
         },
-        render_modes = { "n", "c", "t", },
+        render_modes = { "n", "c", "t" },
         -- components config
         heading = {
           border = true,

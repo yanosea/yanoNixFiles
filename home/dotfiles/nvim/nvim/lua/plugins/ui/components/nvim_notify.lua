@@ -20,5 +20,5 @@ return {
         top_down = false,
       })
     end,
-  }
+  },
 }

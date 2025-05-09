@@ -17,9 +17,7 @@ _G.BufferKill = function(kill_command, bufnr, force)
     if bo[bufnr].modified then
       -- check if buffer is unnamed
       local is_unnamed = bufname == ""
-      local message = is_unnamed
-        and "Save changes to unnamed buffer?"
-        or fmt([[Save changes to "%s"?]], bufname)
+      local message = is_unnamed and "Save changes to unnamed buffer?" or fmt([[Save changes to "%s"?]], bufname)
 
       choice = fn.confirm(message, "&Yes\n&No\n&Cancel")
       if choice == 1 then

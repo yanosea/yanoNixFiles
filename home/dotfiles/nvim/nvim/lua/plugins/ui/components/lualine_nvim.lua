@@ -55,7 +55,7 @@ return {
         env_cleanup = function(venv)
           if string.find(venv, "/") then
             local final_venv = venv
-            for w in venv:gmatch "([^/]+)" do
+            for w in venv:gmatch("([^/]+)") do
               final_venv = w
             end
             venv = final_venv
@@ -111,10 +111,10 @@ return {
         python_env = {
           function()
             if vim.bo.filetype == "python" then
-              local venv = os.getenv "CONDA_DEFAULT_ENV" or os.getenv "VIRTUAL_ENV"
+              local venv = os.getenv("CONDA_DEFAULT_ENV") or os.getenv("VIRTUAL_ENV")
               if venv then
-                local icons = require "nvim-web-devicons"
-                local py_icon, _ = icons.get_icon ".py"
+                local icons = require("nvim-web-devicons")
+                local py_icon, _ = icons.get_icon(".py")
                 return string.format(" " .. py_icon .. " (%s)", utils.env_cleanup(venv))
               end
             end
@@ -197,8 +197,8 @@ return {
         filetype = { "filetype", cond = nil, padding = { left = 1, right = 1 } },
         scrollbar = {
           function()
-            local current_line = vim.fn.line "."
-            local total_lines = vim.fn.line "$"
+            local current_line = vim.fn.line(".")
+            local total_lines = vim.fn.line("$")
             local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
             local line_ratio = current_line / total_lines
             local index = math.ceil(line_ratio * #chars)

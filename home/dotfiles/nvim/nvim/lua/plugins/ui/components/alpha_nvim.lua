@@ -88,7 +88,7 @@ return {
         dashboard.button("f", "󰈞  find file", "<CMD>Telescope find_files<CR>"),
         dashboard.button("t", "󰊄  find text", "<CMD>Telescope live_grep<CR>"),
         dashboard.button("r", "  recent files", "<CMD>Telescope oldfiles<CR>"),
-        dashboard.button("e", "  explorer","<CMD>Telescope file_browser cwd=" .. vim.fn.expand('%:p:h') .. "<CR>"),
+        dashboard.button("e", "  explorer", "<CMD>Telescope file_browser cwd=" .. vim.fn.expand("%:p:h") .. "<CR>"),
         dashboard.button("g", "  lazygit", "<CMD>lua ToggleLazyGit()<CR>"),
         dashboard.button("l", "󰒲  lazy", "<CMD>Lazy<CR>"),
         dashboard.button("m", "󱌣  mason Lsp", "<CMD>Mason<CR>"),

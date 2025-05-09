@@ -7,23 +7,13 @@ return {
     init = function()
       -- keymaps
       -- increment
-      vim.keymap.set(
-        "n",
-        "<C-a>",
-        function()
-          require("dial.map").inc_normal()
-        end,
-        { desc = "dial increment", silent = true }
-      )
+      vim.keymap.set("n", "<C-a>", function()
+        require("dial.map").inc_normal()
+      end, { desc = "dial increment", silent = true })
       -- decrement
-      vim.keymap.set(
-        "n",
-        "<C-x>",
-        function()
-          require("dial.map").dec_normal()
-        end,
-        { desc = "dial decrement", silent = true }
-      )
+      vim.keymap.set("n", "<C-x>", function()
+        require("dial.map").dec_normal()
+      end, { desc = "dial decrement", silent = true })
     end,
     config = function()
       require("dial.config").augends:register_group({

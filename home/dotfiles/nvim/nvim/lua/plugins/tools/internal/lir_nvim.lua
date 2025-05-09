@@ -35,7 +35,7 @@ return {
           ["d"] = actions.delete,
           ["J"] = function()
             require("lir.mark.actions").toggle_mark()
-            vim.cmd "normal! j"
+            vim.cmd("normal! j")
           end,
           ["c"] = clipboard_actions.copy,
           ["x"] = clipboard_actions.cut,
@@ -85,13 +85,13 @@ return {
         if not found then
           icon_hl = "#42A5F5"
         end
-        devicons.set_icon {
+        devicons.set_icon({
           lir_folder_icon = {
             icon = folder_icon,
             color = icon_hl,
             name = "LirFolderNode",
           },
-        }
+        })
       end
       setup_icons()
     end,

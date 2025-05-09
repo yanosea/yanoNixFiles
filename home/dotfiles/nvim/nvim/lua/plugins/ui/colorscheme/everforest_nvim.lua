@@ -8,5 +8,5 @@ return {
       -- set neovim colorscheme
       vim.cmd("colorscheme everforest")
     end,
-  }
+  },
 }

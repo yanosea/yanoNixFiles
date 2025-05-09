@@ -53,11 +53,31 @@ return {
       local navic = require("nvim-navic")
       navic.setup(opts)
       local excluded_filetypes = {
-        "help", "startify", "dashboard", "lazy", "neo-tree", "neogitstatus",
-        "NvimTree", "Trouble", "alpha", "lir", "Outline", "spectre_panel",
-        "toggleterm", "DressingSelect", "Jaq", "harpoon", "dap-repl",
-        "dap-terminal", "dapui_console", "dapui_hover", "lab", "notify",
-        "noice", "neotest-summary", "",
+        "help",
+        "startify",
+        "dashboard",
+        "lazy",
+        "neo-tree",
+        "neogitstatus",
+        "NvimTree",
+        "Trouble",
+        "alpha",
+        "lir",
+        "Outline",
+        "spectre_panel",
+        "toggleterm",
+        "DressingSelect",
+        "Jaq",
+        "harpoon",
+        "dap-repl",
+        "dap-terminal",
+        "dapui_console",
+        "dapui_hover",
+        "lab",
+        "notify",
+        "noice",
+        "neotest-summary",
+        "",
       }
 
       local function get_filename()
@@ -160,6 +180,6 @@ return {
           end
         end,
       })
-    end
+    end,
   },
 }

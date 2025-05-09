@@ -24,7 +24,7 @@ return {
       -- define the function to toggle lazygit
       _G.ToggleLazyGit = function()
         local Terminal = require("toggleterm.terminal").Terminal
-        local lazygit = Terminal:new {
+        local lazygit = Terminal:new({
           cmd = "lazygit",
           hidden = true,
           direction = "float",
@@ -35,11 +35,11 @@ return {
             zindex = 200,
           },
           on_open = function(_)
-            vim.cmd "startinsert!"
+            vim.cmd("startinsert!")
           end,
           on_close = function(_) end,
           count = 99,
-        }
+        })
         lazygit:toggle()
       end
     end,
