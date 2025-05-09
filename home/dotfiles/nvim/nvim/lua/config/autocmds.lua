@@ -45,3 +45,18 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.highlight.on_yank { higroup = "Search", timeout = 100 }
   end,
 })
+-- define a group for directory opened
+local dir_opened_group = vim.api.nvim_create_augroup("_dir_opened", { clear = true })
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = dir_opened_group,
+  nested = true,
+  callback = function(args)
+    local bufname = vim.api.nvim_buf_get_name(args.buf)
+    local stat = vim.loop.fs_stat(bufname)
+    if stat and stat.type == "directory" then
+      vim.api.nvim_del_augroup_by_name "_dir_opened"
+      vim.cmd "do User DirOpened"
+      vim.api.nvim_exec_autocmds(args.event, { buffer = args.buf, data = args.data })
+    end
+  end,
+})
