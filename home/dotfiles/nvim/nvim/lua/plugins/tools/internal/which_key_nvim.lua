@@ -23,14 +23,14 @@ return {
           { "<LEADER>bj", "<CMD>BufferLinePick<CR>", desc = "jump to buffer" },
           { "<LEADER>bn", "<CMD>bnext<CR>", desc = "switch to next buffer" },
           { "<LEADER>bN", "<CMD>ene!<CR>", desc = "close current buffer" },
-          { "<LEADER>bw", "<CMD>w!<CR>", desc = "save" },
+          { "<LEADER>bw", "<CMD>w!<CR>", desc = "save buffer" },
           { "<LEADER>c", "<CMD>lua BufferKill()<CR>", desc = "close current buffer" },
           -- explorer
           { "<LEADER>e", "<CMD>NvimTreeToggle<CR>", desc = "explorer" },
           -- find file
           { "<LEADER>f", "<CMD>Telescope find_files<CR>", desc = "find file" },
           -- save
-          { "<LEADER>w", "<CMD>w!<CR>", desc = "save" },
+          { "<LEADER>w", "<CMD>w!<CR>", desc = "save buffer" },
           -- quit
           { "<LEADER>q", "<CMD>confirm q<CR>", desc = "quit" },
           -- comment
