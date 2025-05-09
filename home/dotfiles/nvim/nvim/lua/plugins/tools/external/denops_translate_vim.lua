@@ -1,4 +1,5 @@
 -- translate text
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
 return {
   {
     "skanehira/denops-translate.vim",
@@ -15,13 +16,6 @@ return {
         "<LEADER>T",
         ":'<,'>Translate<CR>",
         { desc = "translate selection", silent = true, noremap = true }
-      )
-      -- normal mode mapping for line translation
-      vim.api.nvim_set_keymap(
-        "n",
-        "<LEADER>T",
-        "<CMD>Translate<CR>",
-        { desc = "translate current line", silent = true, noremap = true }
       )
     end,
   },

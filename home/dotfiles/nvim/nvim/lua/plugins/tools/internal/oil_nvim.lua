@@ -1,4 +1,5 @@
 -- oil.nvim filer
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
 return {
   {
     "stevearc/oil.nvim",

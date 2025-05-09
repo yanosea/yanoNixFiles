@@ -1,5 +1,6 @@
 -- plugin manager config (lazy.nvim)
 -- clone lazy.nvim if not clone yet in $XDG_DATA_HOME/lazy/lazy.nvim
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"

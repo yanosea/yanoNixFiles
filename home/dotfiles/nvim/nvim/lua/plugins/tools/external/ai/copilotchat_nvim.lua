@@ -1,4 +1,5 @@
 -- github copilot chat for neovim
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
 return {
   {
     "CopilotC-Nvim/CopilotChat.nvim",
@@ -9,35 +10,6 @@ return {
     lazy = true,
     event = "VeryLazy",
     branch = "main",
-    init = function()
-      for _, mode in ipairs({ "n", "x" }) do
-        vim.keymap.set(
-          mode,
-          "<LEADER>Cc",
-          "<CMD>CopilotChatCommit<CR>",
-          { silent = true, desc = "copilotchat commit" }
-        )
-        vim.keymap.set(mode, "<LEADER>Cd", "<CMD>CopilotChatDocs<CR>", { silent = true, desc = "copilotchat docs" })
-        vim.keymap.set(mode, "<LEADER>Ce", "<CMD>CopilotChatExplain<CR>", { silent = true, desc = "copilotchat explain" })
-        vim.keymap.set(mode, "<LEADER>Cf", "<CMD>CopilotChatFix<CR>", { silent = true, desc = "copilotchat fix" })
-        vim.keymap.set(mode, "<LEADER>Cl", "<CMD>CopilotChatLoad<CR>", { silent = true, desc = "copilotchat load" })
-        vim.keymap.set(
-          mode,
-          "<LEADER>Co",
-          "<CMD>CopilotChatOptimize<CR>",
-          { silent = true, desc = "copilotchat optimize" }
-        )
-        vim.keymap.set(mode, "<LEADER>Cr", "<CMD>CopilotChatReview<CR>", { silent = true, desc = "copilotchat review" })
-        vim.keymap.set(mode, "<LEADER>Cs", "<CMD>CopilotChatSave<CR>", { silent = true, desc = "copilotchat save" })
-        vim.keymap.set(
-          mode,
-          "<LEADER>Ct",
-          "<CMD>CopilotChatToggle<CR>",
-          { silent = true, desc = "copilotchat chat toggle" }
-        )
-        vim.keymap.set(mode, "<LEADER>CT", "<CMD>CopilotChatTests<CR>", { silent = true, desc = "copilotchat tests" })
-      end
-    end,
     opts = {
       system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").prompt,
       prompts = {

@@ -1,5 +1,5 @@
 -- dashboard config
--- keymaps is set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>;)
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
 return {
   {
     "goolord/alpha-nvim",
@@ -89,6 +89,7 @@ return {
         dashboard.button("t", "󰊄  find text", "<CMD>Telescope live_grep<CR>"),
         dashboard.button("r", "  recent files", "<CMD>Telescope oldfiles<CR>"),
         dashboard.button("e", "  explorer","<CMD>Telescope file_browser cwd=" .. vim.fn.expand('%:p:h') .. "<CR>"),
+        dashboard.button("g", "  lazygit", "<CMD>lua ToggleLazyGit()<CR>"),
         dashboard.button("l", "󰒲  lazy", "<CMD>Lazy<CR>"),
         dashboard.button("m", "󱌣  mason Lsp", "<CMD>Mason<CR>"),
         dashboard.button("T", "󰔱  sync tree-sitter parser", "<CMD>TSUpdateSync<CR>"),

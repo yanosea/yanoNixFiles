@@ -7,7 +7,7 @@ return {
     config = function()
       require("which-key").setup({
         preset = "modern",
-        delay = 300,
+        delay = 500,
         sort = { "local", "order", "alphanum", "mod" },
       })
       -- which-key mappings (start with <LEADER>)
@@ -15,28 +15,138 @@ return {
         {
           -- normal and visual
           mode = {"n", "v"},
+          -- avante
+          { "<LEADER>a", group = "avante" },
+          { "<LEADER>aa", "<CMD>AvanteAsk<CR>", desc = "avante ask" },
+          { "<LEADER>ac", "<CMD>AvanteClear<CR>", desc = "avante clear" },
+          { "<LEADER>ae", "<CMD>AvanteEdit<CR>", desc = "avante edit" },
+          { "<LEADER>af", "<CMD>AvanteFocus<CR>", desc = "avante focus" },
+          { "<LEADER>ar", "<CMD>AvanteRefresh<CR>", desc = "avante refresh" },
+          { "<LEADER>aR", "<CMD>AvanteRepoMap<CR>", desc = "avante repo map" },
+          { "<LEADER>at", "<CMD>AvanteToggle<CR>", desc = "avante toggle" },
+          -- chatgpt
+          { "<LEADER>A", group = "chatgpt" },
+          { "<LEADER>AA", "<CMD>GpChatRespond<CR>", desc = "gpchat respond" },
+          { "<LEADER>AC", "<CMD>GpChatStop<CR>", desc = "gpchat stop" },
+          { "<LEADER>AD", "<CMD>GpChatDelete<CR>", desc = "gpchat delete" },
+          { "<LEADER>AE", "<CMD>GpChatFinder<CR>", desc = "gpchat finder" },
+          { "<LEADER>AP", "<CMD>GpChatNew popup<CR>", desc = "gpchatnew popup" },
+          { "<LEADER>AS", "<CMD>GpChatNew split<CR>", desc = "gpchatnew split" },
+          { "<LEADER>AT", "<CMD>GpChatNew tabnew<CR>", desc = "gpchatnew tabnew" },
+          { "<LEADER>AV", "<CMD>GpChatNew vsplit<CR>", desc = "gpchatnew vsplit" },
           -- buffers
           { "<LEADER>b", group = "buffers" },
-          { "<LEADER>bb", "<CMD>bprevious<CR>", desc = "switch to previous buffer" },
+          { "<LEADER>bb", "<CMD>BufferLineCyclePrev<CR>", desc = "switch to previous buffer" },
           { "<LEADER>bc", "<CMD>lua BufferKill()<CR>", desc = "close current buffer" },
+          { "<LEADER>bd", "<CMD>BufferLineSortByDirectory<CR>", desc = "sort by directory" },
+          { "<LEADER>be", "<CMD>BufferLinePickClose<CR>", desc = "pick which buffer to close" },
           { "<LEADER>bf", "<CMD>Telescope buffers previewer=false<CR>", desc = "find and jump to buffer" },
+          { "<LEADER>bh", "<CMD>BufferLineCloseLeft<CR>", desc = "close all to the left" },
           { "<LEADER>bj", "<CMD>BufferLinePick<CR>", desc = "jump to buffer" },
-          { "<LEADER>bn", "<CMD>bnext<CR>", desc = "switch to next buffer" },
-          { "<LEADER>bN", "<CMD>ene!<CR>", desc = "close current buffer" },
+          { "<LEADER>bl", "<CMD>BufferLineCloseRight<CR>", desc = "close all to the right" },
+          { "<LEADER>bL", "<CMD>BufferLineSortByExtension<CR>", desc = "sort by language" },
+          { "<LEADER>bn", "<CMD>BufferLineCycleNext<CR>", desc = "switch to next buffer" },
+          { "<LEADER>bN", "<CMD>ene!<CR>", desc = "new buffer" },
           { "<LEADER>bw", "<CMD>w!<CR>", desc = "save buffer" },
+          { "<LEADER>bW", "<CMD>noautocmd w<CR>", desc = "save buffer without formatting" },
+          -- close buffer
           { "<LEADER>c", "<CMD>lua BufferKill()<CR>", desc = "close current buffer" },
+          -- copilot chat
+          { "<LEADER>C", group = "copilot" },
+          { "<LEADER>Cc", "<CMD>CopilotChatCommit<CR>", desc = "copilotchat commit" },
+          { "<LEADER>Cd", "<CMD>CopilotChatDocs<CR>", desc = "copilotchat docs" },
+          { "<LEADER>Ce", "<CMD>CopilotChatExplain<CR>", desc = "copilotchat explain" },
+          { "<LEADER>Cf", "<CMD>CopilotChatFix<CR>", desc = "copilotchat fix" },
+          { "<LEADER>Cl", "<CMD>CopilotChatLoad<CR>", desc = "copilotchat load" },
+          { "<LEADER>Co", "<CMD>CopilotChatOptimize<CR>", desc = "copilotchat optimize" },
+          { "<LEADER>Cr", "<CMD>CopilotChatReview<CR>", desc = "copilotchat review" },
+          { "<LEADER>Cs", "<CMD>CopilotChatSave<CR>", desc = "copilotchat save" },
+          { "<LEADER>Ct", "<CMD>CopilotChatToggle<CR>", desc = "copilotchat chat toggle" },
+          { "<LEADER>CT", "<CMD>CopilotChatTests<CR>", desc = "copilotchat tests" },
           -- explorer
           { "<LEADER>e", "<CMD>NvimTreeToggle<CR>", desc = "explorer" },
           -- find file
           { "<LEADER>f", "<CMD>Telescope find_files<CR>", desc = "find file" },
+          -- git
+          { "<LEADER>g", group = "git" },
+          { "<LEADER>gb", "<CMD>Telescope git_branches<CR>", desc = "checkout branch" },
+          { "<LEADER>gc", "<CMD>Telescope git_commits<CR>", desc = "checkout commit" },
+          { "<LEADER>gC", "<CMD>Telescope git_bcommits<CR>", desc = "checkout commit (current file)" },
+          { "<LEADER>gd", "<CMD>Gitsigns diffthis HEAD<CR>", desc = "git diff" },
+          { "<LEADER>gg", "<CMD>lua ToggleLazyGit()<CR>", desc = "lazygit" },
+          { "<LEADER>gj", "<CMD>lua require 'gitsigns'.next_hunk({navigation_message = false})<CR>", desc = "next hunk" },
+          { "<LEADER>gk", "<CMD>lua require 'gitsigns'.prev_hunk({navigation_message = false})<CR>", desc = "prev hunk" },
+          { "<LEADER>gl", "<CMD>Gitsigns blame_line<CR>", desc = "blame" },
+          { "<LEADER>gL", "<CMD>Gitsigns blame_line({full=true})<CR>", desc = "blame line (full)" },
+          { "<LEADER>gp", "<CMD>lua require 'gitsigns'.preview_hunk()<CR>", desc = "preview hunk" },
+          { "<LEADER>gr", "<CMD>Gitsigns reset_hunk<CR>", desc = "reset hunk" },
+          { "<LEADER>gR", "<CMD>Gitsigns reset_buffer<CR>", desc = "reset buffer" },
+          { "<LEADER>gs", "<CMD>Gitsigns stage_hunk<CR>", desc = "stage hunk" },
+          { "<LEADER>gu", "<CMD>Gitsigns undo_stage_hunk<CR>", desc = "undo stage hunk" },
+          { "<LEADER>go", "<CMD>Telescope git_status<CR>", desc = "open changed file" },
+          -- lsp
+          { "<LEADER>l", group = "lsp" },
+          { "<LEADER>lo", "<CMD>Outline<CR>", desc = "outline" },
+          { "<LEADER>lt", "<CMD>Trouble diagnostics toggle<CR>", desc = "diagnostics list" },
+          { "<LEADER>lT", "<CMD>TodoLocList<CR>", desc = "todo location list" },
+          -- noice
+          { "<LEADER>n", group = "noice" },
+          { "<LEADER>na", "<CMD>Noice<CR>", desc = "noice" },
+          { "<LEADER>nA", "<CMD>NoiceAll<CR>", desc = "noice all" },
+          { "<LEADER>nC", "<CMD>NoiceConfirm<CR>", desc = "confirm" },
+          { "<LEADER>nd", "<CMD>NoiceDismiss<CR>", desc = "dismiss" },
+          { "<LEADER>nD", "<CMD>NoiceDismissAll<CR>", desc = "dismiss all" },
+          { "<LEADER>nh", "<CMD>NoiceHistory<CR>", desc = "message history" },
+          { "<LEADER>nl", "<CMD>NoiceLast<CR>", desc = "last message" },
+          -- oil explorer
+          { "<LEADER>o", group = "oil" },
+          { "<LEADER>of", "<CMD>Oil float<CR>", desc = "oil float" },
+          { "<LEADER>oF", "<CMD>Oil float cwd=%:p:h<CR>", desc = "oil float (cwd)" },
+          { "<LEADER>oO", "<CMD>Oil<CR>", desc = "oil" },
+          { "<LEADER>oC", "<CMD>Oil cd<CR>", desc = "oil cd" },
+          -- plugins
+          { "<LEADER>p", group = "plugins" },
+          { "<LEADER>pc", "<CMD>Lazy clean<CR>", desc = "clean plugins" },
+          { "<LEADER>pd", "<CMD>Lazy debug<CR>", desc = "debug plugins" },
+          { "<LEADER>pi", "<CMD>Lazy install<CR>", desc = "install plugins" },
+          { "<LEADER>pl", "<CMD>Lazy log<CR>", desc = "show logs of plugins" },
+          { "<LEADER>pp", "<CMD>Lazy profile<CR>", desc = "profile plugins" },
+          { "<LEADE>ps", "<CMD>Lazy sync<CR>", desc = "sync plugins" },
+          { "<LEADER>pS", "<CMD>Lazy status<CR>", desc = "status plugins" },
+          { "<LEADER>pu", "<CMD>Lazy update<CR>", desc = "update plugins" },
           -- save
           { "<LEADER>w", "<CMD>w!<CR>", desc = "save buffer" },
           -- quit
           { "<LEADER>q", "<CMD>confirm q<CR>", desc = "quit" },
+          -- search
+          { "<LEADER>s", group = "search" },
+          { "<LEADER>sb", "<CMD>Telescope git_branches<CR>", desc = "search checkout branch" },
+          { "<LEADER>sc", "<CMD>Telescope colorscheme<CR>", desc = "search colorscheme" },
+          { "<LEADER>sC", "<CMD>Telescope commands<CR>", desc = "search commands" },
+          { "<LEADER>sf", "<CMD>Telescope find_files<CR>", desc = "search file" },
+          { "<LEADER>sh", "<CMD>Telescope help_tags<CR>", desc = "search help" },
+          { "<LEADER>sH", "<CMD>Telescope highlights<CR>", desc = "search highlight groups" },
+          { "<LEADER>sk", "<CMD>Telescope keymaps<CR>", desc = "search keymaps" },
+          { "<LEADER>sl", "<CMD>Telescope resume<CR>", desc = "resume last search" },
+          { "<LEADER>sM", "<CMD>Telescope man_pages<CR>", desc = "search man pages" },
+          { "<LEADER>sn", "<CMD>Telescope nerdy<CR>", desc = "search nerd font", },
+          { "<LEADER>sp", "<CMD>lua require('telescope.builtin').colorscheme({enable_preview = true})<CR>", desc = "search colorscheme with preview" },
+          { "<LEADER>sr", "<CMD>Telescope oldfiles<CR>", desc = "search recent file" },
+          { "<LEADER>sR", "<CMD>Telescope registers<CR>", desc = "search registers" },
+          { "<LEADER>st", "<CMD>Telescope live_grep<CR>", desc = "search text" },
+          -- terminal
+          { "<LEADER>t", "<CMD>ToggleTerm<CR>", desc = "terminal" },
+          -- fuzzymotion
+          { "<LEADER><SPACE>", "<CMD>FuzzyMotion<CR>", desc = "fuzzymotion" },
           -- comment
           { "<LEADER>/", "<Plug>(comment_toggle_linewise_current)", desc = "comment toggle current line" },
           -- dashboard
           { "<LEADER>;", "<CMD>Alpha<CR>", desc = "dashboard" },
+        },
+        {
+          -- normal
+          -- translate
+          { "<LEADER>T", "<CMD>Translate<CR>", desc = "translate current line" },
         },
         {
           -- visual
@@ -55,142 +165,3 @@ return {
     end,
   },
 }
-
--- mappings = {
---   b = {
---     name = "Buffers",
---     b = { "<CMD>BufferLineCyclePrev<CR>", "previous" },
---     n = { "<CMD>BufferLineCycleNext<CR>", "next" },
---     W = { "<CMD>noautocmd w<CR>", "save without formatting (noautocmd)" },
---     -- w = { "<CMD>BufferWipeout<CR>", "Wipeout" }, -- TODO: implement this for bufferline
---     e = {
---       "<CMD>BufferLinePickClose<CR>",
---       "pick which buffer to close",
---     },
---     h = { "<CMD>BufferLineCloseLeft<CR>", "close all to the left" },
---     l = {
---       "<CMD>BufferLineCloseRight<CR>",
---       "close all to the right",
---     },
---     D = {
---       "<CMD>BufferLineSortByDirectory<CR>",
---       "sort by directory",
---     },
---     L = {
---       "<CMD>BufferLineSortByExtension<CR>",
---       "sort by language",
---     },
---   },
---   d = {
---     name = "Debug",
---     t = { "<CMD>lua require'dap'.toggle_breakpoint()<CR>", "toggle breakpoint" },
---     b = { "<CMD>lua require'dap'.step_back()<CR>", "step back" },
---     c = { "<CMD>lua require'dap'.continue()<CR>", "continue" },
---     C = { "<CMD>lua require'dap'.run_to_cursor()<CR>", "run to cursor" },
---     d = { "<CMD>lua require'dap'.disconnect()<CR>", "disconnect" },
---     g = { "<CMD>lua require'dap'.session()<CR>", "get session" },
---     i = { "<CMD>lua require'dap'.step_into()<CR>", "step into" },
---     o = { "<CMD>lua require'dap'.step_over()<CR>", "step over" },
---     u = { "<CMD>lua require'dap'.step_out()<CR>", "step out" },
---     p = { "<CMD>lua require'dap'.pause()<CR>", "pause" },
---     r = { "<CMD>lua require'dap'.repl.toggle()<CR>", "toggle repl" },
---     s = { "<CMD>lua require'dap'.continue()<CR>", "start" },
---     q = { "<CMD>lua require'dap'.close()<CR>", "quit" },
---     U = { "<CMD>lua require'dapui'.toggle({reset = true})<CR>", "toggle ui" },
---   },
---   p = {
---     name = "Plugins",
---     i = { "<CMD>Lazy install<CR>", "install" },
---     s = { "<CMD>Lazy sync<CR>", "sync" },
---     S = { "<CMD>Lazy clear<CR>", "status" },
---     c = { "<CMD>Lazy clean<CR>", "clean" },
---     u = { "<CMD>Lazy update<CR>", "update" },
---     p = { "<CMD>Lazy profile<CR>", "profile" },
---     l = { "<CMD>Lazy log<CR>", "log" },
---     d = { "<CMD>Lazy debug<CR>", "debug" },
---   },
---
---   -- " Available Debug Adapters:
---   -- "   https://microsoft.github.io/debug-adapter-protocol/implementors/adapters/
---   -- " Adapter configuration and installation instructions:
---   -- "   https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
---   -- " Debug Adapter protocol:
---   -- "   https://microsoft.github.io/debug-adapter-protocol/
---   -- " Debugging
---   g = {
---     name = "Git",
---     -- FIX : g = { "<CMD>lua require 'lvim.core.terminal'.lazygit_toggle()<CR>", "Lazygit" },
---     j = { "<CMD>lua require 'gitsigns'.nav_hunk('next', {navigation_message = false})<CR>", "next hunk" },
---     k = { "<CMD>lua require 'gitsigns'.nav_hunk('prev', {navigation_message = false})<CR>", "prev hunk" },
---     l = { "<CMD>lua require 'gitsigns'.blame_line()<CR>", "blame" },
---     L = { "<CMD>lua require 'gitsigns'.blame_line({full=true})<CR>", "blame line (full)" },
---     p = { "<CMD>lua require 'gitsigns'.preview_hunk()<CR>", "preview hunk" },
---     r = { "<CMD>lua require 'gitsigns'.reset_hunk()<CR>", "reset hunk" },
---     R = { "<CMD>lua require 'gitsigns'.reset_buffer()<CR>", "reset buffer" },
---     s = { "<CMD>lua require 'gitsigns'.stage_hunk()<CR>", "stage hunk" },
---     u = {
---       "<CMD>lua require 'gitsigns'.undo_stage_hunk()<CR>",
---       "undo Stage Hunk",
---     },
---     o = { "<CMD>Telescope git_status<CR>", "open changed file" },
---     b = { "<CMD>Telescope git_branches<CR>", "checkout branch" },
---     c = { "<CMD>Telescope git_commits<CR>", "checkout commit" },
---     C = {
---       "<CMD>Telescope git_bcommits<CR>",
---       "checkout commit(for current file)",
---     },
---     d = {
---       "<CMD>Gitsigns diffthis HEAD<CR>",
---       "git diff",
---     },
---   },
---   l = {
---     name = "LSP",
---     a = { "<CMD>lua vim.lsp.buf.code_action()<CR>", "code action" },
---     d = { "<CMD>Telescope diagnostics bufnr=0 theme=get_ivy<CR>", "buffer diagnostics" },
---     w = { "<CMD>Telescope diagnostics<CR>", "diagnostics" },
---     -- FIX : f = { "<CMD>lua require('lvim.lsp.utils').format()<CR>", "format" },
---     i = { "<CMD>LspInfo<CR>", "info" },
---     I = { "<CMD>Mason<CR>", "mason info" },
---     j = {
---       "<CMD>lua vim.diagnostic.goto_next()<CR>",
---       "next diagnostic",
---     },
---     k = {
---       "<CMD>lua vim.diagnostic.goto_prev()<CR>",
---       "prev diagnostic",
---     },
---     l = { "<CMD>lua vim.lsp.codelens.run()<CR>", "codeLens action" },
---     q = { "<CMD>lua vim.diagnostic.setloclist()<CR>", "quickfix" },
---     r = { "<CMD>lua vim.lsp.buf.rename()<CR>", "rename" },
---     s = { "<CMD>Telescope lsp_document_symbols<CR>", "document symbols" },
---     S = {
---       "<CMD>Telescope lsp_dynamic_workspace_symbols<CR>",
---       "workspace symbols",
---     },
---     e = { "<CMD>Telescope quickfix<CR>", "telescope quickfix" },
---   },
---   s = {
---     name = "Search",
---     b = { "<CMD>Telescope git_branches<CR>", "checkout branch" },
---     c = { "<CMD>Telescope colorscheme<CR>", "colorscheme" },
---     f = { "<CMD>Telescope find_files<CR>", "find file" },
---     h = { "<CMD>Telescope help_tags<CR>", "find help" },
---     H = { "<CMD>Telescope highlights<CR>", "find highlight groups" },
---     M = { "<CMD>Telescope man_pages<CR>", "man pages" },
---     r = { "<CMD>Telescope oldfiles<CR>", "open Recent File" },
---     R = { "<CMD>Telescope registers<CR>", "registers" },
---     t = { "<CMD>Telescope live_grep<CR>", "text" },
---     k = { "<CMD>Telescope keymaps<CR>", "keymaps" },
---     C = { "<CMD>Telescope commands<CR>", "commands" },
---     l = { "<CMD>Telescope resume<CR>", "resume last search" },
---     p = {
---       "<CMD>lua require('telescope.builtin').colorscheme({enable_preview = true})<CR>",
---       "colorscheme with preview",
---     },
---   },
---   T = {
---     name = "treesitter",
---     i = { ":TSConfigInfo<CR>", "info" },
---   },
--- }

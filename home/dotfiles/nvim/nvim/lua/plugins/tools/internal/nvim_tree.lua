@@ -1,5 +1,5 @@
 -- file explorer
--- keymaps is set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>e)
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
 return {
   {
     "nvim-tree/nvim-tree.lua",

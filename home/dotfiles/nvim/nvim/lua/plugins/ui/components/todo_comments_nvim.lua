@@ -1,13 +1,10 @@
 -- highlight and search for todo comments
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
 return {
   {
     "folke/todo-comments.nvim",
     event = { "VeryLazy" },
     dependencies = { "nvim-lua/plenary.nvim" },
-    init = function()
-      -- keymaps
-      vim.keymap.set("n", "<LEADER>lt", "<CMD>TodoLocList<CR>", { desc = "todoloclist", silent = true })
-    end,
     opts = {
       signs = true,
       sign_priority = 8,

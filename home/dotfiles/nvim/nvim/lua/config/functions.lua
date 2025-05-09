@@ -1,6 +1,6 @@
 -- functions definitions
 -- BufferKill function to close buffers with confirmation
--- keymaps is set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>bc, <LEADER>c)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua
 _G.BufferKill = function(kill_command, bufnr, force)
   kill_command = kill_command or "bd"
   local bo = vim.bo
