@@ -32,8 +32,7 @@ require("lazy").setup({
   concurrency = vim.uv.available_parallelism() * 2,
   -- plugin installation behavior
   install = {
-    -- lazy.nvim colorscheme while installing plugins
-    colorscheme = { "habamax" },
+    colorscheme = { "everforest" },
   },
   -- lazy.nvim ui config
   ui = {
