@@ -1,4 +1,5 @@
 -- file explorer
+-- keymaps is set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>e)
 return {
   {
     "nvim-tree/nvim-tree.lua",
@@ -7,11 +8,6 @@ return {
     },
     lazy = true,
     cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeFocus", "NvimTreeFindFileToggle" },
-    init = function()
-      -- keymaps
-      -- toggle file explorer
-      vim.keymap.set("n", "<LEADER>e", "<CMD>NvimTreeToggle<CR>", { desc = "file explorer", silent = true })
-    end,
     config = function()
       -- disable netrw
       vim.loaded_netrw = 1

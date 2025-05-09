@@ -1,4 +1,5 @@
 -- telescope config
+-- keymaps is set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>f, )
 return {
   {
   "nvim-telescope/telescope.nvim",
