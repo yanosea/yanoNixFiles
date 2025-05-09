@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-04-30T19:29:08.459-00:00",
+  "CreationDate": "2025-05-10T01:59:39.875-00:00",
   "Sources": [
     {
       "Packages": [
@@ -162,6 +162,9 @@
         },
         {
           "PackageIdentifier": "Microsoft.WSL"
+        },
+        {
+          "PackageIdentifier": "Microsoft.XNARedist"
         },
         {
           "PackageIdentifier": "nathancorvussolis.corvusskk"
