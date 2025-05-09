@@ -1,4 +1,5 @@
 -- bufferline config
+-- keymaps is set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>bj>)
 return {
   {
     "akinsho/bufferline.nvim",

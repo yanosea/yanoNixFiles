@@ -19,8 +19,11 @@ return {
           { "<LEADER>b", group = "buffers" },
           { "<LEADER>bb", "<CMD>bprevious<CR>", desc = "switch to previous buffer" },
           { "<LEADER>bc", "<CMD>lua BufferKill()<CR>", desc = "close current buffer" },
+          { "<LEADER>bf", "<CMD>Telescope buffers previewer=false<CR>", desc = "find and jump to buffer" },
+          { "<LEADER>bj", "<CMD>BufferLinePick<CR>", desc = "jump to buffer" },
           { "<LEADER>bn", "<CMD>bnext<CR>", desc = "switch to next buffer" },
           { "<LEADER>bN", "<CMD>ene!<CR>", desc = "close current buffer" },
+          { "<LEADER>bw", "<CMD>w!<CR>", desc = "save" },
           { "<LEADER>c", "<CMD>lua BufferKill()<CR>", desc = "close current buffer" },
           -- explorer
           { "<LEADER>e", "<CMD>NvimTreeToggle<CR>", desc = "explorer" },
@@ -56,8 +59,6 @@ return {
 -- mappings = {
 --   b = {
 --     name = "Buffers",
---     j = { "<CMD>BufferLinePick<CR>", "jump" },
---     f = { "<CMD>Telescope buffers previewer=false<CR>", "find" },
 --     b = { "<CMD>BufferLineCyclePrev<CR>", "previous" },
 --     n = { "<CMD>BufferLineCycleNext<CR>", "next" },
 --     W = { "<CMD>noautocmd w<CR>", "save without formatting (noautocmd)" },
