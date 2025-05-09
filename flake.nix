@@ -12,11 +12,7 @@
       inputs = { nixpkgs = { follows = "nixpkgs"; }; };
     };
     # darwin
-    nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin"; };
-    darwin = {
-      url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
-    };
+    darwin = { url = "github:lnl7/nix-darwin"; };
     # home-manager
     home-manager = {
       url = "github:nix-community/home-manager";
