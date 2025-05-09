@@ -19,10 +19,7 @@ export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 # editor
-if command -v lvim >/dev/null 2>&1; then
-	export VISUAL="lvim"
-	export EDITOR="lvim"
-elif command -v nvim >/dev/null 2>&1; then
+if command -v nvim >/dev/null 2>&1; then
 	export VISUAL="nvim"
 	export EDITOR="nvim"
 elif command -v vim >/dev/null 2>&1; then

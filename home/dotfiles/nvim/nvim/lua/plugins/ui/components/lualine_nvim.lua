@@ -6,7 +6,7 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     lazy = true,
-    event = "UIEnter",
+    event = "VimEnter",
     config = function()
       local colors = {
         bg = "#2b3339", -- everforest bg

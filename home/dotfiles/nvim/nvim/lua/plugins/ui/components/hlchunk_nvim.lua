@@ -1,4 +1,4 @@
--- show indent lines instead of lunarvim builtin indentblankline.nvim
+-- show indent lines
 return {
   {
     "shellRaining/hlchunk.nvim",

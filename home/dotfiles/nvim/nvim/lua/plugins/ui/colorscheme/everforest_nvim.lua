@@ -3,7 +3,7 @@ return {
   {
     "neanias/everforest-nvim",
     lazy = true,
-    event = "UIEnter",
+    event = "VimEnter",
     config = function()
       -- set neovim colorscheme
       vim.cmd("colorscheme everforest")
