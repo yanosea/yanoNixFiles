@@ -3,7 +3,7 @@ return {
   {
     "brenoprata10/nvim-highlight-colors",
     lazy = true,
-    ft = { "css", "scss", "html", "javascript", "typescript", "svelte", "vue", "tsx", "jsx" },
+    event = "BufRead",
     config = function()
       require("nvim-highlight-colors").setup({
         render = "background",

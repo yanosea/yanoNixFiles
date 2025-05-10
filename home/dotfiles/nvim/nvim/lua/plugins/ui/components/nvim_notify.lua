@@ -5,15 +5,16 @@ return {
     lazy = true,
     event = "UIEnter",
     config = function()
+      local colors = require("utils.colors").colors
       vim.notify = require("notify")
       require("notify").setup({
         fps = 60,
         colors = {
-          error = "#e67e80", -- everforest red
-          warn = "#dbbc7f", -- everforest yellow
-          info = "#83c092", -- everforest sage green
-          debug = "#7fbbb3", -- everforest blue
-          trace = "#d3c6aa", -- everforest foreground
+          error = colors.Red,
+          warn = colors.Yellow,
+          info = colors.Green,
+          debug = colors.Blue,
+          trace = colors.Purple,
         },
         render = "compact",
         timeout = 500,

@@ -6,10 +6,10 @@ return {
     lazy = true,
     event = "InsertEnter",
     config = function()
-      vim.defer_fn(function()
-        require("copilot").setup()
-        require("copilot_cmp").setup()
-      end, 100)
+      require("copilot_cmp").setup({
+        suggestion = { enabled = true },
+        panel = { enabled = true },
+      })
     end,
   },
 }

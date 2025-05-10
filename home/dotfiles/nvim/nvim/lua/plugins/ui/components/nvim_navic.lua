@@ -7,51 +7,61 @@ return {
     },
     lazy = true,
     event = "BufRead",
-    opts = {
-      icons = {
-        Array = "",
-        Boolean = "",
-        Class = "",
-        Color = "",
-        Constant = "",
-        Constructor = "",
-        Enum = "",
-        EnumMember = "",
-        Event = "",
-        Field = "",
-        File = "",
-        Folder = "󰉋",
-        Function = "",
-        Interface = "",
-        Key = "",
-        Keyword = "",
-        Method = "",
-        Module = "",
-        Namespace = "",
-        Null = "󰟢",
-        Number = "",
-        Object = "",
-        Operator = "",
-        Package = "",
-        Property = "",
-        Reference = "",
-        Snippet = "",
-        String = "",
-        Struct = "",
-        Text = "",
-        TypeParameter = "",
-        Unit = "",
-        Value = "",
-        Variable = "",
-      },
-      highlight = true,
-      separator = " ",
-      depth_limit = 0,
-      depth_limit_indicator = "..",
-    },
-    config = function(_, opts)
+    config = function()
       local navic = require("nvim-navic")
-      navic.setup(opts)
+      local icons = require("utils.icons").icons
+      navic.setup({
+        icons = {
+          Array = icons.kind.Array,
+          Boolean = icons.kind.Boolean,
+          Class = icons.kind.Class,
+          Color = icons.kind.Color,
+          Constant = icons.kind.Constant,
+          Constructor = icons.kind.Constructor,
+          Enum = icons.kind.Enum,
+          EnumMember = icons.kind.EnumMember,
+          Event = icons.kind.Event,
+          Field = icons.kind.Field,
+          File = icons.kind.File,
+          Folder = icons.kind.Folder,
+          Function = icons.kind.Function,
+          Interface = icons.kind.Interface,
+          Key = icons.kind.Key,
+          Keyword = icons.kind.Keyword,
+          Method = icons.kind.Method,
+          Module = icons.kind.Module,
+          Namespace = icons.kind.Namespace,
+          Null = icons.kind.Null,
+          Number = icons.kind.Number,
+          Object = icons.kind.Object,
+          Operator = icons.kind.Operator,
+          Package = icons.kind.Package,
+          Property = icons.kind.Property,
+          Reference = icons.kind.Reference,
+          Snippet = icons.kind.Snippet,
+          String = icons.kind.String,
+          Struct = icons.kind.Struct,
+          TypeParameter = icons.kind.TypeParameter,
+          Unit = icons.kind.Unit,
+          Value = icons.kind.Value,
+          Variable = icons.kind.Variable,
+        },
+        lsp = {
+          auto_attach = true,
+          preference = nil,
+        },
+        highlight = false,
+        separator = " " .. icons.ui.LineRightArrow .. " ",
+        depth_limit = 0,
+        depth_limit_indicator = "..",
+        safe_output = true,
+        lazy_update_context = false,
+        click = false,
+        format_text = function(text)
+          return text
+        end,
+      })
+
       local excluded_filetypes = {
         "help",
         "startify",
@@ -91,7 +101,7 @@ return {
             file_icon, hl_group = devicons.get_icon(filename, extension, { default = true })
 
             if not file_icon or file_icon == "" then
-              file_icon = ""
+              file_icon = icons.kind.File
             end
           else
             file_icon = ""
@@ -101,13 +111,13 @@ return {
           local buf_ft = vim.bo.filetype
 
           if buf_ft == "dapui_breakpoints" then
-            file_icon = ""
+            file_icon = icons.ui.Breakpoint
           elseif buf_ft == "dapui_stacks" then
-            file_icon = ""
+            file_icon = icons.ui.Stack
           elseif buf_ft == "dapui_scopes" then
-            file_icon = ""
+            file_icon = icons.ui.Scope
           elseif buf_ft == "dapui_watches" then
-            file_icon = "󰂥"
+            file_icon = icons.ui.Watches
           end
 
           local navic_text = vim.api.nvim_get_hl_by_name("Normal", true)
@@ -122,7 +132,7 @@ return {
         local gps_location = navic.get_location()
 
         if gps_location ~= "" and navic.is_available() then
-          return "%#NavicSeparator#" .. "󰄾" .. "%* " .. gps_location
+          return "%#NavicSeparator#" .. icons.ui.Separator .. " " .. "%* " .. gps_location
         end
         return ""
       end
@@ -144,7 +154,7 @@ return {
         end
 
         if value ~= "" and vim.bo.modified then
-          local mod = "%#LspCodeLens#" .. "●" .. "%*"
+          local mod = "%#LspCodeLens#" .. icons.ui.Circle .. "%*"
           if gps_added then
             value = value .. " " .. mod
           else

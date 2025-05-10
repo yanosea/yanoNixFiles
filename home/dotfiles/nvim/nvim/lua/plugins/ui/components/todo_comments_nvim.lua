@@ -10,16 +10,20 @@ return {
       sign_priority = 8,
       keywords = {
         FIX = {
-          icon = " ",
+          icon = require("utils.icons").icons.ui.Bug,
           color = "error",
           alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
         },
-        TODO = { icon = " ", color = "info" },
-        HACK = { icon = " ", color = "warning" },
-        WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-        PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-        TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+        TODO = { icon = require("utils.icons").icons.ui.Check, color = "info" },
+        HACK = { icon = require("utils.icons").icons.ui.Fire, color = "warning" },
+        WARN = { icon = require("utils.icons").icons.ui.Warning, color = "warning", alt = { "WARNING", "XXX" } },
+        PERF = { icon = require("utils.icons").icons.ui.Clock, alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+        NOTE = { icon = require("utils.icons").icons.ui.Info, color = "hint", alt = { "INFO" } },
+        TEST = {
+          icon = require("utils.icons").icons.ui.Stopwatch,
+          color = "test",
+          alt = { "TESTING", "PASSED", "FAILED" },
+        },
       },
       gui_style = {
         fg = "NONE",
@@ -39,12 +43,12 @@ return {
         exclude = {},
       },
       colors = {
-        error = { "DiagnosticError", "ErrorMsg", "#e67e80" }, -- Everforest red
-        warning = { "DiagnosticWarn", "WarningMsg", "#dbbc7f" }, -- Everforest yellow
-        info = { "DiagnosticInfo", "#7fbbb3" }, -- Everforest blue
-        hint = { "DiagnosticHint", "#83c092" }, -- Everforest sage green
-        default = { "Identifier", "#d699b6" }, -- Everforest purple
-        test = { "Identifier", "#e69875" }, -- Everforest orange
+        error = { "DiagnosticError", "ErrorMsg", require("utils.colors").colors.red },
+        warning = { "DiagnosticWarn", "WarningMsg", require("utils.colors").colors.yellow },
+        info = { "DiagnosticInfo", require("utils.colors").colors.blue },
+        hint = { "DiagnosticHint", require("utils.colors").colors.green },
+        default = { "Identifier", require("utils.colors").colors.purple },
+        test = { "Identifier", require("utils.colors").colors.orange },
       },
       search = {
         command = "rg",

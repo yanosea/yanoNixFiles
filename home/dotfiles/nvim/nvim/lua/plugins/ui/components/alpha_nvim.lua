@@ -83,17 +83,22 @@ return {
         },
       }
       -- buttons
+      local icons = require("utils.icons").icons
       dashboard.section.buttons.val = {
-        dashboard.button("n", "  new file", "<CMD>ene!<CR>"),
-        dashboard.button("f", "󰈞  find file", "<CMD>Telescope find_files<CR>"),
-        dashboard.button("t", "󰊄  find text", "<CMD>Telescope live_grep<CR>"),
-        dashboard.button("r", "  recent files", "<CMD>Telescope oldfiles<CR>"),
-        dashboard.button("e", "  explorer", "<CMD>Telescope file_browser cwd=" .. vim.fn.expand("%:p:h") .. "<CR>"),
-        dashboard.button("g", "  lazygit", "<CMD>lua ToggleLazyGit()<CR>"),
-        dashboard.button("l", "󰒲  lazy", "<CMD>Lazy<CR>"),
-        dashboard.button("m", "󱌣  mason Lsp", "<CMD>Mason<CR>"),
-        dashboard.button("T", "󰔱  sync tree-sitter parser", "<CMD>TSUpdateSync<CR>"),
-        dashboard.button("q", "󰅖  quit", "<CMD>quit<CR>"),
+        dashboard.button("n", icons.ui.NewFile .. "  new file", "<CMD>ene!<CR>"),
+        dashboard.button("f", icons.ui.FindFile .. "  find file", "<CMD>Telescope find_files<CR>"),
+        dashboard.button("t", icons.ui.FindText .. "  find text", "<CMD>Telescope live_grep<CR>"),
+        dashboard.button("r", icons.ui.History .. "  recent files", "<CMD>Telescope oldfiles<CR>"),
+        dashboard.button(
+          "e",
+          icons.ui.Telescope .. "  explorer",
+          "<CMD>Telescope file_browser cwd=" .. vim.fn.expand("%:p:h") .. "<CR>"
+        ),
+        dashboard.button("g", icons.git.Git .. "  lazygit", "<CMD>lua ToggleLazyGit()<CR>"),
+        dashboard.button("l", icons.misc.Lazy .. "  lazy", "<CMD>Lazy<CR>"),
+        dashboard.button("m", icons.misc.Mason .. "  mason lsp", "<CMD>Mason<CR>"),
+        dashboard.button("T", icons.ui.Tree .. "  sync tree-sitter parser", "<CMD>TSUpdateSync<CR>"),
+        dashboard.button("q", icons.ui.Close .. "  quit", "<CMD>quit<CR>"),
       }
       -- layout
       dashboard.section.header = header

@@ -8,44 +8,9 @@ return {
     lazy = true,
     event = "VimEnter",
     config = function()
-      local colors = {
-        bg = "#2b3339", -- everforest bg
-        fg = "#d3c6aa", -- everforest fg
-        yellow = "#dbbc7f", -- everforest yellow
-        cyan = "#83c092", -- everforest aqua
-        darkblue = "#1e2326", -- everforest bg_dim
-        green = "#a7c080", -- everforest green
-        orange = "#e69875", -- everforest orange
-        violet = "#9fe3d3", -- everforest teal
-        magenta = "#d699b6", -- everforest purple
-        purple = "#b67996", -- everforest magenta
-        blue = "#7fbbb3", -- everforest blue
-        red = "#e67e80", -- everforest red
-      }
-      local icons = {
-        ui = {
-          Target = "󰀘",
-          Tree = "",
-          Tab = "󰌒",
-          BoldDividerRight = "",
-          BoldDividerLeft = "",
-          DividerRight = "",
-          DividerLeft = "",
-        },
-        git = {
-          Branch = "",
-          LineAdded = "",
-          LineModified = "",
-          LineRemoved = "",
-          Octoface = " ",
-        },
-        diagnostics = {
-          BoldError = "",
-          BoldWarning = "",
-          BoldInformation = "",
-          BoldHint = "",
-        },
-      }
+      -- lualine.nvim config
+      local colors = require("utils.colors").colors
+      local icons = require("utils.icons").icons
       local conditions = {
         hide_in_width = function()
           return vim.fn.winwidth(0) > 80
@@ -102,9 +67,9 @@ return {
           },
           padding = { left = 2, right = 1 },
           diff_color = {
-            added = { fg = colors.green },
-            modified = { fg = colors.yellow },
-            removed = { fg = colors.red },
+            added = { fg = colors.Green },
+            modified = { fg = colors.Yellow },
+            removed = { fg = colors.Red },
           },
           cond = nil,
         },
@@ -113,14 +78,14 @@ return {
             if vim.bo.filetype == "python" then
               local venv = os.getenv("CONDA_DEFAULT_ENV") or os.getenv("VIRTUAL_ENV")
               if venv then
-                local icons = require("nvim-web-devicons")
-                local py_icon, _ = icons.get_icon(".py")
+                local devicons = require("nvim-web-devicons")
+                local py_icon, _ = devicons.get_icon(".py")
                 return string.format(" " .. py_icon .. " (%s)", utils.env_cleanup(venv))
               end
             end
             return ""
           end,
-          color = { fg = colors.green },
+          color = { fg = colors.Green },
           cond = conditions.hide_in_width,
         },
         diagnostics = {
@@ -140,7 +105,7 @@ return {
           color = function()
             local buf = vim.api.nvim_get_current_buf()
             local ts = vim.treesitter.highlighter.active[buf]
-            return { fg = ts and not vim.tbl_isempty(ts) and colors.green or colors.red }
+            return { fg = ts and not vim.tbl_isempty(ts) and colors.Green or colors.Red }
           end,
           cond = conditions.hide_in_width,
         },
@@ -150,23 +115,25 @@ return {
             if #buf_clients == 0 then
               return "LSP Inactive"
             end
-            local buf_ft = vim.bo.filetype
             local buf_client_names = {}
             local copilot_active = false
             for _, client in pairs(buf_clients) do
+              if client.name == "GitHub Copilot" then
+                copilot_active = true
+                goto continue
+              end
+
               if client.name ~= "null-ls" and client.name ~= "copilot" then
                 table.insert(buf_client_names, client.name)
               end
 
-              if client.name == "copilot" then
-                copilot_active = true
-              end
+              ::continue::
             end
             local unique_client_names = table.concat(buf_client_names, ", ")
             local language_servers = string.format("[%s]", unique_client_names)
             if copilot_active then
-              vim.api.nvim_set_hl(0, "LualineCopilot", { fg = colors.green })
-              language_servers = language_servers .. " %#LualineCopilot#" .. icons.git.Octoface .. "%*"
+              vim.api.nvim_set_hl(0, "LualineCopilot", { fg = colors.Green })
+              language_servers = language_servers .. " %#LualineCopilot#" .. icons.git.Octoface .. " " .. "%*"
             end
 
             return language_servers
@@ -200,7 +167,17 @@ return {
           function()
             local current_line = vim.fn.line(".")
             local total_lines = vim.fn.line("$")
-            local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
+            local chars = {
+              icons.scrollbars.Min,
+              icons.scrollbars.Bar1,
+              icons.scrollbars.Bar2,
+              icons.scrollbars.Bar3,
+              icons.scrollbars.Bar4,
+              icons.scrollbars.Bar5,
+              icons.scrollbars.Bar6,
+              icons.scrollbars.Bar7,
+              icons.scrollbars.Max,
+            }
             local line_ratio = current_line / total_lines
             local index = math.ceil(line_ratio * #chars)
             return chars[index]
@@ -219,8 +196,14 @@ return {
           theme = vim.g.colors_name or "auto",
           globalstatus = true,
           icons_enabled = true,
-          component_separators = { left = "", right = "" },
-          section_separators = { left = "", right = "" },
+          component_separators = {
+            left = icons.ui.DividerRight,
+            right = icons.ui.DividerLeft,
+          },
+          section_separators = {
+            left = icons.ui.BoldDividerRight,
+            right = icons.ui.BoldDividerLeft,
+          },
           disabled_filetypes = { "alpha" },
         },
         sections = {

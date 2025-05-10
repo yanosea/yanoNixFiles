@@ -5,6 +5,9 @@ return {
     lazy = true,
     event = "VeryLazy",
     config = function()
+      -- hlchunk.nvim config
+      local icons = require("utils.icons").icons
+      local colors = require("utils.colors").colors
       require("hlchunk").setup({
         chunk = {
           enable = true,
@@ -57,15 +60,15 @@ return {
             ["null-ls-info"] = true,
           },
           chars = {
-            horizontal_line = "─",
-            vertical_line = "│",
-            left_top = "╭",
-            left_bottom = "╰",
-            right_arrow = ">",
+            horizontal_line = icons.ui.LineHorizontal,
+            vertical_line = icons.ui.LineMiddle,
+            left_top = icons.ui.LineLeftTop,
+            left_bottom = icons.ui.LineLeftBottom,
+            right_arrow = icons.ui.LineRightArrow,
           },
           style = {
-            { fg = "#83c092" }, -- everforest sage green
-            { fg = "#e67e80" }, -- everforest red
+            { fg = colors.Blue },
+            { fg = colors.Red },
           },
           textobject = "",
           max_file_size = 1024 * 1024,
@@ -75,7 +78,7 @@ return {
           enable = false,
           use_treesitter = true,
           chars = {
-            "│",
+            icons.ui.LineMiddle,
           },
           style = {
             { fg = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("Whitespace")), "fg", "gui") },
@@ -84,12 +87,12 @@ return {
         line_num = {
           enable = true,
           use_treesitter = true,
-          style = "#83c092", -- everforest sage green
+          style = colors.Blue,
         },
         blank = {
           enable = true,
           chars = {
-            "․",
+            icons.ui.Blank,
           },
           style = {
             vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("Whitespace")), "fg", "gui"),

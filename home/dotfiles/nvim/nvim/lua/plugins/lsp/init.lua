@@ -10,6 +10,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       local ensure_installed = {
+        "gopls",
         "lua_ls",
       }
       require("mason").setup()
@@ -17,28 +18,8 @@ return {
         automatic_installation = true,
         ensure_installed = ensure_installed,
       })
-      local colors = {
-        bg = "#2b3339", -- everforest bg
-        fg = "#d3c6aa", -- everforest fg
-        yellow = "#dbbc7f", -- everforest yellow
-        cyan = "#83c092", -- everforest aqua
-        darkblue = "#1e2326", -- everforest bg_dim
-        green = "#a7c080", -- everforest green
-        orange = "#e69875", -- everforest orange
-        violet = "#9fe3d3", -- everforest teal
-        magenta = "#d699b6", -- everforest purple
-        purple = "#b67996", -- everforest magenta
-        blue = "#7fbbb3", -- everforest blue
-        red = "#e67e80", -- everforest red
-      }
-      local icons = {
-        diagnostics = {
-          BoldError = "",
-          BoldWarning = "",
-          BoldInformation = "",
-          BoldHint = "",
-        },
-      }
+      local colors = require("utils.colors").colors
+      local icons = require("utils.icons").icons
       vim.diagnostic.config({
         virtual_text = true,
         update_in_insert = false,
@@ -52,10 +33,10 @@ return {
             [vim.diagnostic.severity.HINT] = icons.diagnostics.BoldHint,
           },
           texthl = {
-            [vim.diagnostic.severity.ERROR] = { fg = colors.red },
-            [vim.diagnostic.severity.WARN] = { fg = colors.yellow },
-            [vim.diagnostic.severity.INFO] = { fg = colors.blue },
-            [vim.diagnostic.severity.HINT] = { fg = colors.green },
+            [vim.diagnostic.severity.ERROR] = { fg = colors.Red },
+            [vim.diagnostic.severity.WARN] = { fg = colors.Yellow },
+            [vim.diagnostic.severity.INFO] = { fg = colors.Blue },
+            [vim.diagnostic.severity.HINT] = { fg = colors.Green },
           },
         },
         float = {

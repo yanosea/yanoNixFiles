@@ -10,6 +10,8 @@ return {
     lazy = true,
     event = "UIEnter",
     config = function()
+      -- noice.nvim --config
+      local icons = require("utils.icons").icons
       require("noice").setup({
         cmdline = {
           enabled = true, -- enables the Noice cmdline UI
@@ -21,13 +23,27 @@ return {
             -- opts: any options passed to the view
             -- icon_hl_group: optional hl_group for the icon
             -- title: set to anything or empty string to hide
-            cmdline = { pattern = "^:", icon = "", lang = "vim" },
-            search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
-            search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
-            filter = { pattern = "^:%s*!", icon = "$", lang = "bash" },
-            lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
-            help = { pattern = "^:%s*he?l?p?%s+", icon = "" },
-            input = { view = "cmdline_input", icon = "󰥻 " }, -- Used by input()
+            cmdline = { pattern = "^:", icon = icons.ui.CommandLine, lang = "vim" },
+            search_down = {
+              kind = "search",
+              pattern = "^/",
+              icon = icons.ui.SearchBold .. " " .. icons.ui.ChevronShortDown,
+              lang = "regex",
+            },
+            search_up = {
+              kind = "search",
+              pattern = "^%?",
+              icon = icons.ui.SearchBold .. " " .. icons.ui.ChevronShortUp,
+              lang = "regex",
+            },
+            filter = { pattern = "^:%s*!", icon = icons.ui.Filter, lang = "bash" },
+            lua = {
+              pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" },
+              icon = icons.languages.Lua,
+              lang = "lua",
+            },
+            help = { pattern = "^:%s*he?l?p?%s+", icon = icons.ui.Question },
+            input = { view = "cmdline_input", icon = icons.ui.CommandLineInput }, -- Used by input()
             -- lua = false, -- to disable a format, set to `false`
           },
         },
