@@ -18,7 +18,7 @@ return {
           -- avante
           { "<LEADER>a", group = "avante" },
           { "<LEADER>aa", "<CMD>AvanteAsk<CR>", desc = "avante ask" },
-          { "<LEADER>ac", "<CMD>AvanteClear<CR>", desc = "avante clear" },
+          { "<LEADER>aC", "<CMD>AvanteClear<CR>", desc = "avante clear" },
           { "<LEADER>ae", "<CMD>AvanteEdit<CR>", desc = "avante edit" },
           { "<LEADER>af", "<CMD>AvanteFocus<CR>", desc = "avante focus" },
           { "<LEADER>ar", "<CMD>AvanteRefresh<CR>", desc = "avante refresh" },

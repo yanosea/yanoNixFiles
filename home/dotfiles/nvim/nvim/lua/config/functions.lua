@@ -18,14 +18,12 @@ _G.BufferKill = function(kill_command, bufnr, force)
       -- check if buffer is unnamed
       local is_unnamed = bufname == ""
       local message = is_unnamed and "Save changes to unnamed buffer?" or fmt([[Save changes to "%s"?]], bufname)
-
       choice = fn.confirm(message, "&Yes\n&No\n&Cancel")
       if choice == 1 then
         if is_unnamed then
           -- for unnamed buffers, switch to the buffer before saving
           -- to properly show the filename prompt
           local current_buf = api.nvim_get_current_buf()
-          local current_win = api.nvim_get_current_win()
           -- only switch if not already on the target buffer
           if current_buf ~= bufnr then
             api.nvim_set_current_buf(bufnr)
@@ -40,9 +38,8 @@ _G.BufferKill = function(kill_command, bufnr, force)
             local filename = vim.fn.input("Please enter filename to save: ")
             if filename and filename ~= "" then
               local dir = vim.fn.fnamemodify(filename, ":h")
-              local basename = vim.fn.fnamemodify(filename, ":t")
               if dir ~= "." and vim.fn.isdirectory(dir) == 0 then
-                local choice = fn.confirm(fmt("Directory '%s' doesn't exist. Create it?", dir), "&Yes\n&No", 1)
+                choice = fn.confirm(fmt("Directory '%s' doesn't exist. Create it?", dir), "&Yes\n&No", 1)
                 if choice == 1 then
                   fn.mkdir(dir, "p")
                 end

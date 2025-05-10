@@ -6,16 +6,16 @@
   - 遅延読み込みによるパフォーマンス最適化
 
 ## LSP（言語サーバープロトコル）関連
-- [ ] **neovim/nvim-lspconfig**
+- [x] **neovim/nvim-lspconfig**
   - LSP設定基盤
   - 言語サーバーとの連携設定
-- [ ] **williamboman/mason-lspconfig.nvim**
+- [x] **williamboman/mason-lspconfig.nvim**
   - LSPサーバー自動インストール
 - [ ] **tamago324/nlsp-settings.nvim**
   - JSON形式でのLSP設定管理
 - [ ] **nvimtools/none-ls.nvim**
   - 診断・フォーマット等LSP拡張
-- [ ] **williamboman/mason.nvim**
+- [x] **williamboman/mason.nvim**
   - LSPサーバーとツールのパッケージマネージャ
 - [ ] **folke/neodev.nvim**
   - Neovim Lua API開発支援

@@ -37,11 +37,11 @@ return {
           LineAdded = "",
           LineModified = "",
           LineRemoved = "",
-          Octoface = "",
+          Octoface = " ",
         },
         diagnostics = {
           BoldError = "",
-          BoldWarning = "",
+          BoldWarning = "",
           BoldInformation = "",
           BoldHint = "",
         },
@@ -165,7 +165,8 @@ return {
             local unique_client_names = table.concat(buf_client_names, ", ")
             local language_servers = string.format("[%s]", unique_client_names)
             if copilot_active then
-              language_servers = language_servers .. " " .. icons.git.Octoface
+              vim.api.nvim_set_hl(0, "LualineCopilot", { fg = colors.green })
+              language_servers = language_servers .. " %#LualineCopilot#" .. icons.git.Octoface .. "%*"
             end
 
             return language_servers
