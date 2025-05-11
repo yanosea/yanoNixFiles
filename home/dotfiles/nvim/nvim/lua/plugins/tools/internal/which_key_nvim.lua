@@ -63,6 +63,22 @@ return {
           { "<LEADER>Cs", "<CMD>CopilotChatSave<CR>", desc = "copilotchat save" },
           { "<LEADER>Ct", "<CMD>CopilotChatToggle<CR>", desc = "copilotchat chat toggle" },
           { "<LEADER>CT", "<CMD>CopilotChatTests<CR>", desc = "copilotchat tests" },
+          -- debug
+          { "<LEADER>d", group = "debug" },
+          { "<LEADER>dt", "<CMD>lua require'dap'.toggle_breakpoint()<CR>", desc = "toggle breakpoint" },
+          { "<LEADER>db", "<CMD>lua require'dap'.step_back()<CR>", desc = "step back" },
+          { "<LEADER>dc", "<CMD>lua require'dap'.continue()<CR>", desc = "continue" },
+          { "<LEADER>dC", "<CMD>lua require'dap'.run_to_cursor()<CR>", desc = "run to cursor" },
+          { "<LEADER>dd", "<CMD>lua require'dap'.disconnect()<CR>", desc = "disconnect" },
+          { "<LEADER>dg", "<CMD>lua require'dap'.session()<CR>", desc = "get session" },
+          { "<LEADER>di", "<CMD>lua require'dap'.step_into()<CR>", desc = "step into" },
+          { "<LEADER>do", "<CMD>lua require'dap'.step_over()<CR>", desc = "step over" },
+          { "<LEADER>du", "<CMD>lua require'dap'.step_out()<CR>", desc = "step out" },
+          { "<LEADER>dp", "<CMD>lua require'dap'.pause()<CR>", desc = "pause" },
+          { "<LEADER>dr", "<CMD>lua require'dap'.repl.toggle()<CR>", desc = "toggle repl" },
+          { "<LEADER>ds", "<CMD>lua require'dap'.continue()<CR>", desc = "start" },
+          { "<LEADER>dq", "<CMD>lua require'dap'.close()<CR>", desc = "quit" },
+          { "<LEADER>dU", "<CMD>lua require'dapui'.toggle({reset = true})<CR>", desc = "toggle UI" },
           -- explorer
           { "<LEADER>e", "<CMD>NvimTreeToggle<CR>", desc = "explorer" },
           -- find file

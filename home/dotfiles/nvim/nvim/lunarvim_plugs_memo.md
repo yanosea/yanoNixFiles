@@ -87,9 +87,9 @@
   - 差分表示と操作機能
 
 ## 開発支援ツール
-- [ ] **mfussenegger/nvim-dap**
+- [x] **mfussenegger/nvim-dap**
   - デバッグアダプタープロトコル実装
-- [ ] **rcarriga/nvim-dap-ui**
+- [x] **rcarriga/nvim-dap-ui**
   - デバッガーUI
 - [x] **numToStr/Comment.nvim**
   - 効率的なコード内コメント操作
