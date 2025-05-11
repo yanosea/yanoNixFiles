@@ -10,6 +10,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       local ensure_installed = {
+        "efm",
         "gopls",
         "lua_ls",
       }

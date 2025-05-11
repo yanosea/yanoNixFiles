@@ -110,9 +110,23 @@ return {
           { "<LEADER>go", "<CMD>Telescope git_status<CR>", desc = "open changed file" },
           -- lsp
           { "<LEADER>l", group = "lsp" },
+          { "<LEADER>la", "<CMD>lua vim.lsp.buf.code_action()<CR>", desc = "code action" },
+          { "<LEADER>ld", "<CMD>Telescope diagnostics bufnr=0 theme=get_ivy<CR>", desc = "buffer diagnostics" },
+          { "<LEADER>le", "<CMD>Telescope quickfix<CR>", desc = "telescope quickfix" },
+          { "<LEADER>lf", "<CMD>lua _G.FormatUtils.format_buffer()<CR>", desc = "format" },
+          { "<LEADER>li", "<CMD>LspInfo<CR>", desc = "info" },
+          { "<LEADER>lI", "<CMD>Mason<CR>", desc = "mason info" },
+          { "<LEADER>lj", "<CMD>lua vim.diagnostic.goto_next()<CR>", desc = "next diagnostic" },
+          { "<LEADER>lk", "<CMD>lua vim.diagnostic.goto_prev()<CR>", desc = "prev diagnostic" },
+          { "<LEADER>ll", "<CMD>lua vim.lsp.codelens.run()<CR>", desc = "codelens action" },
           { "<LEADER>lo", "<CMD>Outline<CR>", desc = "outline" },
+          { "<LEADER>lq", "<CMD>lua vim.diagnostic.setloclist()<CR>", desc = "quickfix" },
+          { "<LEADER>lr", "<CMD>lua vim.lsp.buf.rename()<CR>", desc = "rename" },
+          { "<LEADER>ls", "<CMD>Telescope lsp_document_symbols<CR>", desc = "document symbols" },
+          { "<LEADER>lS", "<CMD>Telescope lsp_dynamic_workspace_symbols<CR>", desc = "workspace symbols" },
           { "<LEADER>lt", "<CMD>Trouble diagnostics toggle<CR>", desc = "diagnostics list" },
           { "<LEADER>lT", "<CMD>TodoLocList<CR>", desc = "todo location list" },
+          { "<LEADER>lw", "<CMD>Telescope diagnostics<CR>", desc = "diagnostics" },
           -- markdown
           { "<LEADER>m", "<CMD>RenderMarkdown toggle<CR>", desc = "markdown preview toggle" },
           -- noice
