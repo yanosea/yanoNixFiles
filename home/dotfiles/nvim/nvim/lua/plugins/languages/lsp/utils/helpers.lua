@@ -1,17 +1,14 @@
--- LSP ユーティリティ関数
+-- lsp helper utils
 local M = {}
-
--- Neovim ランタイムディレクトリを取得
+-- get nvim runtime dir
 M.get_nvim_runtime_dir = function()
   return vim.fn.expand "$VIMRUNTIME"
 end
-
--- 設定ディレクトリを取得
+-- get nvim config dir
 M.get_config_dir = function()
   return vim.fn.stdpath "config"
 end
-
--- コマンドのフルパスを解決
+-- get command full path
 M.resolve_full_path = function(cmd)
   if not cmd or cmd == "" then
     return cmd
@@ -37,8 +34,7 @@ M.resolve_full_path = function(cmd)
 
   return cmd
 end
-
--- ワークスペースにパッケージを追加
+-- add packages to lua workspace
 M.add_packages_to_workspace = function(packages, config)
   config.settings = config.settings or {}
   config.settings.Lua = config.settings.Lua or {}
@@ -59,8 +55,7 @@ M.add_packages_to_workspace = function(packages, config)
     end
   end
 end
-
--- デフォルトのLuaワークスペース設定
+-- default workspace
 M.default_workspace = {
   library = {
     M.get_nvim_runtime_dir(),
@@ -73,5 +68,4 @@ M.default_workspace = {
   maxPreload = 5000,
   preloadFileSize = 10000,
 }
-
 return M

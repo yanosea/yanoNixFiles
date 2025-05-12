@@ -1,10 +1,6 @@
--- LSPInfoコマンドの実装
+-- overwirte LspInfo command
 local M = {}
-
 function M.setup()
-  -- LspInfo コマンドの実装
-  -- 既存のコマンドを削除（上書き）
-  -- vim.api.nvim_del_user_command("LspInfo")
   vim.api.nvim_create_user_command("LspInfo", function()
     local clients = vim.lsp.get_clients()
     local bufnr = vim.api.nvim_get_current_buf()
@@ -399,5 +395,4 @@ function M.setup()
     })
   end, {})
 end
-
 return M

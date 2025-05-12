@@ -5,26 +5,70 @@ return {
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
       "folke/neodev.nvim",
     },
     lazy = true,
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      -- LspInfo コマンドの実装をインポート
+      -- overwrite LspInfo command
       require("plugins.languages.lsp.utils.lsp_info").setup()
+      -- define lsp servers
+      local ensure_installed_server = {
+        -- common
+        "ast_grep",
+        "efm",
+        "diagnosticls",
+        "typos_lsp",
+        -- config files
+        "docker_compose_language_service",
+        "dockerls",
+        "taplo", -- toml
+        "yamlls",
+        -- web
+        "astro",
+        "cssls",
+        "html",
+        "jsonls",
+        "marksman", -- markdown
+        "tailwindcss",
+        -- languages
+        "bashls",
+        "golangci_lint_ls",
+        "gopls",
+        "lua_ls",
+        "nil_ls", -- nix
+        "rust_analyzer",
+        "sqlls",
+      }
+      local ensure_installed_tools = {
+        -- actions
+        -- common
+        "proselint",
 
-      -- Mason セットアップ
+        --formatters
+        -- web
+        "prettier",
+        -- languages
+        "nixfmt", -- nix
+        "shfmt", -- shell
+        "stylua", -- lua
+
+        -- linters
+        -- languages
+        "golangci-lint", -- go
+        "shellcheck", -- shell
+      }
       require("mason").setup()
       require("mason-lspconfig").setup({
         automatic_installation = true,
-        ensure_installed = {
-          "efm",
-          "gopls",
-          "lua_ls",
-        },
+        ensure_installed = ensure_installed_server,
       })
-
-      -- 診断表示の設定
+      require("mason-tool-installer").setup({
+        automatic_installation = true,
+        ensure_installed = ensure_installed_tools,
+      })
+      -- diagnostics config
       local colors = require("utils.colors").colors
       local icons = require("utils.icons").icons
       vim.diagnostic.config({
@@ -53,8 +97,6 @@ return {
           prefix = "",
         },
       })
-
-      -- Neodev セットアップ
       require("neodev").setup({
         library = {
           enabled = true,
@@ -66,19 +108,10 @@ return {
         lspconfig = true,
         pathStrict = true,
       })
-
-      -- LSPウィンドウの設定
       require("lspconfig.ui.windows").default_options = {
         border = "single",
       }
-
-      -- サーバー設定を適用
-      local ensure_installed = {
-        "efm",
-        "gopls",
-        "lua_ls",
-      }
-      vim.lsp.enable(ensure_installed)
+      vim.lsp.enable(ensure_installed_server)
     end,
   },
 }

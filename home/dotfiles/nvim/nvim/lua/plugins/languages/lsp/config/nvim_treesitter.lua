@@ -12,7 +12,7 @@ return {
       "TSInstallSync",
       "TSInstallFromGrammar",
     },
-    event = "VeryLazy",
+    event = "BufRead",
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = {

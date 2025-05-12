@@ -1,3 +1,4 @@
+-- dap ui config
 return {
   {
     "rcarriga/nvim-dap-ui",
