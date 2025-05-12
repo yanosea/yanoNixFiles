@@ -2,11 +2,11 @@
 local M = {}
 -- get nvim runtime dir
 M.get_nvim_runtime_dir = function()
-  return vim.fn.expand "$VIMRUNTIME"
+  return vim.fn.expand("$VIMRUNTIME")
 end
 -- get nvim config dir
 M.get_config_dir = function()
-  return vim.fn.stdpath "config"
+  return vim.fn.stdpath("config")
 end
 -- get command full path
 M.resolve_full_path = function(cmd)

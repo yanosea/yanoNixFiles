@@ -102,10 +102,7 @@ function M.setup()
         if client.config and client.config.autostart ~= nil then
           autostart = client.config.autostart and "true" or "false"
         end
-        table.insert(
-          client_info,
-          string.format(" Client: %s (id: %d, bufnr: %s)", client.name, client.id, buf_list)
-        )
+        table.insert(client_info, string.format(" Client: %s (id: %d, bufnr: %s)", client.name, client.id, buf_list))
         table.insert(client_info, string.format(" \tfiletypes:       %s", filetypes))
         table.insert(client_info, string.format(" \tautostart:       %s", autostart))
         table.insert(client_info, string.format(" \troot directory:  %s", root_dir))
@@ -293,10 +290,7 @@ function M.setup()
     end
     local servers_list = {}
     if #configured_servers > 0 then
-      table.insert(
-        servers_list,
-        string.format(" Configured servers list: %s", table.concat(configured_servers, ", "))
-      )
+      table.insert(servers_list, string.format(" Configured servers list: %s", table.concat(configured_servers, ", ")))
       table.insert(servers_list, "")
     end
     local content = {}
