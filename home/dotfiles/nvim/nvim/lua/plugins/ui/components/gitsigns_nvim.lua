@@ -42,7 +42,7 @@ return {
           },
         },
         preview_config = {
-          border = "rounded",
+          border = "single",
           style = "minimal",
           relative = "cursor",
           row = 0,

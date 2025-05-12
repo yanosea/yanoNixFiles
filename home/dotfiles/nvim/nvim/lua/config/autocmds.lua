@@ -42,7 +42,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "highlight on yank",
   pattern = "*",
   callback = function()
-    vim.highlight.on_yank({ higroup = "Search", timeout = 100 })
+    vim.hl.on_yank({ higroup = "Search", timeout = 100 })
   end,
 })
 -- define a group for directory opened

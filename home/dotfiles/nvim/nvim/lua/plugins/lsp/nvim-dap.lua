@@ -25,6 +25,6 @@ return {
         numhl = "DiagnosticSignWarn",
       })
       dap.set_log_level("info")
-    end
+    end,
   },
 }

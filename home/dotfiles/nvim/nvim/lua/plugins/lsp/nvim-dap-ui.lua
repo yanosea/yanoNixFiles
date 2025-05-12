@@ -51,7 +51,7 @@ return {
         controls = {
           enabled = true,
           element = "repl",
-           icons = {
+          icons = {
             pause = icons.ui.Pause,
             play = icons.ui.Play,
             step_into = icons.ui.StepInto,
@@ -65,7 +65,7 @@ return {
         floating = {
           max_height = 0.9,
           max_width = 0.5,
-          border = "rounded",
+          border = "single",
           mappings = {
             close = { "q", "<Esc>" },
           },
@@ -114,6 +114,6 @@ return {
       if not ok then
         vim.notify("Unable to override dap-ui logging level", vim.log.levels.DEBUG)
       end
-    end
+    end,
   },
 }

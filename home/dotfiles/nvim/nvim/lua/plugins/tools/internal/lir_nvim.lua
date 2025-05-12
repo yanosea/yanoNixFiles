@@ -51,7 +51,7 @@ return {
             local width = math.floor(vim.o.columns * 0.7)
             local height = math.floor(vim.o.lines * 0.7)
             return {
-              border = "rounded",
+              border = "single",
               width = width,
               height = height,
             }

@@ -182,13 +182,13 @@ _G.FormatUtils = {
     local info = {
       filetype = filetype,
       clients = {},
-      has_efm = false
+      has_efm = false,
     }
     for _, client in ipairs(clients) do
       local client_info = {
         name = client.name,
         supports_formatting = client.supports_method("textDocument/formatting"),
-        filetypes = client.config and client.config.filetypes or {}
+        filetypes = client.config and client.config.filetypes or {},
       }
       table.insert(info.clients, client_info)
       -- check if efm-langserver is available
@@ -200,5 +200,5 @@ _G.FormatUtils = {
       title = "Format Info",
       timeout = 5000,
     })
-  end
+  end,
 }

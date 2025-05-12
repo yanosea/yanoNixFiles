@@ -3,8 +3,6 @@ table.insert(lvim.plugins, {
   "stevearc/oil.nvim",
   cmd = { "Oil" },
   dependencies = { { "echasnovski/mini.icons", opts = {} } },
-  ---@module 'oil'
-  ---@type oil.SetupOpts
   opts = {
     -- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
     -- Set to false if you want some other plugin (e.g. netrw) to open when you edit directories.
@@ -88,12 +86,12 @@ table.insert(lvim.plugins, {
       -- Show files and directories that start with "."
       show_hidden = true,
       -- This function defines what is considered a "hidden" file
-      is_hidden_file = function(name, bufnr)
+      is_hidden_file = function(name, _)
         local m = name:match("^%.")
         return m ~= nil
       end,
       -- This function defines what will never be shown, even when `show_hidden` is set
-      is_always_hidden = function(name, bufnr)
+      is_always_hidden = function(_, _)
         return false
       end,
       -- Sort file names with numbers in a more intuitive order for humans.
@@ -108,7 +106,7 @@ table.insert(lvim.plugins, {
         { "name", "asc" },
       },
       -- Customize the highlight group for the file name
-      highlight_filename = function(entry, is_hidden, is_link_target, is_link_orphan)
+      highlight_filename = function(_, _, _, _)
         return nil
       end,
     },
@@ -117,13 +115,13 @@ table.insert(lvim.plugins, {
     -- EXPERIMENTAL support for performing file operations with git
     git = {
       -- Return true to automatically git add/mv/rm files
-      add = function(path)
+      add = function(_)
         return false
       end,
-      mv = function(src_path, dest_path)
+      mv = function(_, _)
         return false
       end,
-      rm = function(path)
+      rm = function(_)
         return false
       end,
     },
@@ -155,7 +153,7 @@ table.insert(lvim.plugins, {
       -- How to open the preview window "load"|"scratch"|"fast_scratch"
       preview_method = "fast_scratch",
       -- A function that returns true to disable preview on a file e.g. to avoid lag
-      disable_preview = function(filename)
+      disable_preview = function(_)
         return false
       end,
       -- Window-local options to use for preview window buffers
