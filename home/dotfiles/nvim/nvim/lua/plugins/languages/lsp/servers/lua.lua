@@ -7,7 +7,7 @@ return {
     lazy = true,
     event = "VeryLazy",
     config = function()
-      local lsp_utils = require("plugins.languages.lsp.utils")
+      local helpers = require("plugins.languages.lsp.utils.helpers")
       local lspconfig = require("lspconfig")
 
       -- コンフィギュレーションのフック設定
@@ -17,7 +17,7 @@ return {
 
         -- プラグインをワークスペースに追加
         local plugins = { "plenary.nvim", "telescope.nvim", "nvim-treesitter", "LuaSnip" }
-        lsp_utils.add_packages_to_workspace(plugins, new_config)
+        helpers.add_packages_to_workspace(plugins, new_config)
       end
 
       -- Lua LSP の詳細設定を適用
@@ -37,7 +37,7 @@ return {
                 "nvim",
               },
             },
-            workspace = lsp_utils.default_workspace,
+            workspace = helpers.default_workspace,
           },
         },
       })
