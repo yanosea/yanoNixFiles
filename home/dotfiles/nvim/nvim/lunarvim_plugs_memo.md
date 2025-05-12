@@ -23,18 +23,18 @@
   - 型定義と補完機能強化
 
 ## 補完エンジンと拡張
-- [ ] **hrsh7th/nvim-cmp**
+- [x] **hrsh7th/nvim-cmp**
   - モダンな補完エンジン
   - プラグイン拡張可能なアーキテクチャ
-- [ ] **hrsh7th/cmp-nvim-lsp**
+- [x] **hrsh7th/cmp-nvim-lsp**
   - LSPからの補完ソース
-- [ ] **saadparwaiz1/cmp_luasnip**
+- [x] **saadparwaiz1/cmp_luasnip**
   - スニペット補完ソース
-- [ ] **hrsh7th/cmp-buffer**
+- [x] **hrsh7th/cmp-buffer**
   - 現在のバッファからの単語補完
-- [ ] **hrsh7th/cmp-path**
+- [x] **hrsh7th/cmp-path**
   - ファイルパス補完
-- [ ] **hrsh7th/cmp-cmdline**
+- [x] **hrsh7th/cmp-cmdline**
   - コマンドライン補完
 
 ## スニペット

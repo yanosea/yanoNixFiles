@@ -118,12 +118,12 @@ return {
             local buf_client_names = {}
             local copilot_active = false
             for _, client in pairs(buf_clients) do
-              if client.name == "GitHub Copilot" then
+              if client.name == "copilot" then
                 copilot_active = true
                 goto continue
               end
 
-              if client.name ~= "null-ls" and client.name ~= "copilot" then
+              if client.name ~= "efm" and client.name ~= "copilot" then
                 table.insert(buf_client_names, client.name)
               end
 
