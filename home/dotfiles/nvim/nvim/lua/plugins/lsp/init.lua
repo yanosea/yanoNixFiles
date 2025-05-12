@@ -5,6 +5,7 @@ return {
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      "folke/neodev.nvim",
     },
     lazy = true,
     event = { "BufReadPre", "BufNewFile" },
@@ -399,7 +400,7 @@ return {
               vim.fn.system({ "xdg-open", doc_url })
             end
           end,
-          desc = "Open server documentation",
+          desc = "open server documentation",
         })
       end, {})
 
@@ -435,29 +436,149 @@ return {
           },
         },
         float = {
-          source = "always",
+          source = true,
           border = "single",
           header = "",
           prefix = "",
         },
       })
+      require("neodev").setup({
+        library = {
+          enabled = true,
+          runtime = true,
+          types = true,
+          plugins = true,
+        },
+        setup_jsonls = true,
+        lspconfig = true,
+        pathStrict = true,
+      })
+      local function get_nvim_runtime_dir()
+        return vim.fn.expand "$VIMRUNTIME"
+      end
+
+      local function get_config_dir()
+        return vim.fn.stdpath "config"
+      end
+      local default_workspace = {
+        library = {
+          get_nvim_runtime_dir(),
+          get_config_dir(),
+          require("neodev.config").types(),
+          "${3rd}/busted/library",
+          "${3rd}/luassert/library",
+          "${3rd}/luv/library",
+        },
+        maxPreload = 5000,
+        preloadFileSize = 10000,
+      }
+      local add_packages_to_workspace = function(packages, config)
+        config.settings = config.settings or {}
+        config.settings.Lua = config.settings.Lua or {}
+        config.settings.Lua.workspace = config.settings.Lua.workspace or {}
+        config.settings.Lua.workspace.library = config.settings.Lua.workspace.library or {}
+        local ok, runtimedirs = pcall(function()
+          return vim.api.nvim__get_runtime({ "lua" }, true, { is_lua = true }) or {}
+        end)
+        if not ok or type(runtimedirs) ~= "table" then
+          runtimedirs = {}
+        end
+        local workspace_lib = config.settings.Lua.workspace.library
+        for _, v in pairs(runtimedirs) do
+          for _, pack in ipairs(packages) do
+            if v:match(pack) and not vim.tbl_contains(workspace_lib, v) then
+              table.insert(workspace_lib, v)
+            end
+          end
+        end
+      end
+
+      -- コンフィギュレーションのフック設定
+      local lspconfig = require "lspconfig"
+      local original_on_new_config = lspconfig.lua_ls.document_config.on_new_config or function() end
+      lspconfig.lua_ls.document_config.on_new_config = function(new_config, root_dir)
+        original_on_new_config(new_config, root_dir)
+
+        -- プラグインをワークスペースに追加
+        local plugins = { "plenary.nvim", "telescope.nvim", "nvim-treesitter", "LuaSnip" }
+        add_packages_to_workspace(plugins, new_config)
+      end
+
+      -- Lua LSP の詳細設定を適用
       vim.lsp.config("lua_ls", {
         settings = {
           Lua = {
-            diagnostics = {
-              globals = {
-                "nvim",
-                "vim",
+            telemetry = { enable = false },
+            runtime = {
+              version = "LuaJIT",
+              special = {
+                reload = "require",
               },
             },
+            diagnostics = {
+              globals = {
+                "vim",
+                "nvim",
+              },
+            },
+            workspace = default_workspace,
           },
         },
       })
+
       -- enable popup in :LspInfo
       require("lspconfig.ui.windows").default_options = {
         border = "single",
       }
       vim.lsp.enable(ensure_installed)
+    end,
+  },
+
+  -- LuaSnip プラグイン
+  {
+    "L3MON4D3/LuaSnip",
+    version = "v2.*",
+    lazy = true,
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+    },
+    config = function()
+      require("luasnip").config.set_config({
+        history = true,
+        updateevents = "TextChanged,TextChangedI",
+        enable_autosnippets = true,
+        ext_opts = {
+          [require("luasnip.util.types").choiceNode] = {
+            active = {
+              virt_text = { { "●", "GruvboxOrange" } },
+            },
+          },
+        },
+      })
+
+      -- snippet読み込み設定
+      require("luasnip.loaders.from_vscode").lazy_load()
+      require("luasnip.loaders.from_lua").lazy_load({ paths = vim.fn.stdpath("config") .. "/snippets/" })
+      require("luasnip.loaders.from_snipmate").lazy_load()
+
+      -- キーマップ設定
+      vim.keymap.set({ "i", "s" }, "<C-k>", function()
+        if require("luasnip").expand_or_jumpable() then
+          require("luasnip").expand_or_jump()
+        end
+      end, { silent = true, desc = "luasnip forward" })
+
+      vim.keymap.set({ "i", "s" }, "<C-j>", function()
+        if require("luasnip").jumpable(-1) then
+          require("luasnip").jump(-1)
+        end
+      end, { silent = true, desc = "luasnip backward" })
+
+      vim.keymap.set({ "i", "s" }, "<C-l>", function()
+        if require("luasnip").choice_active() then
+          require("luasnip").change_choice(1)
+        end
+      end, { silent = true, desc = "luasnip next choice" })
     end,
   },
 }

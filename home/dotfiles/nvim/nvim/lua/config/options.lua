@@ -21,11 +21,14 @@ vim.opt.ruler = true
 vim.opt.signcolumn = "yes"
 -- invisible character
 vim.opt.list = true
+---@diagnostic disable-next-line missing-fields
 vim.opt.listchars = { tab = "▸ ", trail = "⋅", nbsp = "␣", extends = "❯", precedes = "❮" }
 -- status line
 vim.opt.laststatus = 3
 -- gui setting
+---@diagnostic disable-next-line missing-fields
 vim.opt.guifont = { "PlemolJP Console NF" }
+---@diagnostic disable-next-line missing-fields
 vim.opt.guifontwide = { "PlemolJP Console NF" }
 vim.opt.termguicolors = true
 vim.opt.mouse = ""

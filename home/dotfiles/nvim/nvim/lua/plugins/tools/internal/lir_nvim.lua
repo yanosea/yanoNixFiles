@@ -9,6 +9,8 @@ return {
     lazy = true,
     event = "User DirOpened",
     config = function()
+      local colors = require("utils.colors").colors
+      local icons = require("utils.icons").icons
       local actions = require("lir.actions")
       local clipboard_actions = require("lir.clipboard.actions")
       local options = {
@@ -77,13 +79,13 @@ return {
           return
         end
         local function get_hl_by_name(name)
-          local ret = vim.api.nvim_get_hl_by_name(name.group, true)
+          local ret = vim.api.nvim_get_hl(0, { name = name.group })
           return string.format("#%06x", ret[name.property])
         end
-        local folder_icon = ""
-        local found, icon_hl = pcall(get_hl_by_name, { group = "NvimTreeFolderIcon", property = "foreground" })
+        local folder_icon = icons.ui.Folder
+        local found, icon_hl = pcall(get_hl_by_name, { group = "NvimTreeFolderIcon", property = "fg" })
         if not found then
-          icon_hl = "#42A5F5"
+          icon_hl = colors.Aqua
         end
         devicons.set_icon({
           lir_folder_icon = {

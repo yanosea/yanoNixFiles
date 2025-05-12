@@ -120,7 +120,7 @@ return {
             file_icon = icons.ui.Watches
           end
 
-          local navic_text = vim.api.nvim_get_hl_by_name("Normal", true)
+          local navic_text = vim.api.nvim_get_hl(0, { name = "Normal" })
           vim.api.nvim_set_hl(0, "Winbar", { fg = navic_text.foreground })
 
           return " " .. "%#" .. hl_group .. "#" .. file_icon .. "%*" .. " " .. "%#Winbar#" .. filename .. "%*"

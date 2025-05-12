@@ -147,7 +147,7 @@ return {
           { "<LEADER>pi", "<CMD>Lazy install<CR>", desc = "install plugins" },
           { "<LEADER>pl", "<CMD>Lazy log<CR>", desc = "show logs of plugins" },
           { "<LEADER>pp", "<CMD>Lazy profile<CR>", desc = "profile plugins" },
-          { "<LEADE>ps", "<CMD>Lazy sync<CR>", desc = "sync plugins" },
+          { "<LEADER>ps", "<CMD>Lazy sync<CR>", desc = "sync plugins" },
           { "<LEADER>pS", "<CMD>Lazy status<CR>", desc = "status plugins" },
           { "<LEADER>pu", "<CMD>Lazy update<CR>", desc = "update plugins" },
           -- save

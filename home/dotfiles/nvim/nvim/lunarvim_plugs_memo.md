@@ -11,13 +11,14 @@
   - 言語サーバーとの連携設定
 - [x] **williamboman/mason-lspconfig.nvim**
   - LSPサーバー自動インストール
-- [ ] **tamago324/nlsp-settings.nvim**
+- [x] **tamago324/nlsp-settings.nvim**
   - JSON形式でのLSP設定管理
-- [ ] **nvimtools/none-ls.nvim**
+~~- [ ] **nvimtools/none-ls.nvim**~~
   - 診断・フォーマット等LSP拡張
+  - efm-langserverをで代用
 - [x] **williamboman/mason.nvim**
   - LSPサーバーとツールのパッケージマネージャ
-- [ ] **folke/neodev.nvim**
+- [x] **folke/neodev.nvim**
   - Neovim Lua API開発支援
   - 型定義と補完機能強化
 
@@ -37,10 +38,10 @@
   - コマンドライン補完
 
 ## スニペット
-- [ ] **L3MON4D3/LuaSnip**
+- [x] **L3MON4D3/LuaSnip**
   - 強力なスニペットエンジン
   - Lua設定可能
-- [ ] **rafamadriz/friendly-snippets**
+- [x] **rafamadriz/friendly-snippets**
   - 各言語用スニペットコレクション
 
 ## 構文解析・コード分析
