@@ -3,5 +3,5 @@ return {
   { import = "plugins.editor" },
   { import = "plugins.tools" },
   { import = "plugins.ui" },
-  { import = "plugins.lsp" },
+  { import = "plugins.languages" },
 }
