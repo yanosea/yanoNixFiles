@@ -123,7 +123,7 @@ return {
                 goto continue
               end
 
-              if client.name ~= "efm" and client.name ~= "copilot" then
+              if client.name ~= "copilot" then
                 table.insert(buf_client_names, client.name)
               end
 
