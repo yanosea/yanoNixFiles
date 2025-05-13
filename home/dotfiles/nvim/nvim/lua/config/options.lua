@@ -67,3 +67,5 @@ vim.opt.whichwrap = vim.opt.whichwrap - "h" - "l"
 -- display
 vim.opt.cmdheight = 0
 vim.opt.display = "lastline"
+-- persist undo
+vim.opt.undofile = true
