@@ -18,9 +18,10 @@
   - efm-langserverをで代用
 - [x] **williamboman/mason.nvim**
   - LSPサーバーとツールのパッケージマネージャ
-- [x] **folke/neodev.nvim**
+~~- [ ] **folke/neodev.nvim**~~
   - Neovim Lua API開発支援
   - 型定義と補完機能強化
+  - public achieveなので入れない
 
 ## 補完エンジンと拡張
 - [x] **hrsh7th/nvim-cmp**
@@ -48,7 +49,7 @@
 - [x] **nvim-treesitter/nvim-treesitter**
   - 高度な構文解析
   - 精密なコード認識と操作
-- [ ] **JoosepAlviste/nvim-ts-context-commentstring**
+- [x] **JoosepAlviste/nvim-ts-context-commentstring**
   - 言語コンテキスト対応コメント
 - [x] **RRethy/vim-illuminate**
   - 同一識別子のハイライト表示

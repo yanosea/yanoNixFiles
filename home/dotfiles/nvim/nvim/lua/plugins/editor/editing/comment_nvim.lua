@@ -4,7 +4,7 @@ return {
   {
     "numToStr/Comment.nvim",
     lazy = true,
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
   },
 }

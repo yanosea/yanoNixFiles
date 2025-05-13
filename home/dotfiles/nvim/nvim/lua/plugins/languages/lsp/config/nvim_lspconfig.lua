@@ -6,7 +6,6 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
-      "folke/neodev.nvim",
       "creativenull/efmls-configs-nvim",
     },
     lazy = true,
@@ -46,17 +45,6 @@ return {
           header = "",
           prefix = "",
         },
-      })
-      require("neodev").setup({
-        library = {
-          enabled = true,
-          runtime = true,
-          types = true,
-          plugins = true,
-        },
-        setup_jsonls = true,
-        lspconfig = true,
-        pathStrict = true,
       })
       require("lspconfig.ui.windows").default_options = {
         border = "single",
