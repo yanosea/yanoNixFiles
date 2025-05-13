@@ -148,5 +148,5 @@ sudo nix store gc --debug --extra-experimental-features "nix-command flakes"
 [tasks."misc.update"]
 description = "update flake.lock file"
 script = '''
-nix flake lock --update-input nixpkgs --extra-experimental-features "nix-command flakes"
+nix flake update nixpkgs --extra-experimental-features "nix-command flakes"
 '''
