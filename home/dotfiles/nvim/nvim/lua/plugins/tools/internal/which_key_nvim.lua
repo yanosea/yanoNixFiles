@@ -37,7 +37,7 @@ return {
           -- buffers
           { "<LEADER>b", group = "buffers" },
           { "<LEADER>bb", "<CMD>BufferLineCyclePrev<CR>", desc = "switch to previous buffer" },
-          { "<LEADER>bc", "<CMD>lua BufferKill()<CR>", desc = "close current buffer" },
+          { "<LEADER>bc", "<CMD>lua require('utils.functions').buffer_kill()<CR>", desc = "close current buffer" },
           { "<LEADER>bd", "<CMD>BufferLineSortByDirectory<CR>", desc = "sort by directory" },
           { "<LEADER>be", "<CMD>BufferLinePickClose<CR>", desc = "pick which buffer to close" },
           { "<LEADER>bf", "<CMD>Telescope buffers previewer=false<CR>", desc = "find and jump to buffer" },
@@ -50,7 +50,7 @@ return {
           { "<LEADER>bw", "<CMD>w!<CR>", desc = "save buffer" },
           { "<LEADER>bW", "<CMD>noautocmd w<CR>", desc = "save buffer without formatting" },
           -- close buffer
-          { "<LEADER>c", "<CMD>lua BufferKill()<CR>", desc = "close current buffer" },
+          { "<LEADER>c", "<CMD>lua require('utils.functions').buffer_kill()<CR>", desc = "close current buffer" },
           -- copilot chat
           { "<LEADER>C", group = "copilot" },
           { "<LEADER>Cc", "<CMD>CopilotChatCommit<CR>", desc = "copilotchat commit" },
@@ -113,7 +113,7 @@ return {
           { "<LEADER>la", "<CMD>lua vim.lsp.buf.code_action()<CR>", desc = "code action" },
           { "<LEADER>ld", "<CMD>Telescope diagnostics bufnr=0 theme=get_ivy<CR>", desc = "buffer diagnostics" },
           { "<LEADER>le", "<CMD>Telescope quickfix<CR>", desc = "telescope quickfix" },
-          { "<LEADER>lf", "<CMD>lua _G.FormatUtils.format_buffer()<CR>", desc = "format" },
+          { "<LEADER>lf", "<CMD>lua require('plugins.languages.lsp.utils.format_utils').format()<CR>", desc = "format" },
           { "<LEADER>li", "<CMD>LspInfo<CR>", desc = "info" },
           { "<LEADER>lI", "<CMD>Mason<CR>", desc = "mason info" },
           { "<LEADER>lj", "<CMD>lua vim.diagnostic.goto_next()<CR>", desc = "next diagnostic" },

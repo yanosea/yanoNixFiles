@@ -16,7 +16,7 @@ function M.setup()
       },
       languages = {
         lua = {
-          { formatCommand = "stylua --config-path -", formatStdin = true },
+          require("efmls-configs.formatters.stylua"),
         },
       },
     },

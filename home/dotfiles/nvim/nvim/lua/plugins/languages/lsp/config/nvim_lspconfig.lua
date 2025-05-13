@@ -7,6 +7,7 @@ return {
       "williamboman/mason-lspconfig.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       "folke/neodev.nvim",
+      "creativenull/efmls-configs-nvim",
     },
     lazy = true,
     event = { "BufReadPre", "BufNewFile" },
