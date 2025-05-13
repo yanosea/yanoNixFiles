@@ -41,7 +41,6 @@ alias gitgraph='git log --graph --all --oneline --decorate'
 alias ls="$(which lsd)"
 alias nvimdiff="$(which nvim) -d"
 alias lg="lazygit"
-alias lvimdiff="$(which lvim) -d"
 alias reboot="sudo systemctl reboot"
 alias rrm="$(which rm)"
 alias rm="$(which trash)"
