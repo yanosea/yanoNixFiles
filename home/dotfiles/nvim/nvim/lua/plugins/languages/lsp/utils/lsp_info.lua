@@ -120,6 +120,88 @@ function M.setup()
             end
           end
           table.insert(client_info, string.format(" \tefm config:      %s", config_path))
+          if client.config and client.config.settings and client.config.settings.languages then
+            local buf_ft = vim.bo[bufnr].filetype
+            local formatters = {}
+            local linters = {}
+            local action_tools = {}
+            if client.config.settings.languages[buf_ft] then
+              local ft_tools = client.config.settings.languages[buf_ft]
+              if ft_tools then
+                for _, tool in ipairs(ft_tools) do
+                  if tool and type(tool) == "table" then
+                    local raw_command = tool.prefix or tool.lintCommand or tool.formatCommand or ""
+                    local tool_name = ""
+                    if raw_command ~= "" then
+                      local normalized_cmd = string.gsub(raw_command, "//", "/")
+                      local cmd_parts = {}
+                      for part in string.gmatch(normalized_cmd, "%S+") do
+                        table.insert(cmd_parts, part)
+                      end
+                      if #cmd_parts > 0 then
+                        local path = cmd_parts[1]
+                        tool_name = string.match(path, "([^/\\]+)$") or ""
+                      end
+                    end
+                    if tool_name ~= "" then
+                      if tool.formatCommand then
+                        table.insert(formatters, tool_name)
+                      elseif tool.lintCommand then
+                        table.insert(linters, tool_name)
+                      elseif tool.codeActionCommand then
+                        table.insert(action_tools, tool_name)
+                      end
+                    end
+                  end
+                end
+              end
+            end
+            local function display_unique_tools(tools_list, label)
+              if #tools_list > 0 then
+                local unique_tools = {}
+                for _, v in ipairs(tools_list) do
+                  unique_tools[v] = true
+                end
+                local tool_list = {}
+                for tool, _ in pairs(unique_tools) do
+                  table.insert(tool_list, tool)
+                end
+                table.sort(tool_list)
+                local tool_info = table.concat(tool_list, ", ")
+                table.insert(client_info, string.format(" \t%-16s %s", label .. ":", tool_info))
+              end
+            end
+            display_unique_tools(formatters, "formatters")
+            display_unique_tools(linters, "linters")
+            display_unique_tools(action_tools, "action tools")
+          end
+          if client.config and client.config.init_options and client.config.init_options.codeAction then
+            local tools = {}
+            for tool_name, _ in pairs(client.config.init_options.codeAction) do
+              table.insert(tools, tool_name)
+            end
+            if #tools > 0 then
+              table.insert(client_info, string.format(" \tcode actions:    %s", table.concat(tools, ", ")))
+            end
+          end
+          if client.config and client.config.init_options and client.config.init_options.hover then
+            local tools = {}
+            for tool_name, _ in pairs(client.config.init_options.hover) do
+              table.insert(tools, tool_name)
+            end
+            if #tools > 0 then
+              table.insert(client_info, string.format(" \thover tools:     %s", table.concat(tools, ", ")))
+            end
+          end
+          if client.config and client.config.init_options and client.config.init_options.documentSymbol then
+            local tools = {}
+            for tool_name, _ in pairs(client.config.init_options.documentSymbol) do
+              table.insert(tools, tool_name)
+            end
+            if #tools > 0 then
+              table.insert(client_info, string.format(" \tsymbol tools:    %s", table.concat(tools, ", ")))
+            end
+          end
           local capabilities = {}
           if client.server_capabilities.documentFormattingProvider then
             table.insert(capabilities, "formatting")
