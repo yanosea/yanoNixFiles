@@ -1,11 +1,13 @@
 # LunarVim プラグイン分類
 
 ## プラグイン管理
+
 - [x] **folke/lazy.nvim**
   - モダンなプラグイン管理システム
   - 遅延読み込みによるパフォーマンス最適化
 
 ## LSP（言語サーバープロトコル）関連
+
 - [x] **neovim/nvim-lspconfig**
   - LSP設定基盤
   - 言語サーバーとの連携設定
@@ -13,17 +15,18 @@
   - LSPサーバー自動インストール
 - [x] **tamago324/nlsp-settings.nvim**
   - JSON形式でのLSP設定管理
-~~- [ ] **nvimtools/none-ls.nvim**~~
+    ~~- [ ] **nvimtools/none-ls.nvim**~~
   - 診断・フォーマット等LSP拡張
   - efm-langserverをで代用
 - [x] **williamboman/mason.nvim**
   - LSPサーバーとツールのパッケージマネージャ
-~~- [ ] **folke/neodev.nvim**~~
+    ~~- [ ] **folke/neodev.nvim**~~
   - Neovim Lua API開発支援
   - 型定義と補完機能強化
   - public achieveなので入れない
 
 ## 補完エンジンと拡張
+
 - [x] **hrsh7th/nvim-cmp**
   - モダンな補完エンジン
   - プラグイン拡張可能なアーキテクチャ
@@ -39,6 +42,7 @@
   - コマンドライン補完
 
 ## スニペット
+
 - [x] **L3MON4D3/LuaSnip**
   - 強力なスニペットエンジン
   - Lua設定可能
@@ -46,6 +50,7 @@
   - 各言語用スニペットコレクション
 
 ## 構文解析・コード分析
+
 - [x] **nvim-treesitter/nvim-treesitter**
   - 高度な構文解析
   - 精密なコード認識と操作
@@ -58,6 +63,7 @@
   - LSP情報を活用した構造表示
 
 ## ファイルナビゲーション
+
 - [x] **nvim-telescope/telescope.nvim**
   - 多機能ファジーファインダー
   - 拡張可能な検索インターフェース
@@ -69,6 +75,7 @@
   - シンプルなファイルブラウザ
 
 ## UI改善
+
 - [x] **folke/which-key.nvim**
   - キーバインド表示ヘルパー
   - コマンド探索支援
@@ -84,11 +91,13 @@
   - インテリジェントな自動カッコ閉じ
 
 ## Git統合
+
 - [x] **lewis6991/gitsigns.nvim**
   - Gitステータス表示
   - 差分表示と操作機能
 
 ## 開発支援ツール
+
 - [x] **mfussenegger/nvim-dap**
   - デバッグアダプタープロトコル実装
 - [x] **rcarriga/nvim-dap-ui**
@@ -97,9 +106,10 @@
   - 効率的なコード内コメント操作
 - [x] **akinsho/toggleterm.nvim**
   - 高度な組込ターミナル
-- [ ] **b0o/schemastore.nvim**
+- [x] **b0o/schemastore.nvim**
   - JSONスキーマ対応
 
 ## パフォーマンス/ユーティリティ
+
 - [x] **nvim-lua/plenary.nvim**
   - Luaユーティリティ関数群
