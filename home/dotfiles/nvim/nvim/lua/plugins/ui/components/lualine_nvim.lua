@@ -164,7 +164,6 @@ return {
               local client_names_new = {}
               for _, name in ipairs(buf_client_names) do
                 if name == "efm" then
-                  local tool_info = "efm"
                   if #efm_tools > 0 then
                     local unique_tools = {}
                     for _, v in ipairs(efm_tools) do
@@ -174,9 +173,9 @@ return {
                     for tool, _ in pairs(unique_tools) do
                       table.insert(tool_list, tool)
                     end
-                    tool_info = "efm(" .. table.concat(tool_list, ", ") .. ")"
+                    local tool_info = "efm(" .. table.concat(tool_list, ", ") .. ")"
+                    table.insert(client_names_new, tool_info)
                   end
-                  table.insert(client_names_new, tool_info)
                 else
                   table.insert(client_names_new, name)
                 end
