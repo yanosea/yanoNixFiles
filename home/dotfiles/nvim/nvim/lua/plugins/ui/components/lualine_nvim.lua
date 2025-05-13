@@ -117,25 +117,79 @@ return {
             end
             local buf_client_names = {}
             local copilot_active = false
+            local efm_active = false
+            local efm_tools = {}
             for _, client in pairs(buf_clients) do
+              -- if copilot is active, set color
               if client.name == "copilot" then
                 copilot_active = true
                 goto continue
               end
-
-              if client.name ~= "copilot" then
-                table.insert(buf_client_names, client.name)
+              -- if efm is active, get tools
+              if client.name == "efm" then
+                efm_active = true
+                local ft = vim.bo.filetype
+                if client.config and client.config.settings and client.config.settings.languages then
+                  local ft_tools = client.config.settings.languages[ft]
+                  if ft_tools then
+                    for _, tool in ipairs(ft_tools) do
+                      local raw_command = tool.prefix or tool.lintCommand or tool.formatCommand or ""
+                      local tool_name = ""
+                      if raw_command ~= "" then
+                        local normalized_cmd = string.gsub(raw_command, "//", "/")
+                        local cmd_parts = {}
+                        for part in string.gmatch(normalized_cmd, "%S+") do
+                          table.insert(cmd_parts, part)
+                        end
+                        if #cmd_parts > 0 then
+                          local path = cmd_parts[1]
+                          tool_name = string.match(path, "([^/\\]+)$") or ""
+                        end
+                      end
+                      if tool_name ~= "" then
+                        table.insert(efm_tools, tool_name)
+                      end
+                    end
+                  end
+                end
               end
-
+              table.insert(buf_client_names, client.name)
               ::continue::
             end
+            -- remove duplicates
             local unique_client_names = table.concat(buf_client_names, ", ")
             local language_servers = string.format("[%s]", unique_client_names)
+            -- efm tools
+            if efm_active then
+              local client_names_new = {}
+              for _, name in ipairs(buf_client_names) do
+                if name == "efm" then
+                  local tool_info = "efm"
+                  if #efm_tools > 0 then
+                    local unique_tools = {}
+                    for _, v in ipairs(efm_tools) do
+                      unique_tools[v] = true
+                    end
+                    local tool_list = {}
+                    for tool, _ in pairs(unique_tools) do
+                      table.insert(tool_list, tool)
+                    end
+                    tool_info = "efm(" .. table.concat(tool_list, ", ") .. ")"
+                  end
+                  table.insert(client_names_new, tool_info)
+                else
+                  table.insert(client_names_new, name)
+                end
+              end
+              buf_client_names = client_names_new
+              unique_client_names = table.concat(buf_client_names, ", ")
+              language_servers = string.format("[%s]", unique_client_names)
+            end
+            -- copilot icon
             if copilot_active then
               vim.api.nvim_set_hl(0, "LualineCopilot", { fg = colors.Green })
               language_servers = language_servers .. " %#LualineCopilot#" .. icons.git.Octoface .. " " .. "%*"
             end
-
             return language_servers
           end,
           color = { gui = "bold" },

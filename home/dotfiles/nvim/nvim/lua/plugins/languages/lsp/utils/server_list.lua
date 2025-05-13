@@ -6,42 +6,54 @@ M.servers = {
   "efm",
   "diagnosticls",
   "typos_lsp",
-  -- config files
+  -- docker
   "docker_compose_language_service",
   "dockerls",
-  "taplo", -- toml
-  "yamlls",
+  -- go
+  "golangci_lint_ls",
+  "gopls",
   -- web
   "astro",
   "cssls",
   "html",
   "jsonls",
-  "marksman", -- markdown
-  "tailwindcss",
-  -- languages
-  "bashls",
-  "golangci_lint_ls",
-  "gopls",
+  -- markdown
+  "marksman",
+  -- lua
   "lua_ls",
-  "nil_ls", -- nix
+  -- nix
+  "nil_ls",
+  -- rust
   "rust_analyzer",
+  -- shell
+  "bashls",
+  -- sql
   "sqlls",
+  -- tailwind
+  "tailwindcss",
+  -- toml
+  "taplo",
+  -- yaml
+  "yamlls",
 }
 -- tools
 M.tools = {
-  -- actions
   -- common
   "proselint",
-  --formatters
+  -- docker
+  "hadolint",
+  -- go
+  "golangci-lint",
+  -- lua
+  "stylua",
+  -- nix
+  "nixfmt",
+  -- shell
+  "shfmt",
+  "shellcheck",
+  -- sql
+  "sql-formatter",
   -- web
   "prettier",
-  -- languages
-  "nixfmt", -- nix
-  "shfmt", -- shell
-  "stylua", -- lua
-  -- linters
-  -- languages
-  "golangci-lint", -- go
-  "shellcheck", -- shell
 }
 return M

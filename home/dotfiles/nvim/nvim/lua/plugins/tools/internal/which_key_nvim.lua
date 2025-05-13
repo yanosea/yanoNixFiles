@@ -113,7 +113,11 @@ return {
           { "<LEADER>la", "<CMD>lua vim.lsp.buf.code_action()<CR>", desc = "code action" },
           { "<LEADER>ld", "<CMD>Telescope diagnostics bufnr=0 theme=get_ivy<CR>", desc = "buffer diagnostics" },
           { "<LEADER>le", "<CMD>Telescope quickfix<CR>", desc = "telescope quickfix" },
-          { "<LEADER>lf", "<CMD>lua require('plugins.languages.lsp.utils.format_utils').format()<CR>", desc = "format" },
+          {
+            "<LEADER>lf",
+            "<CMD>lua require('plugins.languages.lsp.utils.format_utils').format()<CR>",
+            desc = "format",
+          },
           { "<LEADER>li", "<CMD>LspInfo<CR>", desc = "info" },
           { "<LEADER>lI", "<CMD>Mason<CR>", desc = "mason info" },
           { "<LEADER>lj", "<CMD>lua vim.diagnostic.goto_next()<CR>", desc = "next diagnostic" },
