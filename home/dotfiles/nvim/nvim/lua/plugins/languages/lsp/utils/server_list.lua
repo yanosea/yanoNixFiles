@@ -43,6 +43,7 @@ M.tools = {
   -- docker
   "hadolint",
   -- go
+  "goimports",
   "golangci-lint",
   -- lua
   "stylua",
