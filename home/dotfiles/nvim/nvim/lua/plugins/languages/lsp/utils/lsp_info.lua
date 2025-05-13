@@ -1,4 +1,4 @@
--- overwirte LspInfo command
+-- overwrite LspInfo command
 local M = {}
 function M.setup()
   vim.api.nvim_create_user_command("LspInfo", function()
@@ -22,7 +22,7 @@ function M.setup()
         table.insert(unattached_clients, client)
       end
     end
-
+    -- define a function to resolve the full path of a command
     local function resolve_full_path(cmd)
       if not cmd or cmd == "" then
         return cmd
@@ -48,7 +48,7 @@ function M.setup()
 
       return cmd
     end
-
+    -- get the full path of the command
     local client_info = {}
     if #attached_clients > 0 then
       table.insert(client_info, string.format(" %d client(s) attached to this buffer: ", #attached_clients))

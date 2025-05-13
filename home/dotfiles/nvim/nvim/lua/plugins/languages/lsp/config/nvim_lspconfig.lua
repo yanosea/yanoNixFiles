@@ -45,7 +45,6 @@ return {
         -- actions
         -- common
         "proselint",
-
         --formatters
         -- web
         "prettier",
@@ -53,7 +52,6 @@ return {
         "nixfmt", -- nix
         "shfmt", -- shell
         "stylua", -- lua
-
         -- linters
         -- languages
         "golangci-lint", -- go

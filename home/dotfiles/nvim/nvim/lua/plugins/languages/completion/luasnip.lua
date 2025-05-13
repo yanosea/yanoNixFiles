@@ -1,16 +1,17 @@
--- LuaSnipプラグイン
+-- luasnip config
 return {
   {
     "L3MON4D3/LuaSnip",
     version = "v2.*",
-    event = "InsertEnter",
     dependencies = {
       "rafamadriz/friendly-snippets",
     },
+    lazy = true,
+    event = "InsertEnter",
     config = function()
+      local icons = require("utils.icons").icons
       local luasnip = require("luasnip")
-
-      -- 基本設定
+      -- luasnip config
       luasnip.config.set_config({
         history = true,
         updateevents = "TextChanged,TextChangedI",
@@ -18,46 +19,31 @@ return {
         ext_opts = {
           [require("luasnip.util.types").choiceNode] = {
             active = {
-              virt_text = { { "●", "GruvboxOrange" } },
+              virt_text = { { icons.ui.Circle, "GruvboxOrange" } },
             },
           },
         },
       })
-
-      -- スニペットパスの設定
       local snippet_path = vim.fn.stdpath("config") .. "/snippets"
-
-      -- スニペットローダー設定
-      local function load_snippets()
-        require("luasnip.loaders.from_lua").lazy_load({
-          paths = snippet_path,
-        })
-
-        -- friendly-snippetsの読み込み
-        require("luasnip.loaders.from_vscode").lazy_load({
-          paths = vim.fn.stdpath("data") .. "/lazy/friendly-snippets",
-        })
-
-        -- 追加のスニペットソース
-        require("luasnip.loaders.from_vscode").lazy_load()
-        require("luasnip.loaders.from_snipmate").lazy_load()
-      end
-
-      load_snippets()
-
-      -- キーマップ設定
+      require("luasnip.loaders.from_lua").lazy_load({
+        paths = snippet_path,
+      })
+      require("luasnip.loaders.from_vscode").lazy_load({
+        paths = vim.fn.stdpath("data") .. "/lazy/friendly-snippets",
+      })
+      require("luasnip.loaders.from_vscode").lazy_load()
+      require("luasnip.loaders.from_snipmate").lazy_load()
+      -- keymaps
       vim.keymap.set({ "i", "s" }, "<C-n>", function()
         if luasnip.expand_or_jumpable() then
           luasnip.expand_or_jump()
         end
       end, { silent = true, desc = "luasnip forward" })
-
       vim.keymap.set({ "i", "s" }, "<C-p>", function()
         if luasnip.jumpable(-1) then
           luasnip.jump(-1)
         end
       end, { silent = true, desc = "luasnip backward" })
-
       vim.keymap.set({ "i", "s" }, "<C-l>", function()
         if luasnip.choice_active() then
           luasnip.change_choice(1)

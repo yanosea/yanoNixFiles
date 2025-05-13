@@ -31,7 +31,6 @@ M.resolve_full_path = function(cmd)
       return full_path
     end
   end
-
   return cmd
 end
 -- add packages to lua workspace

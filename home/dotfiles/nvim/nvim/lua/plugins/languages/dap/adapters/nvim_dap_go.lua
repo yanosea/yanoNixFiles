@@ -4,7 +4,7 @@ return {
     "leoluz/nvim-dap-go",
     lazy = true,
     ft = { "go" },
-    init = function()
+    config = function()
       require("dap-go").setup({
         dap_configurations = {
           go = {
