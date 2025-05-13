@@ -22,9 +22,9 @@ vim.api.nvim_create_autocmd("BufRead", {
     })
   end,
 })
--- remove trailing whitespace on save except for markdown files
+-- format on save
 vim.api.nvim_create_autocmd("BufWritePre", {
-  desc = "remove trailing whitespace on save except for markdown files",
+  desc = "format on save",
   pattern = "*",
   callback = function()
     -- check if the file is a markdown file
@@ -35,6 +35,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
       -- remove trailing whitespace
       vim.cmd([[%s/\s\+$//e]])
     end
+    local format_utils = require("plugins.languages.lsp.utils.format_utils")
+    format_utils.setup_format_on_save_all()
   end,
 })
 -- highlight on yank

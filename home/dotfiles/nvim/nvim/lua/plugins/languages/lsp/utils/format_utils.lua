@@ -96,4 +96,18 @@ M.log_format_info = function()
     timeout = 5000,
   })
 end
+-- format on save for all filetypes
+M.setup_format_on_save_all = function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local can_format = false
+  for _, client in ipairs(clients) do
+    if M.format_filter(client) then
+      can_format = true
+      break
+    end
+  end
+  if can_format then
+    M.format_buffer()
+  end
+end
 return M
