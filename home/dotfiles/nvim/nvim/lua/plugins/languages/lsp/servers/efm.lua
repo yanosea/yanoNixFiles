@@ -52,6 +52,10 @@ function M.setup()
         lua = {
           require("efmls-configs.formatters.stylua"),
         },
+        -- make
+        make = {
+          require("efmls-configs.linters.checkmake"),
+        },
         -- nix
         nix = {
           require("efmls-configs.formatters.nixfmt"),

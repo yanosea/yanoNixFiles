@@ -12,48 +12,73 @@ return {
       "TSInstallSync",
       "TSInstallFromGrammar",
     },
-    event = "BufRead",
+    event = "BufReadPost",
     config = function()
       require("nvim-treesitter.configs").setup({
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = false,
+        },
+        incremental_selection = {
+          enable = true,
+        },
+        indent = {
+          enable = true,
+        },
         ensure_installed = {
           -- common
           "comment",
           "diff",
-          "regex",
-          -- version control
           "git_config",
           "git_rebase",
           "gitattributes",
           "gitcommit",
           "gitignore",
-          -- config files
-          "dockerfile",
           "ini",
-          "make",
-          "toml",
-          "yaml",
-          -- web
+          "regex",
+          -- astro
           "astro",
-          "css",
-          "html",
-          "javascript",
-          "jsdoc",
-          "json",
-          "jsonc",
-          "markdown",
-          "markdown_inline",
-          "scss",
-          "tsx",
-          "typescript",
-          -- languages
+          -- bash
           "bash",
+          -- css
+          "css",
+          -- docker
+          "dockerfile",
+          -- go
           "go",
           "gomod",
           "gosum",
+          -- hrml
+          "html",
+          -- javascript
+          "javascript",
+          "jsdoc",
+          -- json
+          "jsonc",
+          "json",
+          -- lua
           "lua",
+          -- markdown
+          "markdown",
+          "markdown_inline",
+          -- make
+          "make",
+          -- nix
           "nix",
+          -- rust
           "rust",
+          -- scss
+          "scss",
+          -- sql
           "sql",
+          -- toml
+          "toml",
+          -- typescript
+          "tsx",
+          -- typescript
+          "typescript",
+          -- yaml
+          "yaml",
         },
       })
     end,

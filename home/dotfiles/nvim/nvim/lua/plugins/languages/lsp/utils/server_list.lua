@@ -46,6 +46,8 @@ M.tools = {
   "golangci-lint",
   -- lua
   "stylua",
+  -- make
+  "checkmake",
   -- nix
   "nixfmt",
   -- shell
