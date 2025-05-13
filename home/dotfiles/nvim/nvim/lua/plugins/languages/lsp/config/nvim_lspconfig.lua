@@ -13,59 +13,10 @@ return {
     config = function()
       -- overwrite LspInfo command
       require("plugins.languages.lsp.utils.lsp_info").setup()
-      -- define lsp servers
-      local ensure_installed_server = {
-        -- common
-        "ast_grep",
-        "efm",
-        "diagnosticls",
-        "typos_lsp",
-        -- config files
-        "docker_compose_language_service",
-        "dockerls",
-        "taplo", -- toml
-        "yamlls",
-        -- web
-        "astro",
-        "cssls",
-        "html",
-        "jsonls",
-        "marksman", -- markdown
-        "tailwindcss",
-        -- languages
-        "bashls",
-        "golangci_lint_ls",
-        "gopls",
-        "lua_ls",
-        "nil_ls", -- nix
-        "rust_analyzer",
-        "sqlls",
-      }
-      local ensure_installed_tools = {
-        -- actions
-        -- common
-        "proselint",
-        --formatters
-        -- web
-        "prettier",
-        -- languages
-        "nixfmt", -- nix
-        "shfmt", -- shell
-        "stylua", -- lua
-        -- linters
-        -- languages
-        "golangci-lint", -- go
-        "shellcheck", -- shell
-      }
+      -- load lsp servers and tools
+      local all_servers = require("plugins.languages.lsp.utils.server_list")
+      local lsps = all_servers.servers
       require("mason").setup()
-      require("mason-lspconfig").setup({
-        automatic_installation = true,
-        ensure_installed = ensure_installed_server,
-      })
-      require("mason-tool-installer").setup({
-        automatic_installation = true,
-        ensure_installed = ensure_installed_tools,
-      })
       -- diagnostics config
       local colors = require("utils.colors").colors
       local icons = require("utils.icons").icons
@@ -109,7 +60,10 @@ return {
       require("lspconfig.ui.windows").default_options = {
         border = "single",
       }
-      vim.lsp.enable(ensure_installed_server)
+      require("plugins.languages.lsp.utils.setup_servers").setup(lsps)
+      for _, lsp in pairs(lsps) do
+        vim.lsp.enable(lsp)
+      end
     end,
   },
 }

@@ -1,23 +1,25 @@
 -- efm lsp config
-return {
-  {
-    "neovim/nvim-lspconfig",
-    lazy = true,
-    event = "VeryLazy",
-    config = function()
-      local lspconfig = require("lspconfig")
-      lspconfig.efm.setup({
-        init_options = { documentFormatting = true },
-        filetypes = { "lua" },
-        settings = {
-          rootMarkers = { ".git/" },
-          languages = {
-            lua = {
-              { formatCommand = "stylua --stdin-filepath ${INPUT}", formatStdin = true },
-            },
-          },
+local M = {}
+function M.setup()
+  vim.lsp.config("efm", {
+    init_options = {
+      documentFormatting = true,
+      documentRangeFormatting = true,
+    },
+    settings = {
+      root_markers = {
+        ".git",
+        ".luacheckrc",
+        ".luarc.json",
+        ".stylua.toml",
+        "stylua.toml",
+      },
+      languages = {
+        lua = {
+          { formatCommand = "stylua --config-path -", formatStdin = true },
         },
-      })
-    end,
-  },
-}
+      },
+    },
+  })
+end
+return M
