@@ -2,6 +2,7 @@
 return {
   {
     "gbrlsnchs/winpick.nvim",
+    lazy = true,
     keys = { "<C-w><C-w>" },
     config = function()
       -- winpick.nvim config
@@ -14,7 +15,7 @@ return {
           local bufnr = vim.api.nvim_win_get_buf(winid)
           local filetype = vim.bo[bufnr].filetype
           local excluded_filetypes = {
-            "noice",
+            "notify",
           }
           if vim.tbl_contains(excluded_filetypes, filetype) then
             is_excluded = true
