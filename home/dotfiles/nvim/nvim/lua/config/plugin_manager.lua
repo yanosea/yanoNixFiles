@@ -38,7 +38,7 @@ require("lazy").setup({
   },
   -- lazy.nvim ui config
   ui = {
-    -- single border line
+    -- set border to single line
     border = "single",
   },
   -- config file change detection

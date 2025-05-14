@@ -49,10 +49,14 @@ return {
           prefix = "",
         },
       })
+      -- lsp ui config
       require("lspconfig.ui.windows").default_options = {
+        -- set border to single line
         border = "single",
       }
+      -- set up lsp servers
       require("plugins.languages.lsp.utils.setup_servers").setup(lsps)
+      -- enable lsp servers
       for _, lsp in pairs(lsps) do
         vim.lsp.enable(lsp)
       end

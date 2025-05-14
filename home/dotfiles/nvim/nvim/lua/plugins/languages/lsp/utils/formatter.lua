@@ -3,14 +3,14 @@
 local M = {}
 -- filter function to determine which LSP client should handle formatting
 -- prioritizes efm-langserver if available
-M.format_filter = function(client)
+M.format_filter = function(client, bufnr)
   -- prioritize efm-langserver for formatting
   if client.name == "efm" then
     return true
   end
   -- check if other clients can format and efm is not available
   local has_efm = false
-  for _, c in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+  for _, c in ipairs(vim.lsp.get_clients({ bufnr = bufnr or 0 })) do
     if c.name == "efm" then
       has_efm = true
       break
@@ -25,7 +25,10 @@ end
 -- simple wrapper for vim.lsp.buf.format() to provide defaults
 M.format = function(opts)
   opts = opts or {}
-  opts.filter = opts.filter or M.format_filter
+  -- create a wrapper function that passes both arguments to format_filter
+  opts.filter = opts.filter or function(client)
+    return M.format_filter(client, opts.bufnr)
+  end
   return vim.lsp.buf.format(opts)
 end
 -- format current buffer or visual selection with LSP
@@ -59,49 +62,24 @@ M.has_efm_formatter = function(filetype)
 
   for _, client in ipairs(clients) do
     if client.name == "efm" then
-      if client.config and client.config.filetypes then
-        for _, ft in ipairs(client.config.filetypes) do
-          if ft == filetype then
-            return true
-          end
+      -- safe access to filetypes with proper type checking
+      if client.config and client.config.settings and client.config.settings.languages then
+        -- check if filetype is supported in efm config
+        if client.config.settings.languages[filetype] then
+          return true
         end
       end
     end
   end
   return false
 end
--- log formatting information for debugging
-M.log_format_info = function()
-  local filetype = vim.bo.filetype
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
-  local info = {
-    filetype = filetype,
-    clients = {},
-    has_efm = false,
-  }
-  for _, client in ipairs(clients) do
-    local client_info = {
-      name = client.name,
-      supports_formatting = client.supports_method("textDocument/formatting"),
-      filetypes = client.config and client.config.filetypes or {},
-    }
-    table.insert(info.clients, client_info)
-    -- check if efm-langserver is available
-    if client.name == "efm" then
-      info.has_efm = true
-    end
-  end
-  vim.notify(vim.inspect(info), vim.log.levels.INFO, {
-    title = "Format Info",
-    timeout = 5000,
-  })
-end
 -- format on save for all filetypes
 M.setup_format_on_save_all = function()
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
   local can_format = false
   for _, client in ipairs(clients) do
-    if M.format_filter(client) then
+    if M.format_filter(client, bufnr) then
       can_format = true
       break
     end

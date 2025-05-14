@@ -395,9 +395,9 @@ function M.setup()
     local height = math.min(#content + 2, vim.o.lines - 4)
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
-    vim.api.nvim_buf_set_option(buf, "modifiable", false)
-    vim.api.nvim_buf_set_option(buf, "filetype", "lspinfo")
-    vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+    vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
+    vim.api.nvim_set_option_value("filetype", "lspinfo", { buf = buf })
+    vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })
     local win = vim.api.nvim_open_win(buf, true, {
       relative = "editor",
       width = width,
@@ -407,8 +407,8 @@ function M.setup()
       style = "minimal",
       border = "single",
     })
-    vim.api.nvim_win_set_option(win, "wrap", true)
-    vim.api.nvim_win_set_option(win, "cursorline", true)
+    vim.api.nvim_set_option_value("wrap", true, { win = win })
+    vim.api.nvim_set_option_value("cursorline", true, { win = win })
     local colors = require("utils.colors").colors
     vim.cmd(
       string.format(
@@ -436,7 +436,7 @@ function M.setup()
         colors.Red
       )
     )
-    vim.api.nvim_win_set_option(win, "winhl", "Normal:Normal,FloatBorder:LspInfoBorder")
+    vim.api.nvim_set_option_value("winhl", "Normal:Normal,FloatBorder:LspInfoBorder", { win = win })
     local function add_match(group, pattern)
       pcall(vim.fn.matchadd, group, pattern)
     end

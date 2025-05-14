@@ -3,11 +3,12 @@ return {
   {
     "folke/lazydev.nvim",
     lazy = true,
-    ft = "lua",
+    event = { "BufReadPre", "BufNewFile" },
     opts = {
       library = {
-        "lazy.nvim",
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        vim.env.VIMRUNTIME,
+        "${3rd}/luv/library",
+        "${3rd}/busted/library",
         { path = "wezterm-types", mods = { "wezterm" } },
       },
       enabled = function(root_dir)

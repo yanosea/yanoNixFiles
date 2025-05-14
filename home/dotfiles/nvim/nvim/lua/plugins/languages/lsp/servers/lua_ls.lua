@@ -13,7 +13,11 @@ function M.setup()
           keywordSnippet = "Both",
         },
         diagnostics = {
-          -- define globals
+          disable = {
+            -- disable diagnostics for missing fields
+            "missing-fields",
+          },
+          -- define global variables
           globals = {
             -- hammerspoon
             "hs",

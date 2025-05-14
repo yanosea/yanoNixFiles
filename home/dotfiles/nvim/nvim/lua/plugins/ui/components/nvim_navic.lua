@@ -10,6 +10,7 @@ return {
     config = function()
       local navic = require("nvim-navic")
       local icons = require("utils.icons").icons
+      local colors = require("utils.colors").colors
       navic.setup({
         icons = {
           Array = icons.kind.Array,
@@ -119,10 +120,7 @@ return {
           elseif buf_ft == "dapui_watches" then
             file_icon = icons.ui.Watches
           end
-
-          local navic_text = vim.api.nvim_get_hl(0, { name = "Normal" })
-          vim.api.nvim_set_hl(0, "Winbar", { fg = navic_text.foreground })
-
+          vim.api.nvim_set_hl(0, "Winbar", { fg = colors.Fg })
           return " " .. "%#" .. hl_group .. "#" .. file_icon .. "%*" .. " " .. "%#Winbar#" .. filename .. "%*"
         end
         return ""

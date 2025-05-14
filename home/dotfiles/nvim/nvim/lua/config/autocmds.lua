@@ -35,8 +35,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
       -- remove trailing whitespace
       vim.cmd([[%s/\s\+$//e]])
     end
-    local format_utils = require("plugins.languages.lsp.utils.format_utils")
-    format_utils.setup_format_on_save_all()
+    -- format the buffer
+    require("plugins.languages.lsp.utils.formatter").setup_format_on_save_all()
   end,
 })
 -- highlight on yank

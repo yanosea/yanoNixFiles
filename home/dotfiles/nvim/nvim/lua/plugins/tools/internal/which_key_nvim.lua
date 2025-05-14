@@ -115,7 +115,7 @@ return {
           { "<LEADER>le", "<CMD>Telescope quickfix<CR>", desc = "telescope quickfix" },
           {
             "<LEADER>lf",
-            "<CMD>lua require('plugins.languages.lsp.utils.format_utils').format()<CR>",
+            "<CMD>lua require('plugins.languages.lsp.utils.formatter').format()<CR>",
             desc = "format",
           },
           { "<LEADER>li", "<CMD>LspInfo<CR>", desc = "info" },
