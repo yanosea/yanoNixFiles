@@ -12,7 +12,9 @@ return {
     lazy = true,
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      -- overwrite LspInfo command
+      -- keymaps
+      require("plugins.languages.lsp.utils.keymaps").setup()
+      -- overwrite :LspInfo command
       require("plugins.languages.lsp.utils.lsp_info").setup()
       -- load lsp servers and tools
       local all_servers = require("plugins.languages.lsp.utils.server_list")
