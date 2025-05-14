@@ -4,9 +4,8 @@ return {
     "mfussenegger/nvim-treehopper",
     lazy = true,
     keys = { "zf" },
-    init = function()
+    config = function()
       -- keymaps
-      -- smart folding
       vim.keymap.set("n", "zf", function()
         require("tsht").nodes()
         vim.cmd("normal! zf")
