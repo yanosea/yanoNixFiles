@@ -5,6 +5,7 @@ return {
     lazy = true,
     event = { "CmdlineEnter" },
     config = function()
+      -- numb.nvim config
       require("numb").setup({
         show_numbers = true,
         show_cursorline = true,
