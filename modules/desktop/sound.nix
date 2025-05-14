@@ -1,7 +1,5 @@
 { ... }: {
-  # hardware
-  hardware = { pulseaudio = { enable = false; }; };
-  # services
+  # security
   security = { rtkit = { enable = true; }; };
   # services
   services = {
@@ -12,5 +10,6 @@
       jack = { enable = true; };
       pulse = { enable = true; };
     };
+    pulseaudio = { enable = false; };
   };
 }
