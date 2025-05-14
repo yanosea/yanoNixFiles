@@ -8,10 +8,14 @@ return {
       -- dial.nvim config
       require("dial.config").augends:register_group({
         default = {
+          -- number
           require("dial.augend").integer.alias.decimal,
           require("dial.augend").integer.alias.hex,
+          -- boolean
           require("dial.augend").constant.alias.bool,
+          -- version
           require("dial.augend").semver.alias.semver,
+          -- date
           require("dial.augend").date.alias["%Y/%m/%d"],
           require("dial.augend").date.alias["%Y-%m-%d"],
           require("dial.augend").date.alias["%Y年%m月%d日"],
