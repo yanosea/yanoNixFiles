@@ -453,9 +453,16 @@ function M.setup()
     add_match("LspInfoTrue", "true")
     add_match("LspInfoFalse", "false")
     add_match("Comment", "^\\s*Press q or")
-    vim.api.nvim_buf_set_keymap(buf, "n", "q", ":close<CR>", { noremap = true, silent = true })
-    vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", ":close<CR>", { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(buf, "n", "q", ":close<CR>", { desc = "close lsp info", silent = true, noremap = true })
+    vim.api.nvim_buf_set_keymap(
+      buf,
+      "n",
+      "<Esc>",
+      ":close<CR>",
+      { desc = "close lsp info", silent = true, noremap = true }
+    )
     vim.api.nvim_buf_set_keymap(buf, "n", "<Tab>", "", {
+      desc = "open server documentation",
       noremap = true,
       callback = function()
         local line = vim.api.nvim_get_current_line()
@@ -467,7 +474,6 @@ function M.setup()
           vim.fn.system({ "xdg-open", doc_url })
         end
       end,
-      desc = "open server documentation",
     })
   end, {})
 end

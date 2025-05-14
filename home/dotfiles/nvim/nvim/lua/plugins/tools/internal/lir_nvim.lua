@@ -67,7 +67,7 @@ return {
             "x",
             "J",
             ':<C-u>lua require"lir.mark.actions".toggle_mark("v")<CR>',
-            { noremap = true, silent = true }
+            { desc = "lir toggle mark (visual mode)", silent = true, noremap = true }
           )
         end,
       }

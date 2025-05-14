@@ -53,7 +53,7 @@ return {
         "n",
         "<C-w><C-w>",
         "<CMD>lua WinPick()<CR>",
-        { noremap = true, silent = true, desc = "Pick Windows" }
+        { desc = "pick windows", silent = true, noremap = true }
       )
     end,
   },
