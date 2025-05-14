@@ -5,6 +5,7 @@
   networking = { hostName = hostname; };
   # nix
   nix = {
+    enable = true;
     envVars = { ZDOTDIR = "$HOME/.config/zsh"; };
     gc = {
       automatic = true;
@@ -14,11 +15,10 @@
         Minute = 0;
       };
       options = "--delete-older-than 7d";
-      user = "root";
     };
+    optimise = { automatic = true; };
     settings = {
       accept-flake-config = true;
-      auto-optimise-store = true;
       experimental-features = [ "nix-command" "flakes" ];
       substituters = [
         "https://cache.nixos.org"
@@ -36,7 +36,6 @@
       ];
       trusted-users = [ "root" "@wheel" username ];
     };
-    useDaemon = true;
   };
   # nixpkgs
   nixpkgs = {
@@ -47,8 +46,8 @@
   };
   # programs
   programs = { zsh = { enable = true; }; };
-  # services
-  services = { nix-daemon = { enable = true; }; };
+  # system
+  system = { stateVersion = 6; };
   # users
   users = {
     users = {

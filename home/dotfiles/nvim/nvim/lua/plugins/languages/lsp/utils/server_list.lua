@@ -50,7 +50,7 @@ M.tools = {
   -- make
   "checkmake",
   -- nix
-  "nixfmt",
+  "nixpkgs-fmt",
   -- shell
   "shfmt",
   "shellcheck",
