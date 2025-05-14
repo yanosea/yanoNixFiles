@@ -1,4 +1,4 @@
--- clipboard sharing
+-- clipboard sharing between WSL and Windows
 if vim.fn.executable("win32yank.exe") ~= 0 then
   vim.g.clipboard = {
     name = "win32yank",

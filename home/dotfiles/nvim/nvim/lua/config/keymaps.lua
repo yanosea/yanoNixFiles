@@ -1,9 +1,9 @@
 -- common keymaps config
 -- leader key
 vim.g.mapleader = "space" and " "
--- local leader
+-- local leader key
 vim.g.maplocalleader = "\\"
--- move line
+-- move line up and down
 vim.keymap.set("n", "j", "gj", { silent = true })
 vim.keymap.set("n", "k", "gk", { silent = true })
 vim.keymap.set("n", "gj", "j", { silent = true })

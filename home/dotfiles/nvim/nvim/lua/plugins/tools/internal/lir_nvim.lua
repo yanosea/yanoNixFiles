@@ -1,4 +1,4 @@
--- setup for image pasting
+-- file manager
 return {
   {
     "tamago324/lir.nvim",

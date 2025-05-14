@@ -1,6 +1,6 @@
 -- plugin manager config (lazy.nvim)
--- clone lazy.nvim if not clone yet in $XDG_DATA_HOME/lazy/lazy.nvim
--- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua
+-- clone lazy.nvim if not cloned yet in $XDG_DATA_HOME/nvim/lazy/lazy.nvim
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>p : plugins)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -23,20 +23,22 @@ require("lazy").setup({
   defaults = {
     -- not lazy load by default
     lazy = false,
+    -- always use the latest version of the plugin
     version = false,
   },
   -- load plugins
   spec = {
+    -- path from `$XDG_CONFIG_HOME/nvim/lua/init.lua
     { import = "plugins" },
   },
-  -- limit the maximum number of concurrent tasks
-  concurrency = vim.uv.available_parallelism() * 2,
   -- plugin installation behavior
   install = {
-    colorscheme = { "everforest" },
+    -- habamax is the default theme
+    colorscheme = { "everforest", "habamax" },
   },
   -- lazy.nvim ui config
   ui = {
+    -- single border line
     border = "single",
   },
   -- config file change detection

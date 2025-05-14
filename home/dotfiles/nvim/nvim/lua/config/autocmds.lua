@@ -1,4 +1,4 @@
--- clear existing autocommands
+-- clear existing autocommands first
 vim.api.nvim_clear_autocmds({})
 -- restore last cursor position
 vim.api.nvim_create_autocmd("BufRead", {
@@ -47,7 +47,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.hl.on_yank({ higroup = "Search", timeout = 100 })
   end,
 })
--- define a group for directory opened
+-- define a group for directory opened for lir.nvim (file manager)
 local dir_opened_group = vim.api.nvim_create_augroup("_dir_opened", { clear = true })
 vim.api.nvim_create_autocmd("BufEnter", {
   group = dir_opened_group,
