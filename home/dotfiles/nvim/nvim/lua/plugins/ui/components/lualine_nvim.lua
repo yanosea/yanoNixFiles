@@ -1,4 +1,5 @@
 -- status line config
+-- TODO : []を表示しないようにする
 return {
   {
     "nvim-lualine/lualine.nvim",
