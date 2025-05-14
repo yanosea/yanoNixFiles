@@ -4,23 +4,37 @@ function M.setup()
   vim.lsp.config("lua_ls", {
     settings = {
       Lua = {
+        completion = {
+          -- snippets support
+          callSnippet = "Both",
+          -- lines to show in completion
+          displayContext = 1,
+          -- keyword completion support
+          keywordSnippet = "Both",
+        },
+        diagnostics = {
+          -- define globals
+          globals = {
+            -- hammerspoon
+            "hs",
+          },
+        },
+        hint = {
+          -- show inline hints
+          enable = true,
+        },
         runtime = {
+          -- lua version
           version = "LuaJIT",
         },
         workspace = {
-          vim.env.VIMRUNTIME,
-          "${3rd}/luv/library",
-          "${3rd}/busted/library",
+          -- libraries to include
+          library = {
+            vim.env.VIMRUNTIME,
+            "${3rd}/luv/library",
+            "${3rd}/busted/library",
+          },
         },
-        completion = {
-          callSnippet = "Both",
-          displayContext = 1,
-          keywordSnippet = "Both",
-        },
-        hint = {
-          enable = true,
-        },
-        telemetry = { enable = false },
       },
     },
   })
