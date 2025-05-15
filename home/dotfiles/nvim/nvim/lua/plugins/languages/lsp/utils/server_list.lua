@@ -1,3 +1,4 @@
+-- lsp server list
 local M = {}
 -- lsp servers
 M.servers = {

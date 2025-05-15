@@ -55,10 +55,6 @@ return {
       }
       -- set up lsp servers
       require("plugins.languages.lsp.utils.setup_servers").setup(servers)
-      -- enable lsp servers
-      for _, server in pairs(servers) do
-        vim.lsp.enable(server)
-      end
     end,
   },
 }
