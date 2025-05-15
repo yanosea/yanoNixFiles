@@ -3,6 +3,7 @@
 return {
   {
     "yetone/avante.nvim",
+    version = false,
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
       "stevearc/dressing.nvim",
@@ -15,7 +16,6 @@ return {
       { "nvim-tree/nvim-web-devicons", lazy = true }, -- or echasnovski/mini.icons
       { "zbirenbaum/copilot.lua", lazy = true }, -- for providers='copilot'
     },
-    version = false,
     lazy = true,
     event = "VeryLazy",
     build = "make",
