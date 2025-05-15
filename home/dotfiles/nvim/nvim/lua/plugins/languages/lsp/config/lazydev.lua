@@ -3,7 +3,7 @@ return {
   {
     "folke/lazydev.nvim",
     lazy = true,
-    event = "VeryLazy",
+    ft = { "lua" },
     opts = {
       library = {
         vim.env.VIMRUNTIME,
