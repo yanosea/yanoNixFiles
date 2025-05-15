@@ -12,7 +12,7 @@ return {
       "TSInstallSync",
       "TSInstallFromGrammar",
     },
-    event = "BufReadPost",
+    event = "VeryLazy",
     config = function()
       require("nvim-treesitter.configs").setup({
         highlight = {

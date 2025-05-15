@@ -10,15 +10,14 @@ return {
       "b0o/schemastore.nvim",
     },
     lazy = true,
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       -- keymaps
       require("plugins.languages.lsp.utils.keymaps").setup()
       -- overwrite :LspInfo command
       require("plugins.languages.lsp.utils.lsp_info").setup()
-      -- load lsp servers and tools
-      local all_servers = require("plugins.languages.lsp.utils.server_list")
-      local lsps = all_servers.servers
+      -- load lsp servers
+      local servers = require("plugins.languages.lsp.utils.server_list").servers
       require("mason").setup()
       -- diagnostics config
       local colors = require("utils.colors").colors
@@ -55,10 +54,10 @@ return {
         border = "single",
       }
       -- set up lsp servers
-      require("plugins.languages.lsp.utils.setup_servers").setup(lsps)
+      require("plugins.languages.lsp.utils.setup_servers").setup(servers)
       -- enable lsp servers
-      for _, lsp in pairs(lsps) do
-        vim.lsp.enable(lsp)
+      for _, server in pairs(servers) do
+        vim.lsp.enable(server)
       end
     end,
   },

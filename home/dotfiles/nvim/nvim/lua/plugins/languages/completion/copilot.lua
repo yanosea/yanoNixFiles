@@ -4,7 +4,7 @@ return {
     "zbirenbaum/copilot.lua",
     lazy = true,
     cmd = "Copilot",
-    event = { "InsertEnter", "LspAttach" },
+    event = "InsertEnter",
     config = function()
       -- copilot.lua config
       require("copilot").setup({

@@ -3,7 +3,8 @@ return {
   {
     "folke/lazydev.nvim",
     lazy = true,
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost", "BufNewFile" },
+    ft = { "lua" },
     opts = {
       library = {
         vim.env.VIMRUNTIME,

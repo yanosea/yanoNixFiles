@@ -9,9 +9,10 @@ return {
     lazy = true,
     event = "VeryLazy",
     init = function()
+      -- setup mason
+      require("mason").setup()
       -- install lsp servers
       local ensure_installed_server = require("plugins.languages.lsp.utils.server_list").servers
-      require("mason").setup()
       require("mason-lspconfig").setup({
         ensure_installed = ensure_installed_server,
       })

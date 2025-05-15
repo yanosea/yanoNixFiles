@@ -3,6 +3,6 @@ return {
   {
     "rhysd/clever-f.vim",
     lazy = true,
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufNewFile" },
   },
 }
