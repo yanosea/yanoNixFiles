@@ -156,7 +156,7 @@ M.icons = {
     Warning = "",
   },
   scrollbars = {
-    Min = "__",
+    Min = "  ",
     Bar1 = "▁▁",
     Bar2 = "▂▂",
     Bar3 = "▃▃",
