@@ -11,6 +11,7 @@ return {
       local navic = require("nvim-navic")
       local icons = require("utils.icons").icons
       local colors = require("utils.colors").colors
+      -- nvim-navic config
       navic.setup({
         icons = {
           Array = icons.kind.Array,
@@ -51,7 +52,7 @@ return {
           auto_attach = true,
           preference = nil,
         },
-        highlight = false,
+        highlight = true,
         separator = " " .. icons.ui.LineRightArrow .. " ",
         depth_limit = 0,
         depth_limit_indicator = "..",
@@ -62,39 +63,11 @@ return {
           return text
         end,
       })
-
-      local excluded_filetypes = {
-        "help",
-        "startify",
-        "dashboard",
-        "lazy",
-        "neo-tree",
-        "neogitstatus",
-        "NvimTree",
-        "Trouble",
-        "alpha",
-        "lir",
-        "Outline",
-        "spectre_panel",
-        "toggleterm",
-        "DressingSelect",
-        "Jaq",
-        "harpoon",
-        "dap-repl",
-        "dap-terminal",
-        "dapui_console",
-        "dapui_hover",
-        "lab",
-        "notify",
-        "noice",
-        "neotest-summary",
-        "",
-      }
-
+      -- define get filename function
       local function get_filename()
         local filename = vim.fn.expand("%:t")
         local extension = vim.fn.expand("%:e")
-
+        -- get the file name and extension
         if filename ~= "" then
           local file_icon, hl_group
           local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
@@ -108,9 +81,8 @@ return {
             file_icon = ""
             hl_group = "Normal"
           end
-
+          -- check if the file is a dapui file
           local buf_ft = vim.bo.filetype
-
           if buf_ft == "dapui_breakpoints" then
             file_icon = icons.ui.Breakpoint
           elseif buf_ft == "dapui_stacks" then
@@ -125,68 +97,17 @@ return {
         end
         return ""
       end
-
-      local function get_gps()
-        local gps_location = navic.get_location()
-
-        if gps_location ~= "" and navic.is_available() then
-          return "%#NavicSeparator#" .. icons.ui.Separator .. " " .. "%* " .. gps_location
+      -- overwrite navic.get_winbar function
+      function navic.get_winbar()
+        local filename = get_filename()
+        local location = navic.get_location()
+        if location and location ~= "" then
+          return filename .. " " .. icons.ui.Separator .. "  " .. location
+        else
+          return filename
         end
-        return ""
       end
-
-      local function get_winbar()
-        if vim.tbl_contains(excluded_filetypes, vim.bo.filetype) then
-          return
-        end
-
-        local value = get_filename()
-        local gps_added = false
-
-        if value ~= "" then
-          local gps_value = get_gps()
-          value = value .. " " .. gps_value
-          if gps_value ~= "" then
-            gps_added = true
-          end
-        end
-
-        if value ~= "" and vim.bo.modified then
-          local mod = "%#LspCodeLens#" .. icons.ui.Circle .. "%*"
-          if gps_added then
-            value = value .. " " .. mod
-          else
-            value = value .. mod
-          end
-        end
-
-        local num_tabs = #vim.api.nvim_list_tabpages()
-        if num_tabs > 1 and value ~= "" then
-          local tabpage_number = tostring(vim.api.nvim_tabpage_get_number(0))
-          value = value .. "%=" .. tabpage_number .. "/" .. tostring(num_tabs)
-        end
-
-        pcall(vim.api.nvim_set_option_value, "winbar", value, { scope = "local" })
-      end
-
-      vim.api.nvim_create_autocmd({
-        "CursorHoldI",
-        "CursorHold",
-        "BufWinEnter",
-        "BufFilePost",
-        "InsertEnter",
-        "BufWritePost",
-        "TabClosed",
-        "TabEnter",
-      }, {
-        group = vim.api.nvim_create_augroup("NavicWinbar", {}),
-        callback = function()
-          local status_ok, _ = pcall(vim.api.nvim_buf_get_var, 0, "lsp_floating_window")
-          if not status_ok then
-            get_winbar()
-          end
-        end,
-      })
+      vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_winbar()%}"
     end,
   },
 }
