@@ -1,7 +1,7 @@
 -- yamlls lsp config
 local M = {}
 function M.setup()
-  vim.lsp.config("jsonls", {
+  vim.lsp.config("yamlls", {
     settings = {
       redhat = {
         telemetry = {

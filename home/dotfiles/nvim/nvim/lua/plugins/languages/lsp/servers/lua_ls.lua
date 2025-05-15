@@ -21,6 +21,8 @@ function M.setup()
           globals = {
             -- hammerspoon
             "hs",
+            -- vim
+            "vim",
           },
         },
         hint = {
@@ -31,14 +33,17 @@ function M.setup()
           -- lua version
           version = "LuaJIT",
         },
-        workspace = {
-          -- libraries to include
-          library = {
-            vim.env.VIMRUNTIME,
-            "${3rd}/luv/library",
-            "${3rd}/busted/library",
-          },
-        },
+        -- if lazydev is not installed, use the default library paths
+        workspace = not pcall(require, "lazydev")
+            and {
+              -- library paths
+              library = {
+                vim.env.VIMRUNTIME,
+                "${3rd}/luv/library",
+                "${3rd}/busted/library",
+              },
+            }
+          or nil,
       },
     },
   })
