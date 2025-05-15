@@ -33,17 +33,12 @@ function M.setup()
           -- lua version
           version = "LuaJIT",
         },
-        -- if lazydev is not installed, use the default library paths
-        workspace = not pcall(require, "lazydev")
-            and {
-              -- library paths
-              library = {
-                vim.env.VIMRUNTIME,
-                "${3rd}/luv/library",
-                "${3rd}/busted/library",
-              },
-            }
-          or nil,
+        workspace = {
+          -- enable library
+          library = vim.api.nvim_get_runtime_file("", true),
+          -- enable library for 3rd party libraries
+          checkThirdParty = false,
+        },
       },
     },
   })
