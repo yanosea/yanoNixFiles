@@ -48,9 +48,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 -- define a group for directory opened for lir.nvim (file manager)
-local dir_opened_group = vim.api.nvim_create_augroup("_dir_opened", { clear = true })
 vim.api.nvim_create_autocmd("BufEnter", {
-  group = dir_opened_group,
+  group = vim.api.nvim_create_augroup("_dir_opened", { clear = true }),
   nested = true,
   callback = function(args)
     local bufname = vim.api.nvim_buf_get_name(args.buf)

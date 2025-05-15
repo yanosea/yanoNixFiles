@@ -169,7 +169,6 @@ return {
         pcall(vim.api.nvim_set_option_value, "winbar", value, { scope = "local" })
       end
 
-      local augroup = vim.api.nvim_create_augroup("NavicWinbar", {})
       vim.api.nvim_create_autocmd({
         "CursorHoldI",
         "CursorHold",
@@ -180,7 +179,7 @@ return {
         "TabClosed",
         "TabEnter",
       }, {
-        group = augroup,
+        group = vim.api.nvim_create_augroup("NavicWinbar", {}),
         callback = function()
           local status_ok, _ = pcall(vim.api.nvim_buf_get_var, 0, "lsp_floating_window")
           if not status_ok then
