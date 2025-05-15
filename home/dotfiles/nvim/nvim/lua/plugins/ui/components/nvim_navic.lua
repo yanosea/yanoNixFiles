@@ -73,24 +73,36 @@ return {
           local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
           if devicons_ok then
             file_icon, hl_group = devicons.get_icon(filename, extension, { default = true })
-
-            if not file_icon or file_icon == "" then
-              file_icon = icons.kind.File
-            end
           else
             file_icon = ""
             hl_group = "Normal"
           end
+          if file_icon == nil then
+            file_icon = ""
+          end
+          if file_icon == "" and icons and icons.kind and icons.kind.File then
+            file_icon = icons.kind.File
+          end
           -- check if the file is a dapui file
           local buf_ft = vim.bo.filetype
           if buf_ft == "dapui_breakpoints" then
-            file_icon = icons.ui.Breakpoint
+            file_icon = icons.ui.BreakPoint
           elseif buf_ft == "dapui_stacks" then
-            file_icon = icons.ui.Stack
+            file_icon = icons.ui.Stacks
           elseif buf_ft == "dapui_scopes" then
-            file_icon = icons.ui.Scope
+            file_icon = icons.ui.Scopes
           elseif buf_ft == "dapui_watches" then
             file_icon = icons.ui.Watches
+          elseif buf_ft == "dapui_console" then
+            file_icon = icons.ui.DebugConsole
+          elseif buf_ft == "dap-repl" then
+            file_icon = icons.ui.CommandLineInput
+          end
+          if file_icon == nil then
+            file_icon = ""
+          end
+          if hl_group == nil then
+            hl_group = "Normal"
           end
           vim.api.nvim_set_hl(0, "Winbar", { fg = colors.Fg })
           return " " .. "%#" .. hl_group .. "#" .. file_icon .. "%*" .. " " .. "%#Winbar#" .. filename .. "%*"
