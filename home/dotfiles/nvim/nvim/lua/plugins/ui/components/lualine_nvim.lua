@@ -113,7 +113,15 @@ return {
           function()
             local buf_clients = vim.lsp.get_clients({ bufnr = 0 })
             if #buf_clients == 0 then
-              return "lsp inactive"
+              -- if no clients, check if there are any active clients
+              buf_clients = vim.lsp.get_clients()
+              if #buf_clients == 0 then
+                return "lsp inactive"
+              end
+              -- if no active clients, check if the buffer is empty
+              if vim.fn.expand("%") == "" then
+                return "lsp inactive"
+              end
             end
             local buf_client_names = {}
             local copilot_active = false
@@ -195,7 +203,7 @@ return {
             end
             -- return empty string if no lsp clients
             if language_servers == "[]" then
-              return ""
+              return "lsp inactive"
             end
             return language_servers
           end,
