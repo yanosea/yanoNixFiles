@@ -4,13 +4,12 @@ return {
     "zbirenbaum/copilot-cmp",
     dependencies = { "zbirenbaum/copilot.lua" },
     lazy = true,
-    event = "InsertEnter",
-    init = function()
-      require("copilot").setup({
-        suggestion = { enabled = false },
-        panel = { enabled = false },
+    event = { "InsertEnter", "CmdlineEnter" },
+    config = function()
+      -- copilot-cmp config
+      require("copilot_cmp").setup({
+        fix_pairs = true,
       })
     end,
-    config = true,
   },
 }

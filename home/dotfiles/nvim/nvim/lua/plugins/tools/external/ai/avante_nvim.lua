@@ -15,9 +15,9 @@ return {
       { "nvim-tree/nvim-web-devicons", lazy = true }, -- or echasnovski/mini.icons
       { "zbirenbaum/copilot.lua", lazy = true }, -- for providers='copilot'
     },
+    version = false,
     lazy = true,
     event = "VeryLazy",
-    version = false,
     build = "make",
     opts = {
       provider = "copilot",
