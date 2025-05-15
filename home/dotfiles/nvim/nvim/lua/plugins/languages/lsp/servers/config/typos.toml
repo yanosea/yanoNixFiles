@@ -1,3 +1,4 @@
+# typos_lsp config
 [default.extend-words]
 noice = "noice"
 nd = "nd"
