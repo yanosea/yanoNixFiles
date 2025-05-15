@@ -22,7 +22,7 @@ style = "bg:#83c092 fg:#090c0c"
 disabled = false
 
 [os.symbols]
-Windows = ""
+Windows = ""
 Arch = ""
 Macos = ""
 NixOS = ""
@@ -72,4 +72,4 @@ format = '[[ $symbol ($version) ](fg:#a7c080 bg:#2d353b)]($style)'
 disabled = false
 time_format = "%H:%M:%S"
 style = "bg:#2b3339"
-format = '[[  $time ](fg:#d3c6aa bg:#2b3339)]($style)'
+format = '[[   $time ](fg:#d3c6aa bg:#2b3339)]($style)'
