@@ -8,11 +8,12 @@ return {
       { "theHamsta/nvim-dap-virtual-text", opts = {} },
     },
     lazy = true,
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       local icons = require("utils.icons").icons
       local dap = require("dap")
       local dapui = require("dapui")
+      -- nvim-dap-ui config
       dapui.setup({
         icons = {
           expanded = icons.ui.TriangleShortArrowDown,
@@ -20,7 +21,7 @@ return {
           circular = icons.ui.Circular,
         },
         mappings = {
-          expand = { "<CR>", "<2-LeftMouse>" },
+          expand = { "<CR>" },
           open = "o",
           remove = "d",
           edit = "e",
@@ -77,14 +78,8 @@ return {
           max_value_lines = 100,
         },
       })
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open()
-      end
+      dap.listeners.after.event_initialized["dapui_config"] = dapui.open
       local function notify_handler(msg, level, opts)
-        local threshold = vim.log.levels.INFO
-        if level >= threshold then
-          return vim.notify(msg, level, opts)
-        end
         opts = vim.tbl_extend("keep", opts or {}, {
           title = "dap-ui",
           icon = "",
@@ -95,26 +90,20 @@ return {
         if level == nil then
           level = vim.log.levels.INFO
         elseif type(level) == "string" then
-          local log_levels = {
-            ["TRACE"] = vim.log.levels.TRACE,
-            ["DEBUG"] = vim.log.levels.DEBUG,
-            ["INFO"] = vim.log.levels.INFO,
-            ["WARN"] = vim.log.levels.WARN,
-            ["ERROR"] = vim.log.levels.ERROR,
-          }
-          level = log_levels[(level):upper()] or vim.log.levels.INFO
-        else
-          level = level + 1
+          level = ({
+            TRACE = vim.log.levels.TRACE,
+            DEBUG = vim.log.levels.DEBUG,
+            INFO = vim.log.levels.INFO,
+            WARN = vim.log.levels.WARN,
+            ERROR = vim.log.levels.ERROR,
+          })[(level):upper()] or vim.log.levels.INFO
         end
         msg = string.format("%s: %s", opts.title, msg)
         vim.notify(msg, level, opts)
       end
-      local ok, _ = pcall(function()
+      pcall(function()
         require("dapui.util").notify = notify_handler
       end)
-      if not ok then
-        vim.notify("Unable to override dap-ui logging level", vim.log.levels.DEBUG)
-      end
     end,
   },
 }

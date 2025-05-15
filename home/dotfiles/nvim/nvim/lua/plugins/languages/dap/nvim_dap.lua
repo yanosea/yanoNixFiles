@@ -3,10 +3,9 @@ return {
   {
     "mfussenegger/nvim-dap",
     lazy = true,
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       local icons = require("utils.icons").icons
-      local dap = require("dap")
       vim.fn.sign_define("DapBreakpoint", {
         text = icons.ui.Bug,
         texthl = "DiagnosticSignError",
@@ -25,7 +24,32 @@ return {
         linehl = "Visual",
         numhl = "DiagnosticSignWarn",
       })
-      dap.set_log_level("info")
+      require("dap").set_log_level("info")
+      -- keymaps
+      vim.keymap.set(
+        "n",
+        "<F5>",
+        ":lua require('dap').continue()<CR>",
+        { desc = "continue", silent = true, noremap = true }
+      )
+      vim.keymap.set(
+        "n",
+        "<F10>",
+        ":lua require('dap').step_over()<CR>",
+        { desc = "step over", silent = true, noremap = true }
+      )
+      vim.keymap.set(
+        "n",
+        "<F11>",
+        ":lua require('dap').step_into()<CR>",
+        { desc = "step into", silent = true, noremap = true }
+      )
+      vim.keymap.set(
+        "n",
+        "<F12>",
+        ":lua require('dap').step_out()<CR>",
+        { desc = "step out", silent = true, noremap = true }
+      )
     end,
   },
 }

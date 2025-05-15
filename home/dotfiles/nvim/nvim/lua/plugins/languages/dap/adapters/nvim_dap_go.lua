@@ -5,30 +5,13 @@ return {
     lazy = true,
     ft = { "go" },
     config = function()
+      -- dap-go config
       require("dap-go").setup({
-        dap_configurations = {
-          go = {
-            {
-              type = "go",
-              name = "Debug the golang",
-              request = "launch",
-              program = "${file}",
-            },
-            {
-              type = "go",
-              name = "Debug the golang test",
-              request = "launch",
-              mode = "test",
-              program = "${file}",
-            },
-            {
-              type = "go",
-              name = "Debug test (go.mod)",
-              request = "launch",
-              mode = "test",
-              program = "./${relativeFileDirname}",
-            },
-          },
+        delve = {
+          path = "dlv",
+          initialize_timeout_sec = 20,
+          port = "${port}",
+          build_flags = "",
         },
       })
     end,
