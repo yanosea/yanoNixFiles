@@ -17,15 +17,11 @@ M.format_filter = function(client, bufnr)
     end
   end
   -- if efm is not available, fallback to other clients with formatting capability
-  if not has_efm and client.supports_method("textDocument/formatting") then
-    return true
-  end
-  return false
+  return not has_efm and client.supports_method("textDocument/formatting")
 end
 -- simple wrapper for vim.lsp.buf.format() to provide defaults
 M.format = function(opts)
   opts = opts or {}
-  -- create a wrapper function that passes both arguments to format_filter
   opts.filter = opts.filter or function(client)
     return M.format_filter(client, opts.bufnr)
   end
@@ -59,16 +55,15 @@ end
 M.has_efm_formatter = function(filetype)
   filetype = filetype or vim.bo.filetype
   local clients = vim.lsp.get_clients({ bufnr = 0 })
-
   for _, client in ipairs(clients) do
-    if client.name == "efm" then
-      -- safe access to filetypes with proper type checking
-      if client.config and client.config.settings and client.config.settings.languages then
-        -- check if filetype is supported in efm config
-        if client.config.settings.languages[filetype] then
-          return true
-        end
-      end
+    if
+      client.name == "efm"
+      and client.config
+      and client.config.settings
+      and client.config.settings.languages
+      and client.config.settings.languages[filetype]
+    then
+      return true
     end
   end
   return false
@@ -77,15 +72,12 @@ end
 M.setup_format_on_save_all = function()
   local bufnr = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients({ bufnr = bufnr })
-  local can_format = false
+  -- find clients that can format
   for _, client in ipairs(clients) do
     if M.format_filter(client, bufnr) then
-      can_format = true
+      M.format_buffer()
       break
     end
-  end
-  if can_format then
-    M.format_buffer()
   end
 end
 return M
