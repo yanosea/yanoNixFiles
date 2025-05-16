@@ -9,7 +9,18 @@ return {
       "nvim-lua/plenary.nvim",
     },
     lazy = true,
-    event = "VeryLazy",
+    cmd = {
+      "CopilotChatCommit",
+      "CopilotChatDocs",
+      "CopilotChatExplain",
+      "CopilotChatFix",
+      "CopilotChatLoad",
+      "CopilotChatOptimize",
+      "CopilotChatReview",
+      "CopilotChatSave",
+      "CopilotChatToggle",
+      "CopilotChatTests",
+    },
     opts = {
       system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").prompt,
       prompts = {

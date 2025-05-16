@@ -17,7 +17,16 @@ return {
       { "zbirenbaum/copilot.lua", lazy = true }, -- for providers='copilot'
     },
     lazy = true,
-    event = "VeryLazy",
+    cmd = {
+      "AvanteAsk",
+      "AvanteClear",
+      "AvanteEdit",
+      "AvanteFocus",
+      "AvanteRefresh",
+      "AvanteRepoMap",
+      "AvanteStop",
+      "AvanteToggle",
+    },
     build = "make",
     opts = {
       provider = "copilot",

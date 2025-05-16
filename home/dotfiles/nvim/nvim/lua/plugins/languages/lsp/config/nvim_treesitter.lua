@@ -3,16 +3,16 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     lazy = true,
+    event = { "BufReadPost", "BufNewFile" },
     cmd = {
       "TSInstall",
-      "TSUninstall",
+      "TSInstallInfo",
+      "TSInstallFromGrammar",
+      "TSInstallSync",
       "TSUpdate",
       "TSUpdateSync",
-      "TSInstallInfo",
-      "TSInstallSync",
-      "TSInstallFromGrammar",
+      "TSUninstall",
     },
-    event = "VeryLazy",
     config = function()
       require("nvim-treesitter.configs").setup({
         highlight = {

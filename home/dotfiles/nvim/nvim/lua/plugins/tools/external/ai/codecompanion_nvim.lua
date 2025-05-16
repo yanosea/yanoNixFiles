@@ -9,7 +9,11 @@ return {
       "ravitemer/mcphub.nvim",
     },
     lazy = true,
-    event = "VeryLazy",
+    cmd = {
+      "CodeCompanionActions",
+      "CodeCompanionChat",
+      "CodeCompanionCmd",
+    },
     config = function()
       -- companion.nvim config
       require("codecompanion").setup({

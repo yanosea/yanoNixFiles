@@ -4,7 +4,16 @@ return {
   {
     "robitx/gp.nvim",
     lazy = true,
-    cmd = { "GpChatNew", "GpChatPaste", "GpChatToggle" },
+    cmd = {
+      "Gpchatrespond",
+      "Gpchatstop",
+      "Gpchatdelete",
+      "Gpchatfinder",
+      "Gpchatnew popup",
+      "Gpchatnew split",
+      "Gpchatnew tabnew",
+      "GpChatNew vsplit",
+    },
     config = function()
       vim.api.nvim_set_hl(0, "GpHandlerStandout", { link = "Normal" })
       vim.api.nvim_set_hl(0, "GpExplorerSearch", { link = "Normal" })

@@ -7,7 +7,20 @@ return {
       "WhoIsSethDaniel/mason-tool-installer.nvim",
     },
     lazy = true,
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = {
+      "Mason",
+      "MasonUpdate",
+      "MasonLog",
+      "MasonInstall",
+      "MasonUninstall",
+      "MasonToolsClean",
+      "MasonToolsUpdate",
+      "MasonToolsInstall",
+      "MasonUninstallAll",
+      "MasonToolsUpdateSync",
+      "MasonToolsInstallSync",
+    },
     init = function()
       -- setup mason
       require("mason").setup()
