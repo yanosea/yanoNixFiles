@@ -72,6 +72,7 @@ return {
           )
         end,
       }
+      -- lir.nvim config
       require("lir").setup(options)
       -- define icons
       local function setup_icons()
