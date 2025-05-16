@@ -1,5 +1,5 @@
 -- codecompanion config
--- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>ac)
 return {
   {
     "olimorris/codecompanion.nvim",
@@ -27,9 +27,24 @@ return {
         strategies = {
           chat = {
             adapter = "copilot",
+            keymaps = {
+              send = {
+                modes = { n = "<CR>" },
+              },
+            },
           },
           inline = {
             adapter = "copilot",
+            keymaps = {
+              accept_change = {
+                modes = { n = "<LEADER>acA" },
+                description = { "codecompanion: accept the suggested change" },
+              },
+              reject_change = {
+                modes = { n = "<LEADER>acR" },
+                description = { "codecompanion: reject the suggested change" },
+              },
+            },
           },
           cmd = {
             adapter = "copilot",

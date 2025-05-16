@@ -17,7 +17,7 @@ return {
       { "zbirenbaum/copilot.lua", lazy = true }, -- for providers='copilot'
     },
     lazy = true,
-    keys = { "<LEADER>aa" },
+    event = "VeryLazy",
     build = "make",
     opts = {
       provider = "copilot",
