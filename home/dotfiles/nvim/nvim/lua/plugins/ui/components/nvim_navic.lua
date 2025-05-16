@@ -125,6 +125,7 @@ return {
           "lir",
           "Outline",
           "spectre_panel",
+          "TelescopePrompt",
           "toggleterm",
           "DressingSelect",
           "Jaq",
