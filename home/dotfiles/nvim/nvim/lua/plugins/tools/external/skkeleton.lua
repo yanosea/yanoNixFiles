@@ -7,7 +7,6 @@ return {
     event = "VeryLazy",
     init = function()
       -- keymaps
-      -- toggle skkeleton
       vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-toggle)", { desc = "toggle skkeleton", silent = true })
       vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-toggle)", { desc = "toggle skkeleton", silent = true })
     end,
