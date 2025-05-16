@@ -5,11 +5,6 @@ return {
     dependencies = { "vim-denops/denops.vim" },
     lazy = true,
     event = "VeryLazy",
-    init = function()
-      -- keymaps
-      vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-toggle)", { desc = "toggle skkeleton", silent = true })
-      vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-toggle)", { desc = "toggle skkeleton", silent = true })
-    end,
     config = function()
       -- load local skk dictionaries
       local dictionaries = {}
@@ -37,6 +32,9 @@ return {
           vim.fn["skkeleton#register_keymap"]("henkan", "<Esc>", "cancel")
         end,
       })
+      -- keymaps
+      vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-toggle)", { desc = "toggle skkeleton", silent = true })
+      vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-toggle)", { desc = "toggle skkeleton", silent = true })
     end,
   },
 }

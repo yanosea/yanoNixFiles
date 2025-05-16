@@ -21,7 +21,7 @@ return {
       "MasonToolsUpdateSync",
       "MasonToolsInstallSync",
     },
-    init = function()
+    config = function()
       -- setup mason
       require("mason").setup()
       -- install lsp servers
