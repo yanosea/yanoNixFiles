@@ -37,6 +37,6 @@ body:
 <body>
 ```
 
-# IMPORTANT: Commit messages must be in English.
+# IMPORTANT: Commit messages must be in English, but your reply must be in Japanese.
 ]],
 }
