@@ -1,5 +1,5 @@
 -- github copilot assistant plugin for avante.nvim
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>aa)
 return {
   {
     "yetone/avante.nvim",
@@ -17,7 +17,7 @@ return {
       { "zbirenbaum/copilot.lua", lazy = true }, -- for providers='copilot'
     },
     lazy = true,
-    event = "VeryLazy",
+    keys = { "<LEADER>aa" },
     build = "make",
     opts = {
       provider = "copilot",
@@ -101,6 +101,66 @@ return {
         url_encode_path = true,
         template = "\nimage: $FILE_PATH\n",
       },
+      mappings = {
+        diff = {
+          ours = "co",
+          theirs = "ct",
+          all_theirs = "ca",
+          both = "cb",
+          cursor = "cc",
+          next = "]x",
+          prev = "[x",
+        },
+        suggestion = {
+          accept = "<M-l>",
+          next = "<M-]>",
+          prev = "<M-[>",
+          dismiss = "<C-]>",
+        },
+        jump = {
+          next = "]]",
+          prev = "[[",
+        },
+        submit = {
+          normal = "<CR>",
+          insert = "<C-s>",
+        },
+        cancel = {
+          normal = { "<C-c>", "<Esc>", "q" },
+          insert = { "<C-c>" },
+        },
+        ask = "<leader>aaa",
+        new_ask = "<leader>aan",
+        edit = "<leader>aae",
+        refresh = "<leader>aar",
+        focus = "<leader>aaf",
+        stop = "<leader>aas",
+        toggle = {
+          default = "<leader>aat",
+          debug = "<leader>aad",
+          hint = "<leader>aah",
+          suggestion = "<leader>aas",
+          repomap = "<leader>aaR",
+        },
+        sidebar = {
+          apply_all = "A",
+          apply_cursor = "a",
+          retry_user_request = "r",
+          edit_user_request = "e",
+          switch_windows = "<Tab>",
+          reverse_switch_windows = "<S-Tab>",
+          remove_file = "d",
+          add_file = "@",
+          close = { "q" },
+          close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
+        },
+        files = {
+          add_current = "<leader>aac", -- Add current buffer to selected files
+          add_all_buffers = "<leader>aaB", -- Add all buffer files to selected files
+        },
+        select_model = "<leader>aa?", -- Select model command
+        select_history = "<leader>aaH", -- Select history command
+      },
       windows = {
         position = "right",
         fillchars = "eob: ",
@@ -152,7 +212,9 @@ return {
         debounce = 600,
         throttle = 600,
       },
-      disabled_tools = {},
+      disabled_tools = {
+        "python",
+      },
       custom_tools = {},
       slash_commands = {},
     },
