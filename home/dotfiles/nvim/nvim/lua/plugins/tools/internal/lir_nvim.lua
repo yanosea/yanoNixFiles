@@ -1,4 +1,4 @@
--- file manager
+-- netrw alternative
 return {
   {
     "tamago324/lir.nvim",
@@ -13,6 +13,7 @@ return {
       local icons = require("utils.icons").icons
       local actions = require("lir.actions")
       local clipboard_actions = require("lir.clipboard.actions")
+      -- lir.nvim config
       local options = {
         show_hidden_files = true,
         ignore = {}, -- { ".DS_Store" "node_modules" } etc.
@@ -36,7 +37,7 @@ return {
           ["i"] = actions.toggle_show_hidden,
           ["d"] = actions.delete,
           ["J"] = function()
-            require("lir.mark.actions").toggle_mark()
+            require("lir.mark.actions").toggle_mark("v")
             vim.cmd("normal! j")
           end,
           ["c"] = clipboard_actions.copy,
@@ -72,7 +73,7 @@ return {
         end,
       }
       require("lir").setup(options)
-
+      -- define icons
       local function setup_icons()
         local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
         if not devicons_ok then

@@ -1,4 +1,5 @@
--- markdown preview
+-- preview markdown in browser
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>m)
 return {
   {
     "toppair/peek.nvim",
@@ -6,6 +7,7 @@ return {
     ft = { "markdown" },
     build = "deno task --quiet build:fast",
     config = function()
+      -- define user commands
       vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
       vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
       -- peek.nvim config

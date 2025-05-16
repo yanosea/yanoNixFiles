@@ -1,5 +1,5 @@
--- telescope config
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
+-- ui for selecting files, searching, and more
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>s)
 return {
   {
     "nvim-telescope/telescope.nvim",
@@ -18,6 +18,7 @@ return {
     cmd = "Telescope",
     config = function()
       local actions = require("telescope.actions")
+      -- telescope.nvim config
       require("telescope").setup({
         theme = "cursor",
         defaults = {

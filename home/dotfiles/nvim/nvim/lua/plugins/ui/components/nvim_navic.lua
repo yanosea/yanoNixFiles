@@ -1,4 +1,4 @@
--- comment utilizes the same keybinding as the default comment plugin
+-- navigations in winbar
 return {
   {
     "SmiteshP/nvim-navic",
@@ -109,8 +109,45 @@ return {
         end
         return ""
       end
+
+      -- 除外するファイルタイプのリストを取得する関数
+      function navic.get_excluded_filetypes()
+        return {
+          "help",
+          "startify",
+          "dashboard",
+          "lazy",
+          "neo-tree",
+          "neogitstatus",
+          "NvimTree",
+          "Trouble",
+          "alpha",
+          "lir",
+          "Outline",
+          "spectre_panel",
+          "toggleterm",
+          "DressingSelect",
+          "Jaq",
+          "harpoon",
+          "dap-repl",
+          "dap-terminal",
+          "dapui_console",
+          "dapui_hover",
+          "lab",
+          "notify",
+          "noice",
+          "neotest-summary",
+          "",
+        }
+      end
       -- overwrite navic.get_winbar function
       function navic.get_winbar()
+        local buf_ft = vim.bo.filetype
+        for _, ft in ipairs(navic.get_excluded_filetypes()) do
+          if buf_ft == ft then
+            return ""
+          end
+        end
         local filename = get_filename()
         local location = navic.get_location()
         if location and location ~= "" then
@@ -119,7 +156,16 @@ return {
           return filename
         end
       end
-      vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_winbar()%}"
+      -- create a new autocmd
+      vim.api.nvim_create_autocmd({ "BufWinEnter", "BufFilePost", "FileType" }, {
+        callback = function()
+          if vim.tbl_contains(navic.get_excluded_filetypes(), vim.bo.filetype) then
+            vim.opt_local.winbar = nil
+          else
+            vim.opt_local.winbar = "%{%v:lua.require'nvim-navic'.get_winbar()%}"
+          end
+        end,
+      })
     end,
   },
 }

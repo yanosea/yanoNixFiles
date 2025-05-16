@@ -5,6 +5,7 @@ return {
     lazy = true,
     event = "VeryLazy",
     config = function()
+      -- which-key.nvim config
       require("which-key").setup({
         preset = "modern",
         delay = 500,
@@ -140,7 +141,9 @@ return {
           { "<LEADER>lT", "<CMD>TodoLocList<CR>", desc = "lsp: todo location list" },
           { "<LEADER>lw", "<CMD>Telescope diagnostics<CR>", desc = "lsp: diagnostics" },
           -- markdown
-          { "<LEADER>m", "<CMD>RenderMarkdown toggle<CR>", desc = "markdown preview toggle" },
+          { "LEADER>m", group = "markdown" },
+          { "<LEADER>mp", "<CMD>PeekOpen<CR>", desc = "markdown: preview in browser" },
+          { "<LEADER>mt", "<CMD>RenderMarkdown toggle<CR>", desc = "markdown: preview toggle" },
           -- noice
           { "<LEADER>n", group = "noice" },
           { "<LEADER>na", "<CMD>NoiceAll<CR>", desc = "noice: all" },

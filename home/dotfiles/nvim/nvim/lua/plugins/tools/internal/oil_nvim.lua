@@ -1,4 +1,4 @@
--- oil.nvim filer
+-- buffer like netrw
 -- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
 return {
   {
@@ -10,6 +10,7 @@ return {
       -- keymaps
       vim.keymap.set("n", "<LEADER>o", "<CMD>Oil<CR>", { desc = "oil", silent = true })
     end,
+    -- oil.nvim config
     opts = {
       -- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
       -- Set to false if you want some other plugin (e.g. netrw) to open when you edit directories.
@@ -76,7 +77,7 @@ return {
         ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
         ["<C-t>"] = { "actions.select", opts = { tab = true } },
         ["<C-p>"] = "actions.preview",
-        ["<ESC>"] = { "actions.close", mode = "n" },
+        ["<Q>"] = { "actions.close", mode = "n" },
         ["<C-l>"] = "actions.refresh",
         ["-"] = { "actions.parent", mode = "n" },
         ["_"] = { "actions.open_cwd", mode = "n" },

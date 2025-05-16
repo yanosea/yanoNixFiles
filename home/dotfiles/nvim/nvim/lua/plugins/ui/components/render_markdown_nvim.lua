@@ -1,5 +1,5 @@
 -- render markdown
--- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>mt)
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",

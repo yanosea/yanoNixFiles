@@ -5,6 +5,7 @@ return {
     lazy = true,
     event = { "LspAttach" },
     config = function()
+      -- lsp-lens.nvim config
       require("lsp-lens").setup({
         enable = true,
         include_declaration = true,

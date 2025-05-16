@@ -1,5 +1,5 @@
 -- terminal in neovim
--- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>t)
 return {
   {
     "akinsho/toggleterm.nvim",
