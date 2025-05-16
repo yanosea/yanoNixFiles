@@ -1,15 +1,15 @@
 -- github copilot chat for neovim
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>aC)
 return {
   {
     "CopilotC-Nvim/CopilotChat.nvim",
+    branch = "main",
     dependencies = {
       "zbirenbaum/copilot.lua",
       "nvim-lua/plenary.nvim",
     },
     lazy = true,
     event = "VeryLazy",
-    branch = "main",
     opts = {
       system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").prompt,
       prompts = {
