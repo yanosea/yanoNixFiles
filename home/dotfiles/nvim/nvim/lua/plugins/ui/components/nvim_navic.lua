@@ -6,7 +6,7 @@ return {
       "nvim-web-devicons",
     },
     lazy = true,
-    event = "BufRead",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       local navic = require("nvim-navic")
       local icons = require("utils.icons").icons

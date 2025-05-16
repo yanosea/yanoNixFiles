@@ -8,7 +8,7 @@ return {
       "rcarriga/nvim-notify",
     },
     lazy = true,
-    event = "UIEnter",
+    event = "VimEnter",
     config = function()
       -- noice.nvim --config
       local icons = require("utils.icons").icons

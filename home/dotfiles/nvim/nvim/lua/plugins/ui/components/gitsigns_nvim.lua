@@ -1,10 +1,10 @@
 -- show git status in the sign column
--- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>g)
 return {
   {
     "lewis6991/gitsigns.nvim",
     lazy = true,
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       -- gitsigns.nvim config
       local icons = require("utils.icons").icons

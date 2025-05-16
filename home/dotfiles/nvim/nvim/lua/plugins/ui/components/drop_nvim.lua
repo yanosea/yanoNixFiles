@@ -3,8 +3,9 @@ return {
   {
     "folke/drop.nvim",
     lazy = true,
-    event = "VeryLazy",
+    event = "VimEnter",
     config = function()
+      -- drop.nvim config
       require("drop").setup({
         theme = "leaves",
         max = 20,

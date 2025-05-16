@@ -3,7 +3,7 @@ return {
   {
     "shellRaining/hlchunk.nvim",
     lazy = true,
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       -- hlchunk.nvim config
       local icons = require("utils.icons").icons

@@ -3,7 +3,7 @@ return {
   {
     "RRethy/vim-illuminate",
     lazy = true,
-    event = "BufRead",
+    event = { "BufReadPost", "BufNewFile" },
     opts = {
       -- providers: provider used to get references in the buffer, ordered by priority
       providers = {
@@ -12,7 +12,7 @@ return {
         "regex",
       },
       -- delay: delay in milliseconds
-      delay = 120,
+      delay = 100,
       -- filetype_overrides: filetype specific overrides.
       -- The keys are strings to represent the filetype while the values are tables that
       -- supports the same keys passed to .configure except for filetypes_denylist and filetypes_allowlist

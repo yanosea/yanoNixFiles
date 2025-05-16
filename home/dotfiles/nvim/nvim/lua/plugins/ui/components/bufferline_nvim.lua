@@ -1,11 +1,12 @@
 -- bufferline config
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>b)
 return {
   {
     "akinsho/bufferline.nvim",
     lazy = true,
     event = { "BufReadPost", "BufNewFile" },
     config = function()
+      -- bufferline.nvim config
       require("bufferline").setup({
         highlights = {
           background = {

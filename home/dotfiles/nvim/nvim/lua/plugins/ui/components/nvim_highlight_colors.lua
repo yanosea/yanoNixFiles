@@ -3,8 +3,9 @@ return {
   {
     "brenoprata10/nvim-highlight-colors",
     lazy = true,
-    event = "BufRead",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
+      -- nvim-highlight-colors config
       require("nvim-highlight-colors").setup({
         render = "background",
         enable_named_colors = true,

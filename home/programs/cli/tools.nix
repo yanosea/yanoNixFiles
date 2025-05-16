@@ -19,6 +19,7 @@
   home = {
     packages = with pkgs; [
       # tools
+      aider-chat
       bat
       bash
       broot
