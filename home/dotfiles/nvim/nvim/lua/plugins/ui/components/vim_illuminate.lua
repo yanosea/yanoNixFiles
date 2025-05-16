@@ -51,6 +51,7 @@ return {
       under_cursor = true,
     },
     config = function(_, opts)
+      -- vim-illuminate config
       require("illuminate").configure(opts)
     end,
   },
