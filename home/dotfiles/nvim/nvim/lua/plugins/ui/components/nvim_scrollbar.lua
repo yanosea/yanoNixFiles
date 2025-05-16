@@ -114,6 +114,7 @@ return {
           },
         },
         excluded_buftypes = {
+          "nofile",
           "terminal",
         },
         excluded_filetypes = {

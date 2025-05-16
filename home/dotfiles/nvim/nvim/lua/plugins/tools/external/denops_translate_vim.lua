@@ -8,7 +8,7 @@ return {
     },
     lazy = true,
     event = "VeryLazy",
-    init = function()
+    config = function()
       -- keymaps
       -- visual mode mapping for selection translation
       vim.api.nvim_set_keymap(

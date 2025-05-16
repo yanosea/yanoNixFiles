@@ -14,13 +14,6 @@ return {
     },
     keys = { "g", "<LEADER>gg", "<LEADER>t" },
     init = function()
-      -- toggleterm.nvim config
-      require("toggleterm").setup({
-        open_mapping = nil, -- disable default mapping and use which_key_nvim.lua instead
-        shading_factor = 2,
-        persist_size = false,
-        direction = "horizontal",
-      })
       -- define the function to toggle lazygit
       _G.ToggleLazyGit = function()
         local Terminal = require("toggleterm.terminal").Terminal
@@ -42,6 +35,15 @@ return {
         })
         lazygit:toggle()
       end
+    end,
+    config = function()
+      -- toggleterm.nvim config
+      require("toggleterm").setup({
+        open_mapping = nil, -- disable default mapping and use which_key_nvim.lua instead
+        shading_factor = 2,
+        persist_size = false,
+        direction = "horizontal",
+      })
     end,
   },
 }
