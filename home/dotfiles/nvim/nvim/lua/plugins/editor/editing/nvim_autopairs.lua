@@ -5,6 +5,9 @@ return {
     lazy = true,
     event = "InsertEnter",
     dependencies = { "nvim-treesitter/nvim-treesitter", "hrsh7th/nvim-cmp" },
-    config = true,
+    config = function()
+      -- nvim-autopairs config
+      require("nvim-autopairs").setup()
+    end,
   },
 }

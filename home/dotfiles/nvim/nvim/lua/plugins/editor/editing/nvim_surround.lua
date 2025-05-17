@@ -5,6 +5,7 @@ return {
     lazy = true,
     event = { "BufReadPost", "BufNewFile" },
     config = function()
+      -- nvim-surround config
       require("nvim-surround").setup()
     end,
   },
