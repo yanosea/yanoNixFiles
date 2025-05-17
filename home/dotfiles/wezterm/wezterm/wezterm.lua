@@ -10,24 +10,20 @@ local wsl_domains = wezterm.default_wsl_domains()
 local default_prog
 local font_size
 local ctrl_key
-local window_style
 local target = wezterm.target_triple:lower()
 if string.find(target, "windows") then
   default_prog = { "pwsh.exe", "-NoLogo" }
   default_domain = "local"
   font_size = 10
   ctrl_key = "CTRL"
-  window_style = "RESIZE"
 elseif string.find(target, "darwin") then
   default_domain = "local"
   font_size = 14
   ctrl_key = "CTRL"
-  window_style = "RESIZE"
 elseif string.find(target, "linux") then
   default_domain = "local"
   font_size = 11
   ctrl_key = "CTRL"
-  window_style = "RESIZE"
 end
 -- style
 local background_opacity = 0.8
@@ -163,7 +159,7 @@ return {
   },
   -- style
   window_background_opacity = background_opacity,
-  window_decorations = window_style,
+  window_decorations = "RESIZE",
   use_fancy_tab_bar = false,
   tab_bar_at_bottom = true,
   show_new_tab_button_in_tab_bar = false,

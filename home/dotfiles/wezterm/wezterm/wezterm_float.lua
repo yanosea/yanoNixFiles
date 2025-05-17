@@ -12,10 +12,6 @@ local font_size
 local ctrl_key
 local target = wezterm.target_triple:lower()
 if string.find(target, "windows") then
-  -- default_domain = "WSL:Arch"
-  -- for _, domain in ipairs(wsl_domains) do
-  --   domain.default_cwd = "~"
-  -- end
   default_prog = { "pwsh.exe", "-NoLogo" }
   default_domain = "local"
   font_size = 10
@@ -260,6 +256,7 @@ return {
   scrollback_lines = 3500,
   term = "xterm-256color",
   enable_wayland = false,
+  warn_about_missing_glyphs = false,
   -- ime
   window_close_confirmation = "NeverPrompt",
 }
