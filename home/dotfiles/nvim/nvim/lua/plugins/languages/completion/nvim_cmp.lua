@@ -45,6 +45,7 @@ return {
         nvim_lsp = false,
         luasnip = true,
       }
+      -- nvim-cmp config
       cmp.setup({
         enabled = function()
           local buftype = vim.api.nvim_get_option_value("buftype", { buf = 0 })

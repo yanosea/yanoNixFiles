@@ -14,6 +14,7 @@ return {
       "TSUninstall",
     },
     config = function()
+      -- nvim-treesitter config
       require("nvim-treesitter.configs").setup({
         highlight = {
           enable = true,
