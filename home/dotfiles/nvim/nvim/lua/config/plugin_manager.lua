@@ -49,8 +49,8 @@ require("lazy").setup({
   },
   -- performance settings
   performance = {
-    -- enable lazy.nvim cache
     cache = {
+      -- enable lazy.nvim cache
       enabled = true,
     },
     rtp = {
@@ -67,7 +67,6 @@ require("lazy").setup({
         "tarPlugin",
         -- convert current buffer to html(:TOhtml)
         "tohtml",
-        "2html_plugin",
         -- study vim (:Tutor)
         "tutor",
         -- be able to edit files under zip

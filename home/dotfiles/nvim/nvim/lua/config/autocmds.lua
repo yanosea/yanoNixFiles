@@ -47,7 +47,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.hl.on_yank({ higroup = "Search", timeout = 100 })
   end,
 })
--- define a group for directory opened for lir.nvim (file manager)
+-- define a group for directory opened for lir.nvim (netrw alternative)
 vim.api.nvim_create_autocmd("BufEnter", {
   group = vim.api.nvim_create_augroup("_dir_opened", { clear = true }),
   nested = true,
