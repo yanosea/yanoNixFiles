@@ -4,6 +4,7 @@ return {
     "folke/lazydev.nvim",
     lazy = true,
     ft = { "lua" },
+    -- lazydev.nvim config
     opts = {
       library = {
         vim.env.VIMRUNTIME,

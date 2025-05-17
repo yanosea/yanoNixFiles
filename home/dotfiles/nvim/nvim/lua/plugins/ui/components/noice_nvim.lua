@@ -10,8 +10,8 @@ return {
     lazy = true,
     event = "VimEnter",
     config = function()
-      -- noice.nvim --config
       local icons = require("utils.icons").icons
+      -- noice.nvim --config
       require("noice").setup({
         cmdline = {
           enabled = true, -- enables the Noice cmdline UI
@@ -48,8 +48,6 @@ return {
           },
         },
         messages = {
-          -- NOTE: If you enable messages, then the cmdline is enabled automatically.
-          -- This is a current Neovim limitation.
           enabled = true, -- enables the Noice messages UI
           view = "notify", -- default view for messages
           view_error = "notify", -- view for errors

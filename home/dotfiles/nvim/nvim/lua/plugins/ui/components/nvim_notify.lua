@@ -7,6 +7,7 @@ return {
     config = function()
       local colors = require("utils.colors").colors
       vim.notify = require("notify")
+      -- nvim-notify config
       require("notify").setup({
         fps = 60,
         colors = {

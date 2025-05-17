@@ -4,6 +4,7 @@ return {
     "RRethy/vim-illuminate",
     lazy = true,
     event = { "BufReadPost", "BufNewFile" },
+    -- vim-illuminate config
     opts = {
       -- providers: provider used to get references in the buffer, ordered by priority
       providers = {

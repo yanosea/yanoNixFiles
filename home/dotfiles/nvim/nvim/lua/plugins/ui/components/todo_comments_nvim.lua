@@ -6,6 +6,7 @@ return {
     lazy = true,
     event = { "BufReadPost", "BufNewFile" },
     dependencies = { "nvim-lua/plenary.nvim" },
+    -- todo-comments.nvim config
     opts = {
       signs = true,
       sign_priority = 8,

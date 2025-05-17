@@ -21,6 +21,7 @@ return {
       "CopilotChatToggle",
       "CopilotChatTests",
     },
+    -- CopilotChat.nvim config
     opts = {
       system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").prompt,
       prompts = {

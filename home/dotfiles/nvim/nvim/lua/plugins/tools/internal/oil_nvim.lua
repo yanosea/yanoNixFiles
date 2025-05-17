@@ -1,5 +1,5 @@
 -- buffer like netrw
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua
+-- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>o)
 return {
   {
     "stevearc/oil.nvim",
@@ -77,7 +77,7 @@ return {
         ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
         ["<C-t>"] = { "actions.select", opts = { tab = true } },
         ["<C-p>"] = "actions.preview",
-        ["<Q>"] = { "actions.close", mode = "n" },
+        ["<ESC>"] = { "actions.close", mode = "n" },
         ["<C-l>"] = "actions.refresh",
         ["-"] = { "actions.parent", mode = "n" },
         ["_"] = { "actions.open_cwd", mode = "n" },

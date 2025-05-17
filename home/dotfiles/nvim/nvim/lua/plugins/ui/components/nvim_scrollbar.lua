@@ -5,6 +5,7 @@ return {
     lazy = true,
     event = { "BufReadPost", "BufNewFile" },
     config = function()
+      -- nvim-scrollbar config
       require("scrollbar").setup({
         show = true,
         show_in_active_only = false,

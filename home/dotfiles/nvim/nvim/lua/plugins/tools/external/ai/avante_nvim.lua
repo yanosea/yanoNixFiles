@@ -209,7 +209,7 @@ return {
       },
       file_selector = {
         provider = nil,
-        -- Options override for custom providers
+        -- options override for custom providers
         provider_opts = {},
       },
       selector = {
