@@ -257,4 +257,6 @@ return {
   term = "xterm-256color",
   enable_wayland = false,
   warn_about_missing_glyphs = false,
+  -- ime
+  window_close_confirmation = "NeverPrompt",
 }
