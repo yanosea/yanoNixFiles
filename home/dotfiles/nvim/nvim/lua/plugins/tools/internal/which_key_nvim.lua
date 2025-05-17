@@ -117,6 +117,7 @@ return {
           { "<LEADER>gR", "<CMD>Gitsigns reset_buffer<CR>", desc = "git: reset buffer" },
           { "<LEADER>gs", "<CMD>Gitsigns stage_hunk<CR>", desc = "git: stage hunk" },
           { "<LEADER>gu", "<CMD>Gitsigns undo_stage_hunk<CR>", desc = "git: undo stage hunk" },
+          { "<LEADER>gU", "<CMD>OpenGitHubUrlUnderCursor<CR>", desc = "git: open github url" },
           -- lsp
           { "<LEADER>l", group = "lsp" },
           { "<LEADER>la", "<CMD>lua vim.lsp.buf.code_action()<CR>", desc = "lsp: code action" },
