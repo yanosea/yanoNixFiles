@@ -260,4 +260,5 @@ return {
   scrollback_lines = 3500,
   term = "xterm-256color",
   enable_wayland = false,
+  warn_about_missing_glyphs = false,
 }
