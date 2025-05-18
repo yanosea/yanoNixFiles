@@ -6,10 +6,6 @@ return {
     dependencies = { "echasnovski/mini.icons" },
     lazy = true,
     cmd = { "Oil" },
-    init = function()
-      -- keymaps
-      vim.keymap.set("n", "<LEADER>o", "<CMD>Oil<CR>", { desc = "oil", silent = true })
-    end,
     -- oil.nvim config
     opts = {
       -- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
