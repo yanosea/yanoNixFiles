@@ -10,13 +10,5 @@
     ../dotfiles/sonic-pi.net
     ../dotfiles/yabai
   ];
-  home = {
-    packages = with pkgs; [
-      darwin.apple_sdk.frameworks.CoreFoundation
-      darwin.CF
-      darwin.xcode
-      xcodes
-      xcode-install
-    ];
-  };
+  home = { packages = with pkgs; [ darwin.xcode xcodes xcode-install ]; };
 }

@@ -30,7 +30,7 @@ echo -e $'\n\e[33;1mupdate nix!\e[m'
 nix-env -u
 # apply nix
 echo -e $'\n\e[33;1mapply nix darwin!\e[m'
-sudo rm -r $HOME/.nix-defexpr && sudo nix-channel --update
+sudo rm -fr $HOME/.nix-defexpr && sudo nix-channel --update
 cargo make darwin.apply.system
 # apply home-manager
 echo -e $'\n\e[33;1mapply home-manager!\e[m'

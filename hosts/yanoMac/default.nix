@@ -1,6 +1,7 @@
 { hostname, homePath, pkgs, username, ... }: {
   # fonts
   fonts = { packages = with pkgs; [ plemoljp-nf noto-fonts-emoji ]; };
+  ids = { gids = { nixbld = 30000; }; };
   # networking
   networking = { hostName = hostname; };
   # nix
