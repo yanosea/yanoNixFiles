@@ -1,6 +1,6 @@
 -- Prompt for test generation
 return {
-  prompt = [[
+	prompt = [[
 Please write tests for this code.
 ]],
 }

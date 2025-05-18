@@ -1,7 +1,7 @@
 -- load plugins
 return {
-  { import = "plugins.editor" },
-  { import = "plugins.tools" },
-  { import = "plugins.ui" },
-  { import = "plugins.languages" },
+	{ import = "plugins.editor" },
+	{ import = "plugins.tools" },
+	{ import = "plugins.ui" },
+	{ import = "plugins.languages" },
 }

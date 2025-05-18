@@ -1,6 +1,6 @@
 -- prompt for documentation generation
 return {
-  prompt = [[
+	prompt = [[
 Please add documentation to this code.
 ]],
 }

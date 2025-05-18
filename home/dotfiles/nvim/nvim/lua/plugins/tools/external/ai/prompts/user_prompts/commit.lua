@@ -1,6 +1,6 @@
 -- Prompt for commit message generation
 return {
-  prompt = [[
+	prompt = [[
 Please write a commit message in English for these changes.
 The title should be at most 50 characters, and the body should be wrapped at 72 characters.
 For the title, use one of the following prefixes, separated from the title by a space:

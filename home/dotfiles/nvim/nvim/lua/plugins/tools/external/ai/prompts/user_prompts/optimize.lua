@@ -1,6 +1,6 @@
 -- prompt for code optimization
 return {
-  prompt = [[
+	prompt = [[
 Please refactor this code to improve readability and performance.
 ]],
 }

@@ -1,6 +1,6 @@
 -- prompt for code review
 return {
-  prompt = [[
+	prompt = [[
 Please review the selected code.
 ]],
 }

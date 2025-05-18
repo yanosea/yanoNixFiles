@@ -1,6 +1,6 @@
 -- Prompt for code explanation
 return {
-  prompt = [[
+	prompt = [[
 Please explain the selected code.
 ]],
 }

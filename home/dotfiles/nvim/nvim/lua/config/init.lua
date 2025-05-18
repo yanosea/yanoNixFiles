@@ -4,7 +4,7 @@ require("config.keymaps")
 require("config.autocmds")
 -- load wsl config if running in WSL
 if os.getenv("WSL_DISTRO_NAME") ~= nil then
-  require("config.wsl")
+	require("config.wsl")
 end
 -- plugin manager
 require("config.plugin_manager")
