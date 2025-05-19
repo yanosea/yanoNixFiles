@@ -303,22 +303,24 @@ darwin.apply.home:
 # initialize windows
 windows.init:
 ifeq ($(IS_WINDOWS),1)
-		Write-Host 'initialize windows...' -ForegroundColor Magenta; \
-		Write-Host 'install winget...' -ForegroundColor Yellow; \
-		winget install Microsoft.PowerShell; \
-		Write-Host 'install git...' -ForegroundColor Yellow; \
-		winget install git; \
-		Write-Host 'install scoop...' -ForegroundColor Yellow; \
-		Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; \
-		Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression; \
-		Write-Host 'install ghq via scoop...!' -ForegroundColor Yellow; \
-		scoop install ghq; \
-		Write-Host 'clone ghq repos...' -ForegroundColor Yellow; \
-		$$filePath = \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt\"; \
-		Get-Content -Path $$filePath | ForEach-Object { & ghq get $$_ }; \
-		Write-Host 'install winget packages...' -ForegroundColor Yellow; \
-		winget import \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json\"; \
-		Write-Host 'initializing done!' -ForegroundColor Green; \
+	Write-Host "`ninitialize windows..." -ForegroundColor Magenta
+	Write-Host "`ninstall pwsh..." -ForegroundColor Yellow
+	winget install Microsoft.PowerShell
+	Write-Host "`ninstall git..." -ForegroundColor Yellow
+	winget install git
+	Write-Host "`ninstall scoop..." -ForegroundColor Yellow
+	Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+	Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+	Write-Host "`ninstall ghq..." -ForegroundColor Yellow
+	scoop install ghq
+	Write-Host "`nclone ghq repos..." -ForegroundColor Yellow
+	$filePath = "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt"
+	Get-Content -Path $filePath | ForEach-Object {
+			& ghq get $_
+	}
+	Write-Host "`ninstall winget packages..." -ForegroundColor Yellow
+	winget import "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	Write-Host "`ninitialize done!" -ForegroundColor Green
 else
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.init...$(COLOR_RESET)"
 endif
@@ -326,13 +328,15 @@ endif
 # install shortage packages on windows and apply configurations
 windows.install:
 ifeq ($(IS_WINDOWS),1)
-		Write-Host 'install shortage packages...' -ForegroundColor Yellow; \
-		Write-Host 'clone ghq shortage repos...' -ForegroundColor Yellow; \
-		$$filePath = \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt\"; \
-		Get-Content -Path $$filePath | ForEach-Object { ghq get $$_ }; \
-		Write-Host 'install winget shortage packages...' -ForegroundColor Yellow; \
-		winget import \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json\"; \
-		Write-Host 'installing done!' -ForegroundColor Green; \
+	Write-Host "`ninstall shortage packages..." -ForegroundColor Magenta
+	Write-Host "`nclone ghq shortage repos..." -ForegroundColor Yellow
+	$filePath = "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt"
+	Get-Content -Path $filePath | ForEach-Object {
+			& ghq get $_
+	}
+	Write-Host "`ninstall winget shortage packages..." -ForegroundColor Yellow
+	winget import "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	Write-Host "`ndone!" -ForegroundColor Green
 else
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.install...$(COLOR_RESET)"
 endif
@@ -340,25 +344,22 @@ endif
 # update windows
 windows.update:
 ifeq ($(IS_WINDOWS),1)
-		Write-Host 'update windows...' -ForegroundColor Magenta; \
-		Write-Host 'sync ghq repos...' -ForegroundColor Yellow; \
-		ghq list | ForEach-Object { ghq get --update $$_ }; \
-		Write-Host 'update winget packages...' -ForegroundColor Yellow; \
-		winget upgrade --silent --all; \
-		Write-Host 'update scoop...' -ForegroundColor Yellow; \
-		scoop update; \
-		Write-Host 'clone ghq repos...' -ForegroundColor Yellow; \
-		$$filePath = \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt\"; \
-		Get-Content -Path $$filePath | ForEach-Object { ghq get $$_ }; \
-		Write-Host 'install winget packages...' -ForegroundColor Yellow; \
-		winget import \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json\"; \
-		Write-Host 'export winget packages...' -ForegroundColor Yellow; \
-		$$exportPath = \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json\"; \
-		winget export -o $$exportPath; \
-		$$jsonContent = Get-Content -Path $$exportPath -Raw; \
-		$$sortedContent = & jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' -InputObject $$jsonContent; \
-		Set-Content -Path $$exportPath -Value $$sortedContent; \
-		Write-Host 'update done!' -ForegroundColor Green; \
+	Write-Host "`nupdate windows..." -ForegroundColor Magenta
+	Write-Host "`ncsync ghq repos..." -ForegroundColor Yellow
+	ghq list | ghq get --update
+	Write-Host "`nupdate winget packages..." -ForegroundColor Yellow
+	winget upgrade --silent --all
+	Write-Host "`nupdate scoop..." -ForegroundColor Yellow
+	scoop update
+	Write-Host "`ninstall new packages..." -ForegroundColor Yellow
+	make windows.install
+	Write-Host "`nexport winget packages..." -ForegroundColor Yellow
+	$exportPath = "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	winget export -o $exportPath
+	$sortedPackages = Get-Content -Path $exportPath | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)'
+	$sortedPackages | Set-Content -Path $exportPath
+	# done
+	Write-Host "`ndone!" -ForegroundColor Green
 else
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.update...$(COLOR_RESET)"
 endif
