@@ -20,8 +20,6 @@
     };
     # rust toolchain
     fenix = { url = "github:nix-community/fenix"; };
-    # xremap
-    xremap = { url = "github:xremap/nix-flake"; };
     # hyprland
     hyprland = { url = "github:hyprwm/Hyprland"; };
     # nur
