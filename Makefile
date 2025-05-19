@@ -314,12 +314,9 @@ ifeq ($(IS_WINDOWS),1)
 	Write-Host "`ninstall ghq..." -ForegroundColor Yellow
 	scoop install ghq
 	Write-Host "`nclone ghq repos..." -ForegroundColor Yellow
-	$filePath = "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt"
-	Get-Content -Path $filePath | ForEach-Object {
-			& ghq get $_
-	}
+	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_
 	Write-Host "`ninstall winget packages..." -ForegroundColor Yellow
-	winget import "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
 	Write-Host "`ninitialize done!" -ForegroundColor Green
 else
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.init...$(COLOR_RESET)"
@@ -330,12 +327,9 @@ windows.install:
 ifeq ($(IS_WINDOWS),1)
 	Write-Host "`ninstall shortage packages..." -ForegroundColor Magenta
 	Write-Host "`nclone ghq shortage repos..." -ForegroundColor Yellow
-	$filePath = "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt"
-	Get-Content -Path $filePath | ForEach-Object {
-			& ghq get $_
-	}
+	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_ }
 	Write-Host "`ninstall winget shortage packages..." -ForegroundColor Yellow
-	winget import "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
 	Write-Host "`ndone!" -ForegroundColor Green
 else
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.install...$(COLOR_RESET)"
@@ -354,10 +348,8 @@ ifeq ($(IS_WINDOWS),1)
 	Write-Host "`ninstall new packages..." -ForegroundColor Yellow
 	make windows.install
 	Write-Host "`nexport winget packages..." -ForegroundColor Yellow
-	$exportPath = "$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
-	winget export -o $exportPath
-	$sortedPackages = Get-Content -Path $exportPath | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)'
-	$sortedPackages | Set-Content -Path $exportPath
+	winget export -o "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json" | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' | Set-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
 	# done
 	Write-Host "`ndone!" -ForegroundColor Green
 else
