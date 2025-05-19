@@ -1,8 +1,10 @@
 # check if windows
 ifeq ($(OS),Windows_NT)
-  IS_WINDOWS := 1
+	IS_WINDOWS := 1
+	SHELL := pwsh.exe
 else
-  IS_WINDOWS := 0
+	IS_WINDOWS := 0
+	SHELL := /usr/bin/env bash
 endif
 
 # define colors
