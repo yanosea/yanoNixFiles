@@ -345,7 +345,11 @@ ifeq ($(IS_WINDOWS),1)
 	@pwsh -Command "& { \
 		Write-Host 'update windows...' -ForegroundColor Magenta; \
 		Write-Host 'sync ghq repos...' -ForegroundColor Yellow; \
-		ghq list | ForEach-Object { ghq get --update $$_ }; \
+		$$repoList = @(ghq list); \
+		foreach ($$repo in $$repoList) { \
+			Write-Host \"Updating $$repo...\"; \
+			ghq get --update \"$$repo\"; \
+		} \
 		Write-Host 'update winget packages...' -ForegroundColor Yellow; \
 		winget upgrade --silent --all; \
 		Write-Host 'update scoop...' -ForegroundColor Yellow; \
