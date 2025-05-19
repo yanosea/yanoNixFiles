@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-05-13T20:55:22.983-00:00",
+  "CreationDate": "2025-05-19T22:00:12.087-00:00",
   "Sources": [
     {
       "Packages": [
@@ -54,6 +54,9 @@
         },
         {
           "PackageIdentifier": "glzr-io.zebar"
+        },
+        {
+          "PackageIdentifier": "GnuWin32.Make"
         },
         {
           "PackageIdentifier": "GnuWin32.Which"
