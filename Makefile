@@ -6,7 +6,7 @@ else
 endif
 
 # define colors
-ifeq ($(IS_WINDOWS),1)
+ifeq ($(IS_WINDOWS),0)
 	COLOR_RESET  := $(shell tput sgr0)
 	COLOR_TITLE  := $(shell tput setaf 5)$(shell tput bold) # magenta, bold
 	COLOR_HEADER := $(shell tput setaf 3)$(shell tput bold) # yellow, bold
