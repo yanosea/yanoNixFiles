@@ -299,8 +299,8 @@ darwin.apply.home:
 # initialize windows
 windows.init:
 ifeq ($(IS_WINDOWS),1)
-	@echo "$(COLOR_TITLE)initialize windows...$(COLOR_RESET)"
 	@pwsh -Command "& { \
+		Write-Host 'initialize windows...' -ForegroundColor Magenta; \
 		Write-Host 'install winget...' -ForegroundColor Yellow; \
 		winget install Microsoft.PowerShell; \
 		Write-Host 'install git...' -ForegroundColor Yellow; \
@@ -325,6 +325,7 @@ endif
 windows.install:
 ifeq ($(IS_WINDOWS),1)
 	@pwsh -Command "& { \
+		Write-Host 'install shortage packages...' -ForegroundColor Yellow; \
 		Write-Host 'clone ghq shortage repos...' -ForegroundColor Yellow; \
 		$$filePath = \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt\"; \
 		Get-Content -Path $$filePath | ForEach-Object { ghq get $$_ }; \
@@ -340,6 +341,7 @@ endif
 windows.update:
 ifeq ($(IS_WINDOWS),1)
 	@pwsh -Command "& { \
+		Write-Host 'update windows...' -ForegroundColor Magenta; \
 		Write-Host 'sync ghq repos...' -ForegroundColor Yellow; \
 		ghq list | ForEach-Object { ghq get --update $$_ }; \
 		Write-Host 'update winget packages...' -ForegroundColor Yellow; \
