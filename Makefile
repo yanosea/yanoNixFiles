@@ -6,11 +6,13 @@ else
 endif
 
 # define colors
-COLOR_RESET  := $(shell tput sgr0)
-COLOR_TITLE  := $(shell tput setaf 5)$(shell tput bold) # magenta, bold
-COLOR_HEADER := $(shell tput setaf 3)$(shell tput bold) # yellow, bold
-COLOR_CMD    := $(shell tput setaf 6)$(shell tput bold) # cyan, bold
-COLOR_DONE   := $(shell tput setaf 2)$(shell tput bold) # green, bold
+ifeq ($(IS_WINDOWS),1)
+	COLOR_RESET  := $(shell tput sgr0)
+	COLOR_TITLE  := $(shell tput setaf 5)$(shell tput bold) # magenta, bold
+	COLOR_HEADER := $(shell tput setaf 3)$(shell tput bold) # yellow, bold
+	COLOR_CMD    := $(shell tput setaf 6)$(shell tput bold) # cyan, bold
+	COLOR_DONE   := $(shell tput setaf 2)$(shell tput bold) # green, bold
+endif
 
 # shows help message defaultly
 .DEFAULT_GOAL := help
