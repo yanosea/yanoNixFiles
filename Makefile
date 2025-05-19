@@ -314,7 +314,7 @@ ifeq ($(IS_WINDOWS),1)
 		scoop install ghq; \
 		Write-Host 'clone ghq repos...' -ForegroundColor Yellow; \
 		$$filePath = \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt\"; \
-		Get-Content -Path $$filePath | ForEach-Object { ghq get $$_ }; \
+		Get-Content -Path $$filePath | ForEach-Object { & ghq get $$_ }; \
 		Write-Host 'install winget packages...' -ForegroundColor Yellow; \
 		winget import \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json\"; \
 		Write-Host 'initializing done!' -ForegroundColor Green; \
@@ -358,8 +358,9 @@ ifeq ($(IS_WINDOWS),1)
 		Write-Host 'export winget packages...' -ForegroundColor Yellow; \
 		$$exportPath = \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json\"; \
 		winget export -o $$exportPath; \
-		$$sortedPackages = Get-Content -Path $$exportPath | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)'; \
-		$$sortedPackages | Set-Content -Path $$exportPath; \
+		$$jsonContent = Get-Content -Path $$exportPath -Raw; \
+		$$sortedContent = & jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' -InputObject $$jsonContent; \
+		Set-Content -Path $$exportPath -Value $$sortedContent; \
 		Write-Host 'update done!' -ForegroundColor Green; \
 	}"
 else
