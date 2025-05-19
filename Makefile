@@ -345,7 +345,7 @@ endif
 windows.update:
 ifeq ($(IS_WINDOWS),1)
 	Write-Host "`nupdate windows..." -ForegroundColor Magenta
-	Write-Host "`ncsync ghq repos..." -ForegroundColor Yellow
+	Write-Host "`nsync ghq repos..." -ForegroundColor Yellow
 	ghq list | ghq get --update
 	Write-Host "`nupdate winget packages..." -ForegroundColor Yellow
 	winget upgrade --silent --all
