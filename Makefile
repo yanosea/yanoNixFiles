@@ -303,7 +303,6 @@ darwin.apply.home:
 # initialize windows
 windows.init:
 ifeq ($(IS_WINDOWS),1)
-	@pwsh -Command "& { \
 		Write-Host 'initialize windows...' -ForegroundColor Magenta; \
 		Write-Host 'install winget...' -ForegroundColor Yellow; \
 		winget install Microsoft.PowerShell; \
@@ -320,7 +319,6 @@ ifeq ($(IS_WINDOWS),1)
 		Write-Host 'install winget packages...' -ForegroundColor Yellow; \
 		winget import \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json\"; \
 		Write-Host 'initializing done!' -ForegroundColor Green; \
-	}"
 else
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.init...$(COLOR_RESET)"
 endif
@@ -328,7 +326,6 @@ endif
 # install shortage packages on windows and apply configurations
 windows.install:
 ifeq ($(IS_WINDOWS),1)
-	@pwsh -Command "& { \
 		Write-Host 'install shortage packages...' -ForegroundColor Yellow; \
 		Write-Host 'clone ghq shortage repos...' -ForegroundColor Yellow; \
 		$$filePath = \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt\"; \
@@ -336,7 +333,6 @@ ifeq ($(IS_WINDOWS),1)
 		Write-Host 'install winget shortage packages...' -ForegroundColor Yellow; \
 		winget import \"$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json\"; \
 		Write-Host 'installing done!' -ForegroundColor Green; \
-	}"
 else
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.install...$(COLOR_RESET)"
 endif
@@ -344,7 +340,6 @@ endif
 # update windows
 windows.update:
 ifeq ($(IS_WINDOWS),1)
-	@pwsh -Command "& { \
 		Write-Host 'update windows...' -ForegroundColor Magenta; \
 		Write-Host 'sync ghq repos...' -ForegroundColor Yellow; \
 		ghq list | ForEach-Object { ghq get --update $$_ }; \
@@ -364,7 +359,6 @@ ifeq ($(IS_WINDOWS),1)
 		$$sortedContent = & jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' -InputObject $$jsonContent; \
 		Set-Content -Path $$exportPath -Value $$sortedContent; \
 		Write-Host 'update done!' -ForegroundColor Green; \
-	}"
 else
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.update...$(COLOR_RESET)"
 endif
