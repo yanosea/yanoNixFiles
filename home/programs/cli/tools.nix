@@ -28,6 +28,7 @@
       delta
       duf
       dust
+      era
       eza
       fd
       ffmpeg
