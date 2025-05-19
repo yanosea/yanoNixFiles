@@ -34,7 +34,7 @@ source <(fzf --zsh)
 # alias
 alias cat="$(which bat)"
 alias dot="cd $HOME/ghq/github.com/yanosea/yanoNixFiles"
-alias fmk="fzf-make"
+alias fm="fzf-make"
 alias gbp='git branch --merged | grep -v "\* $(git rev-parse --abbrev-ref HEAD)" | grep -v "^\s*$" | xargs -r git branch -d'
 alias ghd="gh-dash"
 alias gsf='git switch $(git branch -l | fzf | tr -d "* ")'
