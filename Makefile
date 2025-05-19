@@ -8,7 +8,13 @@ else
 endif
 
 # define colors
-ifeq ($(IS_WINDOWS),0)
+ifeq ($(IS_WINDOWS),1)
+	NEWLINE := "`n"
+	COLOR_TITLE := -ForegroundColor Magenta Bold
+	COLOR_HEADER := -ForegroundColor Yellow Bold
+	COLOR_CMD := -ForegroundColor Cyan Bold
+	COLOR_DONE := -ForegroundColor Green Bold
+else
 	COLOR_RESET  := $(shell tput sgr0)
 	COLOR_TITLE  := $(shell tput setaf 5)$(shell tput bold) # magenta, bold
 	COLOR_HEADER := $(shell tput setaf 3)$(shell tput bold) # yellow, bold
@@ -303,7 +309,7 @@ darwin.apply.home:
 # initialize windows
 windows.init:
 ifeq ($(IS_WINDOWS),1)
-	Write-Host "`ninitialize windows..." -ForegroundColor Magenta
+	@Write-Host "$(PS_NEWLINE)initialize windows... $(PS_COLOR_TITLE)"
 	Write-Host "`ninstall pwsh..." -ForegroundColor Yellow
 	winget install Microsoft.PowerShell
 	Write-Host "`ninstall git..." -ForegroundColor Yellow
@@ -338,7 +344,7 @@ endif
 # update windows
 windows.update:
 ifeq ($(IS_WINDOWS),1)
-	Write-Host "`nupdate windows..." -ForegroundColor Magenta
+	@Write-Host "$(PS_NEWLINE)update windows... $(PS_COLOR_TITLE)"
 	Write-Host "`nsync ghq repos..." -ForegroundColor Yellow
 	ghq list | ghq get --update
 	Write-Host "`nupdate winget packages..." -ForegroundColor Yellow
