@@ -34,10 +34,11 @@ source <(fzf --zsh)
 # alias
 alias cat="$(which bat)"
 alias dot="cd $HOME/ghq/github.com/yanosea/yanoNixFiles"
+alias fmk="fzf-make"
 alias gbp='git branch --merged | grep -v "\* $(git rev-parse --abbrev-ref HEAD)" | grep -v "^\s*$" | xargs -r git branch -d'
-alias ghd='gh-dash'
+alias ghd="gh-dash"
 alias gsf='git switch $(git branch -l | fzf | tr -d "* ")'
-alias gitgraph='git log --graph --all --oneline --decorate'
+alias gitgraph="git log --graph --all --oneline --decorate"
 alias ls="$(which lsd)"
 alias nvimdiff="$(which nvim) -d"
 alias lg="lazygit"
@@ -48,7 +49,7 @@ alias rtty='rtty run zellij --font "PlemolJP Console NF"'
 alias shutdown="sudo systemctl poweroff"
 alias st="systemctl-tui"
 alias tree="$(which eza) --tree"
-alias trl="trello-tui -board yanoBoard"
+alias trello="trello-tui -board yanoBoard"
 alias zmv="noglob zmv -W"
 alias zz="z -"
 # make state directory
