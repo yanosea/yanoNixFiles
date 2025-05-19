@@ -8,10 +8,15 @@ includes = ["*.lua"]
 
 [formatter.rust]
 command = "rustfmt"
-options = ["--edition", "2021"]
+options = ["--edition", "2024"]
 includes = ["*.rs"]
 
 [formatter.toml]
 command = "taplo"
 options = ["format"]
 includes = ["*.toml"]
+
+[formatter.sh]
+command = "shfmt"
+options = ["-i", "2", "-ci", "-bn", "-sr"]
+includes = ["*.sh"]
