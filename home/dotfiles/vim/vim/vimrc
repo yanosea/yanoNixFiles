@@ -50,12 +50,6 @@ set shiftwidth=2
 " window split
 set splitbelow
 set splitright
-" set shell to the user's default shell
-if $SHELL != ''
-  set shell=$SHELL
-else
-  set shell=bash
-endif
 " enable syntax highlighting
 syntax enable
 " enable system clipboard
