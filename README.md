@@ -322,7 +322,9 @@ ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 
 ```sh
 # execute initialize task
-make darwin.init
+make mac.init
+# or
+make macbook.init
 ```
 
 8. Edit /etc/shells and chsh. After this step, exit from the shell.
@@ -361,7 +363,9 @@ cd ghq/github.com/yanosea/yanoNixFiles
 
 ```sh
 # execute apply task
-make darwin.install
+make mac.install
+# or
+make macbook.install
 ```
 
 3. If there were no issues, commit, push the changes.
@@ -374,7 +378,9 @@ make darwin.install
 # change the directory
 cd ghq/github.com/yanosea/yanoNixFiles
 # execute update task
-make darwin.update
+make mac.update
+# or
+make macbook.update
 ```
 
 ## 📚 Refferences
