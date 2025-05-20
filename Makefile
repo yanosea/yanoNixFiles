@@ -75,9 +75,9 @@ nix.install:
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
 	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
-	@echo "$(COLOR_HEADER)apply system configuration...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
 	make nix.apply.system
-	@echo "$(COLOR_HEADER)apply home configuration...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
 	make nix.apply.home
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
 
@@ -248,9 +248,9 @@ darwin.install:
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
 	@echo "$(COLOR_HEADER)install brew shortage packages...$(COLOR_RESET)"
 	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
-	@echo "$(COLOR_HEADER)apply system configuration...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
 	make darwin.apply.system
-	@echo "$(COLOR_HEADER)apply home configuration...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
 	make darwin.apply.home
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
 
