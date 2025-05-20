@@ -39,6 +39,7 @@ alias dot="cd $HOME/ghq/github.com/yanosea/yanoNixFiles"
 ## fzf-make
 alias fm="fzf-make"
 alias fh="fzf-make history"
+alias fr="fzf-make repeat"
 ## git(hub)
 alias gbp='git branch --merged | grep -v "\* $(git rev-parse --abbrev-ref HEAD)" | grep -v "^\s*$" | xargs -r git branch -d'
 alias ghd="gh-dash"
