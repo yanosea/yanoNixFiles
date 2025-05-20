@@ -132,7 +132,7 @@ wsl.init:
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
-	ln -s $$HOME/.config/vim $$HOME/.vim
+	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
 	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
@@ -215,7 +215,7 @@ mac.init:
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
-	ln -s $$HOME/.config/vim $$HOME/.vim
+	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
 	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
@@ -244,7 +244,6 @@ mac.init:
 	@echo "$(COLOR_CMD)ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
-	# done
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 
 # install shortage packages on mac and apply configurations
@@ -316,7 +315,7 @@ macbook.init:
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
-	ln -s $$HOME/.config/vim $$HOME/.vim
+	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
 	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
@@ -326,7 +325,6 @@ macbook.init:
 	@echo "$(COLOR_HEADER)install skk dictionary...$(COLOR_RESET)"
 	jisyo d
 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
-	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	@echo "$(COLOR_HEADER)init sketchybar...$(COLOR_RESET)"
 	cd ~/.config/sketchybar/helpers
@@ -345,7 +343,6 @@ macbook.init:
 	@echo "$(COLOR_CMD)ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
-	# done
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 
 # install shortage packages on macbook and apply configurations
@@ -434,7 +431,7 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host "install ghq...$(NEWLINE)" $(COLOR_HEADER)
 	scoop install ghq
 	@Write-Host "install ghq repos..." -ForegroundColor Yellow
-	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_
+	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_ }
 	@Write-Host "install winget packages..." $(NEWLINE) $(COLOR_HEADER)
 	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
 	@Write-Host "initialize windows done!" $(NEWLINE) $(COLOR_DONE)
@@ -470,7 +467,6 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host "export winget packages..." $(NEWLINE) $(COLOR_HEADER)
 	winget export -o "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
 	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json" | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' | Set-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
-	# done
 	@Write-Host "update done!" $(COLOR_DONE)
 else
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.update...$(COLOR_RESET)"
@@ -530,14 +526,23 @@ help:
 	@echo "    $(COLOR_CMD)wsl.apply.system$(COLOR_RESET)           - apply yanoNixOsWsl system configuration"
 	@echo "    $(COLOR_CMD)wsl.apply.home$(COLOR_RESET)             - apply yanoNixOsWsl home configuration"
 	@echo ""
-	@echo "$(COLOR_HEADER)  [for macOS]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)darwin.init$(COLOR_RESET)                - initialize yanoMac configuration"
-	@echo "    $(COLOR_CMD)darwin.install$(COLOR_RESET)             - install yanoMac packages"
-	@echo "    $(COLOR_CMD)darwin.update$(COLOR_RESET)              - update whole yanoMac (settings, packages)"
-	@echo "    $(COLOR_CMD)darwin.update.brewpkglist$(COLOR_RESET)  - Update yanoMac brew package list"
-	@echo "    $(COLOR_CMD)darwin.restart.services$(COLOR_RESET)    - Restart yanoMac services"
-	@echo "    $(COLOR_CMD)darwin.apply.system$(COLOR_RESET)        - apply yanoMac system configuration"
-	@echo "    $(COLOR_CMD)darwin.apply.home$(COLOR_RESET)          - apply yanoMac home configuration"
+	@echo "$(COLOR_HEADER)  [for mac]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)mac.init$(COLOR_RESET)                   - initialize yanoMac configuration"
+	@echo "    $(COLOR_CMD)mac.install$(COLOR_RESET)                - install yanoMac packages"
+	@echo "    $(COLOR_CMD)mac.update$(COLOR_RESET)                 - update whole yanoMac (settings, packages)"
+	@echo "    $(COLOR_CMD)mac.apply.system$(COLOR_RESET)           - apply yanoMac system configuration"
+	@echo "    $(COLOR_CMD)mac.apply.home$(COLOR_RESET)             - apply yanoMac home configuration"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [for macbook]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)macbook.init$(COLOR_RESET)               - initialize yanoMacBook configuration"
+	@echo "    $(COLOR_CMD)macbook.install$(COLOR_RESET)            - install yanoMacBook packages"
+	@echo "    $(COLOR_CMD)macbook.update$(COLOR_RESET)             - update whole yanoMacBook (settings, packages)"
+	@echo "    $(COLOR_CMD)macbook.apply.system$(COLOR_RESET)       - apply yanoMacBook system configuration"
+	@echo "    $(COLOR_CMD)macbook.apply.home$(COLOR_RESET)         - apply yanoMacBook home configuration"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [for darwin]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)darwin.update.brewpkglist$(COLOR_RESET)  - Update brew package list"
+	@echo "    $(COLOR_CMD)darwin.restart.services$(COLOR_RESET)    - Restart services"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for Windows]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)windows.init$(COLOR_RESET)               - initialize yanoWindows configuration"
