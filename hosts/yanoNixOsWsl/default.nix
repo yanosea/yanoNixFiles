@@ -1,14 +1,7 @@
-{ homePath, inputs, pkgs, username, ... }: {
+{ homePath, pkgs, username, ... }: {
   imports = [
     # core
-    ../../modules/core/i18n.nix
-    ../../modules/core/network.nix
-    ../../modules/core/nix.nix
-    ../../modules/core/security.nix
-    ../../modules/core/virtualisation.nix
-    # programs
-    ../../modules/programs/nix-ld.nix
-    ../../modules/programs/shell.nix
+    ../../modules/core
   ];
   # boot
   boot = {

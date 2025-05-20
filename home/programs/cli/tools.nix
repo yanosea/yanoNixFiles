@@ -26,6 +26,8 @@
       browsh
       btop
       delta
+      docker
+      docker-compose
       duf
       dust
       era
@@ -52,14 +54,17 @@
       rbw
       ripgrep
       sheldon
+      shfmt
       starship
       systemctl-tui
       t-rec
+      taplo
       tldr
       tmux
       trash-cli
       tree
       tree-sitter
+      treefmt
       unzip
       vhs
       wakatime

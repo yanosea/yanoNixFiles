@@ -1,4 +1,4 @@
-{ config, hostname, ... }: {
+{ hostname, ... }: {
   # networking
   networking = {
     hostName = hostname;

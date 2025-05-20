@@ -1,4 +1,4 @@
-{ ... }: {
+{
   # programs
   programs = { seahorse = { enable = true; }; };
   # security

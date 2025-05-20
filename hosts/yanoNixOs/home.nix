@@ -2,8 +2,6 @@
   imports = [
     # cli
     ../../home/programs/cli
-    # develop
-    ../../home/programs/develop
     # gui
     ../../home/programs/gui
     # languages
@@ -15,7 +13,7 @@
   wayland = { windowManager = { hyprland = { }; }; };
   # home
   home = {
-    enableNixpkgsReleaseCheck = false;
+    enableNixpkgsReleaseCheck = true;
     homeDirectory = "${homePath}/${username}";
     # this is not latest but ok because this option have to set the first version of Nix configured for me
     stateVersion = "24.05";

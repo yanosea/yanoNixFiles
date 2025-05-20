@@ -3,21 +3,11 @@
     # hardware-configuration
     ./hardware-configuration.nix
     # core
-    ../../modules/core/i18n.nix
-    ../../modules/core/network.nix
-    ../../modules/core/nix.nix
-    ../../modules/core/security.nix
-    ../../modules/core/virtualisation.nix
+    ../../modules/core
     # desktop
     ../../modules/desktop
     # programs
-    ../../modules/programs/flatpak.nix
-    ../../modules/programs/hyprland.nix
-    ../../modules/programs/media.nix
-    ../../modules/programs/nix-ld.nix
-    ../../modules/programs/shell.nix
-    ../../modules/programs/steam.nix
-    ../../modules/programs/xserver.nix
+    ../../modules/programs
   ] ++ (with inputs.nixos-hardware.nixosModules; [ common-pc-ssd ]);
   # boot
   boot = {

@@ -2,9 +2,7 @@
   imports = [
     # cli
     ../../home/programs/cli
-    # develop
-    ../../home/programs/develop
-    # xdg
+    # gui (xdg-utils)
     ../../home/programs/gui/xdg.nix
     # languages
     ../../home/programs/languages
@@ -13,7 +11,7 @@
   ];
   # home
   home = {
-    enableNixpkgsReleaseCheck = false;
+    enableNixpkgsReleaseCheck = true;
     homeDirectory = "${homePath}/${username}";
     # this is not latest but ok because this option have to set the first version of Nix configured for me
     stateVersion = "24.05";

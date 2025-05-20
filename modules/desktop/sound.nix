@@ -1,4 +1,4 @@
-{ ... }: {
+{
   # security
   security = { rtkit = { enable = true; }; };
   # services

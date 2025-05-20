@@ -193,16 +193,18 @@ wsl.apply.home:
 	home-manager switch --flake .#yanosea@yanoNixOsWsl
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 
-# darwin
-.PHONY: darwin.init darwin.install darwin.update darwin.update.brewpkglist darwin.restart.services darwin.apply.system darwin.apply.home
+#
+# mac
+#
+.PHONY: mac.init mac.install mac.update mac.apply.system mac.apply.home
 
-# initialize nix darwin
-darwin.init:
-	@echo "$(COLOR_TITLE)initialize nix darwin...$(COLOR_RESET)"
+# initialize mac
+mac.init:
+	@echo "$(COLOR_TITLE)initialize mac...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
-	make darwin.apply.system
+	make mac.apply.system
 	@echo "$(COLOR_HEADER)initialize home...$(COLOR_RESET)"
-	make darwin.apply.home
+	make mac.apply.home
 	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
@@ -245,8 +247,8 @@ darwin.init:
 	# done
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 
-# install shortage packages on darwin and apply configurations
-darwin.install:
+# install shortage packages on mac and apply configurations
+mac.install:
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
@@ -255,14 +257,14 @@ darwin.install:
 	@echo "$(COLOR_HEADER)install brew shortage packages...$(COLOR_RESET)"
 	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
 	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
-	make darwin.apply.system
+	make mac.apply.system
 	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
-	make darwin.apply.home
+	make mac.apply.home
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
 
-# update darwin packages and apply configurations
-darwin.update:
-	@echo "$(COLOR_TITLE)update darwin...$(COLOR_RESET)"
+# update mac packages and apply configurations
+mac.update:
+	@echo "$(COLOR_TITLE)update mac...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
 	ghq list | ghq get --update
 	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
@@ -274,8 +276,129 @@ darwin.update:
 	brew upgrade
 	brew cleanup
 	brew doctor
-	make darwin.install
+	make mac.install
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+
+# apply mac system configuration
+mac.apply.system:
+	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
+	sudo rm -r ~/.nix-defexpr && sudo nix-channel --update
+	sudo darwin-rebuild switch --flake .#yanoMac
+	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
+
+# apply mac home configuration
+mac.apply.home:
+	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
+	rm -fr ~/.config/karabiner/karabiner.json
+	export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
+	home-manager switch --flake .#yanosea@yanoMac --extra-experimental-features "nix-command flakes" --impure
+	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
+
+#
+# macbook
+#
+.PHONY: macbook.init macbook.install macbook.update macbook.apply.system macbook.apply.home
+
+# initialize macbook
+macbook.init:
+	@echo "$(COLOR_TITLE)initialize macbook...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
+	make macbook.apply.system
+	@echo "$(COLOR_HEADER)initialize home...$(COLOR_RESET)"
+	make macbook.apply.home
+	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
+	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
+	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
+	mkdir -p $$HOME/.local/bin
+	mkdir -p $$XDG_DATA_HOME/skk
+	mkdir -p $$XDG_STATE_HOME/skk
+	mkdir -p $$XDG_STATE_HOME/zsh
+	mkdir -p $$XDG_CONFIG_HOME/wakatime
+	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
+	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+	ln -s $$HOME/.config/vim $$HOME/.vim
+	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
+	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
+	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo "$(COLOR_HEADER)install brew pkgs...$(COLOR_RESET)"
+	xargs brew install <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
+	@echo "$(COLOR_HEADER)install skk dictionary...$(COLOR_RESET)"
+	jisyo d
+	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
+	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
+	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	@echo "$(COLOR_HEADER)init sketchybar...$(COLOR_RESET)"
+	cd ~/.config/sketchybar/helpers
+	make
+	cd $$HOME/ghq/github.com/yanosea/yanoNixFiles
+	curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.4/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
+	(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -rf /tmp/SbarLua/)
+	@echo "$(COLOR_HEADER)init services...$(COLOR_RESET)"
+	brew services start sketchybar
+	brew services start borders
+	skhd --start-service
+	yabai --start-service
+	@echo "$(COLOR_HEADER)You have to create google drive symbolic link like below...$(COLOR_RESET)"
+	@echo "$(COLOR_CMD)ln -s GOOGLE_DRIVE_PATH $$HOME/google_drive$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)You have to create credentials symbolic link like below...$(COLOR_RESET)"
+	@echo "$(COLOR_CMD)ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials$(COLOR_RESET)"
+	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json$(COLOR_RESET)"
+	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
+	# done
+	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
+
+# install shortage packages on macbook and apply configurations
+macbook.install:
+	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
+	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
+	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo "$(COLOR_HEADER)install brew shortage packages...$(COLOR_RESET)"
+	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
+	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
+	make macbook.apply.system
+	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
+	make macbook.apply.home
+	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
+
+# update macbook packages and apply configurations
+macbook.update:
+	@echo "$(COLOR_TITLE)update macbook...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
+	ghq list | ghq get --update
+	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
+	gup update
+	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
+	sheldon lock --update
+	@echo "$(COLOR_HEADER)update brew packages...$(COLOR_RESET)"
+	brew update
+	brew upgrade
+	brew cleanup
+	brew doctor
+	make macbook.install
+	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+
+# apply macbook system configuration
+macbook.apply.system:
+	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
+	sudo rm -r ~/.nix-defexpr && sudo nix-channel --update
+	sudo darwin-rebuild switch --flake .#yanoMacBook
+	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
+
+# apply macbook home configuration
+macbook.apply.home:
+	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
+	rm -fr ~/.config/karabiner/karabiner.json
+	export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
+	home-manager switch --flake .#yanosea@yanoMacBook --extra-experimental-features "nix-command flakes" --impure
+	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
+
+#
+# darwin (mac, macbook common)
+#
+.PHONY: darwin.update.brewpkglist darwin.restart.services
 
 # update brew package list
 darwin.update.brewpkglist:
@@ -291,21 +414,6 @@ darwin.restart.services:
 	brew services restart borders
 	brew services restart sketchybar
 	@echo "$(COLOR_DONE)restart services done!$(COLOR_RESET)"
-
-# apply system configuration
-darwin.apply.system:
-	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
-	sudo rm -r ~/.nix-defexpr && sudo nix-channel --update
-	sudo darwin-rebuild switch --flake .#yanoMac
-	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
-
-# apply home configuration
-darwin.apply.home:
-	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
-	rm -fr ~/.config/karabiner/karabiner.json
-	export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
-	home-manager switch --flake .#yanosea@yanoMac --extra-experimental-features "nix-command flakes" --impure
-	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
 
 #
 # windows

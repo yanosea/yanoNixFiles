@@ -1,4 +1,4 @@
-{ ... }: {
+{
   # virtualisation
   virtualisation = {
     # docker
