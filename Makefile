@@ -1,3 +1,9 @@
+# not show command all
+.SILENT:
+
+# ignore errors all
+.IGNORE:
+
 # check if windows
 ifeq ($(OS),Windows_NT)
 	IS_WINDOWS := 1
