@@ -31,7 +31,6 @@ return {
 		opts = {
 			provider = "copilot",
 			mode = "agentic",
-			-- mode = "legacy",
 			auto_suggestions_provider = "copilot",
 			cursor_applying_provider = "copilot",
 			memory_summary_provider = "copilot",
@@ -41,7 +40,7 @@ return {
 				proxy = nil, -- [protocol://]host[:port] Use this proxy
 				allow_insecure = true, -- Allow insecure server connections
 				timeout = 60000, -- Timeout in milliseconds
-				temperature = 0,
+				temperature = 1,
 				max_tokens = 50960,
 			},
 			system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").prompt,
@@ -79,8 +78,8 @@ return {
 			},
 			behaviour = {
 				auto_focus_sidebar = false,
-				auto_suggestions = true,
-				auto_suggestions_respect_ignore = true,
+				auto_suggestions = false,
+				auto_suggestions_respect_ignore = false,
 				auto_set_highlight_group = true,
 				auto_set_keymaps = true,
 				auto_apply_diff_after_generation = false,
