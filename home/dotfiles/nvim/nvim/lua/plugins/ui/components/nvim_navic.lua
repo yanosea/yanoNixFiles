@@ -109,8 +109,7 @@ return {
 				end
 				return ""
 			end
-
-			-- 除外するファイルタイプのリストを取得する関数
+			-- define get excluded filetypes function
 			function navic.get_excluded_filetypes()
 				return {
 					"help",
