@@ -283,8 +283,7 @@ mac.apply.system:
 # apply mac home configuration
 mac.apply.home:
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
-	rm -fr ~/.config/karabiner/karabiner.json # TODO : remove this?
-	export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 # TODO : remove this?
+	rm -fr ~/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMac --extra-experimental-features "nix-command flakes" --impure
 	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
 
@@ -381,8 +380,7 @@ macbook.apply.system:
 # apply macbook home configuration
 macbook.apply.home:
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
-	rm -fr ~/.config/karabiner/karabiner.json # TODO : remove this?
-	export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 # TODO : remove this?
+	rm -fr ~/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMacBook
 	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
 
