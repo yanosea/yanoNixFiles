@@ -20,9 +20,6 @@
   # nix
   nix = {
     enable = false;
-    envVars = {
-      ZDOTDIR = "$HOME/.config/zsh";
-    };
     gc = {
       interval = {
         Weekday = 0;

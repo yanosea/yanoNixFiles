@@ -26,10 +26,4 @@
       zsh
     ];
   };
-  # nix
-  nix = {
-    envVars = {
-      ZDOTDIR = "$HOME/.config/zsh";
-    };
-  };
 }

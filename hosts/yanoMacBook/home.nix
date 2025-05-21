@@ -12,6 +12,9 @@
   home = {
     enableNixpkgsReleaseCheck = true;
     homeDirectory = "${homePath}/${username}";
+    sessionVariables = {
+      ZDOTDIR = "$HOME/.config/zsh";
+    };
     # this is not latest but ok because this option have to set the first version of Nix configured for me
     stateVersion = "24.05";
     username = username;
@@ -19,6 +22,9 @@
   # programs
   programs = {
     home-manager = {
+      enable = true;
+    };
+    zsh = {
       enable = true;
     };
   };
