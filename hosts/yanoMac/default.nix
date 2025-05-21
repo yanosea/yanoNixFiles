@@ -19,21 +19,17 @@
   };
   # nix
   nix = {
-    enable = true;
+    enable = false;
     envVars = {
       ZDOTDIR = "$HOME/.config/zsh";
     };
     gc = {
-      automatic = true;
       interval = {
         Weekday = 0;
         Hour = 0;
         Minute = 0;
       };
       options = "--delete-older-than 7d";
-    };
-    optimise = {
-      automatic = true;
     };
     settings = {
       accept-flake-config = true;

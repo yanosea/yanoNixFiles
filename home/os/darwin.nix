@@ -13,8 +13,6 @@
   ];
   home = {
     packages = with pkgs; [
-      darwin.xcode
-      xcodes
       xcode-install
     ];
   };

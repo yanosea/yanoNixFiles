@@ -277,7 +277,6 @@ mac.update:
 # apply mac system configuration
 mac.apply.system:
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
-	sudo rm -r ~/.nix-defexpr && sudo nix-channel --update # TODO : remove this?
 	sudo darwin-rebuild switch --flake .#yanoMac
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
 
@@ -376,7 +375,6 @@ macbook.update:
 # apply macbook system configuration
 macbook.apply.system:
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
-	sudo rm -r ~/.nix-defexpr && sudo nix-channel --update # TODO : remove this?
 	sudo darwin-rebuild switch --flake .#yanoMacBook
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
 
