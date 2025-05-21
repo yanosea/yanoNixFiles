@@ -9,7 +9,9 @@
     };
     libinput = {
       enable = true;
-      mouse = { accelProfile = "flat"; };
+      mouse = {
+        accelProfile = "flat";
+      };
     };
   };
 }

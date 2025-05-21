@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [
     ../dotfiles/AquaSKK
     ../dotfiles/borders
@@ -10,5 +11,11 @@
     ../dotfiles/sonic-pi.net
     ../dotfiles/yabai
   ];
-  home = { packages = with pkgs; [ darwin.xcode xcodes xcode-install ]; };
+  home = {
+    packages = with pkgs; [
+      darwin.xcode
+      xcodes
+      xcode-install
+    ];
+  };
 }

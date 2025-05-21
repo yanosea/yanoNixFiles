@@ -1,1 +1,6 @@
-{ pkgs, ... }: { home = { packages = with pkgs; [ jdk ]; }; }
+{ pkgs, ... }:
+{
+  home = {
+    packages = with pkgs; [ jdk ];
+  };
+}

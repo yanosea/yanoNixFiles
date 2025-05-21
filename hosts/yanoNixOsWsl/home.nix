@@ -1,4 +1,5 @@
-{ homePath, username, ... }: {
+{ homePath, username, ... }:
+{
   imports = [
     # cli
     ../../home/programs/cli
@@ -18,5 +19,9 @@
     username = username;
   };
   # programs
-  programs = { home-manager = { enable = true; }; };
+  programs = {
+    home-manager = {
+      enable = true;
+    };
+  };
 }

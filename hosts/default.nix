@@ -1,48 +1,107 @@
 inputs:
 let
-  mkNixOsSystem = { homePath, hostname, modules, system, username, }:
+  mkNixOsSystem =
+    {
+      homePath,
+      hostname,
+      modules,
+      system,
+      username,
+    }:
     inputs.nixpkgs.lib.nixosSystem {
       inherit modules system;
-      specialArgs = { inherit homePath hostname inputs username; };
+      specialArgs = {
+        inherit
+          homePath
+          hostname
+          inputs
+          username
+          ;
+      };
     };
-  mkNixOsWslSystem = { homePath, hostname, modules, system, username, }:
+  mkNixOsWslSystem =
+    {
+      homePath,
+      hostname,
+      modules,
+      system,
+      username,
+    }:
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       modules = [ inputs.nixos-wsl.nixosModules.wsl ] ++ modules;
-      specialArgs = { inherit homePath hostname inputs username; };
+      specialArgs = {
+        inherit
+          homePath
+          hostname
+          inputs
+          username
+          ;
+      };
     };
-  mkDarwinSystem = { homePath, hostname, modules, system, username, }:
+  mkDarwinSystem =
+    {
+      homePath,
+      hostname,
+      modules,
+      system,
+      username,
+    }:
     inputs.darwin.lib.darwinSystem {
       inherit modules system;
-      specialArgs = { inherit homePath hostname inputs username; };
+      specialArgs = {
+        inherit
+          homePath
+          hostname
+          inputs
+          username
+          ;
+      };
     };
-  mkHomeManagerConfiguration = { homePath, modules, system, username, }:
+  mkHomeManagerConfiguration =
+    {
+      homePath,
+      modules,
+      system,
+      username,
+    }:
     inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = import inputs.nixpkgs {
         inherit system;
-        config = { allowUnfree = true; };
+        config = {
+          allowUnfree = true;
+        };
       };
       extraSpecialArgs = {
         inherit homePath inputs username;
         pkgs-stable = import inputs.nixpkgs-stable {
           inherit system;
-          config = { allowUnfree = true; };
+          config = {
+            allowUnfree = true;
+          };
         };
       };
-      modules = modules ++ [{
-        home = {
-          inherit username;
-          homeDirectory = "${homePath}/${username}";
-          # this is not latest but ok because this option have to set the first version of Nix configured for me
-          stateVersion = "24.05";
-        };
-        programs = {
-          home-manager = { enable = true; };
-          git = { enable = true; };
-        };
-      }];
+      modules = modules ++ [
+        {
+          home = {
+            inherit username;
+            homeDirectory = "${homePath}/${username}";
+            # this is not latest but ok because this option have to set the first version of Nix configured for me
+            stateVersion = "24.05";
+          };
+          programs = {
+            home-manager = {
+              enable = true;
+            };
+            git = {
+              enable = true;
+            };
+          };
+        }
+      ];
     };
-in {
+in
+{
   # nixos
   nixos = {
     # nixos

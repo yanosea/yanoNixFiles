@@ -1,2 +1,6 @@
-{ pkgs, ... }: { home = { packages = with pkgs; [ nixfmt-classic ]; }; }
-
+{ pkgs, ... }:
+{
+  home = {
+    packages = with pkgs; [ nixfmt-rfc-style ];
+  };
+}

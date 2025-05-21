@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   xdg = {
     configFile = {
       "neofetch" = {

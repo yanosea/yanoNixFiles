@@ -96,8 +96,6 @@ nix.update:
 	gup update
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
 	sheldon lock --update
-	@echo "$(COLOR_HEADER)update nix...$(COLOR_RESET)"
-	nix-env -u
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	make nix.install
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
@@ -175,8 +173,6 @@ wsl.update:
 	gup update
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
 	sheldon lock --update
-	@echo "$(COLOR_HEADER)update nix...$(COLOR_RESET)"
-	nix-env -u
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	make wsl.install
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
@@ -232,7 +228,7 @@ mac.init:
 	make
 	cd $$HOME/ghq/github.com/yanosea/yanoNixFiles
 	curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.4/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
-	(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -rf /tmp/SbarLua/)
+	(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -fr /tmp/SbarLua/)
 	@echo "$(COLOR_HEADER)init services...$(COLOR_RESET)"
 	brew services start sketchybar
 	brew services start borders
@@ -281,15 +277,15 @@ mac.update:
 # apply mac system configuration
 mac.apply.system:
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
-	sudo rm -r ~/.nix-defexpr && sudo nix-channel --update
+	sudo rm -r ~/.nix-defexpr && sudo nix-channel --update # TODO : remove this?
 	sudo darwin-rebuild switch --flake .#yanoMac
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
 
 # apply mac home configuration
 mac.apply.home:
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
-	rm -fr ~/.config/karabiner/karabiner.json
-	export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
+	rm -fr ~/.config/karabiner/karabiner.json # TODO : remove this?
+	export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 # TODO : remove this?
 	home-manager switch --flake .#yanosea@yanoMac --extra-experimental-features "nix-command flakes" --impure
 	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
 
@@ -331,7 +327,7 @@ macbook.init:
 	make
 	cd $$HOME/ghq/github.com/yanosea/yanoNixFiles
 	curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.4/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
-	(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -rf /tmp/SbarLua/)
+	(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -fr /tmp/SbarLua/)
 	@echo "$(COLOR_HEADER)init services...$(COLOR_RESET)"
 	brew services start sketchybar
 	brew services start borders
@@ -380,16 +376,16 @@ macbook.update:
 # apply macbook system configuration
 macbook.apply.system:
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
-	sudo rm -r ~/.nix-defexpr && sudo nix-channel --update
+	sudo rm -r ~/.nix-defexpr && sudo nix-channel --update # TODO : remove this?
 	sudo darwin-rebuild switch --flake .#yanoMacBook
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
 
 # apply macbook home configuration
 macbook.apply.home:
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
-	rm -fr ~/.config/karabiner/karabiner.json
-	export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
-	home-manager switch --flake .#yanosea@yanoMacBook --extra-experimental-features "nix-command flakes" --impure
+	rm -fr ~/.config/karabiner/karabiner.json # TODO : remove this?
+	export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 # TODO : remove this?
+	home-manager switch --flake .#yanosea@yanoMacBook
 	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
 
 #
@@ -480,13 +476,13 @@ endif
 # check flake
 misc.check:
 	@echo "$(COLOR_TITLE)check flake...$(COLOR_RESET)"
-	nix flake check --extra-experimental-features "nix-command flakes"
+	nix flake check
 	@echo "$(COLOR_DONE)check done!$(COLOR_RESET)"
 
 # clean result directory
 misc.clean:
 	@echo "$(COLOR_TITLE)clean result directory...$(COLOR_RESET)"
-	rm -rf result
+	rm -fr result
 	@echo "$(COLOR_DONE)clean done!$(COLOR_RESET)"
 
 # format files
@@ -498,14 +494,14 @@ misc.format:
 # garbage collection
 misc.gc:
 	@echo "$(COLOR_TITLE)garbage collection...$(COLOR_RESET)"
-	sudo nix profile wipe-history --extra-experimental-features "nix-command flakes" --profile /nix/var/nix/profiles/system --older-than 7d
-	sudo nix store gc --debug --extra-experimental-features "nix-command flakes"
+	sudo nix profile wipe-history
+	sudo nix store gc
 	@echo "$(COLOR_DONE)garbage collection done!$(COLOR_RESET)"
 
 # update flake.lock
 misc.update:
 	@echo "$(COLOR_TITLE)update flake.lock...$(COLOR_RESET)"
-	nix flake update nixpkgs --extra-experimental-features "nix-command flakes"
+	nix flake update
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 
 # help

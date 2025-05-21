@@ -1,22 +1,43 @@
-{ homePath, pkgs, username, ... }: {
+{
+  homePath,
+  pkgs,
+  username,
+  ...
+}:
+{
   imports = [
     # core
     ../../modules/core
   ];
   # boot
   boot = {
-    loader = { grub = { device = "nodev"; }; };
+    loader = {
+      grub = {
+        device = "nodev";
+      };
+    };
     kernelPackages = pkgs.linuxPackages_latest;
   };
   # programs
-  programs = { zsh = { enable = true; }; };
+  programs = {
+    zsh = {
+      enable = true;
+    };
+  };
   # system
-  system = { stateVersion = "24.11"; };
+  system = {
+    stateVersion = "24.11";
+  };
   # users
   users = {
     users = {
       "${username}" = {
-        extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
+        extraGroups = [
+          "networkmanager"
+          "wheel"
+          "audio"
+          "video"
+        ];
         home = "/${homePath}/${username}";
         isNormalUser = true;
         shell = pkgs.zsh;
@@ -28,12 +49,16 @@
     enable = true;
     defaultUser = "yanosea";
     wslConf = {
-      automount = { root = "/mnt"; };
+      automount = {
+        root = "/mnt";
+      };
       interop = {
         appendWindowsPath = false;
         enabled = true;
       };
-      network = { generateHosts = false; };
+      network = {
+        generateHosts = false;
+      };
     };
   };
 }

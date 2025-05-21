@@ -1,6 +1,14 @@
 {
   # services
-  services = { flatpak = { enable = true; }; };
+  services = {
+    flatpak = {
+      enable = true;
+    };
+  };
   # xdg
-  xdg = { portal = { enable = true; }; };
+  xdg = {
+    portal = {
+      enable = true;
+    };
+  };
 }

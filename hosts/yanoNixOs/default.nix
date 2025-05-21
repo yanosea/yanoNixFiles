@@ -1,4 +1,12 @@
-{ config, homePath, inputs, pkgs, username, ... }: {
+{
+  config,
+  homePath,
+  inputs,
+  pkgs,
+  username,
+  ...
+}:
+{
   imports = [
     # hardware-configuration
     ./hardware-configuration.nix
@@ -11,35 +19,55 @@
   ] ++ (with inputs.nixos-hardware.nixosModules; [ common-pc-ssd ]);
   # boot
   boot = {
-    binfmt = { emulatedSystems = [ "aarch64-linux" ]; };
-    initrd = { kernelModules = [ "nvidia" ]; };
+    binfmt = {
+      emulatedSystems = [ "aarch64-linux" ];
+    };
+    initrd = {
+      kernelModules = [ "nvidia" ];
+    };
     loader = {
       systemd-boot = {
         enable = true;
         configurationLimit = 10;
       };
-      efi = { canTouchEfiVariables = true; };
+      efi = {
+        canTouchEfiVariables = true;
+      };
     };
   };
   # hardware
   hardware = {
-    bluetooth = { enable = true; };
-    graphics = { enable = true; };
+    bluetooth = {
+      enable = true;
+    };
+    graphics = {
+      enable = true;
+    };
     nvidia = {
       forceFullCompositionPipeline = true;
-      modesetting = { enable = true; };
+      modesetting = {
+        enable = true;
+      };
       nvidiaSettings = true;
       open = false;
       package = config.boot.kernelPackages.nvidiaPackages.beta;
-      powerManagement = { enable = true; };
+      powerManagement = {
+        enable = true;
+      };
     };
   };
   # programs
-  programs = { zsh = { enable = true; }; };
+  programs = {
+    zsh = {
+      enable = true;
+    };
+  };
   # services
   services = {
     # blueman
-    blueman = { enable = true; };
+    blueman = {
+      enable = true;
+    };
     # greetd
     greetd = {
       enable = true;
@@ -53,7 +81,9 @@
       };
     };
     # upower
-    upower = { enable = true; };
+    upower = {
+      enable = true;
+    };
   };
   # systemd
   systemd = {
@@ -66,21 +96,29 @@
         wantedBy = [ "default.target" ];
         description = "rclone service";
         serviceConfig = {
-          ExecStart =
-            "${pkgs.rclone}/bin/rclone mount yanosea: /mnt/google_drive/yanosea --allow-other --vfs-cache-mode full --buffer-size 128M --vfs-read-ahead 512M --drive-chunk-size 64M --config /.rclone.conf";
+          ExecStart = "${pkgs.rclone}/bin/rclone mount yanosea: /mnt/google_drive/yanosea --allow-other --vfs-cache-mode full --buffer-size 128M --vfs-read-ahead 512M --drive-chunk-size 64M --config /.rclone.conf";
         };
       };
     };
   };
   # system
-  system = { stateVersion = "24.11"; };
+  system = {
+    stateVersion = "24.11";
+  };
   # time
-  time = { hardwareClockInLocalTime = true; };
+  time = {
+    hardwareClockInLocalTime = true;
+  };
   # users
   users = {
     users = {
       "${username}" = {
-        extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
+        extraGroups = [
+          "networkmanager"
+          "wheel"
+          "audio"
+          "video"
+        ];
         home = "/${homePath}/${username}";
         isNormalUser = true;
         shell = pkgs.zsh;

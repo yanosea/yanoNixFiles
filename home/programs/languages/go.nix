@@ -1,5 +1,13 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home = {
-    packages = with pkgs; [ delve go goreleaser gotests mockgen wails ];
+    packages = with pkgs; [
+      delve
+      go
+      goreleaser
+      gotests
+      mockgen
+      wails
+    ];
   };
 }

@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   xdg = {
     configFile = {
       "sonic-pi.net" = {

@@ -1,15 +1,29 @@
 {
   # security
-  security = { rtkit = { enable = true; }; };
+  security = {
+    rtkit = {
+      enable = true;
+    };
+  };
   # services
   services = {
     pipewire = {
       enable = true;
-      alsa = { enable = true; };
-      alsa = { support32Bit = true; };
-      jack = { enable = true; };
-      pulse = { enable = true; };
+      alsa = {
+        enable = true;
+      };
+      alsa = {
+        support32Bit = true;
+      };
+      jack = {
+        enable = true;
+      };
+      pulse = {
+        enable = true;
+      };
     };
-    pulseaudio = { enable = false; };
+    pulseaudio = {
+      enable = false;
+    };
   };
 }

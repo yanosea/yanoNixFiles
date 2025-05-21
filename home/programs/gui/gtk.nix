@@ -1,12 +1,14 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # dconf
   dconf = {
     settings = {
       "org/gnome/desktop/background" = {
-        picture-uri-dark =
-          "file://${pkgs.nixos-artwork.wallpapers.nineish-dark-gray.src}";
+        picture-uri-dark = "file://${pkgs.nixos-artwork.wallpapers.nineish-dark-gray.src}";
       };
-      "org/gnome/desktop/interface" = { color-scheme = "prefer-dark"; };
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+      };
     };
   };
   # gtk
@@ -25,7 +27,9 @@
   home = {
     packages = with pkgs; [ dconf ];
     pointerCursor = {
-      gtk = { enable = true; };
+      gtk = {
+        enable = true;
+      };
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Classic";
       size = 14;

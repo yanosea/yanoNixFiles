@@ -1,4 +1,8 @@
 {
   # security
-  security = { sudo = { wheelNeedsPassword = true; }; };
+  security = {
+    sudo = {
+      wheelNeedsPassword = true;
+    };
+  };
 }

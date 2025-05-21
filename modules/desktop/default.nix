@@ -1,7 +1,19 @@
 {
-  imports = [ ./fonts.nix ./security.nix ./sound.nix ];
+  imports = [
+    ./fonts.nix
+    ./security.nix
+    ./sound.nix
+  ];
   # programs
-  programs = { dconf = { enable = true; }; };
+  programs = {
+    dconf = {
+      enable = true;
+    };
+  };
   # xdg
-  xdg = { portal = { enable = true; }; };
+  xdg = {
+    portal = {
+      enable = true;
+    };
+  };
 }

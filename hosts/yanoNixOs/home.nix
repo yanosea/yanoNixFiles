@@ -1,4 +1,5 @@
-{ homePath, username, ... }: {
+{ homePath, username, ... }:
+{
   imports = [
     # cli
     ../../home/programs/cli
@@ -10,7 +11,11 @@
     ../../home/os/nixos.nix
   ];
   # wayland
-  wayland = { windowManager = { hyprland = { }; }; };
+  wayland = {
+    windowManager = {
+      hyprland = { };
+    };
+  };
   # home
   home = {
     enableNixpkgsReleaseCheck = true;
@@ -20,5 +25,9 @@
     username = username;
   };
   # programs
-  programs = { home-manager = { enable = true; }; };
+  programs = {
+    home-manager = {
+      enable = true;
+    };
+  };
 }

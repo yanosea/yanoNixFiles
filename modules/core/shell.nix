@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # environment
   environment = {
     systemPackages = with pkgs; [
@@ -26,5 +27,9 @@
     ];
   };
   # nix
-  nix = { envVars = { ZDOTDIR = "$HOME/.config/zsh"; }; };
+  nix = {
+    envVars = {
+      ZDOTDIR = "$HOME/.config/zsh";
+    };
+  };
 }
