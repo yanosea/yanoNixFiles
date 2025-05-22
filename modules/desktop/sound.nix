@@ -22,8 +22,5 @@
         enable = true;
       };
     };
-    pulseaudio = {
-      enable = false;
-    };
   };
 }

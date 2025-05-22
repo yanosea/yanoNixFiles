@@ -17,7 +17,6 @@
     # nix
     ../../modules/nix/nix.nix
     # programs
-    ../../modules/programs/dconf.nix
     ../../modules/programs/hyprland.nix
     ../../modules/programs/media.nix
     ../../modules/programs/nix-ld.nix

@@ -15,7 +15,7 @@
       fuseiso
       rclone
       # gui
-      dolphin
+      kdePackages.dolphin
       remmina
       vivaldi
       # jokeey
