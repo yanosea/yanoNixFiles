@@ -13,7 +13,7 @@
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
     };
-    # nixos wsl
+    ## nixos wsl
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
       inputs = {
@@ -50,6 +50,15 @@
         };
       };
     };
+    ## treefmt-nix
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
+    };
   };
   outputs = inputs: {
     # nixos
@@ -58,5 +67,36 @@
     darwinConfigurations = (import ./hosts inputs).darwin;
     # home-manager
     homeConfigurations = (import ./hosts inputs).home-manager;
+    # formatter
+    formatter =
+      with inputs.nixpkgs.lib;
+      genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
+        system:
+        (inputs.treefmt-nix.lib.evalModule inputs.nixpkgs.legacyPackages.${system} {
+          projectRootFile = "flake.nix";
+          programs = {
+            # lua
+            stylua = {
+              enable = true;
+            };
+            # nix
+            nixfmt = {
+              enable = true;
+            };
+            # rust
+            rustfmt = {
+              enable = true;
+            };
+            # shell
+            shfmt = {
+              enable = true;
+            };
+            # toml
+            taplo = {
+              enable = true;
+            };
+          };
+        }).config.build.wrapper
+      );
   };
 }

@@ -1,5 +1,4 @@
 {
-  # programs
   programs = {
     droidcam = {
       enable = true;

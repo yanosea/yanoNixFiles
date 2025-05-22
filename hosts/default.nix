@@ -93,9 +93,6 @@ let
             home-manager = {
               enable = true;
             };
-            git = {
-              enable = true;
-            };
           };
         }
       ];
@@ -125,7 +122,7 @@ in
   darwin = {
     # mac
     yanoMac = mkDarwinSystem {
-      homePath = "/home";
+      homePath = "/Users";
       hostname = "yanoMac";
       modules = [ ./yanoMac ];
       system = "aarch64-darwin";
@@ -133,7 +130,7 @@ in
     };
     # macbook
     yanoMacBook = mkDarwinSystem {
-      homePath = "/home";
+      homePath = "/Users";
       hostname = "yanoMacBook";
       modules = [ ./yanoMacBook ];
       system = "aarch64-darwin";

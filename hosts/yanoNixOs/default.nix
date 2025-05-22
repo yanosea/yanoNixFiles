@@ -14,8 +14,16 @@
     ../../modules/core
     # desktop
     ../../modules/desktop
+    # nix
+    ../../modules/nix/nix.nix
     # programs
-    ../../modules/programs
+    ../../modules/programs/dconf.nix
+    ../../modules/programs/hyprland.nix
+    ../../modules/programs/media.nix
+    ../../modules/programs/nix-ld.nix
+    ../../modules/programs/shell.nix
+    ../../modules/programs/steam.nix
+    ../../modules/programs/xserver.nix
   ] ++ (with inputs.nixos-hardware.nixosModules; [ common-pc-ssd ]);
   # boot
   boot = {
@@ -25,6 +33,7 @@
     initrd = {
       kernelModules = [ "nvidia" ];
     };
+    kernelPackages = pkgs.linuxPackages_latest;
     loader = {
       systemd-boot = {
         enable = true;
@@ -54,12 +63,6 @@
       powerManagement = {
         enable = true;
       };
-    };
-  };
-  # programs
-  programs = {
-    zsh = {
-      enable = true;
     };
   };
   # services

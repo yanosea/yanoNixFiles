@@ -1,6 +1,5 @@
 { pkgs, ... }:
 {
-  # fonts
   fonts = {
     enableDefaultPackages = true;
     fontDir = {

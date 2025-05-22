@@ -76,7 +76,7 @@ sudo nix-channel --add  https://nixos.org/channels/nixos-24.11 nixos && sudo nix
 
 ```sh
 # enter nix-shell
-nix-shell -p ghq git home-manager
+nix-shell -p git ghq home-manager
 ```
 
 4. Clone this repository and change the directory.
@@ -204,7 +204,7 @@ su - yanosea
 #
 
 # enter nix-shell
-nix-shell -p ghq git home-manager
+nix-shell -p git ghq home-manager
 ```
 
 7. Clone this repository and change the directory.
@@ -293,6 +293,10 @@ make wsl.update
 
 1. Install nix following [here](https://github.com/DeterminateSystems/nix-installer).
 
+```sh
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+```
+
 2. Install nix-darwin following [here](https://github.com/LnL7/nix-darwin).
 
 3. Install homebrew following [here](https://brew.sh/ja/).
@@ -308,7 +312,7 @@ sudo nix-channel --add  https://nixos.org/channels/nixos-24.11 nixos && sudo nix
 
 ```sh
 # enter nix-shell
-nix-shell -p ghq git home-manager
+nix-shell -p git ghq home-manager
 ```
 
 6. Clone this repository and change the directory.

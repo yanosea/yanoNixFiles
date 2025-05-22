@@ -8,6 +8,11 @@
   imports = [
     # core
     ../../modules/core
+    # nix
+    ../../modules/nix/nix.nix
+    # programs
+    ../../modules/programs/nix-ld.nix
+    ../../modules/programs/shell.nix
   ];
   # boot
   boot = {
@@ -18,15 +23,13 @@
     };
     kernelPackages = pkgs.linuxPackages_latest;
   };
-  # programs
-  programs = {
-    zsh = {
-      enable = true;
-    };
-  };
   # system
   system = {
     stateVersion = "24.11";
+  };
+  # time
+  time = {
+    hardwareClockInLocalTime = true;
   };
   # users
   users = {

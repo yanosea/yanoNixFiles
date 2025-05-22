@@ -917,7 +917,7 @@ ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)format files...$(COLOR_RESET)"
 	@echo ""
-	treefmt
+	nix fmt
 	@echo ""
 	@echo "$(COLOR_DONE)format done!$(COLOR_RESET)"
 	@echo ""

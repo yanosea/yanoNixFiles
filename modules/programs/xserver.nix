@@ -1,5 +1,4 @@
 {
-  # services
   services = {
     xserver = {
       enable = true;

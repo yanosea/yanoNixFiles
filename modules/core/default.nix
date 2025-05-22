@@ -1,11 +1,10 @@
 {
   imports = [
+    ./environment.nix
     ./i18n.nix
-    ./network.nix
-    ./nix-ld.nix
-    ./nix.nix
+    ./networking.nix
     ./security.nix
-    ./shell.nix
+    ./time.nix
     ./virtualisation.nix
   ];
 }
