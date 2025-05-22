@@ -877,7 +877,7 @@ endif
 #
 # misc
 #
-.PHONY: misc.check misc.clean misc.format misc.gc misc.update
+.PHONY: misc.check misc.clean misc.format misc.gc.user misc.gc.system misc.update
 
 # check flake
 misc.check:
@@ -927,16 +927,33 @@ else
 	@echo ""
 endif
 
-# garbage collection
-misc.gc:
+# garbage collection (system)
+misc.gc.system:
 ifeq ($(IS_WINDOWS),0)
 	@echo ""
-	@echo "$(COLOR_TITLE)garbage collection...$(COLOR_RESET)"
+	@echo "$(COLOR_TITLE)garbage collection (system)...$(COLOR_RESET)"
 	@echo ""
-	sudo nix profile wipe-history
-	sudo nix store gc
+	sudo -i nix profile wipe-history
+	sudo -i nix store gc
 	@echo ""
-	@echo "$(COLOR_DONE)garbage collection done!$(COLOR_RESET)"
+	@echo "$(COLOR_DONE)garbage collection (system) done!$(COLOR_RESET)"
+	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
+	@echo ""
+endif
+
+# garbage collection (user)
+misc.gc.user:
+ifeq ($(IS_WINDOWS),0)
+	@echo ""
+	@echo "$(COLOR_TITLE)garbage collection (user)...$(COLOR_RESET)"
+	@echo ""
+	nix profile wipe-history
+	nix store gc
+	@echo ""
+	@echo "$(COLOR_DONE)garbage collection (user) done!$(COLOR_RESET)"
 	@echo ""
 else
 	@echo ""
