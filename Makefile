@@ -1,26 +1,55 @@
+# initialize variables
+IS_WINDOWS := 0
+IS_DARWIN := 0
+IS_MAC := 0
+IS_MACBOOK := 0
+IS_NIXOS := 0
+IS_NIXOS_WSL := 0
 # check if windows
 ifeq ($(OS),Windows_NT)
 	IS_WINDOWS := 1
 	SHELL := pwsh.exe
 else
-	IS_WINDOWS := 0
 	SHELL := /usr/bin/env bash
+	# detect other platforms
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Darwin)
+		IS_DARWIN := 1
+		# detect if macbook (portable) or mac (desktop)
+		IS_MACBOOK := $(shell [ "$$(sysctl -n hw.model | grep -i "MacBook")" != "" ] && echo 1 || echo 0)
+		ifeq ($(IS_MACBOOK),0)
+			IS_MAC := 1
+		endif
+	else
+		# check if nixos or wsl
+		# first check if it's wsl
+		IS_WSL := $(shell [ -f /proc/sys/fs/binfmt_misc/WSLInterop ] || grep -q "microsoft\|WSL" /proc/version 2>/dev/null && echo 1 || echo 0)
+		# then check if it's nixos (directory exists)
+		IS_NIXOS_CHECK := $(shell [ -d /etc/nixos ] && echo 1 || echo 0)
+		# if it's both WSL and nixos, then it's nixos on wsl
+		ifeq ($(IS_WSL)$(IS_NIXOS_CHECK),11)
+			IS_NIXOS_WSL := 1
+		# if it's just nixos, but not wsl
+		else ifeq ($(IS_NIXOS_CHECK),1)
+			IS_NIXOS := 1
+		endif
+	endif
 endif
-
 # define colors
 ifeq ($(IS_WINDOWS),1)
 	COLOR_TITLE := -ForegroundColor Magenta
 	COLOR_HEADER := -ForegroundColor Yellow
 	COLOR_CMD := -ForegroundColor Cyan
 	COLOR_DONE := -ForegroundColor Green
+	COLOR_ERROR := -ForegroundColor Red
 else
 	COLOR_RESET  := $(shell tput sgr0)
 	COLOR_TITLE  := $(shell tput setaf 5) # magenta
 	COLOR_HEADER := $(shell tput setaf 3) # yellow
 	COLOR_CMD    := $(shell tput setaf 6) # cyan
 	COLOR_DONE   := $(shell tput setaf 2) # green
+	COLOR_ERROR  := $(shell tput setaf 1) # red
 endif
-
 # shows help message defaultly
 .DEFAULT_GOAL := help
 
@@ -37,6 +66,7 @@ endif
 
 # initialize nixos
 nix.init:
+ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)initialize nixos...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
@@ -94,9 +124,15 @@ nix.init:
 	@echo ""
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # install shortage packages on nixos and apply configurations
 nix.install:
+ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
@@ -117,9 +153,15 @@ nix.install:
 	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # update nixos packages and apply configurations
 nix.update:
+ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update nixos...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
@@ -140,9 +182,15 @@ nix.update:
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # apply system configuration
 nix.apply.system:
+ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
 	@echo ""
@@ -150,9 +198,15 @@ nix.apply.system:
 	@echo ""
 	@echo "$(COLOR_HEADER)apply system configuration done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # apply home configuration
 nix.apply.home:
+ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
@@ -160,6 +214,11 @@ nix.apply.home:
 	@echo ""
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos...$(COLOR_RESET)"
+	@echo ""
+endif
 
 #
 # nixos wsl
@@ -168,6 +227,7 @@ nix.apply.home:
 
 # initialize nixos wsl
 wsl.init:
+ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)initialize nixos wsl...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
@@ -213,9 +273,15 @@ wsl.init:
 	@echo "$(COLOR_CMD)ln -s WINDOWS_WIN32YANK_PATH $$HOME/.local/bin/win32yank.exe$(COLOR_RESET)"
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos wsl...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # install shortage packages on nixos wsl and apply configurations
 wsl.install:
+ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
@@ -236,9 +302,15 @@ wsl.install:
 	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos wsl...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # update nixos wsl packages and apply configurations
 wsl.update:
+ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update nixos wsl...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
@@ -259,9 +331,15 @@ wsl.update:
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos wsl...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # apply system configuration
 wsl.apply.system:
+ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
 	@echo ""
@@ -269,9 +347,15 @@ wsl.apply.system:
 	@echo ""
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos wsl...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # apply home configuration
 wsl.apply.home:
+ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
@@ -279,6 +363,11 @@ wsl.apply.home:
 	@echo ""
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for nixos wsl...$(COLOR_RESET)"
+	@echo ""
+endif
 
 #
 # mac
@@ -287,6 +376,7 @@ wsl.apply.home:
 
 # initialize mac
 mac.init:
+ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)initialize mac...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
@@ -358,9 +448,15 @@ mac.init:
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # install shortage packages on mac and apply configurations
 mac.install:
+ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
@@ -385,9 +481,15 @@ mac.install:
 	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # update mac packages and apply configurations
 mac.update:
+ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update mac...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
@@ -412,9 +514,15 @@ mac.update:
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # apply mac system configuration
 mac.apply.system:
+ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
 	@echo ""
@@ -422,9 +530,15 @@ mac.apply.system:
 	@echo ""
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # apply mac home configuration
 mac.apply.home:
+ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
@@ -433,6 +547,11 @@ mac.apply.home:
 	@echo ""
 	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
+	@echo ""
+endif
 
 #
 # macbook
@@ -441,6 +560,7 @@ mac.apply.home:
 
 # initialize macbook
 macbook.init:
+ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)initialize macbook...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
@@ -511,9 +631,15 @@ macbook.init:
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # install shortage packages on macbook and apply configurations
 macbook.install:
+ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
@@ -538,9 +664,15 @@ macbook.install:
 	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for macbook...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # update macbook packages and apply configurations
 macbook.update:
+ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update macbook...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
@@ -565,9 +697,15 @@ macbook.update:
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for macbook...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # apply macbook system configuration
 macbook.apply.system:
+ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
 	@echo ""
@@ -575,9 +713,15 @@ macbook.apply.system:
 	@echo ""
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for macbook...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # apply macbook home configuration
 macbook.apply.home:
+ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
@@ -586,6 +730,11 @@ macbook.apply.home:
 	@echo ""
 	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for macbook...$(COLOR_RESET)"
+	@echo ""
+endif
 
 #
 # darwin (mac, macbook common)
@@ -594,6 +743,7 @@ macbook.apply.home:
 
 # update brew package list
 darwin.update.brewpkglist:
+ifeq ($(IS_DARWIN),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update brew package list...$(COLOR_RESET)"
 	@echo ""
@@ -601,9 +751,15 @@ darwin.update.brewpkglist:
 	@echo ""
 	@echo "$(COLOR_DONE)update brew package list done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for darwin platforms...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # restart services
 darwin.restart.services:
+ifeq ($(IS_DARWIN),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)restart services...$(COLOR_RESET)"
 	@echo ""
@@ -614,6 +770,11 @@ darwin.restart.services:
 	@echo ""
 	@echo "$(COLOR_DONE)restart services done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for darwin platforms...$(COLOR_RESET)"
+	@echo ""
+endif
 
 #
 # windows
@@ -654,7 +815,7 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 else
 	@echo ""
-	@echo "$(COLOR_TITLE)not on Windows, skipping windows.init...$(COLOR_RESET)"
+	@echo "$(COLOR_ERROR)this target is only for windows...$(COLOR_RESET)"
 	@echo ""
 endif
 
@@ -675,7 +836,7 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 else
 	@echo ""
-	@echo "$(COLOR_TITLE)not on Windows, skipping windows.install...$(COLOR_RESET)"
+	@echo "$(COLOR_ERROR)this target is only for windows...$(COLOR_RESET)"
 	@echo ""
 endif
 
@@ -709,7 +870,7 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 else
 	@echo ""
-	@echo "$(COLOR_TITLE)not on Windows, skipping windows.update...$(COLOR_RESET)"
+	@echo "$(COLOR_ERROR)this target is only for windows...$(COLOR_RESET)"
 	@echo ""
 endif
 
@@ -720,6 +881,7 @@ endif
 
 # check flake
 misc.check:
+ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)check flake...$(COLOR_RESET)"
 	@echo ""
@@ -727,9 +889,15 @@ misc.check:
 	@echo ""
 	@echo "$(COLOR_DONE)check done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # clean result directory
 misc.clean:
+ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)clean result directory...$(COLOR_RESET)"
 	@echo ""
@@ -737,9 +905,15 @@ misc.clean:
 	@echo ""
 	@echo "$(COLOR_DONE)clean done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # format files
 misc.format:
+ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)format files...$(COLOR_RESET)"
 	@echo ""
@@ -747,9 +921,15 @@ misc.format:
 	@echo ""
 	@echo "$(COLOR_DONE)format done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # garbage collection
 misc.gc:
+ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)garbage collection...$(COLOR_RESET)"
 	@echo ""
@@ -758,9 +938,15 @@ misc.gc:
 	@echo ""
 	@echo "$(COLOR_DONE)garbage collection done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # update flake.lock
 misc.update:
+ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)update flake.lock...$(COLOR_RESET)"
 	@echo ""
@@ -768,6 +954,11 @@ misc.update:
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
+	@echo ""
+endif
 
 # help
 .PHONY: help
