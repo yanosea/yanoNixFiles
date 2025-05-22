@@ -9,7 +9,6 @@ endif
 
 # define colors
 ifeq ($(IS_WINDOWS),1)
-	NEWLINE := "`n"
 	COLOR_TITLE := -ForegroundColor Magenta
 	COLOR_HEADER := -ForegroundColor Yellow
 	COLOR_CMD := -ForegroundColor Cyan
@@ -38,23 +37,35 @@ endif
 
 # initialize nixos
 nix.init:
+	@echo ""
 	@echo "$(COLOR_TITLE)initialize nixos...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
+	@echo ""
 	make nix.apply.system
+	@echo ""
 	@echo "$(COLOR_HEADER)initialize home...$(COLOR_RESET)"
+	@echo ""
 	make nix.apply.home
+	@echo ""
 	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
+	@echo ""
 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
+	@echo ""
 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
+	@echo ""
 	mkdir -p $$HOME/.local/bin
 	mkdir -p $$XDG_DATA_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/zsh
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
+	@echo ""
 	@echo "$(COLOR_HEADER)initialize rclone...$(COLOR_RESET)"
+	@echo ""
 	sudo mkdir -p /mnt/google_drive/yanosea
 	sudo rclone config
+	@echo ""
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
+	@echo ""
 	sudo ln -s /root/.config/rclone/rclone.conf /.rclone.conf
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/clipboard-history $$HOME/.local/bin/clipboard-history
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/ime $$HOME/.local/bin/ime
@@ -64,53 +75,91 @@ nix.init:
 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
+	@echo ""
 	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install skk jisyos...$(COLOR_RESET)"
+	@echo ""
 	jisyo d
+	@echo ""
 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
+	@echo ""
 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	@echo ""
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
+	@echo ""
 
 # install shortage packages on nixos and apply configurations
 nix.install:
+	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
+	@echo ""
 	make nix.apply.system
+	@echo ""
 	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
+	@echo ""
 	make nix.apply.home
+	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
+	@echo ""
 
 # update nixos packages and apply configurations
 nix.update:
+	@echo ""
 	@echo "$(COLOR_TITLE)update nixos...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
+	@echo ""
 	ghq list | ghq get --update
+	@echo ""
 	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
+	@echo ""
 	gup update
+	@echo ""
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
+	@echo ""
 	sheldon lock --update
+	@echo ""
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
+	@echo ""
 	make nix.install
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+	@echo ""
 
 # apply system configuration
 nix.apply.system:
+	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
+	@echo ""
 	sudo nixos-rebuild switch --flake .#yanoNixOs
+	@echo ""
 	@echo "$(COLOR_HEADER)apply system configuration done!$(COLOR_RESET)"
+	@echo ""
 
 # apply home configuration
 nix.apply.home:
+	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
+	@echo ""
 	home-manager switch --flake .#yanosea@yanoNixOs
+	@echo ""
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
+	@echo ""
 
 #
 # nixos wsl
@@ -119,8 +168,10 @@ nix.apply.home:
 
 # initialize nixos wsl
 wsl.init:
+	@echo ""
 	@echo "$(COLOR_TITLE)initialize nixos wsl...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
+	@echo ""
 	make wsl.apply.system
 	make wsl.apply.home
 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
@@ -128,17 +179,28 @@ wsl.init:
 	mkdir -p $$XDG_STATE_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/zsh
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
+	@echo ""
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
+	@echo ""
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
+	@echo ""
 	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install skk jisyos...$(COLOR_RESET)"
+	@echo ""
 	jisyo d
+	@echo ""
 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
+	@echo ""
 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	@echo ""
 	@echo "$(COLOR_HEADER)You have to create google drive symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s GOOGLE_DRIVE_PATH $$HOME/google_drive$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)You have to create credentials symbolic link like below...$(COLOR_RESET)"
@@ -150,44 +212,73 @@ wsl.init:
 	@echo "$(COLOR_HEADER)You have to create win32yank symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s WINDOWS_WIN32YANK_PATH $$HOME/.local/bin/win32yank.exe$(COLOR_RESET)"
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
+	@echo ""
 
 # install shortage packages on nixos wsl and apply configurations
 wsl.install:
+	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
+	@echo ""
 	make wsl.apply.system
+	@echo ""
 	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
+	@echo ""
 	make wsl.apply.home
+	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
+	@echo ""
 
 # update nixos wsl packages and apply configurations
 wsl.update:
+	@echo ""
 	@echo "$(COLOR_TITLE)update nixos wsl...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
+	@echo ""
 	ghq list | ghq get --update
+	@echo ""
 	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
+	@echo ""
 	gup update
+	@echo ""
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
+	@echo ""
 	sheldon lock --update
+	@echo ""
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
+	@echo ""
 	make wsl.install
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+	@echo ""
 
 # apply system configuration
 wsl.apply.system:
+	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
+	@echo ""
 	sudo nixos-rebuild switch --flake .#yanoNixOsWsl
+	@echo ""
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
+	@echo ""
 
 # apply home configuration
 wsl.apply.home:
+	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
+	@echo ""
 	home-manager switch --flake .#yanosea@yanoNixOsWsl
+	@echo ""
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
+	@echo ""
 
 #
 # mac
@@ -196,44 +287,69 @@ wsl.apply.home:
 
 # initialize mac
 mac.init:
+	@echo ""
 	@echo "$(COLOR_TITLE)initialize mac...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
+	@echo ""
 	make mac.apply.system
+	@echo ""
 	@echo "$(COLOR_HEADER)initialize home...$(COLOR_RESET)"
+	@echo ""
 	make mac.apply.home
+	@echo ""
 	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
+	@echo ""
 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
+	@echo ""
 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
+	@echo ""
 	mkdir -p $$HOME/.local/bin
 	mkdir -p $$XDG_DATA_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/zsh
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
+	@echo ""
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
+	@echo ""
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
+	@echo ""
 	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install brew pkgs...$(COLOR_RESET)"
+	@echo ""
 	xargs brew install <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install skk dictionary...$(COLOR_RESET)"
+	@echo ""
 	jisyo d
+	@echo ""
 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
+	@echo ""
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	@echo ""
 	@echo "$(COLOR_HEADER)init sketchybar...$(COLOR_RESET)"
+	@echo ""
 	cd ~/.config/sketchybar/helpers
 	make
 	cd $$HOME/ghq/github.com/yanosea/yanoNixFiles
 	curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.4/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
 	(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -fr /tmp/SbarLua/)
+	@echo ""
 	@echo "$(COLOR_HEADER)init services...$(COLOR_RESET)"
+	@echo ""
 	brew services start sketchybar
 	brew services start borders
 	skhd --start-service
 	yabai --start-service
+	@echo ""
 	@echo "$(COLOR_HEADER)You have to create google drive symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s GOOGLE_DRIVE_PATH $$HOME/google_drive$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)You have to create credentials symbolic link like below...$(COLOR_RESET)"
@@ -241,51 +357,82 @@ mac.init:
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
+	@echo ""
 
 # install shortage packages on mac and apply configurations
 mac.install:
+	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install brew shortage packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
+	@echo ""
 	make mac.apply.system
+	@echo ""
 	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
+	@echo ""
 	make mac.apply.home
+	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
+	@echo ""
 
 # update mac packages and apply configurations
 mac.update:
+	@echo ""
 	@echo "$(COLOR_TITLE)update mac...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
+	@echo ""
 	ghq list | ghq get --update
+	@echo ""
 	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
+	@echo ""
 	gup update
+	@echo ""
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
+	@echo ""
 	sheldon lock --update
+	@echo ""
 	@echo "$(COLOR_HEADER)update brew packages...$(COLOR_RESET)"
+	@echo ""
 	brew update
 	brew upgrade
 	brew cleanup
 	brew doctor
 	make mac.install
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+	@echo ""
 
 # apply mac system configuration
 mac.apply.system:
+	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
+	@echo ""
 	sudo darwin-rebuild switch --flake .#yanoMac
+	@echo ""
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
+	@echo ""
 
 # apply mac home configuration
 mac.apply.home:
+	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
+	@echo ""
 	rm -fr ~/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMac --extra-experimental-features "nix-command flakes" --impure
+	@echo ""
 	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
+	@echo ""
 
 #
 # macbook
@@ -294,43 +441,68 @@ mac.apply.home:
 
 # initialize macbook
 macbook.init:
+	@echo ""
 	@echo "$(COLOR_TITLE)initialize macbook...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
+	@echo ""
 	make macbook.apply.system
+	@echo ""
 	@echo "$(COLOR_HEADER)initialize home...$(COLOR_RESET)"
+	@echo ""
 	make macbook.apply.home
+	@echo ""
 	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
+	@echo ""
 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
+	@echo ""
 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
+	@echo ""
 	mkdir -p $$HOME/.local/bin
 	mkdir -p $$XDG_DATA_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/zsh
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
+	@echo ""
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
+	@echo ""
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
+	@echo ""
 	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install brew pkgs...$(COLOR_RESET)"
+	@echo ""
 	xargs brew install <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install skk dictionary...$(COLOR_RESET)"
+	@echo ""
 	jisyo d
+	@echo ""
 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
+	@echo ""
 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	@echo ""
 	@echo "$(COLOR_HEADER)init sketchybar...$(COLOR_RESET)"
+	@echo ""
 	cd ~/.config/sketchybar/helpers
 	make
 	cd $$HOME/ghq/github.com/yanosea/yanoNixFiles
 	curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.4/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
 	(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -fr /tmp/SbarLua/)
+	@echo ""
 	@echo "$(COLOR_HEADER)init services...$(COLOR_RESET)"
+	@echo ""
 	brew services start sketchybar
 	brew services start borders
 	skhd --start-service
 	yabai --start-service
+	@echo ""
 	@echo "$(COLOR_HEADER)You have to create google drive symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s GOOGLE_DRIVE_PATH $$HOME/google_drive$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)You have to create credentials symbolic link like below...$(COLOR_RESET)"
@@ -338,51 +510,82 @@ macbook.init:
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
+	@echo ""
 
 # install shortage packages on macbook and apply configurations
 macbook.install:
+	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)install brew shortage packages...$(COLOR_RESET)"
+	@echo ""
 	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
+	@echo ""
 	make macbook.apply.system
+	@echo ""
 	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
+	@echo ""
 	make macbook.apply.home
+	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
+	@echo ""
 
 # update macbook packages and apply configurations
 macbook.update:
+	@echo ""
 	@echo "$(COLOR_TITLE)update macbook...$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
+	@echo ""
 	ghq list | ghq get --update
+	@echo ""
 	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
+	@echo ""
 	gup update
+	@echo ""
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
+	@echo ""
 	sheldon lock --update
+	@echo ""
 	@echo "$(COLOR_HEADER)update brew packages...$(COLOR_RESET)"
+	@echo ""
 	brew update
 	brew upgrade
 	brew cleanup
 	brew doctor
 	make macbook.install
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+	@echo ""
 
 # apply macbook system configuration
 macbook.apply.system:
+	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
+	@echo ""
 	sudo darwin-rebuild switch --flake .#yanoMacBook
+	@echo ""
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
+	@echo ""
 
 # apply macbook home configuration
 macbook.apply.home:
+	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
+	@echo ""
 	rm -fr ~/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMacBook
+	@echo ""
 	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
+	@echo ""
 
 #
 # darwin (mac, macbook common)
@@ -391,18 +594,26 @@ macbook.apply.home:
 
 # update brew package list
 darwin.update.brewpkglist:
+	@echo ""
 	@echo "$(COLOR_TITLE)update brew package list...$(COLOR_RESET)"
+	@echo ""
 	brew leaves >pkglist/brew/pkglist.txt && brew list --cask >>pkglist/brew/pkglist.txt
+	@echo ""
 	@echo "$(COLOR_DONE)update brew package list done!$(COLOR_RESET)"
+	@echo ""
 
 # restart services
 darwin.restart.services:
+	@echo ""
 	@echo "$(COLOR_TITLE)restart services...$(COLOR_RESET)"
+	@echo ""
 	yabai --restart-service
 	skhd --restart-service
 	brew services restart borders
 	brew services restart sketchybar
+	@echo ""
 	@echo "$(COLOR_DONE)restart services done!$(COLOR_RESET)"
+	@echo ""
 
 #
 # windows
@@ -412,56 +623,94 @@ darwin.restart.services:
 # initialize windows
 windows.init:
 ifeq ($(IS_WINDOWS),1)
-	@Write-Host "initialize windows...$(NEWLINE)" $(COLOR_TITLE)
-	@Write-Host "install pwsh...$(NEWLINE)" $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "initialize windows..." $(COLOR_TITLE)
+	@Write-Host "install pwsh..." $(COLOR_HEADER)
+	@Write-Host ""
 	winget install Microsoft.PowerShell
-	@Write-Host "install git...$(NEWLINE)" $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "install git..." $(COLOR_HEADER)
+	@Write-Host ""
 	winget install git
-	@Write-Host "install scoop...$(NEWLINE)" $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "install scoop..." $(COLOR_HEADER)
+	@Write-Host ""
 	Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 	Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-	@Write-Host "install ghq...$(NEWLINE)" $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "install ghq..." $(COLOR_HEADER)
+	@Write-Host ""
 	scoop install ghq
-	@Write-Host "install ghq repos..." -ForegroundColor Yellow
+	@Write-Host ""
+	@Write-Host "install ghq repos..." $(COLOR_HEADER)
+	@Write-Host ""
 	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_ }
-	@Write-Host "install winget packages..." $(NEWLINE) $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "install winget packages..." $(COLOR_HEADER)
+	@Write-Host ""
 	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
-	@Write-Host "initialize windows done!" $(NEWLINE) $(COLOR_DONE)
+	@Write-Host ""
+	@Write-Host "initialize windows done!" $(COLOR_DONE)
+	@Write-Host ""
 else
+	@echo ""
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.init...$(COLOR_RESET)"
+	@echo ""
 endif
 
 # install shortage packages on windows and apply configurations
 windows.install:
 ifeq ($(IS_WINDOWS),1)
-	@Write-Host "install shortage packages...$(NEWLINE)" $(COLOR_TITLE)
-	@Write-Host "clone ghq shortage repos..." $(NEWLINE) $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "install shortage packages..." $(COLOR_TITLE)
+	@Write-Host "clone ghq shortage repos..." $(COLOR_HEADER)
+	@Write-Host ""
 	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_ }
-	@Write-Host "install winget shortage packages..." $(NEWLINE) $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "install winget shortage packages..." $(COLOR_HEADER)
+	@Write-Host ""
 	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
-	@Write-Host "install shortage packages done!" $(NEWLINE) $(COLOR_DONE)
+	@Write-Host ""
+	@Write-Host "install shortage packages done!" $(COLOR_DONE)
+	@Write-Host ""
 else
+	@echo ""
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.install...$(COLOR_RESET)"
+	@echo ""
 endif
 
 # update windows
 windows.update:
 ifeq ($(IS_WINDOWS),1)
-	@Write-Host "update windows...$(NEWLINE)" $(COLOR_TITLE)
-	@Write-Host "sync ghq repos...$(NEWLINE)" $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "update windows..." $(COLOR_TITLE)
+	@Write-Host "sync ghq repos..." $(COLOR_HEADER)
+	@Write-Host ""
 	ghq list | ghq get --update
-	@Write-Host "update winget packages...$(NEWLINE)" $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "update winget packages..." $(COLOR_HEADER)
+	@Write-Host ""
 	winget upgrade --silent --all
-	@Write-Host "update scoop...$(NEWLINE)" $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "update scoop..." $(COLOR_HEADER)
+	@Write-Host ""
 	scoop update
-	@Write-Host "install new packages..." $(NEWLINE) $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "install new packages..." $(COLOR_HEADER)
+	@Write-Host ""
 	make windows.install
-	@Write-Host "export winget packages..." $(NEWLINE) $(COLOR_HEADER)
+	@Write-Host ""
+	@Write-Host "export winget packages..." $(COLOR_HEADER)
+	@Write-Host ""
 	winget export -o "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
 	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json" | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' | Set-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	@Write-Host ""
 	@Write-Host "update done!" $(COLOR_DONE)
+	@Write-Host ""
 else
+	@echo ""
 	@echo "$(COLOR_TITLE)not on Windows, skipping windows.update...$(COLOR_RESET)"
+	@echo ""
 endif
 
 #
@@ -471,38 +720,59 @@ endif
 
 # check flake
 misc.check:
+	@echo ""
 	@echo "$(COLOR_TITLE)check flake...$(COLOR_RESET)"
+	@echo ""
 	nix flake check
+	@echo ""
 	@echo "$(COLOR_DONE)check done!$(COLOR_RESET)"
+	@echo ""
 
 # clean result directory
 misc.clean:
+	@echo ""
 	@echo "$(COLOR_TITLE)clean result directory...$(COLOR_RESET)"
+	@echo ""
 	rm -fr result
+	@echo ""
 	@echo "$(COLOR_DONE)clean done!$(COLOR_RESET)"
+	@echo ""
 
 # format files
 misc.format:
+	@echo ""
 	@echo "$(COLOR_TITLE)format files...$(COLOR_RESET)"
+	@echo ""
 	treefmt
+	@echo ""
 	@echo "$(COLOR_DONE)format done!$(COLOR_RESET)"
+	@echo ""
 
 # garbage collection
 misc.gc:
+	@echo ""
 	@echo "$(COLOR_TITLE)garbage collection...$(COLOR_RESET)"
+	@echo ""
 	sudo nix profile wipe-history
 	sudo nix store gc
+	@echo ""
 	@echo "$(COLOR_DONE)garbage collection done!$(COLOR_RESET)"
+	@echo ""
 
 # update flake.lock
 misc.update:
+	@echo ""
 	@echo "$(COLOR_TITLE)update flake.lock...$(COLOR_RESET)"
+	@echo ""
 	nix flake update
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+	@echo ""
 
 # help
 .PHONY: help
 help:
+	@echo ""
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
 	@echo "$(COLOR_HEADER)  [for NixOS]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)nix.init$(COLOR_RESET)                   - initialize yanoNixOs config"
@@ -547,3 +817,4 @@ help:
 	@echo "    $(COLOR_CMD)misc.format$(COLOR_RESET)                - run treefmt"
 	@echo "    $(COLOR_CMD)misc.gc$(COLOR_RESET)                    - run nix garbage collection"
 	@echo "    $(COLOR_CMD)misc.update$(COLOR_RESET)                - update flake.lock file"
+	@echo ""
