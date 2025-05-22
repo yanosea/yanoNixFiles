@@ -966,6 +966,7 @@ help:
 ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)  [for NixOS]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)nix.init$(COLOR_RESET)            - initialize yanoNixOs config"
 	@echo "    $(COLOR_CMD)nix.install$(COLOR_RESET)         - install all yanoNixOs packages"
@@ -984,6 +985,7 @@ endif
 ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)  [for NixOS WSL]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)wsl.init$(COLOR_RESET)            - initialize yanoNixOsWsl configuration"
 	@echo "    $(COLOR_CMD)wsl.install$(COLOR_RESET)         - install yanoNixOsWsl packages"
@@ -1002,6 +1004,7 @@ endif
 ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)  [for mac]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)mac.init$(COLOR_RESET)                     - initialize yanoMac configuration"
 	@echo "    $(COLOR_CMD)mac.install$(COLOR_RESET)                  - install yanoMac packages"
@@ -1024,6 +1027,7 @@ endif
 ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)  [for macbook]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)macbook.init$(COLOR_RESET)                 - initialize yanoMacBook configuration"
 	@echo "    $(COLOR_CMD)macbook.install$(COLOR_RESET)              - install yanoMacBook packages"
@@ -1046,6 +1050,7 @@ endif
 ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	@Write-Host "available targets:" $(COLOR_TITLE)
+	@Write-Host ""
 	@Write-Host "[for Windows]" $(COLOR_HEADER)
 	@Write-Host "    windows.init       - initialize yanoWindows configuration" $(COLOR_CMD)
 	@Write-Host "    windows.install    - install yanoWindows packages" $(COLOR_CMD)
