@@ -17,8 +17,7 @@
     sessionVariables = {
       ZDOTDIR = "${homePath}/${username}/.config/zsh";
     };
-    # this is not latest but ok because this option have to set the first version of Nix configured for me
-    stateVersion = "24.05";
+    stateVersion = "24.05"; # DO NOT CHANGE
     username = username;
   };
   # programs

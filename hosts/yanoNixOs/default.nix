@@ -103,10 +103,6 @@
       };
     };
   };
-  # system
-  system = {
-    stateVersion = "24.11";
-  };
   # time
   time = {
     hardwareClockInLocalTime = true;
