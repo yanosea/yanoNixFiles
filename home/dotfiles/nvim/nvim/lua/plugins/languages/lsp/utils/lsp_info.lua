@@ -37,7 +37,7 @@ function M.setup()
 					return result
 				end
 			end
-			local paths = vim.split(vim.fn.getenv("PATH"), ":")
+			local paths = vim.split(vim.env.PATH, ":")
 			for _, path in ipairs(paths) do
 				local full_path = path .. "/" .. cmd
 				if vim.fn.executable(full_path) == 1 then

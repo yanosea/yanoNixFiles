@@ -3,7 +3,7 @@ require("config.options")
 require("config.keymaps")
 require("config.autocmds")
 -- load wsl config if running in WSL
-if os.getenv("WSL_DISTRO_NAME") ~= nil then
+if vim.env.WSL_DISTRO_NAME ~= nil then
 	require("config.wsl")
 end
 -- plugin manager

@@ -160,7 +160,7 @@ return {
 			-- define the function to get the python environment
 			local function get_python_env()
 				if vim.bo.filetype == "python" then
-					local venv = os.getenv("CONDA_DEFAULT_ENV") or os.getenv("VIRTUAL_ENV")
+					local venv = vim.env.CONDA_DEFAULT_ENV or vim.env.VIRTUAL_ENV
 					if venv then
 						local devicons = require("nvim-web-devicons")
 						local py_icon, _ = devicons.get_icon(".py")

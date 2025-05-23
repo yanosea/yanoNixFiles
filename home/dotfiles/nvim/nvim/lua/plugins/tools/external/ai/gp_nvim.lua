@@ -32,8 +32,10 @@ return {
 						disable = true,
 					},
 				},
-				state_dir = os.getenv("XDG_STATE_HOME") .. "/gp-nvim/persisted",
-				chat_dir = os.getenv("GOOGLE_DRIVE") .. "/gp-nvim/chats",
+				state_dir = vim.env.XDG_STATE_HOME and (vim.env.XDG_STATE_HOME .. "/gp-nvim/persisted")
+					or "~/.local/share/gp-nvim/persisted",
+				chat_dir = vim.env.GOOGLE_DRIVE and (vim.env.GOOGLE_DRIVE .. "/gp-nvim/chats")
+					or "~/.local/share/gp-nvim/chats",
 			})
 		end,
 	},

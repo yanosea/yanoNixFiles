@@ -15,6 +15,23 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 		os.exit(1)
 	end
 end
+-- get plugin spec with IS_FLOATING_VIM env var
+local function get_plugin_spec()
+	-- path from `$XDG_CONFIG_HOME/nvim/lua/init.lua`
+	if vim.env.IS_FLOATING_VIM == "1" then
+		-- load only a plugin for floating vim (ime use)
+		return { { import = "plugins.ime" } }
+	else
+		-- load all plugins
+		return {
+			{ import = "plugins.editor" },
+			{ import = "plugins.ime" },
+			{ import = "plugins.tools" },
+			{ import = "plugins.ui" },
+			{ import = "plugins.languages" },
+		}
+	end
+end
 -- add lazy.nvim to runtimepath
 vim.opt.rtp:prepend(lazypath)
 -- lazy.nvim plugin manager config
@@ -27,10 +44,7 @@ require("lazy").setup({
 		version = false,
 	},
 	-- load plugins
-	spec = {
-		-- path from `$XDG_CONFIG_HOME/nvim/lua/init.lua
-		{ import = "plugins" },
-	},
+	spec = get_plugin_spec(),
 	-- plugin installation behavior
 	install = {
 		-- habamax is the default theme

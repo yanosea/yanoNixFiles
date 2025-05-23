@@ -51,7 +51,7 @@ vim.opt.shiftwidth = 2 -- number of spaces to use for auto indent
 vim.opt.splitbelow = true -- put new windows below the current one
 vim.opt.splitright = true -- put new windows to the right of the current one
 -- set shell to the user's default shell
-vim.opt.shell = os.getenv("SHELL") or "bash"
+vim.opt.shell = vim.env.SHELL or "bash"
 -- enable syntax highlighting
 vim.opt.syntax = "enable"
 -- enable system clipboard
