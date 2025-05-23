@@ -22,7 +22,6 @@
     ../../modules/programs/nix-ld.nix
     ../../modules/programs/shell.nix
     ../../modules/programs/steam.nix
-    ../../modules/programs/xserver.nix
   ] ++ (with inputs.nixos-hardware.nixosModules; [ common-pc-ssd ]);
   # boot
   boot = {
@@ -43,6 +42,14 @@
       };
     };
   };
+  # environment
+  environment = {
+    variables = {
+      LIBVA_DRIVER_NAME = "nvidia";
+      VDPAU_DRIVER = "nvidia";
+      CHROMIUM_FLAGS = "--enable-features=VaapiVideoDecoder --disable-features=UseChromeOSDirectVideoDecoder";
+    };
+  };
   # hardware
   hardware = {
     bluetooth = {
@@ -50,6 +57,16 @@
     };
     graphics = {
       enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        vaapiVdpau
+        libvdpau-va-gl
+        nvidia-vaapi-driver
+      ];
+      extraPackages32 = with pkgs; [
+        vaapiVdpau
+        libvdpau-va-gl
+      ];
     };
     nvidia = {
       forceFullCompositionPipeline = true;
