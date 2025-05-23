@@ -22,7 +22,7 @@ elseif string.find(target, "darwin") then
 	ctrl_key = "CTRL"
 elseif string.find(target, "linux") then
 	default_domain = "local"
-	font_size = 11
+	font_size = 10
 	ctrl_key = "CTRL"
 end
 -- style
