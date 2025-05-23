@@ -74,12 +74,6 @@ let
       };
       extraSpecialArgs = {
         inherit homePath inputs username;
-        pkgs-stable = import inputs.nixpkgs-stable {
-          inherit system;
-          config = {
-            allowUnfree = true;
-          };
-        };
       };
       modules = modules ++ [
         {

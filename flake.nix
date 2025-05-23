@@ -5,9 +5,6 @@
     nixpkgs = {
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
-    nixpkgs-stable = {
-      url = "github:nixos/nixpkgs/nixos-24.11";
-    };
     # modules
     ## nixos hardware
     nixos-hardware = {
