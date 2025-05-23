@@ -62,20 +62,21 @@ endif
 #
 # nixos
 #
-.PHONY: nix.init nix.install nix.update nix.apply.system nix.apply.home
+.PHONY: nixos.init nixos.install nixos.update nixos.apply.system nixos.apply.home
 
 # initialize nixos
-nix.init:
+nixos.init:
 ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)initialize nixos...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
 	@echo ""
-	make nix.apply.system
+	make nixos.apply.system
 	@echo ""
 	@echo "$(COLOR_HEADER)initialize home...$(COLOR_RESET)"
 	@echo ""
-	make nix.apply.home
+	make nixos.apply.home
 	@echo ""
 	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
 	@echo ""
@@ -131,10 +132,11 @@ else
 endif
 
 # install shortage packages on nixos and apply configurations
-nix.install:
+nixos.install:
 ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
 	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
@@ -143,13 +145,13 @@ ifeq ($(IS_NIXOS),1)
 	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
 	@echo ""
-	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)apply system...$(COLOR_RESET)"
 	@echo ""
-	make nix.apply.system
+	make nixos.apply.system
 	@echo ""
 	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
 	@echo ""
-	make nix.apply.home
+	make nixos.apply.home
 	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
 	@echo ""
@@ -160,10 +162,11 @@ else
 endif
 
 # update nixos packages and apply configurations
-nix.update:
+nixos.update:
 ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update nixos...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
 	@echo ""
 	ghq list | ghq get --update
@@ -178,7 +181,15 @@ ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	@echo ""
-	make nix.install
+	make nixos.install
+	@echo ""
+	@echo "$(COLOR_HEADER)update ghq package list...$(COLOR_RESET)"
+	@echo ""
+	make misc.update.ghqpkglist
+	@echo ""
+	@echo "$(COLOR_HEADER)update go package list...$(COLOR_RESET)"
+	@echo ""
+	make misc.update.gopkglist
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
@@ -189,14 +200,14 @@ else
 endif
 
 # apply system configuration
-nix.apply.system:
+nixos.apply.system:
 ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
 	@echo ""
 	sudo nixos-rebuild switch --flake .#yanoNixOs
 	@echo ""
-	@echo "$(COLOR_HEADER)apply system configuration done!$(COLOR_RESET)"
+	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
 	@echo ""
 else
 	@echo ""
@@ -205,7 +216,7 @@ else
 endif
 
 # apply home configuration
-nix.apply.home:
+nixos.apply.home:
 ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
@@ -223,18 +234,28 @@ endif
 #
 # nixos wsl
 #
-.PHONY: wsl.init wsl.install wsl.update wsl.apply.system wsl.apply.home
+.PHONY: nixoswsl.init nixoswsl.install nixoswsl.update nixoswsl.apply.system nixoswsl.apply.home
 
 # initialize nixos wsl
-wsl.init:
+nixoswsl.init:
 ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)initialize nixos wsl...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
 	@echo ""
-	make wsl.apply.system
-	make wsl.apply.home
+	make nixoswsl.apply.system
+	@echo ""
+	@echo "$(COLOR_HEADER)initialize home...$(COLOR_RESET)"
+	@echo ""
+	make nixoswsl.apply.home
+	@echo ""
+	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
+	@echo ""
 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
+	@echo ""
+	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
+	@echo ""
 	mkdir -p $$XDG_DATA_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/zsh
@@ -263,14 +284,18 @@ ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_HEADER)You have to create google drive symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s GOOGLE_DRIVE_PATH $$HOME/google_drive$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)You have to create credentials symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)You have to create windows home symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s WINDOWS_HOME_PATH $$HOME/windows_home/$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)You have to create win32yank symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s WINDOWS_WIN32YANK_PATH $$HOME/.local/bin/win32yank.exe$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 	@echo ""
 else
@@ -280,10 +305,11 @@ else
 endif
 
 # install shortage packages on nixos wsl and apply configurations
-wsl.install:
+nixoswsl.install:
 ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
 	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
@@ -292,13 +318,13 @@ ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
 	@echo ""
-	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)apply system...$(COLOR_RESET)"
 	@echo ""
-	make wsl.apply.system
+	make nixoswsl.apply.system
 	@echo ""
 	@echo "$(COLOR_HEADER)apply home...$(COLOR_RESET)"
 	@echo ""
-	make wsl.apply.home
+	make nixoswsl.apply.home
 	@echo ""
 	@echo "$(COLOR_DONE)install shortage packages done!$(COLOR_RESET)"
 	@echo ""
@@ -309,10 +335,11 @@ else
 endif
 
 # update nixos wsl packages and apply configurations
-wsl.update:
+nixoswsl.update:
 ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update nixos wsl...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
 	@echo ""
 	ghq list | ghq get --update
@@ -327,7 +354,15 @@ ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	@echo ""
-	make wsl.install
+	make nixoswsl.install
+	@echo ""
+	@echo "$(COLOR_HEADER)update ghq package list...$(COLOR_RESET)"
+	@echo ""
+	make misc.update.ghqpkglist
+	@echo ""
+	@echo "$(COLOR_HEADER)update go package list...$(COLOR_RESET)"
+	@echo ""
+	make misc.update.gopkglist
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
@@ -338,7 +373,7 @@ else
 endif
 
 # apply system configuration
-wsl.apply.system:
+nixoswsl.apply.system:
 ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply system configuration...$(COLOR_RESET)"
@@ -354,7 +389,7 @@ else
 endif
 
 # apply home configuration
-wsl.apply.home:
+nixoswsl.apply.home:
 ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
@@ -379,6 +414,7 @@ mac.init:
 ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)initialize mac...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
 	@echo ""
 	make mac.apply.system
@@ -422,7 +458,6 @@ ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
 	@echo ""
-	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	@echo ""
 	@echo "$(COLOR_HEADER)init sketchybar...$(COLOR_RESET)"
@@ -430,7 +465,7 @@ ifeq ($(IS_MAC),1)
 	cd ~/.config/sketchybar/helpers
 	make
 	cd $$HOME/ghq/github.com/yanosea/yanoNixFiles
-	curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.4/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
+	curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.4/sketchybar-app-font.ttf -o $$HOME/Library/Fonts/sketchybar-app-font.ttf
 	(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -fr /tmp/SbarLua/)
 	@echo ""
 	@echo "$(COLOR_HEADER)init services...$(COLOR_RESET)"
@@ -442,10 +477,12 @@ ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_HEADER)You have to create google drive symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s GOOGLE_DRIVE_PATH $$HOME/google_drive$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)You have to create credentials symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 	@echo ""
 else
@@ -459,6 +496,7 @@ mac.install:
 ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
 	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
@@ -471,7 +509,7 @@ ifeq ($(IS_MAC),1)
 	@echo ""
 	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
 	@echo ""
-	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)apply system...$(COLOR_RESET)"
 	@echo ""
 	make mac.apply.system
 	@echo ""
@@ -492,6 +530,7 @@ mac.update:
 ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update mac...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
 	@echo ""
 	ghq list | ghq get --update
@@ -510,7 +549,26 @@ ifeq ($(IS_MAC),1)
 	brew upgrade
 	brew cleanup
 	brew doctor
+	@echo ""
+	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
+	@echo ""
 	make mac.install
+	@echo ""
+	@echo "$(COLOR_HEADER)update ghq package list...$(COLOR_RESET)"
+	@echo ""
+	make misc.update.ghqpkglist
+	@echo ""
+	@echo "$(COLOR_HEADER)update go package list...$(COLOR_RESET)"
+	@echo ""
+	make misc.update.gopkglist
+	@echo ""
+	@echo "$(COLOR_HEADER)update brew package list...$(COLOR_RESET)"
+	@echo ""
+	make darwin.update.brewpkglist
+	@echo ""
+	@echo "$(COLOR_HEADER)restart services...$(COLOR_RESET)"
+	@echo ""
+	make darwin.restart.services
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
@@ -545,7 +603,7 @@ ifeq ($(IS_MAC),1)
 	rm -fr ~/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMac --extra-experimental-features "nix-command flakes" --impure
 	@echo ""
-	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
+	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 	@echo ""
 else
 	@echo ""
@@ -563,6 +621,7 @@ macbook.init:
 ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)initialize macbook...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)initialize system...$(COLOR_RESET)"
 	@echo ""
 	make macbook.apply.system
@@ -613,7 +672,7 @@ ifeq ($(IS_MACBOOK),1)
 	cd ~/.config/sketchybar/helpers
 	make
 	cd $$HOME/ghq/github.com/yanosea/yanoNixFiles
-	curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.4/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
+	curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v1.0.4/sketchybar-app-font.ttf -o $$HOME/Library/Fonts/sketchybar-app-font.ttf
 	(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -fr /tmp/SbarLua/)
 	@echo ""
 	@echo "$(COLOR_HEADER)init services...$(COLOR_RESET)"
@@ -625,15 +684,17 @@ ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_HEADER)You have to create google drive symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s GOOGLE_DRIVE_PATH $$HOME/google_drive$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)You have to create credentials symbolic link like below...$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json$(COLOR_RESET)"
 	@echo "$(COLOR_CMD)ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 	@echo ""
 else
 	@echo ""
-	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
+	@echo "$(COLOR_ERROR)this target is only for macbook...$(COLOR_RESET)"
 	@echo ""
 endif
 
@@ -642,6 +703,7 @@ macbook.install:
 ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
 	@echo ""
 	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
@@ -654,7 +716,7 @@ ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
 	@echo ""
-	@echo "$(COLOR_HEADER)apply nix...$(COLOR_RESET)"
+	@echo "$(COLOR_HEADER)apply system...$(COLOR_RESET)"
 	@echo ""
 	make macbook.apply.system
 	@echo ""
@@ -675,6 +737,7 @@ macbook.update:
 ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update macbook...$(COLOR_RESET)"
+	@echo ""
 	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
 	@echo ""
 	ghq list | ghq get --update
@@ -693,7 +756,26 @@ ifeq ($(IS_MACBOOK),1)
 	brew upgrade
 	brew cleanup
 	brew doctor
+	@echo ""
+	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
+	@echo ""
 	make macbook.install
+	@echo ""
+	@echo "$(COLOR_HEADER)update ghq package list...$(COLOR_RESET)"
+	@echo ""
+	make misc.update.ghqpkglist
+	@echo ""
+	@echo "$(COLOR_HEADER)update go package list...$(COLOR_RESET)"
+	@echo ""
+	make misc.update.gopkglist
+	@echo ""
+	@echo "$(COLOR_HEADER)update brew package list...$(COLOR_RESET)"
+	@echo ""
+	make darwin.update.brewpkglist
+	@echo ""
+	@echo "$(COLOR_HEADER)restart services...$(COLOR_RESET)"
+	@echo ""
+	make darwin.restart.services
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
@@ -728,7 +810,7 @@ ifeq ($(IS_MACBOOK),1)
 	rm -fr ~/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMacBook
 	@echo ""
-	@echo "$(COLOR_HEADER)apply home configuration done!$(COLOR_RESET)"
+	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 	@echo ""
 else
 	@echo ""
@@ -779,13 +861,14 @@ endif
 #
 # windows
 #
-.PHONY: windows.init windows.install windows.update
+.PHONY: windows.init windows.install windows.update windows.update.wingetpkglist
 
 # initialize windows
 windows.init:
 ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	@Write-Host "initialize windows..." $(COLOR_TITLE)
+	@Write-Host ""
 	@Write-Host "install pwsh..." $(COLOR_HEADER)
 	@Write-Host ""
 	winget install Microsoft.PowerShell
@@ -824,6 +907,7 @@ windows.install:
 ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	@Write-Host "install shortage packages..." $(COLOR_TITLE)
+	@Write-Host ""
 	@Write-Host "clone ghq shortage repos..." $(COLOR_HEADER)
 	@Write-Host ""
 	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_ }
@@ -845,6 +929,7 @@ windows.update:
 ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	@Write-Host "update windows..." $(COLOR_TITLE)
+	@Write-Host ""
 	@Write-Host "sync ghq repos..." $(COLOR_HEADER)
 	@Write-Host ""
 	ghq list | ghq get --update
@@ -861,10 +946,17 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	make windows.install
 	@Write-Host ""
+	@Write-Host "update ghq package list..." $(COLOR_HEADER)
+	@Write-Host ""
+	make misc.update.ghqpkglist
+	@Write-Host ""
+	@Write-Host "update go packages..." $(COLOR_HEADER)
+	@Write-Host ""
+	make misc.update.gopkglist
+	@Write-Host ""
 	@Write-Host "export winget packages..." $(COLOR_HEADER)
 	@Write-Host ""
-	winget export -o "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
-	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json" | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' | Set-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	make windows.update.wingetpkglist
 	@Write-Host ""
 	@Write-Host "update done!" $(COLOR_DONE)
 	@Write-Host ""
@@ -874,13 +966,30 @@ else
 	@echo ""
 endif
 
-#
-# misc
-#
-.PHONY: misc.check misc.clean misc.format misc.gc.user misc.gc.system misc.update
+# update winget package list
+windows.update.wingetpkglist:
+ifeq ($(IS_WINDOWS),1)
+	@Write-Host ""
+	@Write-Host "update winget package list..." $(COLOR_TITLE)
+	@Write-Host ""
+	winget export -o "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json" | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' | Set-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	@Write-Host ""
+	@Write-Host "update winget package list done!" $(COLOR_DONE)
+	@Write-Host ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for windows...$(COLOR_RESET)"
+	@echo ""
+endif
 
-# check flake
-misc.check:
+#
+# nix
+#
+.PHONY: nix.check nix.clean nix.format nix.gc.user nix.gc.system nix.update all clean test
+
+# nix check flake
+nix.check:
 ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)check flake...$(COLOR_RESET)"
@@ -895,8 +1004,8 @@ else
 	@echo ""
 endif
 
-# clean result directory
-misc.clean:
+# nix clean result directory
+nix.clean:
 ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)clean result directory...$(COLOR_RESET)"
@@ -911,8 +1020,8 @@ else
 	@echo ""
 endif
 
-# format files
-misc.format:
+# nix format files
+nix.format:
 ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)format files...$(COLOR_RESET)"
@@ -927,8 +1036,8 @@ else
 	@echo ""
 endif
 
-# garbage collection (system)
-misc.gc.system:
+# nix garbage collection (system)
+nix.gc.system:
 ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)garbage collection (system)...$(COLOR_RESET)"
@@ -944,8 +1053,8 @@ else
 	@echo ""
 endif
 
-# garbage collection (user)
-misc.gc.user:
+# nix garbage collection (user)
+nix.gc.user:
 ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)garbage collection (user)...$(COLOR_RESET)"
@@ -961,8 +1070,8 @@ else
 	@echo ""
 endif
 
-# update flake.lock
-misc.update:
+# nix update flake.lock
+nix.update:
 ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "$(COLOR_TITLE)update flake.lock...$(COLOR_RESET)"
@@ -977,6 +1086,58 @@ else
 	@echo ""
 endif
 
+# required phony targets for standards
+all: help
+clean: nix.clean
+test: nix.check
+
+#
+# misc
+#
+.PHONY: misc.update.ghqpkglist misc.update.gopkglist
+
+# update ghq package list
+.PHONY: misc.update.ghqpkglist
+misc.update.ghqpkglist:
+ifeq ($(IS_WINDOWS),0)
+	@echo ""
+	@echo "$(COLOR_TITLE)update ghq package list...$(COLOR_RESET)"
+	@echo ""
+	ghq list | sort > pkglist/ghq/pkglist.txt
+	@echo ""
+	@echo "$(COLOR_DONE)update ghq package list done!$(COLOR_RESET)"
+	@echo ""
+else
+	@Write-Host ""
+	@Write-Host "update ghq package list..." $(COLOR_TITLE)
+	@Write-Host ""
+	ghq list | Sort-Object > pkglist/ghq/pkglist.txt
+	@Write-Host ""
+	@Write-Host "update ghq package list done!" $(COLOR_DONE)
+	@Write-Host ""
+endif
+
+# update go package list
+.PHONY: misc.update.gopkglist
+misc.update.gopkglist:
+ifeq ($(IS_WINDOWS),0)
+	@echo ""
+	@echo "$(COLOR_TITLE)update go package list...$(COLOR_RESET)"
+	@echo ""
+	gup list | awk '{print $$2}' | sed 's/@v.*/@latest/' | sort > pkglist/go/pkglist.txt
+	@echo ""
+	@echo "$(COLOR_DONE)update go package list done!$(COLOR_RESET)"
+	@echo ""
+else
+	@Write-Host ""
+	@Write-Host "update go package list..." $(COLOR_TITLE)
+	@Write-Host ""
+	gup list | ForEach-Object { ($$_ -split ": ")[1] } | ForEach-Object { $$_ -replace "@v.*", "@latest" } | Sort-Object > pkglist/go/pkglist.txt
+	@Write-Host ""
+	@Write-Host "update go package list done!" $(COLOR_DONE)
+	@Write-Host ""
+endif
+
 # help
 .PHONY: help
 help:
@@ -984,38 +1145,48 @@ ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)  [for NixOS]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)nix.init$(COLOR_RESET)            - initialize yanoNixOs config"
-	@echo "    $(COLOR_CMD)nix.install$(COLOR_RESET)         - install all yanoNixOs packages"
-	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)          - update whole yanoNixOs (settings, packages)"
-	@echo "    $(COLOR_CMD)nix.apply.system$(COLOR_RESET)    - apply yanoNixOs system configuration"
-	@echo "    $(COLOR_CMD)nix.apply.home$(COLOR_RESET)      - apply yanoNixOs home configuration"
+	@echo "$(COLOR_HEADER)  [for nixos]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)nixos.init$(COLOR_RESET)                - initialize yanoNixOs config"
+	@echo "    $(COLOR_CMD)nixos.install$(COLOR_RESET)             - install all yanoNixOs packages"
+	@echo "    $(COLOR_CMD)nixos.update$(COLOR_RESET)              - update whole yanoNixOs (settings, packages)"
+	@echo "    $(COLOR_CMD)nixos.apply.system$(COLOR_RESET)        - apply yanoNixOs system configuration"
+	@echo "    $(COLOR_CMD)nixos.apply.home$(COLOR_RESET)          - apply yanoNixOs home configuration"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)                 - check configuration"
+	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)                 - remove result directory"
+	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)                - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)             - run nix garbage collection (system)"
+	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)               - run nix garbage collection (user)"
+	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                - update flake.lock file"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [miscellaneous]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)misc.check$(COLOR_RESET)          - check configuration"
-	@echo "    $(COLOR_CMD)misc.clean$(COLOR_RESET)          - remove result directory"
-	@echo "    $(COLOR_CMD)misc.format$(COLOR_RESET)         - run treefmt"
-	@echo "    $(COLOR_CMD)misc.gc$(COLOR_RESET)             - run nix garbage collection"
-	@echo "    $(COLOR_CMD)misc.update$(COLOR_RESET)         - update flake.lock file"
+	@echo "    $(COLOR_CMD)misc.update.ghqpkglist$(COLOR_RESET)    - update ghq package list"
+	@echo "    $(COLOR_CMD)misc.update.gopkglist$(COLOR_RESET)     - update go package list"
 	@echo ""
 endif
 ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)  [for NixOS WSL]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)wsl.init$(COLOR_RESET)            - initialize yanoNixOsWsl configuration"
-	@echo "    $(COLOR_CMD)wsl.install$(COLOR_RESET)         - install yanoNixOsWsl packages"
-	@echo "    $(COLOR_CMD)wsl.update$(COLOR_RESET)          - update whole yanoNixOsWsl (settings, packages)"
-	@echo "    $(COLOR_CMD)wsl.apply.system$(COLOR_RESET)    - apply yanoNixOsWsl system configuration"
-	@echo "    $(COLOR_CMD)wsl.apply.home$(COLOR_RESET)      - apply yanoNixOsWsl home configuration"
+	@echo "$(COLOR_HEADER)  [for nixos wsl]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)nixoswsl.init$(COLOR_RESET)             - initialize yanoNixOsWsl configuration"
+	@echo "    $(COLOR_CMD)nixoswsl.install$(COLOR_RESET)          - install yanoNixOsWsl packages"
+	@echo "    $(COLOR_CMD)nixoswsl.update$(COLOR_RESET)           - update whole yanoNixOsWsl (settings, packages)"
+	@echo "    $(COLOR_CMD)nixoswsl.apply.system$(COLOR_RESET)     - apply yanoNixOsWsl system configuration"
+	@echo "    $(COLOR_CMD)nixoswsl.apply.home$(COLOR_RESET)       - apply yanoNixOsWsl home configuration"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)                 - check configuration"
+	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)                 - remove result directory"
+	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)                - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)             - run nix garbage collection (system)"
+	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)               - run nix garbage collection (user)"
+	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                - update flake.lock file"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [miscellaneous]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)misc.check$(COLOR_RESET)          - check configuration"
-	@echo "    $(COLOR_CMD)misc.clean$(COLOR_RESET)          - remove result directory"
-	@echo "    $(COLOR_CMD)misc.format$(COLOR_RESET)         - run treefmt"
-	@echo "    $(COLOR_CMD)misc.gc$(COLOR_RESET)             - run nix garbage collection"
-	@echo "    $(COLOR_CMD)misc.update$(COLOR_RESET)         - update flake.lock file"
+	@echo "    $(COLOR_CMD)misc.update.ghqpkglist$(COLOR_RESET)    - update ghq package list"
+	@echo "    $(COLOR_CMD)misc.update.gopkglist$(COLOR_RESET)     - update go package list"
 	@echo ""
 endif
 ifeq ($(IS_MAC),1)
@@ -1029,16 +1200,21 @@ ifeq ($(IS_MAC),1)
 	@echo "    $(COLOR_CMD)mac.apply.system$(COLOR_RESET)             - apply yanoMac system configuration"
 	@echo "    $(COLOR_CMD)mac.apply.home$(COLOR_RESET)               - apply yanoMac home configuration"
 	@echo ""
+	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)                    - check configuration"
+	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)                    - remove result directory"
+	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)                   - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)                - run nix garbage collection (system)"
+	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)                  - run nix garbage collection (user)"
+	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                   - update flake.lock file"
+	@echo ""
 	@echo "$(COLOR_HEADER)  [for darwin]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)darwin.update.brewpkglist$(COLOR_RESET)    - update brew package list"
 	@echo "    $(COLOR_CMD)darwin.restart.services$(COLOR_RESET)      - restart services"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [miscellaneous]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)misc.check$(COLOR_RESET)                   - check configuration"
-	@echo "    $(COLOR_CMD)misc.clean$(COLOR_RESET)                   - remove result directory"
-	@echo "    $(COLOR_CMD)misc.format$(COLOR_RESET)                  - run treefmt"
-	@echo "    $(COLOR_CMD)misc.gc$(COLOR_RESET)                      - run nix garbage collection"
-	@echo "    $(COLOR_CMD)misc.update$(COLOR_RESET)                  - update flake.lock file"
+	@echo "    $(COLOR_CMD)misc.update.ghqpkglist$(COLOR_RESET)       - update ghq package list"
+	@echo "    $(COLOR_CMD)misc.update.gopkglist$(COLOR_RESET)        - update go package list"
 	@echo ""
 endif
 ifeq ($(IS_MACBOOK),1)
@@ -1052,25 +1228,35 @@ ifeq ($(IS_MACBOOK),1)
 	@echo "    $(COLOR_CMD)macbook.apply.system$(COLOR_RESET)         - apply yanoMacBook system configuration"
 	@echo "    $(COLOR_CMD)macbook.apply.home$(COLOR_RESET)           - apply yanoMacBook home configuration"
 	@echo ""
+	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)                    - check configuration"
+	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)                    - remove result directory"
+	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)                   - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)                - run nix garbage collection (system)"
+	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)                  - run nix garbage collection (user)"
+	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                   - update flake.lock file"
+	@echo ""
 	@echo "$(COLOR_HEADER)  [for darwin]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)darwin.update.brewpkglist$(COLOR_RESET)    - update brew package list"
 	@echo "    $(COLOR_CMD)darwin.restart.services$(COLOR_RESET)      - restart services"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [miscellaneous]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)misc.check$(COLOR_RESET)                   - check configuration"
-	@echo "    $(COLOR_CMD)misc.clean$(COLOR_RESET)                   - remove result directory"
-	@echo "    $(COLOR_CMD)misc.format$(COLOR_RESET)                  - run treefmt"
-	@echo "    $(COLOR_CMD)misc.gc$(COLOR_RESET)                      - run nix garbage collection"
-	@echo "    $(COLOR_CMD)misc.update$(COLOR_RESET)                  - update flake.lock file"
+	@echo "    $(COLOR_CMD)misc.update.ghqpkglist$(COLOR_RESET)       - update ghq package list"
+	@echo "    $(COLOR_CMD)misc.update.gopkglist$(COLOR_RESET)        - update go package list"
 	@echo ""
 endif
 ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	@Write-Host "available targets:" $(COLOR_TITLE)
 	@Write-Host ""
-	@Write-Host "[for Windows]" $(COLOR_HEADER)
-	@Write-Host "    windows.init       - initialize yanoWindows configuration" $(COLOR_CMD)
-	@Write-Host "    windows.install    - install yanoWindows packages" $(COLOR_CMD)
-	@Write-Host "    windows.update     - update whole yanoWindows (settings, packages)" $(COLOR_CMD)
+	@Write-Host "[for windows]" $(COLOR_HEADER)
+	@Write-Host "    windows.init                    - initialize yanoWindows configuration" $(COLOR_CMD)
+	@Write-Host "    windows.install                 - install yanoWindows packages" $(COLOR_CMD)
+	@Write-Host "    windows.update                  - update whole yanoWindows (settings, packages)" $(COLOR_CMD)
+	@Write-Host "    windows.update.wingetpkglist    - export and sort winget packages" $(COLOR_CMD)
+	@Write-Host ""
+	@Write-Host "[miscellaneous]" $(COLOR_HEADER)
+	@Write-Host "    misc.update.ghqpkglist          - update ghq package list" $(COLOR_CMD)
+	@Write-Host "    misc.update.gopkglist           - update go package list" $(COLOR_CMD)
 	@Write-Host ""
 endif
