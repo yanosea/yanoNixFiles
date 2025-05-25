@@ -90,7 +90,7 @@ ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 
 ```sh
 # execute init task
-make nix.init
+make nixos.init
 ```
 
 6. Reboot NixOS.
@@ -116,7 +116,7 @@ cd ghq/github.com/yanosea/yanoNixFiles
 
 ```sh
 # execute install task
-make nix.install
+make nixos.install
 ```
 
 3. If there were no issues, commit, push the changes.
@@ -129,7 +129,7 @@ make nix.install
 # change the directory
 cd ghq/github.com/yanosea/yanoNixFiles
 # execute update task
-make nix.update
+make nixos.update
 ```
 
 ## 🪟 WSL
@@ -226,7 +226,7 @@ ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 #
 
 # execute initialize task
-make wsl.init
+make nixoswsl.init
 # exit from WSL (you have to type this many times)
 exit
 ```
@@ -267,7 +267,7 @@ cd ghq/github.com/yanosea/yanoNixFiles
 #
 
 # execute install task
-make wsl.install
+make nixoswsl.install
 ```
 
 3. If there were no issues, commit, push the changes.
@@ -284,7 +284,7 @@ make wsl.install
 # change the directory
 cd ghq/github.com/yanosea/yanoNixFiles
 # execute update task
-make wsl.update
+make nixoswsl.update
 ```
 
 ## 🍎 Darwin
