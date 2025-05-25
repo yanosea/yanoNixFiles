@@ -1,9 +1,8 @@
-{ homePath, username, ... }: {
+{ homePath, username, ... }:
+{
   imports = [
     # cli
     ../../home/programs/cli
-    # develop
-    ../../home/programs/develop
     # gui
     ../../home/programs/gui
     # languages
@@ -11,15 +10,23 @@
     # nixos specific
     ../../home/os/nixos.nix
   ];
-  # wayland
-  wayland = { windowManager = { hyprland = { }; }; };
   # home
   home = {
-    enableNixpkgsReleaseCheck = false;
+    enableNixpkgsReleaseCheck = true;
     homeDirectory = "${homePath}/${username}";
-    stateVersion = "24.05";
+    sessionVariables = {
+      ZDOTDIR = "${homePath}/${username}/.config/zsh";
+    };
+    stateVersion = "24.05"; # DO NOT CHANGE
     username = username;
   };
   # programs
-  programs = { home-manager = { enable = true; }; };
+  programs = {
+    home-manager = {
+      enable = true;
+    };
+    zsh = {
+      enable = true;
+    };
+  };
 }

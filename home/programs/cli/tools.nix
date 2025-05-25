@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [
     ../../dotfiles/bash
     ../../dotfiles/browsh
@@ -19,14 +20,18 @@
   home = {
     packages = with pkgs; [
       # tools
+      aider-chat
       bat
       bash
       broot
       browsh
       btop
       delta
+      docker
+      docker-compose
       duf
       dust
+      era
       eza
       fd
       ffmpeg
@@ -50,14 +55,17 @@
       rbw
       ripgrep
       sheldon
+      shfmt
       starship
       systemctl-tui
       t-rec
+      taplo
       tldr
       tmux
       trash-cli
       tree
       tree-sitter
+      treefmt
       unzip
       vhs
       wakatime

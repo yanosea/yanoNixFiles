@@ -1,51 +1,96 @@
 inputs:
 let
-  mkNixOsSystem = { homePath, hostname, modules, system, username, }:
+  mkNixOsSystem =
+    {
+      homePath,
+      hostname,
+      modules,
+      system,
+      username,
+    }:
     inputs.nixpkgs.lib.nixosSystem {
       inherit modules system;
-      specialArgs = { inherit homePath hostname inputs username; };
+      specialArgs = {
+        inherit
+          homePath
+          hostname
+          inputs
+          username
+          ;
+      };
     };
-  mkNixOsWslSystem = { homePath, hostname, modules, system, username, }:
+  mkNixOsWslSystem =
+    {
+      homePath,
+      hostname,
+      modules,
+      system,
+      username,
+    }:
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       modules = [ inputs.nixos-wsl.nixosModules.wsl ] ++ modules;
-      specialArgs = { inherit homePath hostname inputs username; };
+      specialArgs = {
+        inherit
+          homePath
+          hostname
+          inputs
+          username
+          ;
+      };
     };
-  mkDarwinSystem = { homePath, hostname, modules, system, username, }:
+  mkDarwinSystem =
+    {
+      homePath,
+      hostname,
+      modules,
+      system,
+      username,
+    }:
     inputs.darwin.lib.darwinSystem {
       inherit modules system;
-      specialArgs = { inherit homePath hostname inputs username; };
+      specialArgs = {
+        inherit
+          homePath
+          hostname
+          inputs
+          username
+          ;
+      };
     };
   mkHomeManagerConfiguration =
-    { homePath, modules, overlays, system, username, }:
+    {
+      homePath,
+      modules,
+      system,
+      username,
+    }:
     inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = import inputs.nixpkgs {
-        inherit overlays system;
+        inherit system;
         config = {
           allowUnfree = true;
-          permittedInsecurePackages = [ "electron-25.9.0" ];
         };
       };
       extraSpecialArgs = {
         inherit homePath inputs username;
-        pkgs-stable = import inputs.nixpkgs-stable {
-          inherit overlays system;
-          config = { allowUnfree = true; };
-        };
       };
-      modules = modules ++ [{
-        home = {
-          inherit username;
-          homeDirectory = "${homePath}/${username}";
-          stateVersion = "24.05";
-        };
-        programs = {
-          home-manager = { enable = true; };
-          git = { enable = true; };
-        };
-      }];
+      modules = modules ++ [
+        {
+          home = {
+            inherit username;
+            homeDirectory = "${homePath}/${username}";
+          };
+          programs = {
+            home-manager = {
+              enable = true;
+            };
+          };
+        }
+      ];
     };
-in {
+in
+{
   # nixos
   nixos = {
     # nixos
@@ -67,11 +112,19 @@ in {
   };
   # darwin
   darwin = {
-    # darwin
+    # mac
     yanoMac = mkDarwinSystem {
-      homePath = "/home";
+      homePath = "/Users";
       hostname = "yanoMac";
       modules = [ ./yanoMac ];
+      system = "aarch64-darwin";
+      username = "yanosea";
+    };
+    # macbook
+    yanoMacBook = mkDarwinSystem {
+      homePath = "/Users";
+      hostname = "yanoMacBook";
+      modules = [ ./yanoMacBook ];
       system = "aarch64-darwin";
       username = "yanosea";
     };
@@ -82,7 +135,6 @@ in {
     "yanosea@yanoNixOs" = mkHomeManagerConfiguration {
       homePath = "/home";
       modules = [ ./yanoNixOs/home.nix ];
-      overlays = [ inputs.fenix.overlays.default ];
       system = "x86_64-linux";
       username = "yanosea";
     };
@@ -90,15 +142,20 @@ in {
     "yanosea@yanoNixOsWsl" = mkHomeManagerConfiguration {
       homePath = "/home";
       modules = [ ./yanoNixOsWsl/home.nix ];
-      overlays = [ inputs.fenix.overlays.default ];
       system = "x86_64-linux";
       username = "yanosea";
     };
-    # darwin
+    # mac
     "yanosea@yanoMac" = mkHomeManagerConfiguration {
       homePath = "/Users";
       modules = [ ./yanoMac/home.nix ];
-      overlays = [ inputs.fenix.overlays.default ];
+      system = "aarch64-darwin";
+      username = "yanosea";
+    };
+    # macbook
+    "yanosea@yanoMacBook" = mkHomeManagerConfiguration {
+      homePath = "/Users";
+      modules = [ ./yanoMacBook/home.nix ];
       system = "aarch64-darwin";
       username = "yanosea";
     };

@@ -1,7 +1,5 @@
-{ ... }: {
-  # virtualisation
+{
   virtualisation = {
-    # docker
     docker = {
       enable = true;
       rootless = {

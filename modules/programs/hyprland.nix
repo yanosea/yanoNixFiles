@@ -1,11 +1,18 @@
-{ inputs, ... }: {
+{ inputs, ... }:
+{
   imports = [ inputs.hyprland.nixosModules.default ];
-  # programs
   programs = {
+    dconf = {
+      enable = true;
+    };
     hyprland = {
       enable = true;
-      xwayland = { enable = true; };
+      xwayland = {
+        enable = true;
+      };
     };
-    waybar = { enable = true; };
+    waybar = {
+      enable = true;
+    };
   };
 }

@@ -1,7 +1,7 @@
 * {
   border-radius: 0;
-  font-family: "PlemolJP Console NF" ;
-  font-size: 16px;
+  font-family: "PlemolJP Console NF";
+  font-size: 12px;
   min-height: 0;
 }
 window#waybar {

@@ -1,3 +1,7 @@
--- neovim config entry point (for ime usage)
--- common config
-require("helper.loader").load_lua_files(vim.fn.stdpath("config") .. "/lua/config")
+-- neovim config entry point
+-- lazy loading
+if vim.loader then
+	vim.loader.enable()
+end
+-- load config
+require("config")

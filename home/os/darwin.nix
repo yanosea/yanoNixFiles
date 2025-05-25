@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [
     ../dotfiles/AquaSKK
     ../dotfiles/borders
@@ -12,10 +13,6 @@
   ];
   home = {
     packages = with pkgs; [
-      darwin.apple_sdk.frameworks.CoreFoundation
-      darwin.CF
-      darwin.xcode
-      xcodes
       xcode-install
     ];
   };

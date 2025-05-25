@@ -1,40 +1,42 @@
-" preferences
-" encoding
+" vim options {{{
+" define encoding
 set encoding=utf-8
 set fileencoding=utf-8
 scriptencoding utf-8
-" lang
-let $LANG='en_US.UTF-8'
-set helplang=ja,en
-" .viminfo path
-set viminfo+=n~/.vim/viminfo
-" line number
+" set help language
+set helplang=ja
+" disable backup file
+set nobackup
+" disable swap file
+set noswapfile
+" show line number
 set number
 " highlight current line
 set cursorline
-" cursor position
+" show cursor position
 set ruler
-" sign
+" always show sign coolumn
 set signcolumn=yes
-" invisible character
+" invisible characters
 set list
-set listchars=tab:▸-,trail:⋅,nbsp:␣,extends:❯,precedes:❮
-" status line
+set listchars=tab:▸\ ,trail:⋅,nbsp:␣,extends:❯,precedes:❮
+" always show status line
 set laststatus=3
+" disable wrapping
+set nowrap
 " gui setting
 set guifont=PlemolJP\ Console\ NF
 set guifontwide=PlemolJP\ Console\ NF
 set termguicolors
-set mouse-=a
+set mouse=
 set guicursor+=i:block,a:-blinkwait175-blinkoff150-blinkon175
 " search
 set hlsearch
-set ignorecase
+set noignorecase
 set smartcase
 set incsearch
-set noignorecase
 set nowrapscan
-" command history
+" how many lines of command history to keep
 set history=1000
 " complement
 set wildmenu
@@ -48,10 +50,25 @@ set shiftwidth=2
 " window split
 set splitbelow
 set splitright
-" syntax highlight
+" enable syntax highlighting
 syntax enable
-" clipboard
+" enable system clipboard
 set clipboard+=unnamedplus
+" disable line move with h and l
+set whichwrap-=h
+set whichwrap-=l
+" display
+set display=lastline
+" persist undo
+let vim_dir = expand('$HOME/.vim')
+let undo_dir = vim_dir . '/undo'
+if !isdirectory(undo_dir)
+	call mkdir(undo_dir, 'p')
+endif
+set undofile
+exe 'set undodir=' .. undo_dir
+" viminfo
+set viminfo+=n$HOME/.vim/viminfo
 " standard plugin
 filetype plugin on
 let g:netrw_liststyle=1
@@ -59,27 +76,29 @@ let g:netrw_banner=0
 let g:netrw_sizestyle="H"
 let g:netrw_timefmt="%Y/%m/%d %H:%M:%S"
 let g:netrw_preview=1
+" }}}
+" keymaps {{{
 " hide highlight search
 nnoremap <silent> <ESC> :nohlsearch<CR>
 " leader
 let g:mapleader = ' '
-let g:maplocalleader = ' '
-" line
+let g:maplocalleader = '\\'
+" move line up and down
 nnoremap j gj
 nnoremap k gk
 nnoremap gj j
 nnoremap gk k
-" tab
-nnoremap <LEADER><C-k> :tabprevious<CR>
-nnoremap <LEADER><C-j> :tabnext<CR>
-nnoremap <LEADER><C-t> :tabnew<CR>
-nnoremap <LEADER><C-c> :tabclose<CR>
-" buffer
-nnoremap <C-k> :bprevious<CR>
-nnoremap <C-j> :bnext<CR>
-nnoremap <C-t> :enew<CR>
-nnoremap <C-c> :bd<CR>
-" visual
+" tab navigation
+nnoremap <LEADER>tb :tabprevious<CR>
+nnoremap <LEADER>tn :tabnext<CR>
+nnoremap <LEADER>tN :tabnew<CR>
+nnoremap <LEADER>tc :tabclose<CR>
+" buffer navigation
+nnoremap <LEADER>bb :bprevious<CR>
+nnoremap <LEADER>bn :bnext<CR>
+nnoremap <LEADER>bN :enew<CR>
+nnoremap <LEADER>bc :bd<CR>
+" paste without affecting clipboard
 vnoremap <C-p> \"0p<CR>
 " wsl
 if !empty($WSL_DISTRO_NAME)
@@ -98,58 +117,32 @@ call plug#begin()
   Plug 'rhysd/vim-healthcheck'
   " colorscheme
   Plug 'sainnhe/everforest'
-  Plug 'ghifarit53/tokyonight-vim'
   " copilot
   Plug 'github/copilot.vim'
-  " file explorer
-  Plug 'ptzz/lf.vim'
+  " denops (fuzzy-motion, denops-translate, skkeleton dependency)
+  Plug 'vim-denops/denops.vim'
   " fuzzy-motion
   Plug 'yuki-yano/fuzzy-motion.vim'
-  Plug 'vim-denops/denops.vim',
-  Plug 'lambdalisue/kensaku.vim',
+  Plug 'lambdalisue/kensaku.vim'
   " skkeleton
   Plug 'vim-skk/skkeleton'
-  Plug 'vim-denops/denops.vim'
-  " terminal
-  Plug 'voldikss/vim-floaterm'
   " translate
   Plug 'skanehira/denops-translate.vim'
 call plug#end()
 " colorscheme settings
-" everforest settings
 let g:everforest_background = 'hard'
 let g:everforest_better_performance = 1
 let g:everforest_enable_italic = 1
 let g:everforest_diagnostic_text_highlight = 1
 let g:everforest_diagnostic_line_highlight = 1
 let g:everforest_diagnostic_virtual_text = 'colored'
-" tokyonight settings
-let g:tokyonight_style = 'storm'
-let g:tokyonight_enable_italic = 1
-" colorscheme switching function
-function! SwitchColorScheme(scheme)
-  if a:scheme == 'everforest'
-    let g:everforest_background = 'hard'
-    colorscheme everforest
-  elseif a:scheme == 'tokyonight'
-    colorscheme tokyonight
-  endif
-endfunction
-" set default colorscheme
-call SwitchColorScheme('everforest')
-" colorscheme keymaps
-nnoremap <C-c>f :call SwitchColorScheme('everforest')<CR>
-nnoremap <C-c>t :call SwitchColorScheme('tokyonight')<CR>
+colorscheme everforest
 " copilot
 let g:copilot_no_tab_map = 1
-inoremap <silent><expr> <C-a><Tab> copilot#Accept("\<CR>")
-" floaterm
-nnoremap <silent> <LEADER>t :FloatermToggle<CR>
+inoremap <silent><expr> <C-a><C-a> copilot#Accept("\<CR>")
 " fuzzy-motion
 nnoremap <silent> <LEADER><SPACE> :FuzzyMotion<CR>
 let g:fuzzy_motion_matchers = ['fzf', 'kensaku']
-" lf
-nnoremap <silent> <LEADER>f :Lf<CR>
 " skkeleton
 inoremap <C-j> <Plug>(skkeleton-toggle)
 cnoremap <C-j> <Plug>(skkeleton-toggle)
@@ -170,3 +163,4 @@ function! SkkeletonConfig()
   call skkeleton#register_keymap('henkan', '<Esc>', 'cancel')
 endfunction
 autocmd User skkeleton-initialize-pre call SkkeletonConfig()
+" }}}
