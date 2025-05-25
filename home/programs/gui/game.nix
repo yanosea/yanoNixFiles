@@ -1,4 +1,11 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # home
-  home = { packages = with pkgs; [ discord discord-ptb steam ]; };
+  home = {
+    packages = with pkgs; [
+      discord
+      discord-ptb
+      steam
+    ];
+  };
 }

@@ -1,0 +1,6 @@
+# typos_lsp config
+[default.extend-words]
+aas = "aas"
+ags = "ags"
+noice = "noice"
+nd = "nd"

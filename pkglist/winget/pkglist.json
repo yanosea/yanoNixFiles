@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-04-30T19:29:08.459-00:00",
+  "CreationDate": "2025-05-22T21:04:01.487-00:00",
   "Sources": [
     {
       "Packages": [
@@ -56,6 +56,9 @@
           "PackageIdentifier": "glzr-io.zebar"
         },
         {
+          "PackageIdentifier": "GnuWin32.Make"
+        },
+        {
           "PackageIdentifier": "GnuWin32.Which"
         },
         {
@@ -99,9 +102,6 @@
         },
         {
           "PackageIdentifier": "Microsoft.AppInstaller"
-        },
-        {
-          "PackageIdentifier": "Microsoft.DevHome"
         },
         {
           "PackageIdentifier": "Microsoft.DotNet.DesktopRuntime.7"
@@ -162,6 +162,9 @@
         },
         {
           "PackageIdentifier": "Microsoft.WSL"
+        },
+        {
+          "PackageIdentifier": "Microsoft.XNARedist"
         },
         {
           "PackageIdentifier": "nathancorvussolis.corvusskk"

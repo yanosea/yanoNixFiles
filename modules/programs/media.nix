@@ -1,7 +1,10 @@
 {
-  # programs
   programs = {
-    droidcam = { enable = true; };
-    noisetorch = { enable = true; };
+    droidcam = {
+      enable = true;
+    };
+    noisetorch = {
+      enable = true;
+    };
   };
 }

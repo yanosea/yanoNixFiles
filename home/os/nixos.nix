@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [
     ../dotfiles/dolphin
     ../dotfiles/dunst
@@ -14,7 +15,7 @@
       fuseiso
       rclone
       # gui
-      dolphin
+      kdePackages.dolphin
       remmina
       vivaldi
       # jokeey

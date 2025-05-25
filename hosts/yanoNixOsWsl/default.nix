@@ -1,29 +1,42 @@
-{ homePath, inputs, pkgs, username, ... }: {
+{
+  homePath,
+  pkgs,
+  username,
+  ...
+}:
+{
   imports = [
     # core
-    ../../modules/core/i18n.nix
-    ../../modules/core/network.nix
-    ../../modules/core/nix.nix
-    ../../modules/core/security.nix
-    ../../modules/core/virtualisation.nix
+    ../../modules/core
+    # nix
+    ../../modules/nix/nix.nix
     # programs
     ../../modules/programs/nix-ld.nix
     ../../modules/programs/shell.nix
   ];
   # boot
   boot = {
-    loader = { grub = { device = "nodev"; }; };
+    loader = {
+      grub = {
+        device = "nodev";
+      };
+    };
     kernelPackages = pkgs.linuxPackages_latest;
   };
-  # programs
-  programs = { zsh = { enable = true; }; };
-  # system
-  system = { stateVersion = "24.11"; };
+  # time
+  time = {
+    hardwareClockInLocalTime = true;
+  };
   # users
   users = {
     users = {
       "${username}" = {
-        extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
+        extraGroups = [
+          "networkmanager"
+          "wheel"
+          "audio"
+          "video"
+        ];
         home = "/${homePath}/${username}";
         isNormalUser = true;
         shell = pkgs.zsh;
@@ -35,12 +48,16 @@
     enable = true;
     defaultUser = "yanosea";
     wslConf = {
-      automount = { root = "/mnt"; };
+      automount = {
+        root = "/mnt";
+      };
       interop = {
         appendWindowsPath = false;
         enabled = true;
       };
-      network = { generateHosts = false; };
+      network = {
+        generateHosts = false;
+      };
     };
   };
 }

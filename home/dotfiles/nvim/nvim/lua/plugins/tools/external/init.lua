@@ -1,5 +1,4 @@
--- load external tool plugins
+-- load ai tool plugins
 return {
-  require("plugins.tools.external.copilot_vim"),
-  require("plugins.tools.external.skkeleton"),
+	{ import = "plugins.tools.external.ai" },
 }

@@ -1,6 +1,10 @@
+github.com/code-kakitai/code-kakitai
 github.com/kyoheiu/era
+github.com/kyu08/fzf-make
 github.com/tmux-plugins/tpm
+github.com/yanosea/cleancobra
 github.com/yanosea/cmf
+github.com/yanosea/cts
 github.com/yanosea/homebrew-tap
 github.com/yanosea/jrp
 github.com/yanosea/mindnum

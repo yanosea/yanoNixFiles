@@ -32,25 +32,44 @@ eval "$(starship init zsh)"
 # fzf
 source <(fzf --zsh)
 # alias
+## cat alternative
 alias cat="$(which bat)"
+## cd dotfiles
 alias dot="cd $HOME/ghq/github.com/yanosea/yanoNixFiles"
+## fzf-make
+alias fm="fzf-make"
+alias fh="fzf-make history"
+alias fr="fzf-make repeat"
+## git(hub)
 alias gbp='git branch --merged | grep -v "\* $(git rev-parse --abbrev-ref HEAD)" | grep -v "^\s*$" | xargs -r git branch -d'
-alias ghd='gh-dash'
+alias ghd="gh-dash"
 alias gsf='git switch $(git branch -l | fzf | tr -d "* ")'
-alias gitgraph='git log --graph --all --oneline --decorate'
+alias gitgraph="git log --graph --all --oneline --decorate"
+# ls alternative
 alias ls="$(which lsd)"
+# nvim diff
 alias nvimdiff="$(which nvim) -d"
+# lazygit
 alias lg="lazygit"
-alias lvimdiff="$(which lvim) -d"
+# reboot
 alias reboot="sudo systemctl reboot"
-alias rrm="$(which rm)"
+# rm alternative
 alias rm="$(which trash)"
+# real rm
+alias rrm="$(which rm)"
+# rtty
 alias rtty='rtty run zellij --font "PlemolJP Console NF"'
+# shutdown
 alias shutdown="sudo systemctl poweroff"
+# systemctl-tui
 alias st="systemctl-tui"
+# tree alternative
 alias tree="$(which eza) --tree"
-alias trl="trello-tui -board yanoBoard"
+# trello
+alias trello="trello-tui -board yanoBoard"
+# zmv
 alias zmv="noglob zmv -W"
+# z (cd previous directory)
 alias zz="z -"
 # make state directory
 if [[ ! -d "$XDG_STATE_HOME/zsh" ]]; then

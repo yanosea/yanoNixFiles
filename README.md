@@ -64,7 +64,7 @@ yanosea ALL=(ALL:ALL) SETENV:ALL
 exit
 ```
 
-2. First, update the system. (You have to add your user to sodoers.)
+2. First, update the system. (You have to add your user to sudoers.)
 
 ```sh
 # update the system
@@ -76,7 +76,7 @@ sudo nix-channel --add  https://nixos.org/channels/nixos-24.11 nixos && sudo nix
 
 ```sh
 # enter nix-shell
-nix-shell -p cargo cargo-make ghq git home-manager
+nix-shell -p git ghq home-manager
 ```
 
 4. Clone this repository and change the directory.
@@ -90,7 +90,7 @@ ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 
 ```sh
 # execute init task
-cargo make nix.init
+make nix.init
 ```
 
 6. Reboot NixOS.
@@ -113,9 +113,10 @@ cd ghq/github.com/yanosea/yanoNixFiles
 ```
 
 2. Execute install task.
+
 ```sh
 # execute install task
-cargo make nix.install
+make nix.install
 ```
 
 3. If there were no issues, commit, push the changes.
@@ -128,7 +129,7 @@ cargo make nix.install
 # change the directory
 cd ghq/github.com/yanosea/yanoNixFiles
 # execute update task
-cargo make nix.update
+make nix.update
 ```
 
 ## 🪟 WSL
@@ -185,7 +186,7 @@ sudo nix-channel --add  https://nixos.org/channels/nixos-24.11 nixos && sudo nix
 sudo -i
 # add user yanosea and set password
 useradd yanosea && passwd yanosea
-# edit sodoers
+# edit sudoers
 visudo
 # add below
 yanosea ALL=(ALL:ALL) SETENV:ALL
@@ -203,7 +204,7 @@ su - yanosea
 #
 
 # enter nix-shell
-nix-shell -p cargo cargo-make ghq git home-manager
+nix-shell -p git ghq home-manager
 ```
 
 7. Clone this repository and change the directory.
@@ -225,7 +226,7 @@ ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 #
 
 # execute initialize task
-cargo make wsl.init
+make wsl.init
 # exit from WSL (you have to type this many times)
 exit
 ```
@@ -266,7 +267,7 @@ cd ghq/github.com/yanosea/yanoNixFiles
 #
 
 # execute install task
-cargo make wsl.install
+make wsl.install
 ```
 
 3. If there were no issues, commit, push the changes.
@@ -283,7 +284,7 @@ cargo make wsl.install
 # change the directory
 cd ghq/github.com/yanosea/yanoNixFiles
 # execute update task
-cargo make wsl.update
+make wsl.update
 ```
 
 ## 🍎 Darwin
@@ -292,11 +293,15 @@ cargo make wsl.update
 
 1. Install nix following [here](https://github.com/DeterminateSystems/nix-installer).
 
+```sh
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+```
+
 2. Install nix-darwin following [here](https://github.com/LnL7/nix-darwin).
 
 3. Install homebrew following [here](https://brew.sh/ja/).
 
-4. First, update the system. (You have to add your user to sodoers.)
+4. First, update the system. (You have to add your user to sudoers.)
 
 ```sh
 # update the system
@@ -307,7 +312,7 @@ sudo nix-channel --add  https://nixos.org/channels/nixos-24.11 nixos && sudo nix
 
 ```sh
 # enter nix-shell
-nix-shell -p cargo cargo-make ghq git home-manager
+nix-shell -p git ghq home-manager
 ```
 
 6. Clone this repository and change the directory.
@@ -321,7 +326,9 @@ ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 
 ```sh
 # execute initialize task
-cargo make darwin.init
+make mac.init
+# or
+make macbook.init
 ```
 
 8. Edit /etc/shells and chsh. After this step, exit from the shell.
@@ -357,9 +364,12 @@ cd ghq/github.com/yanosea/yanoNixFiles
 ```
 
 2. Execute install task.
+
 ```sh
 # execute apply task
-cargo make darwin.install
+make mac.install
+# or
+make macbook.install
 ```
 
 3. If there were no issues, commit, push the changes.
@@ -372,7 +382,9 @@ cargo make darwin.install
 # change the directory
 cd ghq/github.com/yanosea/yanoNixFiles
 # execute update task
-cargo make darwin.update
+make mac.update
+# or
+make macbook.update
 ```
 
 ## 📚 Refferences
