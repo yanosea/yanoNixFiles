@@ -912,7 +912,7 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_ }
 	@Write-Host ""
-	@Write-Host "clone go shortage repos..." $(COLOR_HEADER)
+	@Write-Host "install go shortage packages..." $(COLOR_HEADER)
 	@Write-Host ""
 	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\go\pkglist.txt" | ForEach-Object { & go install $$_ }
 	@Write-Host ""
