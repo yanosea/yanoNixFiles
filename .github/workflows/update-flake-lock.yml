@@ -100,6 +100,11 @@ jobs:
 
             # set output
             COMMIT_TITLE="⚡deps(nix): update dependencies in \`flake.lock\` ($TODAY)"
+
+            # set branch name with date
+            BRANCH_NAME="auto-update/flake-lock/$TODAY"
+            echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
             echo "commit_title<<EOF" >> $GITHUB_OUTPUT
             echo "$COMMIT_TITLE" >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
@@ -117,7 +122,7 @@ jobs:
           commit-message: ${{ steps.update-flake.outputs.commit_title }}
           title: ${{ steps.update-flake.outputs.commit_title }}
           body: ${{ steps.update-flake.outputs.commit_body }}
-          branch: auto-update/flake-lock
+          branch: ${{ steps.update-flake.outputs.branch_name }}
           delete-branch: true
           labels: |
             dependencies
