@@ -990,7 +990,7 @@ endif
 #
 # nix
 #
-.PHONY: nix.check nix.clean nix.format nix.gc.user nix.gc.system nix.update all clean test
+.PHONY: nix.check nix.clean nix.format nix.gc.all nix.gc.system nix.gc.user nix.update all clean test
 
 # nix check flake
 nix.check:
@@ -1033,6 +1033,23 @@ ifeq ($(IS_WINDOWS),0)
 	nix fmt
 	@echo ""
 	@echo "$(COLOR_DONE)format done!$(COLOR_RESET)"
+	@echo ""
+else
+	@echo ""
+	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
+	@echo ""
+endif
+
+# nix garbage collection (all)
+nix.gc.all:
+ifeq ($(IS_WINDOWS),0)
+	@echo ""
+	@echo "$(COLOR_TITLE)garbage collection (all)...$(COLOR_RESET)"
+	@echo ""
+	sudo nix-collect-garbage --delete-old
+	nix-collect-garbage --delete-old
+	@echo ""
+	@echo "$(COLOR_DONE)garbage collection (all) done!$(COLOR_RESET)"
 	@echo ""
 else
 	@echo ""
@@ -1160,6 +1177,7 @@ ifeq ($(IS_NIXOS),1)
 	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)                 - check configuration"
 	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)                 - remove result directory"
 	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)                - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)                   - run nix garbage collection (all)"
 	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)             - run nix garbage collection (system)"
 	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)               - run nix garbage collection (user)"
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                - update flake.lock file"
@@ -1184,6 +1202,7 @@ ifeq ($(IS_NIXOS_WSL),1)
 	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)                 - check configuration"
 	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)                 - remove result directory"
 	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)                - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)                   - run nix garbage collection (all)"
 	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)             - run nix garbage collection (system)"
 	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)               - run nix garbage collection (user)"
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                - update flake.lock file"
@@ -1208,6 +1227,7 @@ ifeq ($(IS_MAC),1)
 	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)                    - check configuration"
 	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)                    - remove result directory"
 	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)                   - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)                   - run nix garbage collection (all)"
 	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)                - run nix garbage collection (system)"
 	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)                  - run nix garbage collection (user)"
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                   - update flake.lock file"
@@ -1236,6 +1256,7 @@ ifeq ($(IS_MACBOOK),1)
 	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)                    - check configuration"
 	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)                    - remove result directory"
 	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)                   - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)                   - run nix garbage collection (all)"
 	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)                - run nix garbage collection (system)"
 	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)                  - run nix garbage collection (user)"
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                   - update flake.lock file"
