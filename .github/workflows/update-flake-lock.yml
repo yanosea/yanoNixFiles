@@ -130,6 +130,8 @@ jobs:
           body: ${{ steps.update-flake.outputs.commit_body }}
           branch: ${{ steps.update-flake.outputs.branch_name }}
           delete-branch: true
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           labels: |
             dependencies
             automated
