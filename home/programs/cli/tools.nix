@@ -7,7 +7,6 @@
     ../../dotfiles/jisyo
     ../../dotfiles/lazygit
     ../../dotfiles/lf
-    ../../dotfiles/neofetch
     ../../dotfiles/sheldon
     ../../dotfiles/starship
     ../../dotfiles/textualize
@@ -33,6 +32,7 @@
       dust
       era
       eza
+      fastfetch
       fd
       ffmpeg
       fontforge
@@ -50,7 +50,6 @@
       lsd
       mermaid-cli
       ncdu
-      neofetch
       onefetch
       rbw
       ripgrep
