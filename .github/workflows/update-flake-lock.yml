@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: "0 15 * * *" # run at 15:00 UTC (0:00 JST)
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   update-flake:
     runs-on: ubuntu-latest
