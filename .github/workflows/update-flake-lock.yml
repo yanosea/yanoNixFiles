@@ -101,6 +101,9 @@ jobs:
             # set output
             COMMIT_TITLE="⚡deps(nix): update dependencies in \`flake.lock\` ($TODAY)"
 
+            # create full commit message with body
+            COMMIT_MESSAGE="$COMMIT_TITLE"$'\n\n'"$COMMIT_BODY"
+
             # set branch name with date
             BRANCH_NAME="auto-update/flake-lock/$TODAY"
             echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
@@ -111,6 +114,9 @@ jobs:
             echo "commit_body<<EOF" >> $GITHUB_OUTPUT
             echo "$COMMIT_BODY" >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
+            echo "commit_message<<EOF" >> $GITHUB_OUTPUT
+            echo "$COMMIT_MESSAGE" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
           else
             echo "changes=false" >> $GITHUB_OUTPUT
           fi
@@ -119,7 +125,7 @@ jobs:
         if: steps.update-flake.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
-          commit-message: ${{ steps.update-flake.outputs.commit_title }}
+          commit-message: ${{ steps.update-flake.outputs.commit_message }}
           title: ${{ steps.update-flake.outputs.commit_title }}
           body: ${{ steps.update-flake.outputs.commit_body }}
           branch: ${{ steps.update-flake.outputs.branch_name }}
