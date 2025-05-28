@@ -1,0 +1,120 @@
+name: Update flake.lock
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 15 * * *" # run at 15:00 UTC (0:00 JST)
+
+jobs:
+  update-flake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: install nix
+        uses: cachix/install-nix-action@v25
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - name: update flake.lock and get command output
+        id: update-flake
+        run: |
+          # set date
+          export TZ="Asia/Tokyo"
+          TODAY=$(date +%Y-%m-%d)
+
+          # run nix flake update
+          UPDATE_OUTPUT=$(nix flake update 2>&1)
+          UPDATE_EXIT_CODE=$?
+
+          # check if there are updates
+          if echo "$UPDATE_OUTPUT" | grep -q "Updated input"; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            COMMIT_BODY=""
+
+            # extract updated inputs
+            while read -r line; do
+              if [[ "$line" =~ Updated\ input\ \'([^\']+)\' ]]; then
+                INPUT_NAME="${BASH_REMATCH[1]}"
+
+                # read next two lines
+                if read -r old_line && read -r new_line; then
+                  # extract old hash
+                  if [[ "$old_line" =~ github:[^/]+/[^/]+/([0-9a-f]+) ]]; then
+                    OLD_HASH="${BASH_REMATCH[1]:0:8}"
+
+                    # extract new hash
+                    if [[ "$new_line" =~ github:[^/]+/[^/]+/([0-9a-f]+) ]]; then
+                      NEW_HASH="${BASH_REMATCH[1]:0:8}"
+
+                      # add to commit body
+                      if [ -z "$COMMIT_BODY" ]; then
+                        COMMIT_BODY="- update \`$INPUT_NAME\` from \`$OLD_HASH\` to \`$NEW_HASH\`"
+                      else
+                        COMMIT_BODY="$COMMIT_BODY"$'\n'"- update \`$INPUT_NAME\` from \`$OLD_HASH\` to \`$NEW_HASH\`"
+                      fi
+                    fi
+                  fi
+                fi
+              fi
+            done < <(echo "$UPDATE_OUTPUT")
+
+            # fallback if extraction failed
+            if [ -z "$COMMIT_BODY" ]; then
+              echo "::warning::failed to parse with regex, using fallback method"
+
+              # get list of updated inputs
+              UPDATED_INPUTS=$(echo "$UPDATE_OUTPUT" | grep "Updated input" | sed -E "s/.*'([^']+)'.*/\1/")
+
+              for input in $UPDATED_INPUTS; do
+                # extract related lines for this input
+                INPUT_BLOCK=$(echo "$UPDATE_OUTPUT" | grep -A 2 "input '$input'")
+
+                # extract old and new hashes
+                OLD_HASH=$(echo "$INPUT_BLOCK" | grep -o -E "/[0-9a-f]{7,}[0-9a-f]*" | head -1 | sed 's/\///' | cut -c1-8)
+                NEW_HASH=$(echo "$INPUT_BLOCK" | grep -o -E "/[0-9a-f]{7,}[0-9a-f]*" | tail -1 | sed 's/\///' | cut -c1-8)
+
+                if [ -n "$OLD_HASH" ] && [ -n "$NEW_HASH" ]; then
+                  # add to commit body
+                  if [ -z "$COMMIT_BODY" ]; then
+                    COMMIT_BODY="- update \`$input\` from \`$OLD_HASH\` to \`$NEW_HASH\`"
+                  else
+                    COMMIT_BODY="$COMMIT_BODY"$'\n'"- update \`$input\` from \`$OLD_HASH\` to \`$NEW_HASH\`"
+                  fi
+                fi
+              done
+
+              # exit if still failed
+              if [ -z "$COMMIT_BODY" ]; then
+                echo "::error::failed to extract update details from nix flake update output"
+                echo "update output was: $UPDATE_OUTPUT"
+                exit 1
+              fi
+            fi
+
+            # set output
+            COMMIT_TITLE="⚡deps(nix): update dependencies in \`flake.lock\` ($TODAY)"
+            echo "commit_title<<EOF" >> $GITHUB_OUTPUT
+            echo "$COMMIT_TITLE" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            echo "commit_body<<EOF" >> $GITHUB_OUTPUT
+            echo "$COMMIT_BODY" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: create pull request
+        if: steps.update-flake.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: ${{ steps.update-flake.outputs.commit_title }}
+          title: ${{ steps.update-flake.outputs.commit_title }}
+          body: ${{ steps.update-flake.outputs.commit_body }}
+          branch: auto-update/flake-lock
+          delete-branch: true
+          labels: |
+            dependencies
+            automated
