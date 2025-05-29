@@ -72,6 +72,7 @@ return {
 					{ "<LEADER>bL", "<CMD>BufferLineSortByExtension<CR>", desc = "buffer: sort by language" },
 					{ "<LEADER>bn", "<CMD>BufferLineCycleNext<CR>", desc = "buffer: switch to next" },
 					{ "<LEADER>bN", "<CMD>ene!<CR>", desc = "buffer: new" },
+					{ "<LEADER>bp", "<CMD>BufferLineTogglePin<CR>", desc = "buffer: toggle pin" },
 					{ "<LEADER>bw", "<CMD>w!<CR>", desc = "buffer: save" },
 					{ "<LEADER>bW", "<CMD>noautocmd w<CR>", desc = "buffer: save without formatting" },
 					-- close buffer
