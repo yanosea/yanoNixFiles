@@ -30,10 +30,19 @@ return {
 				ensure_installed = ensure_installed_server,
 			})
 			-- install tools
+			local registry = require("mason-registry")
 			local ensure_installed_tools = require("plugins.languages.lsp.utils.server_list").tools
 			require("mason-tool-installer").setup({
 				ensure_installed = ensure_installed_tools,
 			})
+			registry.refresh(function()
+				for _, name in pairs(ensure_installed_tools) do
+					local package = registry.get_package(name)
+					if not registry.is_installed(name) then
+						package:install()
+					end
+				end
+			end)
 		end,
 	},
 }

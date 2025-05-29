@@ -61,6 +61,10 @@ function M.setup()
 				nix = {
 					require("efmls-configs.formatters.nixfmt"),
 				},
+				-- rust
+				rust = {
+					require("efmls-configs.formatters.rustfmt"),
+				},
 				-- shell
 				sh = {
 					require("efmls-configs.formatters.shfmt"),

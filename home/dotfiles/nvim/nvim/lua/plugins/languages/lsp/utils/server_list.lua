@@ -44,6 +44,7 @@ M.tools = {
 	-- docker
 	"hadolint",
 	-- go
+	"delve",
 	"goimports",
 	"golangci-lint",
 	-- lua
@@ -52,6 +53,8 @@ M.tools = {
 	"checkmake",
 	-- nix
 	"nixpkgs-fmt",
+	-- rustfmt
+	"rustfmt",
 	-- shell
 	"shfmt",
 	"shellcheck",

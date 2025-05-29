@@ -8,7 +8,7 @@ return {
 			-- dap-go config
 			require("dap-go").setup({
 				delve = {
-					path = "dlv",
+					path = vim.fn.stdpath("data") .. "/mason/bin/dlv",
 					initialize_timeout_sec = 20,
 					port = "${port}",
 					build_flags = "",
