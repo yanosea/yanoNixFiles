@@ -6,6 +6,8 @@ on:
       - opened
       - labeled
       - synchronize
+    branches:
+      - 'auto-update/flake-lock/**'
 
 permissions:
   contents: write
@@ -16,7 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       contains(github.event.pull_request.labels.*.name, 'dependencies') &&
-      contains(github.event.pull_request.labels.*.name, 'automated')
+      contains(github.event.pull_request.labels.*.name, 'automated') &&
+      startsWith(github.event.pull_request.head.ref, 'auto-update/flake-lock/')
     permissions:
       pull-requests: write
     steps:
@@ -28,7 +31,8 @@ jobs:
     needs: auto-approve
     if: |
       contains(github.event.pull_request.labels.*.name, 'dependencies') &&
-      contains(github.event.pull_request.labels.*.name, 'automated')
+      contains(github.event.pull_request.labels.*.name, 'automated') &&
+      startsWith(github.event.pull_request.head.ref, 'auto-update/flake-lock/')
     steps:
       - name: enable auto-merge
         run: gh pr merge --auto --merge "$PR_URL"
