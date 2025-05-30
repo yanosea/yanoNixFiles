@@ -27,7 +27,7 @@ jobs:
         id: find-pr
         run: |
           PR_DATA=$(gh api graphql -f query='
-            query($owner:String!, $repo:String!, $base_sha:String!) {
+            query($owner:String!, $repo:String!) {
               repository(owner:$owner, name:$repo) {
                 pullRequests(first:1, orderBy:{field:CREATED_AT, direction:DESC}, baseRefName:"main") {
                   nodes {
@@ -41,7 +41,7 @@ jobs:
                   }
                 }
               }
-            }' -F owner=$GITHUB_REPOSITORY_OWNER -F repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2) -F base_sha=${{ github.event.workflow_run.head_sha }})
+            }' -F owner=$GITHUB_REPOSITORY_OWNER -F repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2))
           PR_NUMBER=$(echo "$PR_DATA" | jq -r '.data.repository.pullRequests.nodes[0].number')
           HEAD_REF=$(echo "$PR_DATA" | jq -r '.data.repository.pullRequests.nodes[0].headRefName')
           HAS_DEPENDENCIES=$(echo "$PR_DATA" | jq '.data.repository.pullRequests.nodes[0].labels.nodes[].name | contains("dependencies")' | grep -q true && echo "true" || echo "false")
