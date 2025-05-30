@@ -65,7 +65,7 @@ jobs:
       - name: auto approve PR
         uses: hmarr/auto-approve-action@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
           pull-request-number: ${{ needs.find-pr.outputs.pr_number }}
 
   auto-merge:
@@ -79,4 +79,4 @@ jobs:
           gh pr merge --auto --merge "$PR_NUMBER"
         env:
           PR_NUMBER: ${{ needs.find-pr.outputs.pr_number }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
