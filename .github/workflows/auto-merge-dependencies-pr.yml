@@ -6,8 +6,8 @@ on:
       - opened
       - labeled
       - synchronize
-    branches:
-      - "auto-update/flake-lock/**"
+    paths:
+      - "flake.lock"
 
 permissions:
   contents: write
