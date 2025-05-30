@@ -237,6 +237,7 @@ exit
 #
 # on windows
 #
+
 # terminate the WSL
 wsl --terminate NixOS
 # start the WSL

@@ -1,4 +1,4 @@
-name: Auto-merge updating flake.lock PR
+name: Auto merge updating flake.lock PR
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
       - labeled
       - synchronize
     branches:
-      - 'auto-update/flake-lock/**'
+      - "auto-update/flake-lock/**"
 
 permissions:
   contents: write
