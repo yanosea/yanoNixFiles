@@ -6,8 +6,6 @@ on:
       - opened
       - labeled
       - synchronize
-    paths:
-      - "flake.lock"
 
 permissions:
   contents: write
