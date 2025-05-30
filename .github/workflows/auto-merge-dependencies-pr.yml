@@ -22,6 +22,7 @@ jobs:
     outputs:
       pr_number: ${{ steps.find-pr.outputs.pr_number }}
       pr_data: ${{ steps.find-pr.outputs.pr_data }}
+      branch_name: ${{ steps.find-pr.outputs.branch_name }}
     steps:
       - name: Find associated PR
         id: find-pr
@@ -49,6 +50,7 @@ jobs:
           if [[ "$HAS_DEPENDENCIES" == "true" && "$HAS_AUTOMATED" == "true" && "$HEAD_REF" == auto-update/flake-lock/* ]]; then
             echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
             echo "pr_data=$PR_DATA" >> $GITHUB_OUTPUT
+            echo "branch_name=$HEAD_REF" >> $GITHUB_OUTPUT
           else
             echo "No matching PR found or PR doesn't have required labels"
           fi
@@ -79,6 +81,21 @@ jobs:
       - name: enable auto-merge
         run: |
           gh pr merge --auto --merge "$PR_NUMBER"
+          while true; do
+            PR_STATE=$(gh pr view "$PR_NUMBER" --json state --jq .state)
+            if [ "$PR_STATE" == "MERGED" ]; then
+              break
+            fi
+            sleep 5
+          done
         env:
           PR_NUMBER: ${{ needs.find-pr.outputs.pr_number }}
+          GITHUB_TOKEN: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
+
+      - name: delete branch after merge
+        if: needs.find-pr.outputs.branch_name != ''
+        run: |
+          git push origin --delete "$BRANCH_NAME"
+        env:
+          BRANCH_NAME: ${{ needs.find-pr.outputs.branch_name }}
           GITHUB_TOKEN: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
