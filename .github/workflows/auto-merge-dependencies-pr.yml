@@ -1,6 +1,11 @@
 name: Auto merge updating flake.lock PR
 
 on:
+  pull_request:
+    types:
+      - opened
+      - labeled
+      - synchronize
   pull_request_target:
     types:
       - opened
@@ -23,6 +28,8 @@ jobs:
     steps:
       - name: auto approve PR
         uses: hmarr/auto-approve-action@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   auto-merge:
     runs-on: ubuntu-latest
@@ -33,7 +40,13 @@ jobs:
       startsWith(github.event.pull_request.head.ref, 'auto-update/flake-lock/')
     steps:
       - name: enable auto-merge
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: |
+          echo "PR URL: $PR_URL"
+          echo "PR Labels: ${{ toJSON(github.event.pull_request.labels) }}"
+          echo "PR Branch: ${{ github.event.pull_request.head.ref }}"
+          echo "PR Number: ${{ github.event.pull_request.number }}"
+          gh pr merge --auto --merge "$PR_NUMBER"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
