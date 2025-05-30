@@ -73,9 +73,11 @@ jobs:
     needs: [find-pr, auto-approve]
     if: needs.find-pr.outputs.pr_number != ''
     steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
       - name: enable auto-merge
         run: |
-          echo "PR Number: $PR_NUMBER"
           gh pr merge --auto --merge "$PR_NUMBER"
         env:
           PR_NUMBER: ${{ needs.find-pr.outputs.pr_number }}
