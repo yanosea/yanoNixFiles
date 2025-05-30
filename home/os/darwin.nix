@@ -11,6 +11,7 @@
     ../dotfiles/sonic-pi.net
     ../dotfiles/yabai
   ];
+  # honme
   home = {
     packages = with pkgs; [
       xcode-install

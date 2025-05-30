@@ -39,4 +39,46 @@
       allowUnsupportedSystem = true;
     };
   };
+  # system
+  system = {
+    # https://nix-darwin.github.io/nix-darwin/manual
+    defaults = {
+      ".GlobalPreferences" = {
+        "com.apple.mouse.scaling" = 17.0;
+        "com.apple.sound.beep.sound" = "/System/Library/Sounds/Purr.aiff";
+      };
+      ActivityMonitor = {
+        IconType = 5;
+        OpenMainWindow = false;
+        ShowCategory = 100;
+        SortColumn = null;
+        SortDirection = null;
+      };
+      NSGlobalDomain = {
+        AppleEnableMouseSwipeNavigateWithScrolls = true;
+        AppleEnableSwipeNavigateWithScrolls = true;
+        AppleFontSmoothing = 2;
+        AppleICUForce24HourTime = true;
+        AppleInterfaceStyle = "Dark";
+        AppleInterfaceStyleSwitchesAutomatically = false;
+        AppleKeyboardUIMode = null;
+        AppleMeasurementUnits = "Centimeters";
+        AppleMetricUnits = 1;
+        ApplePressAndHoldEnabled = false;
+        AppleScrollerPagingBehavior = true;
+        AppleShowAllExtensions = true;
+        AppleShowAllFiles = true;
+        AppleShowScrollBars = "WhenScrolling";
+        AppleSpacesSwitchOnActivate = true;
+        AppleTemperatureUnit = "Celsius";
+        AppleWindowTabbingMode = "always";
+        InitialKeyRepeat = 15;
+        KeyRepeat = 2;
+        NSAutomaticCapitalizationEnabled = false;
+        NSAutomaticDashSubstitutionEnabled = true;
+        NSAutomaticInlinePredictionEnabled = true;
+      };
+    };
+    primaryUser = username;
+  };
 }
