@@ -2,17 +2,7 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
-		lazy = true,
-		event = { "BufReadPost", "BufNewFile" },
-		cmd = {
-			"TSInstall",
-			"TSInstallInfo",
-			"TSInstallFromGrammar",
-			"TSInstallSync",
-			"TSUpdate",
-			"TSUpdateSync",
-			"TSUninstall",
-		},
+		lazy = false,
 		config = function()
 			-- nvim-treesitter config
 			require("nvim-treesitter.configs").setup({

@@ -6,21 +6,7 @@ return {
 			"williamboman/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 		},
-		lazy = true,
-		event = { "BufReadPost", "BufNewFile" },
-		cmd = {
-			"Mason",
-			"MasonUpdate",
-			"MasonLog",
-			"MasonInstall",
-			"MasonUninstall",
-			"MasonToolsClean",
-			"MasonToolsUpdate",
-			"MasonToolsInstall",
-			"MasonUninstallAll",
-			"MasonToolsUpdateSync",
-			"MasonToolsInstallSync",
-		},
+		lazy = false,
 		config = function()
 			-- setup mason
 			require("mason").setup()

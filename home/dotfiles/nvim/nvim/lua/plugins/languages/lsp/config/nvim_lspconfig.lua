@@ -10,8 +10,7 @@ return {
 			"creativenull/efmls-configs-nvim",
 			"b0o/schemastore.nvim",
 		},
-		lazy = true,
-		event = { "BufReadPost", "BufNewFile" },
+		lazy = false,
 		config = function()
 			-- keymaps
 			require("plugins.languages.lsp.utils.keymaps").setup()
