@@ -3,7 +3,9 @@
   imports = [
     # cli
     ../../home/programs/cli
-    # gui (terminal)
+    # gui
+    ../../home/programs/gui/browser.nix
+    ../../home/programs/gui/game.nix
     ../../home/programs/gui/terminal.nix
     # languages
     ../../home/programs/languages

@@ -9,8 +9,7 @@ dotfile is mine.
 ## ⚠️ WARNING
 
 - This is my personal dotfiles using nix or nixos.
-- This flake depends on other package managers such as homebrews.
-  - Also, the configuration for each tool use Nix as little as possible.
+- The configuration for each tool use Nix as little as possible.
   - This is to facilitate the porting of dotfiles even if I stop using Nix in the future.
 
 ## ❄️ NixOS
@@ -300,30 +299,28 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 
 2. Install nix-darwin following [here](https://github.com/LnL7/nix-darwin).
 
-3. Install homebrew following [here](https://brew.sh/ja/).
-
-4. First, update the system. (You have to add your user to sudoers.)
+3. First, update the system. (You have to add your user to sudoers.)
 
 ```sh
 # update the system
 sudo nix-channel --add  https://nixos.org/channels/nixos-24.11 nixos && sudo nix-channel --update && sudo darwin-rebuild switch
 ```
 
-5. Enter nix-shell with necessary packages.
+4. Enter nix-shell with necessary packages.
 
 ```sh
 # enter nix-shell
 nix-shell -p git ghq home-manager
 ```
 
-6. Clone this repository and change the directory.
+5. Clone this repository and change the directory.
 
 ```sh
 # clone this repository and change the directory
 ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 ```
 
-7. Execute initialize task.
+6. Execute initialize task.
 
 ```sh
 # execute initialize task
@@ -332,7 +329,7 @@ make mac.init
 make macbook.init
 ```
 
-8. Edit /etc/shells and chsh. After this step, exit from the shell.
+7. Edit /etc/shells and chsh. After this step, exit from the shell.
 
 ```sh
 # edit /etc/shells
@@ -345,14 +342,14 @@ chsh -s /Users/yanosea/.nix-profile/bin/zsh
 exit
 ```
 
-9. Install command line developer tool.
+8. Install command line developer tool.
 
 ```sh
 # install command line developer tool
 xcode-select --install
 ```
 
-10. Then, you got a new Darwin × Nix environment ;)
+9. Then, you got a new Darwin × Nix environment ;)
 
 ### 🔧 Edit config and install new packages
 

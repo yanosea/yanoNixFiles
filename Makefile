@@ -376,10 +376,6 @@ ifeq ($(IS_MAC),1)
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	@echo ""
-	@echo "$(COLOR_HEADER)install brew pkgs...$(COLOR_RESET)"
-	@echo ""
-	xargs brew install <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)install skk dictionary...$(COLOR_RESET)"
 	@echo ""
 	jisyo d
@@ -425,10 +421,6 @@ ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)install brew shortage packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)apply system...$(COLOR_RESET)"
 	@echo ""
 	make mac.apply.system
@@ -455,20 +447,9 @@ ifeq ($(IS_MAC),1)
 	@echo ""
 	sheldon lock --update
 	@echo ""
-	@echo "$(COLOR_HEADER)update brew packages...$(COLOR_RESET)"
-	@echo ""
-	brew update
-	brew upgrade
-	brew cleanup
-	brew doctor
-	@echo ""
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	@echo ""
 	make mac.install
-	@echo ""
-	@echo "$(COLOR_HEADER)update brew package list...$(COLOR_RESET)"
-	@echo ""
-	make darwin.update.brewpkglist
 	@echo ""
 	@echo "$(COLOR_HEADER)restart services...$(COLOR_RESET)"
 	@echo ""
@@ -551,10 +532,6 @@ ifeq ($(IS_MACBOOK),1)
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	@echo ""
-	@echo "$(COLOR_HEADER)install brew pkgs...$(COLOR_RESET)"
-	@echo ""
-	xargs brew install <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)install skk dictionary...$(COLOR_RESET)"
 	@echo ""
 	jisyo d
@@ -600,10 +577,6 @@ ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)install brew shortage packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)apply system...$(COLOR_RESET)"
 	@echo ""
 	make macbook.apply.system
@@ -630,20 +603,9 @@ ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	sheldon lock --update
 	@echo ""
-	@echo "$(COLOR_HEADER)update brew packages...$(COLOR_RESET)"
-	@echo ""
-	brew update
-	brew upgrade
-	brew cleanup
-	brew doctor
-	@echo ""
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	@echo ""
 	make macbook.install
-	@echo ""
-	@echo "$(COLOR_HEADER)update brew package list...$(COLOR_RESET)"
-	@echo ""
-	make darwin.update.brewpkglist
 	@echo ""
 	@echo "$(COLOR_HEADER)restart services...$(COLOR_RESET)"
 	@echo ""
@@ -693,23 +655,7 @@ endif
 #
 # darwin (mac, macbook common)
 #
-.PHONY: darwin.update.brewpkglist darwin.restart.services
-
-# update brew package list
-darwin.update.brewpkglist:
-ifeq ($(IS_DARWIN),1)
-	@echo ""
-	@echo "$(COLOR_TITLE)update brew package list...$(COLOR_RESET)"
-	@echo ""
-	brew leaves >pkglist/brew/pkglist.txt && brew list --cask >>pkglist/brew/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_DONE)update brew package list done!$(COLOR_RESET)"
-	@echo ""
-else
-	@echo ""
-	@echo "$(COLOR_ERROR)this target is only for darwin platforms...$(COLOR_RESET)"
-	@echo ""
-endif
+.PHONY: darwin.restart.services
 
 # restart services
 darwin.restart.services:
@@ -1026,7 +972,6 @@ ifeq ($(IS_MAC),1)
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                   - update flake.lock file"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for darwin]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)darwin.update.brewpkglist$(COLOR_RESET)    - update brew package list"
 	@echo "    $(COLOR_CMD)darwin.restart.services$(COLOR_RESET)      - restart services"
 	@echo ""
 endif
@@ -1051,7 +996,6 @@ ifeq ($(IS_MACBOOK),1)
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                   - update flake.lock file"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for darwin]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)darwin.update.brewpkglist$(COLOR_RESET)    - update brew package list"
 	@echo "    $(COLOR_CMD)darwin.restart.services$(COLOR_RESET)      - restart services"
 	@echo ""
 endif
