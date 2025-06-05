@@ -7,7 +7,7 @@ font = "plemoljp-nf"
 foreground = "#d3c6aa"
 monitor = 0
 offset = "30x30"
-timeout = 10
+timeout = 5
 transparency = 10
 # urgency_critical
 [urgency_critical]
