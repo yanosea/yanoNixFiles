@@ -8,5 +8,6 @@
     ./media.nix
     ./rdp.nix
     ./terminal.nix
+    ./tools.nix
   ];
 }
