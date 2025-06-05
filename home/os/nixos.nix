@@ -9,17 +9,9 @@
   ];
   home = {
     packages = with pkgs; [
-      # cli
       clipse
-      cron
       fuseiso
       rclone
-      # gui
-      kdePackages.dolphin
-      remmina
-      vivaldi
-      # jokeey
-      bsdgames
     ];
   };
 }

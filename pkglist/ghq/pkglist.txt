@@ -1,8 +1,0 @@
-github.com/tmux-plugins/tpm
-github.com/yanosea/cmf
-github.com/yanosea/jrp
-github.com/yanosea/mindnum
-github.com/yanosea/spotlike
-github.com/yanosea/yanoNixFiles
-github.com/yanosea/yanoPortfolio
-github.com/yurihs/waybar-media

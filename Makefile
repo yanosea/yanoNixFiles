@@ -107,14 +107,6 @@ ifeq ($(IS_NIXOS),1)
 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	@echo ""
-	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)install skk jisyos...$(COLOR_RESET)"
 	@echo ""
 	jisyo d
@@ -136,14 +128,6 @@ nixos.install:
 ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
-	@echo ""
-	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
 	@echo ""
 	@echo "$(COLOR_HEADER)apply system...$(COLOR_RESET)"
 	@echo ""
@@ -167,14 +151,6 @@ ifeq ($(IS_NIXOS),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update nixos...$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
-	@echo ""
-	ghq list | ghq get --update
-	@echo ""
-	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
-	@echo ""
-	gup update
-	@echo ""
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
 	@echo ""
 	sheldon lock --update
@@ -182,14 +158,6 @@ ifeq ($(IS_NIXOS),1)
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	@echo ""
 	make nixos.install
-	@echo ""
-	@echo "$(COLOR_HEADER)update ghq package list...$(COLOR_RESET)"
-	@echo ""
-	make misc.update.ghqpkglist
-	@echo ""
-	@echo "$(COLOR_HEADER)update go package list...$(COLOR_RESET)"
-	@echo ""
-	make misc.update.gopkglist
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
@@ -266,14 +234,6 @@ ifeq ($(IS_NIXOS_WSL),1)
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	@echo ""
-	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)install skk jisyos...$(COLOR_RESET)"
 	@echo ""
 	jisyo d
@@ -310,14 +270,6 @@ ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)apply system...$(COLOR_RESET)"
 	@echo ""
 	make nixoswsl.apply.system
@@ -340,14 +292,6 @@ ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update nixos wsl...$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
-	@echo ""
-	ghq list | ghq get --update
-	@echo ""
-	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
-	@echo ""
-	gup update
-	@echo ""
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
 	@echo ""
 	sheldon lock --update
@@ -355,14 +299,6 @@ ifeq ($(IS_NIXOS_WSL),1)
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	@echo ""
 	make nixoswsl.install
-	@echo ""
-	@echo "$(COLOR_HEADER)update ghq package list...$(COLOR_RESET)"
-	@echo ""
-	make misc.update.ghqpkglist
-	@echo ""
-	@echo "$(COLOR_HEADER)update go package list...$(COLOR_RESET)"
-	@echo ""
-	make misc.update.gopkglist
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 	@echo ""
@@ -440,14 +376,6 @@ ifeq ($(IS_MAC),1)
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	@echo ""
-	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)install brew pkgs...$(COLOR_RESET)"
 	@echo ""
 	xargs brew install <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
@@ -497,14 +425,6 @@ ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)install brew shortage packages...$(COLOR_RESET)"
 	@echo ""
 	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
@@ -531,14 +451,6 @@ ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update mac...$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
-	@echo ""
-	ghq list | ghq get --update
-	@echo ""
-	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
-	@echo ""
-	gup update
-	@echo ""
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
 	@echo ""
 	sheldon lock --update
@@ -553,14 +465,6 @@ ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	@echo ""
 	make mac.install
-	@echo ""
-	@echo "$(COLOR_HEADER)update ghq package list...$(COLOR_RESET)"
-	@echo ""
-	make misc.update.ghqpkglist
-	@echo ""
-	@echo "$(COLOR_HEADER)update go package list...$(COLOR_RESET)"
-	@echo ""
-	make misc.update.gopkglist
 	@echo ""
 	@echo "$(COLOR_HEADER)update brew package list...$(COLOR_RESET)"
 	@echo ""
@@ -647,14 +551,6 @@ ifeq ($(IS_MACBOOK),1)
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 	@echo ""
-	@echo "$(COLOR_HEADER)clone ghq repos...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_HEADER)install go packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)install brew pkgs...$(COLOR_RESET)"
 	@echo ""
 	xargs brew install <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
@@ -704,14 +600,6 @@ ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)install shortage packages...$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)clone ghq shortage repos...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg ghq get arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/ghq/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_HEADER)install go shortage packages...$(COLOR_RESET)"
-	@echo ""
-	xargs -I arg go install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/go/pkglist.txt
-	@echo ""
 	@echo "$(COLOR_HEADER)install brew shortage packages...$(COLOR_RESET)"
 	@echo ""
 	xargs -I arg brew install arg <$$HOME/ghq/github.com/yanosea/yanoNixFiles/pkglist/brew/pkglist.txt
@@ -738,14 +626,6 @@ ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_TITLE)update macbook...$(COLOR_RESET)"
 	@echo ""
-	@echo "$(COLOR_HEADER)sync ghq repos...$(COLOR_RESET)"
-	@echo ""
-	ghq list | ghq get --update
-	@echo ""
-	@echo "$(COLOR_HEADER)update go packages...$(COLOR_RESET)"
-	@echo ""
-	gup update
-	@echo ""
 	@echo "$(COLOR_HEADER)update zsh plugins...$(COLOR_RESET)"
 	@echo ""
 	sheldon lock --update
@@ -760,14 +640,6 @@ ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_HEADER)install new packages...$(COLOR_RESET)"
 	@echo ""
 	make macbook.install
-	@echo ""
-	@echo "$(COLOR_HEADER)update ghq package list...$(COLOR_RESET)"
-	@echo ""
-	make misc.update.ghqpkglist
-	@echo ""
-	@echo "$(COLOR_HEADER)update go package list...$(COLOR_RESET)"
-	@echo ""
-	make misc.update.gopkglist
 	@echo ""
 	@echo "$(COLOR_HEADER)update brew package list...$(COLOR_RESET)"
 	@echo ""
@@ -886,10 +758,6 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	scoop install ghq
 	@Write-Host ""
-	@Write-Host "install ghq repos..." $(COLOR_HEADER)
-	@Write-Host ""
-	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_ }
-	@Write-Host ""
 	@Write-Host "install winget packages..." $(COLOR_HEADER)
 	@Write-Host ""
 	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
@@ -907,14 +775,6 @@ windows.install:
 ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	@Write-Host "install shortage packages..." $(COLOR_TITLE)
-	@Write-Host ""
-	@Write-Host "clone ghq shortage repos..." $(COLOR_HEADER)
-	@Write-Host ""
-	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\ghq\pkglist.txt" | ForEach-Object { & ghq get $$_ }
-	@Write-Host ""
-	@Write-Host "install go shortage packages..." $(COLOR_HEADER)
-	@Write-Host ""
-	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\go\pkglist.txt" | ForEach-Object { & go install $$_ }
 	@Write-Host ""
 	@Write-Host "install winget shortage packages..." $(COLOR_HEADER)
 	@Write-Host ""
@@ -934,10 +794,6 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	@Write-Host "update windows..." $(COLOR_TITLE)
 	@Write-Host ""
-	@Write-Host "sync ghq repos..." $(COLOR_HEADER)
-	@Write-Host ""
-	ghq list | ghq get --update
-	@Write-Host ""
 	@Write-Host "update winget packages..." $(COLOR_HEADER)
 	@Write-Host ""
 	winget upgrade --silent --all
@@ -949,14 +805,6 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host "install new packages..." $(COLOR_HEADER)
 	@Write-Host ""
 	make windows.install
-	@Write-Host ""
-	@Write-Host "update ghq package list..." $(COLOR_HEADER)
-	@Write-Host ""
-	make misc.update.ghqpkglist
-	@Write-Host ""
-	@Write-Host "update go packages..." $(COLOR_HEADER)
-	@Write-Host ""
-	make misc.update.gopkglist
 	@Write-Host ""
 	@Write-Host "export winget packages..." $(COLOR_HEADER)
 	@Write-Host ""
@@ -1112,53 +960,6 @@ all: help
 clean: nix.clean
 test: nix.check
 
-#
-# misc
-#
-.PHONY: misc.update.ghqpkglist misc.update.gopkglist
-
-# update ghq package list
-.PHONY: misc.update.ghqpkglist
-misc.update.ghqpkglist:
-ifeq ($(IS_WINDOWS),0)
-	@echo ""
-	@echo "$(COLOR_TITLE)update ghq package list...$(COLOR_RESET)"
-	@echo ""
-	ghq list | sort > pkglist/ghq/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_DONE)update ghq package list done!$(COLOR_RESET)"
-	@echo ""
-else
-	@Write-Host ""
-	@Write-Host "update ghq package list..." $(COLOR_TITLE)
-	@Write-Host ""
-	ghq list | Sort-Object > pkglist/ghq/pkglist.txt
-	@Write-Host ""
-	@Write-Host "update ghq package list done!" $(COLOR_DONE)
-	@Write-Host ""
-endif
-
-# update go package list
-.PHONY: misc.update.gopkglist
-misc.update.gopkglist:
-ifeq ($(IS_WINDOWS),0)
-	@echo ""
-	@echo "$(COLOR_TITLE)update go package list...$(COLOR_RESET)"
-	@echo ""
-	gup list | awk '{print $$2}' | sed 's/@v.*/@latest/' | sort > pkglist/go/pkglist.txt
-	@echo ""
-	@echo "$(COLOR_DONE)update go package list done!$(COLOR_RESET)"
-	@echo ""
-else
-	@Write-Host ""
-	@Write-Host "update go package list..." $(COLOR_TITLE)
-	@Write-Host ""
-	gup list | ForEach-Object { ($$_ -split ": ")[1] } | ForEach-Object { $$_ -replace "@v.*", "@latest" } | Sort-Object > pkglist/go/pkglist.txt
-	@Write-Host ""
-	@Write-Host "update go package list done!" $(COLOR_DONE)
-	@Write-Host ""
-endif
-
 # help
 .PHONY: help
 help:
@@ -1182,10 +983,6 @@ ifeq ($(IS_NIXOS),1)
 	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)               - run nix garbage collection (user)"
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                - update flake.lock file"
 	@echo ""
-	@echo "$(COLOR_HEADER)  [miscellaneous]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)misc.update.ghqpkglist$(COLOR_RESET)    - update ghq package list"
-	@echo "    $(COLOR_CMD)misc.update.gopkglist$(COLOR_RESET)     - update go package list"
-	@echo ""
 endif
 ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
@@ -1206,10 +1003,6 @@ ifeq ($(IS_NIXOS_WSL),1)
 	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)             - run nix garbage collection (system)"
 	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)               - run nix garbage collection (user)"
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)                - update flake.lock file"
-	@echo ""
-	@echo "$(COLOR_HEADER)  [miscellaneous]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)misc.update.ghqpkglist$(COLOR_RESET)    - update ghq package list"
-	@echo "    $(COLOR_CMD)misc.update.gopkglist$(COLOR_RESET)     - update go package list"
 	@echo ""
 endif
 ifeq ($(IS_MAC),1)
@@ -1236,10 +1029,6 @@ ifeq ($(IS_MAC),1)
 	@echo "    $(COLOR_CMD)darwin.update.brewpkglist$(COLOR_RESET)    - update brew package list"
 	@echo "    $(COLOR_CMD)darwin.restart.services$(COLOR_RESET)      - restart services"
 	@echo ""
-	@echo "$(COLOR_HEADER)  [miscellaneous]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)misc.update.ghqpkglist$(COLOR_RESET)       - update ghq package list"
-	@echo "    $(COLOR_CMD)misc.update.gopkglist$(COLOR_RESET)        - update go package list"
-	@echo ""
 endif
 ifeq ($(IS_MACBOOK),1)
 	@echo ""
@@ -1265,10 +1054,6 @@ ifeq ($(IS_MACBOOK),1)
 	@echo "    $(COLOR_CMD)darwin.update.brewpkglist$(COLOR_RESET)    - update brew package list"
 	@echo "    $(COLOR_CMD)darwin.restart.services$(COLOR_RESET)      - restart services"
 	@echo ""
-	@echo "$(COLOR_HEADER)  [miscellaneous]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)misc.update.ghqpkglist$(COLOR_RESET)       - update ghq package list"
-	@echo "    $(COLOR_CMD)misc.update.gopkglist$(COLOR_RESET)        - update go package list"
-	@echo ""
 endif
 ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
@@ -1279,9 +1064,5 @@ ifeq ($(IS_WINDOWS),1)
 	@Write-Host "    windows.install                 - install yanoWindows packages" $(COLOR_CMD)
 	@Write-Host "    windows.update                  - update whole yanoWindows (settings, packages)" $(COLOR_CMD)
 	@Write-Host "    windows.update.wingetpkglist    - export and sort winget packages" $(COLOR_CMD)
-	@Write-Host ""
-	@Write-Host "[miscellaneous]" $(COLOR_HEADER)
-	@Write-Host "    misc.update.ghqpkglist          - update ghq package list" $(COLOR_CMD)
-	@Write-Host "    misc.update.gopkglist           - update go package list" $(COLOR_CMD)
 	@Write-Host ""
 endif

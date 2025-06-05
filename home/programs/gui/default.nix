@@ -1,9 +1,12 @@
 {
   imports = [
+    ./browser.nix
     ./desktop.nix
+    ./explorer.nix
     ./game.nix
     ./gtk.nix
     ./media.nix
-    ./xdg.nix
+    ./rdp.nix
+    ./terminal.nix
   ];
 }

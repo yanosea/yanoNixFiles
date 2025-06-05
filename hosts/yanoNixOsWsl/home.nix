@@ -3,8 +3,6 @@
   imports = [
     # cli
     ../../home/programs/cli
-    # gui (xdg-utils)
-    ../../home/programs/gui/xdg.nix
     # languages
     ../../home/programs/languages
     # nixos wsl specific
