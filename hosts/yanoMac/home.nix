@@ -3,6 +3,8 @@
   imports = [
     # cli
     ../../home/programs/cli
+    # gui (terminal)
+    ../../home/programs/gui/terminal.nix
     # languages
     ../../home/programs/languages
     # darwin specific

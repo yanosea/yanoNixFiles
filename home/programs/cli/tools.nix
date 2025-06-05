@@ -1,86 +1,23 @@
 { pkgs, ... }:
 {
   imports = [
-    ../../dotfiles/bash
-    ../../dotfiles/browsh
     ../../dotfiles/era
     ../../dotfiles/jisyo
-    ../../dotfiles/lazygit
-    ../../dotfiles/lf
-    ../../dotfiles/sheldon
-    ../../dotfiles/starship
-    ../../dotfiles/textualize
-    ../../dotfiles/tmux
-    ../../dotfiles/wezterm
-    ../../dotfiles/yazi
-    ../../dotfiles/zellij
-    ../../dotfiles/zsh
   ];
   home = {
     packages = with pkgs; [
       # tools
-      aider-chat
-      bat
-      bash
-      broot
-      browsh
-      btop
-      delta
-      docker
-      docker-compose
-      duf
-      dust
       era
-      eza
       fastfetch
-      fd
-      ffmpeg
       fontforge
-      frogmouth
-      fzf
       fzf-make
-      gum
-      htop
       hyperfine
-      inshellisense
       jnv
       jq
-      killall
-      lf
-      lsd
       mermaid-cli
-      ncdu
       onefetch
-      rbw
-      ripgrep
-      sheldon
-      shfmt
-      starship
-      systemctl-tui
-      t-rec
-      taplo
-      tldr
-      tmux
-      trash-cli
-      tree
-      tree-sitter
-      treefmt
-      unzip
       vhs
       wakatime
-      wezterm
-      yazi
-      zellij
-      zoxide
-      zsh
-      # jokeey
-      cmatrix
-      cowsay
-      figlet
-      genact
-      rig
-      sl
-      unimatrix
     ];
   };
 }
