@@ -99,6 +99,17 @@ jobs:
             PR_STATE=$(gh pr view "$PR_NUMBER" --json state --jq .state)
             if [ "$PR_STATE" == "MERGED" ]; then
               echo "PR #$PR_NUMBER has been merged successfully"
+
+              # check if branch still exists
+              BRANCH_EXISTS=$(gh api repos/$GITHUB_REPOSITORY/branches/$BRANCH_NAME -q .name 2>/dev/null || echo "")
+              if [ -n "$BRANCH_EXISTS" ]; then
+                echo "Branch $BRANCH_NAME still exists, deleting it"
+                gh api -X DELETE repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH_NAME
+                echo "Branch $BRANCH_NAME deleted"
+              else
+                echo "Branch $BRANCH_NAME already deleted"
+              fi
+
               break
             fi
 
@@ -107,4 +118,5 @@ jobs:
           done
         env:
           PR_NUMBER: ${{ needs.find-pr.outputs.pr_number }}
+          BRANCH_NAME: ${{ needs.find-pr.outputs.branch_name }}
           GITHUB_TOKEN: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
