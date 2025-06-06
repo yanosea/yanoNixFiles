@@ -22,6 +22,9 @@ jobs:
       branch_name: ${{ steps.find-pr.outputs.branch_name }}
       found: ${{ steps.find-pr.outputs.found }}
     steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
       - name: find associated PR
         id: find-pr
         env:
