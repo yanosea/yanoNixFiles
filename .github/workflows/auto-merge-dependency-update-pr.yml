@@ -76,55 +76,15 @@ jobs:
 
       - name: enable auto-merge and wait for completion
         run: |
-          # verify PR exists
-          if ! gh pr view "$PR_NUMBER" --json number &>/dev/null; then
-            echo "PR #$PR_NUMBER not found or not accessible"
-            exit 0
-          fi
-
-          # enable auto-merge
-          if gh pr merge --auto --merge "$PR_NUMBER"; then
-            echo "Auto-merge enabled for PR #$PR_NUMBER"
-          else
-            echo "Failed to enable auto-merge for PR #$PR_NUMBER"
-            exit 0
-          fi
-
-          # wait for merge to complete
-          MAX_WAIT_TIME=300  # 5 minutes
-          POLLING_INTERVAL=10  # check every 10 seconds
-          START_TIME=$(date +%s)
-
+          gh pr merge --auto --merge "$PR_NUMBER"
           while true; do
-            CURRENT_TIME=$(date +%s)
-            ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
-
-            if [ $ELAPSED_TIME -gt $MAX_WAIT_TIME ]; then
-              echo "Timeout waiting for PR to merge after ${MAX_WAIT_TIME}s"
-              exit 0
-            fi
-
-            PR_STATE=$(gh pr view "$PR_NUMBER" --json state --jq .state 2>/dev/null || echo "UNKNOWN")
+            PR_STATE=$(gh pr view "$PR_NUMBER" --json state --jq .state)
             if [ "$PR_STATE" == "MERGED" ]; then
-              echo "PR #$PR_NUMBER has been merged successfully"
-              break
-            elif [ "$PR_STATE" == "UNKNOWN" ]; then
-              echo "Could not determine PR state, it might have been deleted"
               break
             fi
-
-            echo "Waiting for PR to merge (${ELAPSED_TIME}s elapsed)... Current state: $PR_STATE"
-            sleep $POLLING_INTERVAL
+            sleep 5
           done
 
       - name: delete source branch if it exists
         run: |
-          # check if branch exists and delete it if present
-          if gh api repos/$GITHUB_REPOSITORY/branches/$BRANCH_NAME --silent 2>/dev/null; then
-            echo "Branch $BRANCH_NAME still exists, deleting it"
-            gh api -X DELETE repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH_NAME && \
-              echo "Branch $BRANCH_NAME deleted successfully" || \
-              echo "Failed to delete branch $BRANCH_NAME"
-          else
-            echo "Branch $BRANCH_NAME already deleted or does not exist"
-          fi
+          git push origin --delete "$BRANCH_NAME"
