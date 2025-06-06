@@ -45,11 +45,20 @@ jobs:
               }
             }' -F owner=$GITHUB_REPOSITORY_OWNER -F repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2))
 
+            # check if the json data is valid
+            echo "$PR_DATA" > /tmp/pr_response.json
+            echo "API Response saved to /tmp/pr_response.json"
+            if ! jq '.' /tmp/pr_response.json > /dev/null 2>&1; then
+              echo "API returned invalid JSON response"
+              echo "found=false" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+
           # find PR that matches our criteria (flake update branch with required labels)
-          MATCHING_PR=$(echo "$PR_DATA" | jq -r '.data.repository.pullRequests.nodes[] |
+          MATCHING_PR=$(jq -r '.data.repository.pullRequests.nodes[] |
             select(.headRefName | startswith("auto-update/flake-lock/")) |
             select(.labels.nodes[].name | contains("dependencies") or contains("automated")) |
-            {number: .number, headRefName: .headRefName}' | head -1)
+            {number: .number, headRefName: .headRefName}' /tmp/pr_response.json 2>/dev/null | head -1)
 
           if [[ -n "$MATCHING_PR" ]]; then
             PR_NUMBER=$(echo "$MATCHING_PR" | jq -r '.number')
