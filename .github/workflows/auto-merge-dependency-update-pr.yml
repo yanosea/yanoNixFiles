@@ -27,52 +27,31 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # GraphQL query to find PRs that match our criteria
-           PR_DATA=$(gh api graphql -f query='
-             query($owner:String!, $repo:String!) {
-               repository(owner:$owner, name:$repo) {
-                 pullRequests(first:10, orderBy:{field:CREATED_AT, direction:DESC}, baseRefName:"main") {
-                   nodes {
-                     number
-                     headRefName
-                     labels(first:10) {
-                       nodes {
-                         name
-                       }
-                     }
-                   }
-                 }
-               }
-             }' -F owner=$GITHUB_REPOSITORY_OWNER -F repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2))
+          # alternative approach using direct PR search
+          echo "Searching for dependency update PRs..."
 
-           # check if the json data is valid
-           echo "$PR_DATA" > /tmp/pr_response.json
-           echo "API Response saved to /tmp/pr_response.json"
-           cat /tmp/pr_response.json
+          # get recent PRs and filter for our criteria
+          PR_LIST=$(gh pr list --base main --limit 10 --json number,headRefName,labels --jq '.')
+          echo "$PR_LIST" > /tmp/pr_list.json
 
-           if ! jq -e '.' /tmp/pr_response.json > /dev/null 2>&1; then
-             echo "API returned invalid JSON response"
-             echo "found=false" >> $GITHUB_OUTPUT
-             exit 0
-           fi
+          # extract matching PR with jq
+          MATCHING_PR=$(jq -r '[.[] |
+            select(.headRefName | startswith("auto-update/flake-lock/")) |
+            select(.labels | map(.name) | any(. == "dependencies" or . == "automated")) |
+            {number: .number, headRefName: .headRefName}] | first // {}' /tmp/pr_list.json)
 
-           # now that we have validated JSON, proceed
-           MATCHING_PR=$(jq -r '.data.repository.pullRequests.nodes[] |
-             select(.headRefName | startswith("auto-update/flake-lock/")) |
-             select(any(.labels.nodes[]; .name | contains("dependencies") or contains("automated"))) |
-             {number: .number, headRefName: .headRefName}' /tmp/pr_response.json | head -1)
-
-           if [[ -n "$MATCHING_PR" ]]; then
-             PR_NUMBER=$(echo "$MATCHING_PR" | jq -r '.number')
-             HEAD_REF=$(echo "$MATCHING_PR" | jq -r '.headRefName')
-             echo "PR #$PR_NUMBER ($HEAD_REF) is a valid dependency update PR"
-             echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
-             echo "branch_name=$HEAD_REF" >> $GITHUB_OUTPUT
-             echo "found=true" >> $GITHUB_OUTPUT
-           else
-             echo "No matching PR found"
-             echo "found=false" >> $GITHUB_OUTPUT
-           fi
+          # check if we found a matching PR
+          if [[ $(echo "$MATCHING_PR" | jq 'has("number")') == "true" ]]; then
+            PR_NUMBER=$(echo "$MATCHING_PR" | jq -r '.number')
+            HEAD_REF=$(echo "$MATCHING_PR" | jq -r '.headRefName')
+            echo "PR #$PR_NUMBER ($HEAD_REF) is a valid dependency update PR"
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "branch_name=$HEAD_REF" >> $GITHUB_OUTPUT
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "No matching PR found"
+            echo "found=false" >> $GITHUB_OUTPUT
+          fi
 
   auto-approve-and-merge:
     runs-on: ubuntu-latest
@@ -94,11 +73,21 @@ jobs:
 
       - name: enable auto-merge and wait for completion
         run: |
-          # enable auto-merge
-          gh pr merge --auto --merge "$PR_NUMBER"
-          echo "Auto-merge enabled for PR #$PR_NUMBER"
+          # verify PR exists
+          if ! gh pr view "$PR_NUMBER" --json number &>/dev/null; then
+            echo "PR #$PR_NUMBER not found or not accessible"
+            exit 0
+          fi
 
-          # wait for merge to complete with optimized polling
+          # enable auto-merge
+          if gh pr merge --auto --merge "$PR_NUMBER"; then
+            echo "Auto-merge enabled for PR #$PR_NUMBER"
+          else
+            echo "Failed to enable auto-merge for PR #$PR_NUMBER"
+            exit 0
+          fi
+
+          # wait for merge to complete
           MAX_WAIT_TIME=300  # 5 minutes
           POLLING_INTERVAL=10  # check every 10 seconds
           START_TIME=$(date +%s)
@@ -108,28 +97,31 @@ jobs:
             ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
 
             if [ $ELAPSED_TIME -gt $MAX_WAIT_TIME ]; then
-              echo "Timeout waiting for PR to merge"
+              echo "Timeout waiting for PR to merge after ${MAX_WAIT_TIME}s"
               exit 0
             fi
 
-            PR_STATE=$(gh pr view "$PR_NUMBER" --json state --jq .state)
+            PR_STATE=$(gh pr view "$PR_NUMBER" --json state --jq .state 2>/dev/null || echo "UNKNOWN")
             if [ "$PR_STATE" == "MERGED" ]; then
               echo "PR #$PR_NUMBER has been merged successfully"
               break
+            elif [ "$PR_STATE" == "UNKNOWN" ]; then
+              echo "Could not determine PR state, it might have been deleted"
+              break
             fi
 
-            echo "Waiting for PR to merge (${ELAPSED_TIME}s elapsed)..."
+            echo "Waiting for PR to merge (${ELAPSED_TIME}s elapsed)... Current state: $PR_STATE"
             sleep $POLLING_INTERVAL
           done
 
       - name: delete source branch if it exists
         run: |
-          # check if branch still exists
-          BRANCH_EXISTS=$(gh api repos/$GITHUB_REPOSITORY/branches/$BRANCH_NAME -q .name 2>/dev/null || echo "")
-          if [ -n "$BRANCH_EXISTS" ]; then
+          # check if branch exists and delete it if present
+          if gh api repos/$GITHUB_REPOSITORY/branches/$BRANCH_NAME --silent 2>/dev/null; then
             echo "Branch $BRANCH_NAME still exists, deleting it"
-            gh api -X DELETE repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH_NAME
-            echo "Branch $BRANCH_NAME deleted"
+            gh api -X DELETE repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH_NAME && \
+              echo "Branch $BRANCH_NAME deleted successfully" || \
+              echo "Failed to delete branch $BRANCH_NAME"
           else
-            echo "Branch $BRANCH_NAME already deleted"
+            echo "Branch $BRANCH_NAME already deleted or does not exist"
           fi
