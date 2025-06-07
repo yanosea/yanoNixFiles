@@ -45,7 +45,7 @@ for prefix in "${!emoji_map[@]}"; do
   if [[ "$commit_msg" =~ ^($prefix)(\(.*\))?:\ .* ]]; then
     emoji="${emoji_map[$prefix]}"
     # find matched prefix in original message and add emoji
-    new_msg=$(echo "$commit_msg" | sed "s/^$prefix/$emoji $prefix/")
+    new_msg=$(echo "$commit_msg" | sed "s/^$prefix/$emoji$prefix/")
     echo "$new_msg" > "$COMMIT_MSG_FILE"
     break
   fi
@@ -58,14 +58,14 @@ chmod +x .git/hooks/prepare-commit-msg
 echo -e "${GREEN}Git Emoji Prefix has been installed to the current repository!${NC}"
 echo ""
 echo -e "${YELLOW}Supported prefixes:${NC}"
-echo "  - chore:     🛠️  Chores"
-echo "  - feat:      ✨  New feature"
-echo "  - fix:       🐞  Bug fix"
-echo "  - docs:      📚  Documentation"
-echo "  - merge:     🔀  Merge"
-echo "  - perf:      🚀  Performance improvement"
-echo "  - refactor:  ♻️  Refactoring"
-echo "  - style:     💄  Styling"
-echo "  - test:      🧪  Testing"
+echo "  - chore:     🛠️  chores"
+echo "  - feat:      ✨  new feature"
+echo "  - fix:       🐞  bug fix"
+echo "  - docs:      📚  documentation"
+echo "  - merge:     🔀  merge"
+echo "  - perf:      🚀  performance improvement"
+echo "  - refactor:  ♻️  refactoring"
+echo "  - style:     💄  styling"
+echo "  - test:      🧪  testing"
 echo ""
-echo -e "Example: ${GREEN}git commit -m \"feat: Add new feature\"${NC} → ${GREEN}\"✨ feat: Add new feature\"${NC}"
+echo -e "Example: ${GREEN}git commit -m \"feat: Add new feature\"${NC} → ${GREEN}\"✨feat: Add new feature\"${NC}"
