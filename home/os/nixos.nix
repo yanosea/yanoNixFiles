@@ -12,6 +12,8 @@
       clipse
       fuseiso
       rclone
+      wineWowPackages.staging
+      winetricks
     ];
   };
 }
