@@ -4,15 +4,56 @@
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
-NC='\033[0m' # no Color
+CLEAR='\033[0m' # clear color
 
-echo -e "${YELLOW}Git Emoji Prefix Installer${NC}"
+# function to display help message
+show_help() {
+	echo -e "${YELLOW}Git Emoji Prefix Installer${CLEAR}"
+	echo ""
+	echo "Usage: $0 [options]"
+	echo ""
+	echo "Options:"
+	echo "  -h, --help    Display this help message"
+	echo ""
+	echo -e "${YELLOW}Supported prefixes:${CLEAR}"
+	echo "  - chore:     🧹 chores"
+	echo "  - feat:      ✨ new feature"
+	echo "  - fix:       🐞 bug fix"
+	echo "  - docs:      📚 documentation"
+	echo "  - merge:     🔀 merge"
+	echo "  - perf:      🚀 performance improvement"
+	echo "  - refactor:  🔧 refactoring"
+	echo "  - style:     💄 styling"
+	echo "  - test:      🧪 testing"
+	echo ""
+	echo -e "Example: ${GREEN}git commit -m \"feat: Add new feature\"${CLEAR} → ${GREEN}\"✨feat: Add new feature\"${CLEAR}"
+	exit 0
+}
+
+# process command line arguments
+for arg in "$@"; do
+	case $arg in
+	-h | --help)
+		show_help
+		;;
+	esac
+done
+
+echo -e "${YELLOW}Git Emoji Prefix Installer${CLEAR}"
 
 # check if current directory is a Git repository
 if [ ! -d ".git" ]; then
-	echo -e "${RED}Error: The current directory is not a Git repository.${NC}"
+	echo -e "${RED}Error: The current directory is not a Git repository.${CLEAR}"
 	echo "Please run this script inside a Git repository..."
 	exit 1
+fi
+
+# confirm with user
+echo -e -n "Do you want to install Git Emoji Prefix to the current repository? [y/N] "
+read -r response
+if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+	echo -e "${YELLOW}Installation aborted${CLEAR}"
+	exit 0
 fi
 
 # create prepare-commit-msg hook
@@ -30,22 +71,22 @@ commit_msg=$(cat "$COMMIT_MSG_FILE")
 
 # prefix and emoji mapping
 declare -A emoji_map
-emoji_map["chore"]="🛠️"
+emoji_map["chore"]="🧹"
 emoji_map["feat"]="✨"
 emoji_map["fix"]="🐞"
 emoji_map["docs"]="📚"
 emoji_map["merge"]="🔀"
 emoji_map["perf"]="🚀"
-emoji_map["refactor"]="♻️"
+emoji_map["refactor"]="🔧"
 emoji_map["style"]="💄"
 emoji_map["test"]="🧪"
 
 # detect prefix and add emoji
 for prefix in "${!emoji_map[@]}"; do
-  if [[ "$commit_msg" =~ ^($prefix)(\(.*\))?:\ .* ]]; then
+  if [[ "$commit_msg" =~ ^($prefix)(\(.*\))?(:|[[:space:]]) ]]; then
     emoji="${emoji_map[$prefix]}"
     # find matched prefix in original message and add emoji
-    new_msg=$(echo "$commit_msg" | sed "s/^$prefix/$emoji$prefix/")
+		new_msg="$emoji$commit_msg"
     echo "$new_msg" > "$COMMIT_MSG_FILE"
     break
   fi
@@ -55,17 +96,5 @@ EOF
 # add execution permission
 chmod +x .git/hooks/prepare-commit-msg
 
-echo -e "${GREEN}Git Emoji Prefix has been installed to the current repository!${NC}"
 echo ""
-echo -e "${YELLOW}Supported prefixes:${NC}"
-echo "  - chore:     🛠️  chores"
-echo "  - feat:      ✨  new feature"
-echo "  - fix:       🐞  bug fix"
-echo "  - docs:      📚  documentation"
-echo "  - merge:     🔀  merge"
-echo "  - perf:      🚀  performance improvement"
-echo "  - refactor:  ♻️  refactoring"
-echo "  - style:     💄  styling"
-echo "  - test:      🧪  testing"
-echo ""
-echo -e "Example: ${GREEN}git commit -m \"feat: Add new feature\"${NC} → ${GREEN}\"✨feat: Add new feature\"${NC}"
+echo -e "${GREEN}Git Emoji Prefix has been successfully installed to the current repository!${CLEAR}"
