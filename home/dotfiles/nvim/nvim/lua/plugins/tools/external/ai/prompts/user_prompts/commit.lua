@@ -9,7 +9,7 @@ For the title, use one of the following prefixes, separated from the title by a 
   - Use for new feature additions
 - fix:
   - Use for bug fixes
-- doc:
+- docs:
   - Use for documentation-only changes
 - style:
   - Use for changes that do not affect program behavior (indentation adjustments, formatting, etc.)
