@@ -42,18 +42,22 @@ mkfs.fat -F 32 -n boot /dev/sda3
 # mount the 'nixos' partition to the /mnt directory
 mount /dev/disk/by-label/nixos /mnt
 # create a new directory /mnt/boot and mount the 'boot' partition to the /mnt/boot directory with umask set to 077
-mkdir -p /mnt/boot  && mount -o umask=077 /dev/disk/by-label/boot /mnt/boot
+mkdir -p /mnt/boot && mount -o umask=077 /dev/disk/by-label/boot /mnt/boot
 # enable the swap partition
 swapon /dev/sda2
 # generate a nixos configuration file for the system
 nixos-generate-config --root /mnt
+# you may uncomment networkingmanager config
+nano /mnt/etc/nixos/configuration.nix
+# then, uncomment below
+# networking.networkingmanager.enabled = true;
 # install NixOS on the system
 nixos-install
 # reboot the system
 reboot
 # login as root
 # create a new user 'yanosea' with a home directory
-useradd  -m yanosea
+useradd -m yanosea
 # set or change password for user 'yanosea'
 passwd yanosea
 # add user 'yanosea' sudoers
@@ -68,7 +72,7 @@ exit
 
 ```sh
 # update the system
-sudo nix-channel --add  https://nixos.org/channels/nixos-24.11 nixos && sudo nix-channel --update && sudo nixos-rebuild switch
+sudo nix-channel --add https://nixos.org/channels/nixos-24.11 nixos && sudo nix-channel --update && sudo nixos-rebuild switch
 # you may have to add your user to sudoers again
 ```
 
@@ -181,7 +185,7 @@ wsl -d NixOS --cd ~
 #
 
 # update the system
-sudo nix-channel --add  https://nixos.org/channels/nixos-24.11 nixos && sudo nix-channel --update && sudo nixos-rebuild switch
+sudo nix-channel --add https://nixos.org/channels/nixos-24.11 nixos && sudo nix-channel --update && sudo nixos-rebuild switch
 # change to root
 sudo -i
 # add user yanosea and set password
@@ -306,7 +310,7 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 
 ```sh
 # update the system
-sudo nix-channel --add  https://nixos.org/channels/nixos-24.11 nixos && sudo nix-channel --update && sudo darwin-rebuild switch
+sudo nix-channel --add https://nixos.org/channels/nixos-24.11 nixos && sudo nix-channel --update && sudo darwin-rebuild switch
 ```
 
 5. Enter nix-shell with necessary packages.
