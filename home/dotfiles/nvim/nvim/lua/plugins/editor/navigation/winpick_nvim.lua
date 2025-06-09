@@ -17,6 +17,7 @@ return {
 					local excluded_filetypes = {
 						"noice",
 						"notify",
+						"smear-cursor",
 					}
 					if vim.tbl_contains(excluded_filetypes, filetype) then
 						is_excluded = true
