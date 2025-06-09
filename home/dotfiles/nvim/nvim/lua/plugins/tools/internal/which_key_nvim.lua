@@ -163,7 +163,7 @@ return {
 					{ "<LEADER>lT", "<CMD>TodoLocList<CR>", desc = "lsp: todo location list" },
 					{ "<LEADER>lw", "<CMD>Telescope diagnostics<CR>", desc = "lsp: diagnostics" },
 					-- markdown
-					{ "LEADER>m", group = "markdown" },
+					{ "<LEADER>m", group = "markdown" },
 					{ "<LEADER>mp", "<CMD>PeekOpen<CR>", desc = "markdown: preview in browser" },
 					{ "<LEADER>mt", "<CMD>RenderMarkdown toggle<CR>", desc = "markdown: preview toggle" },
 					-- noice
