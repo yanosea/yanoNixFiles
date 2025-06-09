@@ -217,6 +217,8 @@ return {
 					{ "<LEADER>sr", "<CMD>Telescope oldfiles<CR>", desc = "search: recent file" },
 					{ "<LEADER>sR", "<CMD>Telescope registers<CR>", desc = "search: registers" },
 					{ "<LEADER>st", "<CMD>Telescope live_grep<CR>", desc = "search: text" },
+					-- smear cursor
+					{ "<LEADER>S", "<CMD>SmearCursorToggle<CR>", desc = "smearcursor: toggle" },
 					-- terminal
 					{ "<LEADER>t", "<CMD>ToggleTerm<CR>", desc = "terminal" },
 					-- translate
