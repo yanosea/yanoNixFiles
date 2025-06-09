@@ -175,7 +175,7 @@ return {
 					{ "<LEADER>nh", "<CMD>NoiceHistory<CR>", desc = "noice: message history" },
 					{ "<LEADER>nl", "<CMD>NoiceLast<CR>", desc = "noice: last message" },
 					{ "<LEADER>ns", "<CMD>Noice<CR>", desc = "noice: show" },
-					-- org mode (grouping)
+					-- org mode (for grouping)
 					{ "<LEADER>o", group = "orgmode" },
 					-- oil explorer
 					{ "<LEADER>O", "<CMD>Oil<CR>", desc = "oil" },
