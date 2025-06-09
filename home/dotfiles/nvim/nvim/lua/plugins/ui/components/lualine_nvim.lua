@@ -4,6 +4,7 @@ return {
 		"nvim-lualine/lualine.nvim",
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
+			"NStefan002/screenkey.nvim",
 		},
 		lazy = true,
 		event = "VimEnter",
@@ -231,6 +232,11 @@ return {
 					end,
 					cond = conditions.hide_in_width,
 				},
+				screenkey = {
+					function()
+						return require("screenkey").get_keys()
+					end,
+				},
 				lsp = {
 					get_lsp_info,
 					color = { gui = "bold" },
@@ -274,6 +280,67 @@ return {
 				print("headless mode detected, skipping lualine setup")
 				return
 			end
+			-- screenkey.nvim config
+			require("screenkey").setup({
+				compress_after = 3,
+				clear_after = 1,
+				emit_events = true,
+				disable = {
+					filetypes = {
+						"TelescopePrompt",
+						"toggleterm",
+					},
+					buftypes = {},
+				},
+				show_leader = true,
+				group_mappings = true,
+				filter = function(keys)
+					-- ifnore in insert mode
+					if vim.fn.mode() == "i" then
+						return {}
+					end
+					return keys
+				end,
+				colorize = function(keys)
+					return keys
+				end,
+				separator = " ",
+				keys = {
+					["<TAB>"] = icons.keys.Tab,
+					["<CR>"] = icons.keys.CarriageReturn,
+					["<ESC>"] = icons.keys.Escape,
+					["<SPACE>"] = icons.keys.Space,
+					["<BS>"] = icons.keys.BackSpace,
+					["<DEL>"] = icons.keys.Delete,
+					["<LEFT>"] = icons.keys.Left,
+					["<RIGHT>"] = icons.keys.Right,
+					["<UP>"] = icons.keys.Up,
+					["<DOWN>"] = icons.keys.Down,
+					["<HOME>"] = icons.keys.Home,
+					["<END>"] = icons.keys.End,
+					["<PAGEUP>"] = icons.keys.PageUp,
+					["<PAGEDOWN>"] = icons.keys.PageDown,
+					["<INSERT>"] = icons.keys.Insert,
+					["<F1>"] = icons.keys.F1,
+					["<F2>"] = icons.keys.F2,
+					["<F3>"] = icons.keys.F3,
+					["<F4>"] = icons.keys.F4,
+					["<F5>"] = icons.keys.F5,
+					["<F6>"] = icons.keys.F6,
+					["<F7>"] = icons.keys.F7,
+					["<F8>"] = icons.keys.F8,
+					["<F9>"] = icons.keys.F9,
+					["<F10>"] = icons.keys.F10,
+					["<F11>"] = icons.keys.F11,
+					["<F12>"] = icons.keys.F12,
+					["CTRL"] = icons.keys.Ctrl,
+					["ALT"] = icons.keys.Alt,
+					["SUPER"] = icons.keys.Super,
+					["<leader>"] = icons.keys.Leader,
+				},
+			})
+			-- toggle screenkey statusline component first
+			require("screenkey").toggle_statusline_component()
 			-- lualine.nvim config
 			require("lualine").setup({
 				options = {
@@ -302,6 +369,7 @@ return {
 						components.python_env,
 					},
 					lualine_x = {
+						components.screenkey,
 						components.diagnostics,
 						components.lsp,
 						components.spaces,
@@ -323,6 +391,7 @@ return {
 						components.python_env,
 					},
 					lualine_x = {
+						components.screenkey,
 						components.diagnostics,
 						components.lsp,
 						components.spaces,
