@@ -32,26 +32,27 @@ return {
 			provider = "copilot",
 			mode = "agentic",
 			auto_suggestions_provider = "copilot",
-			cursor_applying_provider = "copilot",
 			memory_summary_provider = "copilot",
-			copilot = {
-				endpoint = "https://api.githubcopilot.com",
-				model = "claude-3.7-sonnet",
-				proxy = nil, -- [protocol://]host[:port] Use this proxy
-				allow_insecure = true, -- Allow insecure server connections
-				timeout = 60000, -- Timeout in milliseconds
-				temperature = 1,
-				max_tokens = 50960,
-			},
+			tokenizer = "tiktoken",
 			system_prompt = require("plugins.tools.external.ai.prompts.system_prompt").prompt,
-			rag_service = {
-				enabled = false, -- Enables the rag service, requires OPENAI_API_KEY to be set
-				host_mount = vim.env.HOME, -- Host mount path for the rag service (docker will mount this path)
-				runner = "docker", -- The runner for the rag service, (can use docker, or nix)
-				provider = "openai", -- The provider to use for RAG service. eg: openai or ollama
-				llm_model = "", -- The LLM model to use for RAG service
-				embed_model = "", -- The embedding model to use for RAG service
-				endpoint = "https://api.openai.com/v1", -- The API endpoint for RAG service
+			rag_service = { -- RAG service configuration
+				enabled = false, -- Enables the RAG service
+				host_mount = os.getenv("HOME"), -- Host mount path for the RAG service (Docker will mount this path)
+				runner = "docker", -- The runner for the RAG service (can use docker or nix)
+				llm = { -- Configuration for the Language Model (LLM) used by the RAG service
+					provider = "openai", -- The LLM provider
+					endpoint = "https://api.openai.com/v1", -- The LLM API endpoint
+					api_key = "OPENAI_API_KEY", -- The environment variable name for the LLM API key
+					model = "gpt-4o-mini", -- The LLM model name
+					extra = nil, -- Extra configuration options for the LLM
+				},
+				embed = { -- Configuration for the Embedding model used by the RAG service
+					provider = "openai", -- The embedding provider
+					endpoint = "https://api.openai.com/v1", -- The embedding API endpoint
+					api_key = "OPENAI_API_KEY", -- The environment variable name for the embedding API key
+					model = "text-embedding-3-large", -- The embedding model name
+					extra = nil, -- Extra configuration options for the embedding model
+				},
 				docker_extra_args = "", -- Extra arguments to pass to the docker command
 			},
 			web_search_engine = {
@@ -66,6 +67,19 @@ return {
 						format_response_body = function(body)
 							return body.answer, nil
 						end,
+					},
+				},
+			},
+			providers = {
+				copilot = {
+					endpoint = "https://api.githubcopilot.com",
+					model = "claude-3.7-sonnet",
+					proxy = nil, -- [protocol://]host[:port] Use this proxy
+					allow_insecure = true, -- Allow insecure server connections
+					timeout = 60000, -- Timeout in milliseconds
+					extra_request_body = {
+						temperature = 0.75, -- Temperature for the model
+						max_tokens = 20480, -- Max tokens for the model
 					},
 				},
 			},
@@ -89,6 +103,8 @@ return {
 				enable_token_counting = true,
 				use_cwd_as_project_root = true,
 				auto_focus_on_diff_view = false,
+				auto_approve_tool_permissions = true,
+				auto_check_diagnostics = true,
 			},
 			history = {
 				max_tokens = 20480,
@@ -137,18 +153,18 @@ return {
 					normal = { "<C-c>", "<Esc>", "q" },
 					insert = { "<C-c>" },
 				},
-				ask = "<leader>aaa",
-				new_ask = "<leader>aan",
-				edit = "<leader>aae",
-				refresh = "<leader>aar",
-				focus = "<leader>aaf",
-				stop = "<leader>aas",
+				ask = "<LEADER>aaa",
+				new_ask = "<LEADER>aan",
+				edit = "<LEADER>aae",
+				refresh = "<LEADER>aar",
+				focus = "<LEADER>aaf",
+				stop = "<LEADER>aas",
 				toggle = {
-					default = "<leader>aat",
-					debug = "<leader>aad",
-					hint = "<leader>aah",
-					suggestion = "<leader>aas",
-					repomap = "<leader>aaR",
+					default = "<LEADER>aat",
+					debug = "<LEADER>aad",
+					hint = "<LEADER>aah",
+					suggestion = "<LEADER>aas",
+					repomap = "<LEADER>aaR",
 				},
 				sidebar = {
 					apply_all = "A",
@@ -212,9 +228,13 @@ return {
 				provider_opts = {},
 			},
 			selector = {
-				provider = "telescope",
+				provider = "fzf_lua",
 				provider_opts = {},
 				exclude_auto_select = {}, -- List of items to exclude from auto selection
+			},
+			input = {
+				provider = "native",
+				provider_opts = {},
 			},
 			suggestion = {
 				debounce = 600,
