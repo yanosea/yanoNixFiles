@@ -3,9 +3,9 @@
   home = {
     packages = with pkgs; [
       pyenv
-      python312
-      python312Packages.pydbus
-      python312Packages.psutil
+      python313
+      python313Packages.pydbus
+      python313Packages.psutil
     ];
   };
 }

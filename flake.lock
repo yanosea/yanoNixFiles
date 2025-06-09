@@ -409,6 +409,26 @@
         "type": "github"
       }
     },
+    "mediaplayer": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1743850043,
+        "narHash": "sha256-vL59oZLITbMUFNrxIiYTsJu3zZVPst3DBgjZfBjoaXE=",
+        "owner": "nomisreual",
+        "repo": "mediaplayer",
+        "rev": "f2c367eeab03ea509521c4434b9736981e54ccb0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nomisreual",
+        "repo": "mediaplayer",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1749195551,
@@ -491,6 +511,7 @@
         "fenix": "fenix",
         "home-manager": "home-manager",
         "hyprland": "hyprland",
+        "mediaplayer": "mediaplayer",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
