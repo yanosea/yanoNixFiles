@@ -175,8 +175,10 @@ return {
 					{ "<LEADER>nh", "<CMD>NoiceHistory<CR>", desc = "noice: message history" },
 					{ "<LEADER>nl", "<CMD>NoiceLast<CR>", desc = "noice: last message" },
 					{ "<LEADER>ns", "<CMD>Noice<CR>", desc = "noice: show" },
+					-- org mode (grouping)
+					{ "<LEADER>o", group = "orgmode" },
 					-- oil explorer
-					{ "<LEADER>o", "<CMD>Oil<CR>", desc = "oil" },
+					{ "<LEADER>O", "<CMD>Oil<CR>", desc = "oil" },
 					-- plugins
 					{ "<LEADER>p", group = "plugins" },
 					{ "<LEADER>pc", "<CMD>Lazy clean<CR>", desc = "plugins: clean" },
