@@ -19,7 +19,6 @@
             "github.com/yanosea/spotlike"
             "github.com/yanosea/yanoNixFiles"
             "github.com/yanosea/yanoPortfolio"
-            "github.com/yurihs/waybar-media"
           ];
           script = pkgs.writeShellScript "sync-git-repos" ''
             set -euo pipefail
