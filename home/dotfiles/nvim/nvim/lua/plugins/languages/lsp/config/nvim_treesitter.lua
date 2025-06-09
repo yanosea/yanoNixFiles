@@ -71,6 +71,9 @@ return {
 					-- yaml
 					"yaml",
 				},
+				ignore_install = {
+					"org",
+				},
 			})
 		end,
 	},
