@@ -195,6 +195,8 @@ return {
 					{ "<LEADER>w", "<CMD>w!<CR>", desc = "save buffer" },
 					-- quit
 					{ "<LEADER>q", "<CMD>confirm q<CR>", desc = "quit" },
+					-- reader mode
+					{ "<LEADER>R", "<CMD>ReaderMode<CR>", desc = "reader mode: toggle" },
 					-- search
 					{ "<LEADER>s", group = "search" },
 					{ "<LEADER>sb", "<CMD>Telescope git_branches<CR>", desc = "search: checkout branch" },
