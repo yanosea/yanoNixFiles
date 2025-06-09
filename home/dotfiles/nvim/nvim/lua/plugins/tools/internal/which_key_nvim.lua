@@ -131,6 +131,8 @@ return {
 					{ "<LEADER>gs", "<CMD>Gitsigns stage_hunk<CR>", desc = "git: stage hunk" },
 					{ "<LEADER>gu", "<CMD>Gitsigns undo_stage_hunk<CR>", desc = "git: undo stage hunk" },
 					{ "<LEADER>gU", "<CMD>OpenGitHubUrlUnderCursor<CR>", desc = "git: open github url" },
+					-- grug far
+					{ "<LEADER>G", "<CMD>GrugFar<CR>", desc = "grug far: search and replace text" },
 					-- lsp
 					{ "<LEADER>l", group = "lsp" },
 					{ "<LEADER>la", "<CMD>lua vim.lsp.buf.code_action()<CR>", desc = "lsp: code action" },
