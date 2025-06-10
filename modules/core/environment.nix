@@ -11,6 +11,7 @@
       ghq
       git
       gnumake
+      killall
       libiconv
       lsof
       openssl

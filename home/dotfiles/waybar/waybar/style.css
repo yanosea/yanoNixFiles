@@ -154,3 +154,16 @@ window#waybar.hidden {
   padding-left: 5px;
   transition: none;
 }
+#custom-recorder-hdmi,
+#custom-recorder-dp3,
+#custom-recorder-dp2 {
+  color: #f38ba8;
+  animation: blink 1s infinite;
+  margin: 0 5px;
+  font-weight: bold;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.5;
+  }
+}

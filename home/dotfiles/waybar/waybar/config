@@ -1,109 +1,359 @@
-{
-  "height": 37,
-  "layer": "top",
-  "margin": "10px 10px 0px 10px",
-  "modules-left": [
-    "custom/os_icon",
-    "hyprland/workspaces",
-    "hyprland/window"
-  ],
-  "modules-center": [],
-  "modules-right": [
-    "custom/media",
-    "cpu",
-    "memory",
-    "temperature",
-    "network",
-    "pulseaudio",
-    "clock"
-  ],
-  "custom/os_icon": {
-    "format": " ",
-    "tooltip": false
-  },
-  "hyprland/workspaces": {
-    "format": "{icon}",
-    "on-scroll-up": "hyprctl dispatch workspace e+1",
-    "on-scroll-down": "hyprctl dispatch workspace e-1"
-  },
-  "hyprland/window": {
-    "max-length": 200,
-    "separate-outputs": true
-  },
-  "custom/media": {
-    "escape": true,
-    "exec": "mediaplayer 2> /dev/null",
-    "format": "{icon}{}",
-    "format-icons": {
-      "spotify": " ",
-      "default": " "
+[
+  {
+    "output": "HDMI-A-1",
+    "height": 37,
+    "layer": "top",
+    "margin": "10px 10px 0px 10px",
+    "modules-left": [
+      "custom/os_icon",
+      "hyprland/workspaces",
+      "hyprland/window",
+      "custom/recorder-hdmi",
+    ],
+    "modules-center": [],
+    "modules-right": [
+      "custom/media",
+      "cpu",
+      "memory",
+      "temperature",
+      "network",
+      "pulseaudio",
+      "clock"
+    ],
+    "custom/os_icon": {
+      "format": " ",
+      "tooltip": false
     },
-    "max-length": 60,
-    "on-click": "playerctl play-pause",
-    "on-click-right": "playerctl stop",
-    "smooth-scrolling-threshold": 10,
-    "on-scroll-up": "playerctl previous",
-    "on-scroll-down": "playerctl next",
-    "return-type": "json"
-  },
-  "cpu": {
-    "interval": 1,
-    "tooltip": false,
-    "format": " {usage}%",
-    "format-alt": " {load}",
-    "states": {
-      "warning": 70,
-      "critical": 90
+    "hyprland/workspaces": {
+      "format": "{icon}",
+      "on-scroll-up": "hyprctl dispatch workspace e+1",
+      "on-scroll-down": "hyprctl dispatch workspace e-1"
+    },
+    "hyprland/window": {
+      "max-length": 200,
+      "separate-outputs": true
+    },
+    "custom/recorder-hdmi": {
+      "exec": "~/.local/bin/check-recording HDMI-A-1",
+      "return-type": "text",
+      "interval": 1,
+      "on-click": "pgrep -f 'wf-recorder.*-o HDMI-A-1' >/dev/null && killall -s SIGINT wf-recorder",
+      "format": "{}",
+      "tooltip": false
+    },
+    "custom/media": {
+      "escape": true,
+      "exec": "mediaplayer 2> /dev/null",
+      "format": "{icon}{}",
+      "format-icons": {
+        "spotify": " ",
+        "default": " "
+      },
+      "max-length": 60,
+      "on-click": "playerctl play-pause",
+      "on-click-right": "playerctl stop",
+      "smooth-scrolling-threshold": 10,
+      "on-scroll-up": "playerctl previous",
+      "on-scroll-down": "playerctl next",
+      "return-type": "json"
+    },
+    "cpu": {
+      "interval": 1,
+      "tooltip": false,
+      "format": " {usage}%",
+      "format-alt": " {load}",
+      "states": {
+        "warning": 70,
+        "critical": 90
+      }
+    },
+    "memory": {
+      "interval": 5,
+      "format": " {used:0.1f}G/{total:0.1f}G",
+      "states": {
+        "warning": 70,
+        "critical": 90
+      },
+      "tooltip": false
+    },
+    "temperature": {
+      "critical-threshold": 90,
+      "interval": 5,
+      "format": "{icon} {temperatureC}°",
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "tooltip": false
+    },
+   "network": {
+      "interval": 5,
+      "format-wifi": " {essid} ({signalStrength}%)",
+      "format-ethernet": " {ifname}",
+      "format-disconnected": " ",
+      "format-alt": "{ipaddr}/{cidr}",
+      "tooltip": false
+    },
+    "pulseaudio": {
+      "format": "{icon}  {volume}%",
+      "format-bluetooth": "{icon}   {volume}%",
+      "format-muted": "",
+      "format-icons": {
+        "headphone": "",
+        "hands-free": "󱡏",
+        "headset": "",
+        "phone": "",
+        "portable": "",
+        "car": "",
+        "default": ["", ""]
+      },
+      "tooltip": false
+    },
+    "clock": {
+      "format": " {:%Y/%m/%d %H:%M:%S }",
+      "interval": 1,
+      "tooltip": false
     }
   },
-  "memory": {
-    "interval": 5,
-    "format": " {used:0.1f}G/{total:0.1f}G",
-    "states": {
-      "warning": 70,
-      "critical": 90
-    },
-    "tooltip": false
-  },
-  "temperature": {
-    "critical-threshold": 90,
-    "interval": 5,
-    "format": "{icon} {temperatureC}°",
-    "format-icons": [
-      "",
-      "",
-      "",
-      "",
-      ""
+  {
+    "output": "DP-3",
+    "height": 37,
+    "layer": "top",
+    "margin": "10px 10px 0px 10px",
+    "modules-left": [
+      "custom/os_icon",
+      "hyprland/workspaces",
+      "hyprland/window",
+      "custom/recorder-dp3",
     ],
-    "tooltip": false
-  },
-  "network": {
-    "interval": 5,
-    "format-wifi": " {essid} ({signalStrength}%)",
-    "format-ethernet": " {ifname}",
-    "format-disconnected": " ",
-    "format-alt": "{ipaddr}/{cidr}",
-    "tooltip": false
-  },
-  "pulseaudio": {
-    "format": "{icon}  {volume}%",
-    "format-bluetooth": "{icon}   {volume}%",
-    "format-muted": "",
-    "format-icons": {
-      "headphone": "",
-      "hands-free": "󱡏",
-      "headset": "",
-      "phone": "",
-      "portable": "",
-      "car": "",
-      "default": ["", ""]
+    "modules-center": [],
+    "modules-right": [
+      "custom/media",
+      "cpu",
+      "memory",
+      "temperature",
+      "network",
+      "pulseaudio",
+      "clock"
+    ],
+    "custom/os_icon": {
+      "format": " ",
+      "tooltip": false
     },
-    "tooltip": false
+    "hyprland/workspaces": {
+      "format": "{icon}",
+      "on-scroll-up": "hyprctl dispatch workspace e+1",
+      "on-scroll-down": "hyprctl dispatch workspace e-1"
+    },
+    "hyprland/window": {
+      "max-length": 200,
+      "separate-outputs": true
+    },
+    "custom/recorder-dp3": {
+      "exec": "~/.local/bin/check-recording DP-3",
+      "return-type": "text",
+      "interval": 1,
+      "on-click": "pgrep -f 'wf-recorder.*-o DP-3' >/dev/null && killall -s SIGINT wf-recorder",
+      "format": "{}",
+      "tooltip": false
+    },
+    "custom/media": {
+      "escape": true,
+      "exec": "mediaplayer 2> /dev/null",
+      "format": "{icon}{}",
+      "format-icons": {
+        "spotify": " ",
+        "default": " "
+      },
+      "max-length": 60,
+      "on-click": "playerctl play-pause",
+      "on-click-right": "playerctl stop",
+      "smooth-scrolling-threshold": 10,
+      "on-scroll-up": "playerctl previous",
+      "on-scroll-down": "playerctl next",
+      "return-type": "json"
+    },
+   "cpu": {
+      "interval": 1,
+      "tooltip": false,
+      "format": " {usage}%",
+      "format-alt": " {load}",
+      "states": {
+        "warning": 70,
+        "critical": 90
+      }
+    },
+    "memory": {
+      "interval": 5,
+      "format": " {used:0.1f}G/{total:0.1f}G",
+      "states": {
+        "warning": 70,
+        "critical": 90
+      },
+      "tooltip": false
+    },
+    "temperature": {
+      "critical-threshold": 90,
+      "interval": 5,
+      "format": "{icon} {temperatureC}°",
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "tooltip": false
+    },
+   "network": {
+      "interval": 5,
+      "format-wifi": " {essid} ({signalStrength}%)",
+      "format-ethernet": " {ifname}",
+      "format-disconnected": " ",
+      "format-alt": "{ipaddr}/{cidr}",
+      "tooltip": false
+    },
+    "pulseaudio": {
+      "format": "{icon}  {volume}%",
+      "format-bluetooth": "{icon}   {volume}%",
+      "format-muted": "",
+      "format-icons": {
+        "headphone": "",
+        "hands-free": "󱡏",
+        "headset": "",
+        "phone": "",
+        "portable": "",
+        "car": "",
+        "default": ["", ""]
+      },
+      "tooltip": false
+    },
+    "clock": {
+      "format": " {:%Y/%m/%d %H:%M:%S }",
+      "interval": 1,
+      "tooltip": false
+    }
   },
-  "clock": {
-    "format": " {:%Y/%m/%d %H:%M:%S }",
-    "interval": 1,
-    "tooltip": false
-  },
-}
+  {
+    "output": "DP-2",
+    "height": 37,
+    "layer": "top",
+    "margin": "10px 10px 0px 10px",
+    "modules-left": [
+      "custom/os_icon",
+      "hyprland/workspaces",
+      "hyprland/window",
+      "custom/recorder-dp2",
+    ],
+    "modules-center": [],
+    "modules-right": [
+      "custom/media",
+      "cpu",
+      "memory",
+      "temperature",
+      "network",
+      "pulseaudio",
+      "clock"
+    ],
+    "custom/os_icon": {
+      "format": " ",
+      "tooltip": false
+    },
+    "hyprland/workspaces": {
+      "format": "{icon}",
+      "on-scroll-up": "hyprctl dispatch workspace e+1",
+      "on-scroll-down": "hyprctl dispatch workspace e-1"
+    },
+    "hyprland/window": {
+      "max-length": 200,
+      "separate-outputs": true
+    },
+    "custom/recorder-dp2": {
+      "exec": "~/.local/bin/check-recording DP-2",
+      "return-type": "text",
+      "interval": 1,
+      "on-click": "pgrep -f 'wf-recorder.*-o DP-2' >/dev/null && killall -s SIGINT wf-recorder",
+      "format": "{}",
+      "tooltip": false
+    },
+    "custom/media": {
+      "escape": true,
+      "exec": "mediaplayer 2> /dev/null",
+      "format": "{icon}{}",
+      "format-icons": {
+        "spotify": " ",
+        "default": " "
+      },
+      "max-length": 60,
+      "on-click": "playerctl play-pause",
+      "on-click-right": "playerctl stop",
+      "smooth-scrolling-threshold": 10,
+      "on-scroll-up": "playerctl previous",
+      "on-scroll-down": "playerctl next",
+      "return-type": "json"
+    },
+   "cpu": {
+      "interval": 1,
+      "tooltip": false,
+      "format": " {usage}%",
+      "format-alt": " {load}",
+      "states": {
+        "warning": 70,
+        "critical": 90
+      }
+    },
+    "memory": {
+      "interval": 5,
+      "format": " {used:0.1f}G/{total:0.1f}G",
+      "states": {
+        "warning": 70,
+        "critical": 90
+      },
+      "tooltip": false
+    },
+    "temperature": {
+      "critical-threshold": 90,
+      "interval": 5,
+      "format": "{icon} {temperatureC}°",
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "tooltip": false
+    },
+   "network": {
+      "interval": 5,
+      "format-wifi": " {essid} ({signalStrength}%)",
+      "format-ethernet": " {ifname}",
+      "format-disconnected": " ",
+      "format-alt": "{ipaddr}/{cidr}",
+      "tooltip": false
+    },
+    "pulseaudio": {
+      "format": "{icon}  {volume}%",
+      "format-bluetooth": "{icon}   {volume}%",
+      "format-muted": "",
+      "format-icons": {
+        "headphone": "",
+        "hands-free": "󱡏",
+        "headset": "",
+        "phone": "",
+        "portable": "",
+        "car": "",
+        "default": ["", ""]
+      },
+      "tooltip": false
+    },
+    "clock": {
+      "format": " {:%Y/%m/%d %H:%M:%S }",
+      "interval": 1,
+      "tooltip": false
+    }
+  }
+]

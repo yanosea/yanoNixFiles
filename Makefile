@@ -100,6 +100,7 @@ ifeq ($(IS_NIXOS),1)
 	sudo ln -s /root/.config/rclone/rclone.conf /.rclone.conf
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/clipboard-history $$HOME/.local/bin/clipboard-history
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/ime $$HOME/.local/bin/ime
+	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/check-recording $$HOME/.local/bin/check-recording
 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 	ln -s /mnt/google_drive/yanosea $$HOME/google_drive
 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
