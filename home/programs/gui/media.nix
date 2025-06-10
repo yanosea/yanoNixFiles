@@ -1,11 +1,11 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 {
   # home
   home = {
     packages = (
       with pkgs;
       [
-        inputs.mediaplayer.packages.${pkgs.system}.default
+        mediaplayer
         evince
         spotify
         totem
