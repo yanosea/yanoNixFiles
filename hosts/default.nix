@@ -136,7 +136,7 @@ in
     "yanosea@yanoNixOs" = mkHomeManagerConfiguration {
       homePath = "/home";
       modules = [ ./yanoNixOs/home.nix ];
-      overlays = [ inputs.fenix.overlays.default ];
+      overlays = import ../overlays inputs;
       system = "x86_64-linux";
       username = "yanosea";
     };
@@ -144,7 +144,7 @@ in
     "yanosea@yanoNixOsWsl" = mkHomeManagerConfiguration {
       homePath = "/home";
       modules = [ ./yanoNixOsWsl/home.nix ];
-      overlays = [ inputs.fenix.overlays.default ];
+      overlays = import ../overlays inputs;
       system = "x86_64-linux";
       username = "yanosea";
     };
@@ -152,7 +152,7 @@ in
     "yanosea@yanoMac" = mkHomeManagerConfiguration {
       homePath = "/Users";
       modules = [ ./yanoMac/home.nix ];
-      overlays = [ inputs.fenix.overlays.default ];
+      overlays = import ../overlays inputs;
       system = "aarch64-darwin";
       username = "yanosea";
     };
@@ -160,7 +160,7 @@ in
     "yanosea@yanoMacBook" = mkHomeManagerConfiguration {
       homePath = "/Users";
       modules = [ ./yanoMacBook/home.nix ];
-      overlays = [ inputs.fenix.overlays.default ];
+      overlays = import ../overlays inputs;
       system = "aarch64-darwin";
       username = "yanosea";
     };
