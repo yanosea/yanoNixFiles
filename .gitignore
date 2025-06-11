@@ -1,8 +1,16 @@
 # IGNORE DIRECTORY
+home/config/go/
 home/config/lf/lf/
 home/config/vim/autoload/
+home/config/vim/undo
+home/config/vim/viminfo
+home/config/wakatime/
 home/config/vim/plugged/
 # IGNORE FILE
+home/config/gh/hosts.yml
+home/config/github-copilot/apps.json
+home/config/github-copilot/versions.json
+home/config/nvim/lazy-lock.json
 result
 .DS_Store
 *.log

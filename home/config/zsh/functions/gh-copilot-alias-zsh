@@ -4,7 +4,7 @@ ghcs() {
 	local GH_DEBUG="$GH_DEBUG"
 
 	read -r -d '' __USAGE <<-EOF
-	Wrapper around \`gh copilot suggest\` to suggest a command based on a natural language description of the desired output effort.
+	Wrapper around \`gh-copilot suggest\` to suggest a command based on a natural language description of the desired output effort.
 	Supports executing suggested commands if applicable.
 
 	USAGE
@@ -67,7 +67,7 @@ ghcs() {
 
 	TMPFILE="$(mktemp -t gh-copilotXXX)"
 	trap 'rm -f "$TMPFILE"' EXIT
-	if GH_DEBUG="$GH_DEBUG" gh copilot suggest -t "$TARGET" "$@" --shell-out "$TMPFILE"; then
+	if GH_DEBUG="$GH_DEBUG" gh-copilot suggest -t "$TARGET" "$@" --shell-out "$TMPFILE"; then
 		if [ -s "$TMPFILE" ]; then
 			FIXED_CMD="$(cat $TMPFILE)"
 			print -s "$FIXED_CMD"
@@ -84,7 +84,7 @@ ghce() {
 	local GH_DEBUG="$GH_DEBUG"
 
 	read -r -d '' __USAGE <<-EOF
-	Wrapper around \`gh copilot explain\` to explain a given input command in natural language.
+	Wrapper around \`gh-copilot explain\` to explain a given input command in natural language.
 
 	USAGE
 	  $FUNCNAME [flags] <command>
@@ -128,5 +128,5 @@ ghce() {
 	# shift so that $@, $1, etc. refer to the non-option arguments
 	shift "$((OPTIND-1))"
 
-	GH_DEBUG="$GH_DEBUG" gh copilot explain "$@"
+	GH_DEBUG="$GH_DEBUG" gh-copilot explain "$@"
 }

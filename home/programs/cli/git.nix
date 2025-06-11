@@ -32,6 +32,7 @@
     };
     packages = with pkgs; [
       gh
+      gh-copilot
       gh-dash
       ghq
       git-credential-oauth
