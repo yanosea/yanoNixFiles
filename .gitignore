@@ -1,7 +1,7 @@
 # IGNORE DIRECTORY
-home/dotfiles/lf/lf/lf/
-home/dotfiles/vim/vim/autoload/
-home/dotfiles/vim/vim/plugged/
+home/config/lf/lf/
+home/config/vim/autoload/
+home/config/vim/plugged/
 # IGNORE FILE
 result
 .DS_Store
