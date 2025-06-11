@@ -1,9 +1,5 @@
 { pkgs, ... }:
 {
-  imports = [
-    ../../dotfiles/era
-    ../../dotfiles/jisyo
-  ];
   home = {
     packages = with pkgs; [
       # tools

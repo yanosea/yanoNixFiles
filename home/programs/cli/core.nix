@@ -1,9 +1,5 @@
 { pkgs, ... }:
 {
-  imports = [
-    ../../dotfiles/lf
-    ../../dotfiles/yazi
-  ];
   home = {
     packages = with pkgs; [
       # core

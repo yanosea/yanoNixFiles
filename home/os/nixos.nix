@@ -1,11 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../dotfiles/dolphin
-    ../dotfiles/dunst
-    ../dotfiles/hypr
-    ../dotfiles/waybar
-    ../dotfiles/wofi
+    ../config
   ];
   home = {
     packages = with pkgs; [
