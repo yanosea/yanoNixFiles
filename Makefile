@@ -88,6 +88,7 @@ ifeq ($(IS_NIXOS),1)
 	mkdir -p $$XDG_DATA_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/zsh
+	mkdir -p $$XDG_CONFIG_HOME/github-copilot
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
 	@echo ""
 	@echo "$(COLOR_HEADER)initialize rclone...$(COLOR_RESET)"
@@ -228,6 +229,7 @@ ifeq ($(IS_NIXOS_WSL),1)
 	mkdir -p $$XDG_DATA_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/zsh
+	mkdir -p $$XDG_CONFIG_HOME/github-copilot
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
 	@echo ""
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
@@ -370,6 +372,7 @@ ifeq ($(IS_MAC),1)
 	mkdir -p $$XDG_DATA_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/zsh
+	mkdir -p $$XDG_CONFIG_HOME/github-copilot
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
 	@echo ""
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
@@ -545,6 +548,7 @@ ifeq ($(IS_MACBOOK),1)
 	mkdir -p $$XDG_DATA_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/skk
 	mkdir -p $$XDG_STATE_HOME/zsh
+	mkdir -p $$XDG_CONFIG_HOME/github-copilot
 	mkdir -p $$XDG_CONFIG_HOME/wakatime
 	@echo ""
 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
