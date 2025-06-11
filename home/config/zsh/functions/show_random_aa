@@ -6,6 +6,6 @@ function show_random_aa() {
   if [[ "$OS" = "Darwin" ]]; then
     /bin/cat $random_file
   elif [[ "$OS" = "Linux" ]]; then
-    /run/current-system/sw/bin/cat $random_file
+    cat $random_file
   fi
 }
