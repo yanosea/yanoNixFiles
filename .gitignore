@@ -2,6 +2,7 @@
 home/config/go/
 home/config/glzr/zebar/tmp-*
 home/config/lf/lf/
+home/config/scoop
 home/config/vim/autoload/
 home/config/vim/undo
 home/config/vim/viminfo
