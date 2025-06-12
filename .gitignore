@@ -1,5 +1,6 @@
 # IGNORE DIRECTORY
 home/config/go/
+home/config/glzr/zebar/tmp-*
 home/config/lf/lf/
 home/config/vim/autoload/
 home/config/vim/undo
