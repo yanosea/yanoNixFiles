@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-06-07T20:00:57.842-00:00",
+  "CreationDate": "2025-06-12T11:34:57.665-00:00",
   "Sources": [
     {
       "Packages": [
@@ -111,6 +111,9 @@
         },
         {
           "PackageIdentifier": "Microsoft.Edge"
+        },
+        {
+          "PackageIdentifier": "Microsoft.Edit"
         },
         {
           "PackageIdentifier": "Microsoft.OneDrive"
