@@ -90,12 +90,7 @@ nix-shell -p git ghq home-manager
 ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 ```
 
-5. Execute init task.
-
-```sh
-# execute init task
-make nixos.init
-```
+5. See `nixos.init` task in `Makefile` and follow instructions.
 
 6. Reboot NixOS.
 
@@ -106,26 +101,7 @@ reboot
 
 7. Then, you got a new NixOS environment ;)
 
-### 🔧 Edit config and install new packages
-
-1. Edit your config in yanoNixFiles repository.
-
-```sh
-# change the directory
-cd ghq/github.com/yanosea/yanoNixFiles
-# then, edit config files or pkglist
-```
-
-2. Execute install task.
-
-```sh
-# execute install task
-make nixos.install
-```
-
-3. If there were no issues, commit, push the changes.
-
-### ✨ Update
+### ✨ Update packages and apply modified config
 
 1. Just execute update task.
 
@@ -166,26 +142,24 @@ wsl --unregister NixOS
 cd .local\share\wsl\nixos && wsl --import NixOS . nixos-wsl.tar.gz --version 2
 ```
 
-4. Start the WSL.
+4. Start WSL.
 
 ```sh
 #
 # on windows
 #
 
-# start the WSL
+# start WSL
 wsl -d NixOS --cd ~
 ```
 
-5. First, update the system. Then, add user yanosea.
+5. First, add user `yanosea`.
 
 ```sh
 #
 # on nixos
 #
 
-# update the system
-sudo nix-channel --add https://nixos.org/channels/nixos-24.11 nixos && sudo nix-channel --update && sudo nixos-rebuild switch
 # change to root
 sudo -i
 # add user yanosea and set password
@@ -222,18 +196,7 @@ nix-shell -p git ghq home-manager
 ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 ```
 
-8. Execute initialize task. After this step, exit from WSL.
-
-```sh
-#
-# on nixos
-#
-
-# execute initialize task
-make nixoswsl.init
-# exit from WSL (you have to type this many times)
-exit
-```
+8. See `nixoswsl.init` task in `Makefile` and follow instructions. After this step, exit from WSL.
 
 9. Terminate WSL and restart it.
 
@@ -242,42 +205,15 @@ exit
 # on windows
 #
 
-# terminate the WSL
+# terminate WSL
 wsl --terminate NixOS
-# start the WSL
+# start WSL
 wsl -d NixOS --cd ~
 ```
 
 10. Then, you got a new NixOS WSL environment ;)
 
-### 🔧 Edit config and install new packages
-
-1. Edit your config in yanoNixFiles repository.
-
-```sh
-#
-# on nixos
-#
-
-# change the directory
-cd ghq/github.com/yanosea/yanoNixFiles
-# then, edit config files or pkglist
-```
-
-2. Execute install task.
-
-```sh
-#
-# on nixos
-#
-
-# execute install task
-make nixoswsl.install
-```
-
-3. If there were no issues, commit, push the changes.
-
-### ✨ Update
+### ✨ Update packages and apply modified config
 
 1. Just execute update task.
 
@@ -306,37 +242,23 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 
 3. Install homebrew following [here](https://brew.sh/ja/).
 
-4. First, update the system. (You have to add your user to sudoers.)
-
-```sh
-# update the system
-sudo nix-channel --add https://nixos.org/channels/nixos-24.11 nixos && sudo nix-channel --update && sudo darwin-rebuild switch
-```
-
-5. Enter nix-shell with necessary packages.
+4. Enter nix-shell with necessary packages.
 
 ```sh
 # enter nix-shell
 nix-shell -p git ghq home-manager
 ```
 
-6. Clone this repository and change the directory.
+5. Clone this repository and change the directory.
 
 ```sh
 # clone this repository and change the directory
 ghq get yanosea/yanoNixFiles && cd ghq/github.com/yanosea/yanoNixFiles
 ```
 
-7. Execute initialize task.
+6. See `mac.init` or `macbook.init` task in `Makefile` and follow instructions.
 
-```sh
-# execute initialize task
-make mac.init
-# or
-make macbook.init
-```
-
-8. Edit /etc/shells and chsh. After this step, exit from the shell.
+7. Edit `/etc/shells `and `chsh`. After this step, exit from the shell.
 
 ```sh
 # edit /etc/shells
@@ -349,37 +271,16 @@ chsh -s /Users/yanosea/.nix-profile/bin/zsh
 exit
 ```
 
-9. Install command line developer tool.
+8. Install command line developer tool.
 
 ```sh
 # install command line developer tool
 xcode-select --install
 ```
 
-10. Then, you got a new Darwin × Nix environment ;)
+9. Then, you got a new Darwin × Nix environment ;)
 
-### 🔧 Edit config and install new packages
-
-1. Edit your config in yanoNixFiles repository.
-
-```sh
-# change the directory
-cd ghq/github.com/yanosea/yanoNixFiles
-# then, edit config files or pkglist
-```
-
-2. Execute install task.
-
-```sh
-# execute apply task
-make mac.install
-# or
-make macbook.install
-```
-
-3. If there were no issues, commit, push the changes.
-
-### ✨ Update
+### ✨ Update packages and apply modified config
 
 1. Just execute update task.
 

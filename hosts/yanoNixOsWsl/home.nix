@@ -5,8 +5,10 @@
     ../../home/programs/cli
     # languages
     ../../home/programs/languages
-    # nixos wsl specific
-    ../../home/os/nixos_wsl.nix
+    # nixos specific
+    ../../home/os/nixos
+    # config
+    ../../home/config
   ];
   # home
   home = {

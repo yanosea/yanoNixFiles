@@ -1,8 +1,10 @@
 { pkgs, ... }:
 {
+  # home
   home = {
     packages = with pkgs; [
-      remmina
+      wineWowPackages.staging
+      winetricks
     ];
   };
 }

@@ -4,7 +4,6 @@
   home = {
     packages = with pkgs; [
       discord
-      discord-ptb
       steam
     ];
   };

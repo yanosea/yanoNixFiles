@@ -252,7 +252,7 @@ return {
 	},
 	-- preferences
 	use_ime = true,
-	check_for_updates = true,
+	check_for_updates = false,
 	scrollback_lines = 3500,
 	term = "xterm-256color",
 	enable_wayland = false,

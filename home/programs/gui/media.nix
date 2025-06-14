@@ -2,28 +2,19 @@
 {
   # home
   home = {
-    packages = (
-      with pkgs;
-      [
-        mediaplayer
-        evince
-        spotify
-        totem
-      ]
-    );
+    packages = with pkgs; [
+      evince
+      mediaplayer
+      spotify
+      totem
+    ];
   };
   # programs
   programs = {
-    ncspot = {
+    easyeffects = {
       enable = true;
     };
     obs-studio = {
-      enable = true;
-    };
-  };
-  # services
-  services = {
-    easyeffects = {
       enable = true;
     };
   };

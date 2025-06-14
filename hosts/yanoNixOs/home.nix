@@ -8,7 +8,9 @@
     # languages
     ../../home/programs/languages
     # nixos specific
-    ../../home/os/nixos.nix
+    ../../home/os/nixos
+    # config
+    ../../home/config
   ];
   # home
   home = {

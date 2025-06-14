@@ -3,12 +3,12 @@
   imports = [
     # cli
     ../../home/programs/cli
-    # gui (terminal)
-    ../../home/programs/gui/terminal.nix
     # languages
     ../../home/programs/languages
     # darwin specific
-    ../../home/os/darwin.nix
+    ../../home/os/darwin
+    # config
+    ../../home/config
   ];
   # home
   home = {

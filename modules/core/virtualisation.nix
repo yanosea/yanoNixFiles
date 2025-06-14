@@ -1,4 +1,5 @@
 {
+  # virtualisation
   virtualisation = {
     docker = {
       enable = true;

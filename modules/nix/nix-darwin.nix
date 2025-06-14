@@ -41,7 +41,6 @@
   };
   # system
   system = {
-    # https://nix-darwin.github.io/nix-darwin/manual
     defaults = {
       ".GlobalPreferences" = {
         "com.apple.mouse.scaling" = 17.0;
@@ -288,13 +287,13 @@
         TrackpadThreeFingerDrag = true;
         TrackpadThreeFingerTapGesture = 2;
       };
-      universalaccess = {
-        closeViewScrollWheelToggle = false;
-        closeViewZoomFollowsFocus = false;
-        mouseDriverCursorSize = 1.0;
-        reduceMotion = false;
-        reduceTransparency = false;
-      };
+      # universalaccess = {
+      #   closeViewScrollWheelToggle = false;
+      #   closeViewZoomFollowsFocus = false;
+      #   mouseDriverCursorSize = 1.0;
+      #   reduceMotion = false;
+      #   reduceTransparency = false;
+      # };
     };
     keyboard = {
       enableKeyMapping = true;

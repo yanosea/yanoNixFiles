@@ -11,21 +11,19 @@
     # nix
     ../../modules/nix/nix.nix
     # programs
+    ## nix-ld
     ../../modules/programs/nix-ld.nix
+    ## shell
     ../../modules/programs/shell.nix
   ];
   # boot
   boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
     loader = {
       grub = {
         device = "nodev";
       };
     };
-    kernelPackages = pkgs.linuxPackages_latest;
-  };
-  # time
-  time = {
-    hardwareClockInLocalTime = true;
   };
   # users
   users = {

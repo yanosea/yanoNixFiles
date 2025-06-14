@@ -17,11 +17,12 @@
     # nix
     ../../modules/nix/nix.nix
     # programs
-    ../../modules/programs/hyprland.nix
-    ../../modules/programs/media.nix
+    ## game
+    ../../modules/programs/game.nix
+    ## nix-ld
     ../../modules/programs/nix-ld.nix
+    ## shell
     ../../modules/programs/shell.nix
-    ../../modules/programs/steam.nix
   ] ++ (with inputs.nixos-hardware.nixosModules; [ common-pc-ssd ]);
   # boot
   boot = {
@@ -29,7 +30,10 @@
       emulatedSystems = [ "aarch64-linux" ];
     };
     initrd = {
-      kernelModules = [ "nvidia" ];
+      kernelModules = [
+        "fuse"
+        "nvidia"
+      ];
     };
     kernelPackages = pkgs.linuxPackages_latest;
     loader = {
@@ -44,9 +48,6 @@
   };
   # hardware
   hardware = {
-    bluetooth = {
-      enable = true;
-    };
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -75,52 +76,16 @@
   };
   # services
   services = {
-    # blueman
-    blueman = {
-      enable = true;
-    };
-    # greetd
-    greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          command = ''
-            ${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland
-          '';
-          user = username;
-        };
-      };
-    };
-    # upower
     upower = {
       enable = true;
     };
-  };
-  # systemd
-  systemd = {
-    services = {
-      # rclone
-      rclone = {
-        enable = true;
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
-        wantedBy = [ "default.target" ];
-        description = "rclone service";
-        serviceConfig = {
-          ExecStart = "${pkgs.rclone}/bin/rclone mount yanosea: /mnt/google_drive/yanosea --allow-other --vfs-cache-mode full --buffer-size 128M --vfs-read-ahead 512M --drive-chunk-size 64M --config /.rclone.conf";
-        };
-      };
-    };
-  };
-  # time
-  time = {
-    hardwareClockInLocalTime = true;
   };
   # users
   users = {
     users = {
       "${username}" = {
         extraGroups = [
+          "fuse"
           "networkmanager"
           "wheel"
           "audio"

@@ -1,12 +1,12 @@
 { pkgs, ... }:
 {
-  imports = [
-    ../config
-  ];
   # home
   home = {
     packages = with pkgs; [
-      xcode-install
+      clipse
+      fuseiso
+      rclone
+      systemctl-tui
     ];
   };
 }

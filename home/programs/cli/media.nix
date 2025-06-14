@@ -1,6 +1,7 @@
 {
+  # programs
   programs = {
-    noisetorch = {
+    ncspot = {
       enable = true;
     };
   };

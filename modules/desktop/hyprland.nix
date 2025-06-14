@@ -1,6 +1,7 @@
 { inputs, ... }:
 {
   imports = [ inputs.hyprland.nixosModules.default ];
+  # programs
   programs = {
     dconf = {
       enable = true;
