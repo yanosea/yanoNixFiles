@@ -1,5 +1,5 @@
 {
   imports = [
-    ../config
+    ./programs/cli
   ];
 }

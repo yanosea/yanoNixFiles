@@ -1,4 +1,5 @@
 {
+  # services
   services = {
     xserver = {
       enable = true;
@@ -11,6 +12,12 @@
       mouse = {
         accelProfile = "flat";
       };
+    };
+  };
+  # xdg
+  xdg = {
+    portal = {
+      enable = true;
     };
   };
 }

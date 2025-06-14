@@ -10,13 +10,16 @@
     # nix
     ../../modules/nix/nix-darwin.nix
     # programs
+    ## brew
+    ../../modules/programs/brew.nix
+    ## shell
     ../../modules/programs/shell.nix
   ];
   # fonts
   fonts = {
     packages = with pkgs; [
-      plemoljp-nf
       noto-fonts-emoji
+      plemoljp-nf
     ];
   };
   # networking

@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 {
+  # home
   home = {
     activation = {
       syncGitRepos =
@@ -17,7 +18,6 @@
             set -euo pipefail
             export PATH=${pkgs.git}/bin:$PATH
             for repo in ${builtins.concatStringsSep " " repositories}; do
-              echo "Processing $repo..."
               ${pkgs.ghq}/bin/ghq get --update "$repo"
             done
           '';

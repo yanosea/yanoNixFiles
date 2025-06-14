@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+  # environment
   environment = {
     systemPackages = with pkgs; [
       acpi
@@ -19,7 +20,6 @@
       patchelf
       pciutils
       pkg-config
-      rclone
       vim
     ];
   };

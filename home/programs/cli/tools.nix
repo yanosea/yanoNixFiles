@@ -1,16 +1,21 @@
 { pkgs, ... }:
 {
+  # home
   home = {
     packages = with pkgs; [
-      # tools
+      btop
+      duf
+      dust
       era
       fastfetch
       fontforge
       fzf-make
+      htop
       hyperfine
       jnv
       jq
       mermaid-cli
+      ncdu
       onefetch
       vhs
       wakatime

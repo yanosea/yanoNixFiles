@@ -1,5 +1,31 @@
 { pkgs, ... }:
 {
+  # gtk
+  gtk = {
+    enable = true;
+    theme = {
+      package = pkgs.flat-remix-gtk;
+      name = "Flat-Remix-GTK-Blue-Dark";
+    };
+    iconTheme = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+    };
+    gtk3 = {
+      extraConfig = {
+        Settings = ''
+          gtk-application-prefer-dark-theme=1
+        '';
+      };
+    };
+    gtk4 = {
+      extraConfig = {
+        Settings = ''
+          gtk-application-prefer-dark-theme=1
+        '';
+      };
+    };
+  };
   # home
   home = {
     file = {
@@ -28,6 +54,7 @@
     packages = (
       with pkgs;
       [
+        dconf
         dunst
         hyprcursor
         hypridle
@@ -35,6 +62,7 @@
         hyprpaper
         hyprpicker
         hyprshot
+        kdePackages.dolphin
         playerctl
         waybar
         wayvnc
@@ -45,6 +73,14 @@
         wofi-emoji
       ]
     );
+    pointerCursor = {
+      gtk = {
+        enable = true;
+      };
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Original-Classic";
+      size = 12;
+    };
   };
   # services
   services = {

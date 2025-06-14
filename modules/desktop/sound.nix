@@ -1,7 +1,15 @@
+{ pkgs, ... }:
 {
-  # security
-  security = {
-    rtkit = {
+  # environment
+  environment = {
+    systemPackages = with pkgs; [
+      pulseaudio
+      pavucontrol
+    ];
+  };
+  # programs
+  programs = {
+    noisetorch = {
       enable = true;
     };
   };

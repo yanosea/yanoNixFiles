@@ -1,13 +1,14 @@
 { pkgs, ... }:
 {
+  # fonts
   fonts = {
     enableDefaultPackages = true;
     fontDir = {
       enable = true;
     };
     packages = with pkgs; [
-      plemoljp-nf
       noto-fonts-emoji
+      plemoljp-nf
     ];
     fontconfig = {
       enable = true;

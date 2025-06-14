@@ -6,9 +6,9 @@
     ./editor.nix
     ./git.nix
     ./jokeey.nix
+    ./media.nix
     ./shell.nix
     ./tools.nix
-    ./utils.nix
     ./xdg.nix
   ];
 }

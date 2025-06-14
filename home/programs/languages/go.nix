@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 {
+  # home
   home = {
     activation = {
       syncGoPackages =
@@ -24,11 +25,10 @@
             export GOBIN="$GOPATH/bin"
             export PATH="${pkgs.go}/bin:$GOBIN:$PATH"
             for pkg in ${builtins.concatStringsSep " " goPackages}; do
-              echo "Processing $pkg..."
               ${pkgs.go}/bin/go install "$pkg"
             done
             if [ -x "$GOBIN/gup" ]; then
-              echo "Found gup at $GOBIN/gup, running update..."
+              echo "found gup at $GOBIN/gup, running update..."
               "$GOBIN/gup" update
             fi
           '';
