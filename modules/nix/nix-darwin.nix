@@ -187,9 +187,6 @@
           {
             app = "/System/Applications/System Settings.app";
           }
-          {
-            app = "/System/Applications/Launchpad.app";
-          }
         ];
         persistent-others = null;
         scroll-to-open = true;
@@ -287,13 +284,13 @@
         TrackpadThreeFingerDrag = true;
         TrackpadThreeFingerTapGesture = 2;
       };
-      # universalaccess = {
-      #   closeViewScrollWheelToggle = false;
-      #   closeViewZoomFollowsFocus = false;
-      #   mouseDriverCursorSize = 1.0;
-      #   reduceMotion = false;
-      #   reduceTransparency = false;
-      # };
+      universalaccess = {
+        closeViewScrollWheelToggle = false;
+        closeViewZoomFollowsFocus = false;
+        mouseDriverCursorSize = 1.0;
+        reduceMotion = false;
+        reduceTransparency = false;
+      };
     };
     keyboard = {
       enableKeyMapping = true;
