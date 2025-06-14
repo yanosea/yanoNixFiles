@@ -27,7 +27,6 @@
       "hammerspoon"
       "hiddenbar"
       "karabiner-elements"
-      "launchpad-manager"
       "libreoffice"
       "libreoffice-language-pack"
       "microsoft-auto-update"
