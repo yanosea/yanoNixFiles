@@ -9,11 +9,14 @@
       totem
     ];
   };
-  # programs
-  programs = {
+  # services
+  services = {
     easyeffects = {
       enable = true;
     };
+  };
+  # programs
+  programs = {
     obs-studio = {
       enable = true;
     };
