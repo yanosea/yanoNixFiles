@@ -3,10 +3,13 @@
   programs = {
     steam = {
       enable = true;
-      remotePlay = {
+      dedicatedServer = {
         openFirewall = true;
       };
-      dedicatedServer = {
+      localNetworkGameTransfers = {
+        openFirewall = true;
+      };
+      remotePlay = {
         openFirewall = true;
       };
     };
