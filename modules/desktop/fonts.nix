@@ -7,8 +7,8 @@
       enable = true;
     };
     packages = with pkgs; [
-      noto-fonts-emoji
       plemoljp-nf
+      noto-fonts-emoji
     ];
     fontconfig = {
       enable = true;
@@ -17,6 +17,14 @@
       };
       defaultFonts = {
         serif = [
+          "plemoljp-nf"
+          "Noto Color Emoji"
+        ];
+        sansSerif = [
+          "plemoljp-nf"
+          "Noto Color Emoji"
+        ];
+        monospace = [
           "plemoljp-nf"
           "Noto Color Emoji"
         ];
