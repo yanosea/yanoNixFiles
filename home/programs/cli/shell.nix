@@ -13,7 +13,7 @@
         in
         config.lib.dag.entryAfter [ "writeBoundary" ] ''
           echo ""
-          echo "updating sheldon plugins..."
+          echo "update sheldon plugins..."
           echo ""
           ${script}
         '';
