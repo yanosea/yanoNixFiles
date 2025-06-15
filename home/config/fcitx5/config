@@ -11,9 +11,8 @@ EnumerateSkipFirst=False
 ModifierOnlyKeyTimeout=250
 
 [Hotkey/TriggerKeys]
-0=Zenkaku_Hankaku
-1=Hangul
-2=Tools
+0=Tools
+1=Control+Control_R
 
 [Hotkey/AltTriggerKeys]
 0=Shift_L
