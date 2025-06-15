@@ -35,7 +35,7 @@
         in
         config.lib.dag.entryAfter [ "writeBoundary" ] ''
           echo ""
-          echo "sync go packages..."
+          echo "update go packages..."
           echo ""
           ${script}
           echo ""
