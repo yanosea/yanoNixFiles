@@ -254,6 +254,29 @@ else
 endif
 
 #
+# darwin (mac common)
+#
+.PHONY: darwin.reload.agents
+
+# reload darwin agents
+darwin.reload.agents:
+ifeq ($(IS_DARWIN),1)
+	@echo "$(COLOR_TITLE)reload darwin agents...$(COLOR_RESET)"
+	@echo ""
+	launchctl unload ~/Library/LaunchAgents/org.nix-community.home.borders.plist
+	launchctl load ~/Library/LaunchAgents/org.nix-community.home.borders.plist
+	launchctl unload ~/Library/LaunchAgents/org.nix-community.home.sketchybar.plist
+	launchctl load ~/Library/LaunchAgents/org.nix-community.home.sketchybar.plist
+	launchctl unload ~/Library/LaunchAgents/org.nix-community.home.skhd.plist
+	launchctl load ~/Library/LaunchAgents/org.nix-community.home.skhd.plist
+	launchctl unload ~/Library/LaunchAgents/org.nix-community.home.yabai.plist
+	launchctl load ~/Library/LaunchAgents/org.nix-community.home.yabai.plist
+	@echo "$(COLOR_DONE)reload done!$(COLOR_RESET)"
+else
+	@echo "$(COLOR_ERROR)this target is only for darwin...$(COLOR_RESET)"
+endif
+
+#
 # mac
 #
 .PHONY: mac.update mac.apply.system mac.apply.home
@@ -648,18 +671,21 @@ ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for mac]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)mac.update$(COLOR_RESET)        - update whole yanoMac (settings, packages)"
-	@echo "    $(COLOR_CMD)mac.apply.system$(COLOR_RESET)  - apply yanoMac system configuration"
-	@echo "    $(COLOR_CMD)mac.apply.home$(COLOR_RESET)    - apply yanoMac home configuration"
+	@echo "    $(COLOR_CMD)mac.update$(COLOR_RESET)           - update whole yanoMac (settings, packages)"
+	@echo "    $(COLOR_CMD)mac.apply.system$(COLOR_RESET)     - apply yanoMac system configuration"
+	@echo "    $(COLOR_CMD)mac.apply.home$(COLOR_RESET)       - apply yanoMac home configuration"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [for darwin]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)darwin.reload.agents$(COLOR_RESET) - reload darwin agents"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)         - check configuration"
-	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)         - remove result directory"
-	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)        - run treefmt"
-	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)        - run nix garbage collection (all)"
-	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)     - run nix garbage collection (system)"
-	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)       - run nix garbage collection (user)"
-	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)        - update flake.lock file"
+	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)            - check configuration"
+	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)            - remove result directory"
+	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)           - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)           - run nix garbage collection (all)"
+	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)        - run nix garbage collection (system)"
+	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)          - run nix garbage collection (user)"
+	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)           - update flake.lock file"
 endif
 ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
@@ -668,6 +694,9 @@ ifeq ($(IS_MACBOOK),1)
 	@echo "    $(COLOR_CMD)macbook.update$(COLOR_RESET)        - update whole yanoMacBook (settings, packages)"
 	@echo "    $(COLOR_CMD)macbook.apply.system$(COLOR_RESET)  - apply yanoMacBook system configuration"
 	@echo "    $(COLOR_CMD)macbook.apply.home$(COLOR_RESET)    - apply yanoMacBook home configuration"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [for darwin]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)darwin.reload.agents$(COLOR_RESET)  - reload darwin agents"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)             - check configuration"
