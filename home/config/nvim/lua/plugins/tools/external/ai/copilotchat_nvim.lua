@@ -50,7 +50,7 @@ return {
 					prompt = require("plugins.tools.external.ai.prompts.user_prompts.tests").prompt,
 				},
 			},
-			model = "claude-3.7-sonnet",
+			model = "claude-sonnet-4",
 			selection = function(source)
 				return require("CopilotChat.select").visual(source) or require("CopilotChat.select").buffer(source)
 			end,
