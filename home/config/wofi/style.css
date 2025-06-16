@@ -9,7 +9,8 @@ window {
 #input {
   all: unset;
   padding: 2px;
-  border-radius: 6px; margin: 5px;
+  border-radius: 6px;
+  margin: 5px;
   border: none;
   color: #d3c6aa;
   background-color: rgba(211, 198, 170, 0.2);

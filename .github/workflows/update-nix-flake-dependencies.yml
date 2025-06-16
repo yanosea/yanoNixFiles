@@ -1,27 +1,22 @@
 name: Update Nix Flake Dependencies
-
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 15 * * *" # 15:00 UTC (0:00 JST)
-
 permissions:
   contents: write
   pull-requests: write
-
 jobs:
   update-flake:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
-
       - name: install Nix
         uses: cachix/install-nix-action@v25
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-
       - name: update flake.lock and parse changes
         id: update-flake
         run: |
@@ -119,7 +114,6 @@ jobs:
             echo "$COMMIT_MESSAGE"
             echo "EOF"
           } >> $GITHUB_OUTPUT
-
       - name: create pull request
         if: steps.update-flake.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v6
