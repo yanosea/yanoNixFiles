@@ -1,16 +1,13 @@
 name: Auto Merge Dependency Update PR
-
 on:
   pull_request_target:
     types: [opened, labeled, synchronize]
   workflow_run:
     workflows: ["Update Nix Flake Dependencies"]
     types: [completed]
-
 permissions:
   contents: write
   pull-requests: write
-
 jobs:
   find-pr:
     runs-on: ubuntu-latest
@@ -24,7 +21,6 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
-
       - name: find associated PR
         id: find-pr
         env:
@@ -55,7 +51,6 @@ jobs:
             echo "No matching PR found"
             echo "found=false" >> $GITHUB_OUTPUT
           fi
-
   auto-approve-and-merge:
     runs-on: ubuntu-latest
     needs: find-pr
@@ -67,13 +62,11 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
-
       - name: auto approve PR
         uses: hmarr/auto-approve-action@v4
         with:
           github-token: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
           pull-request-number: ${{ needs.find-pr.outputs.pr_number }}
-
       - name: enable auto-merge and wait for completion
         run: |
           gh pr merge --auto --merge "$PR_NUMBER"
@@ -84,7 +77,6 @@ jobs:
             fi
             sleep 5
           done
-
       - name: delete source branch if it exists
         run: |
           git push origin --delete "$BRANCH_NAME"

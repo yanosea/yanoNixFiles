@@ -1,9 +1,7 @@
 name: Auto Approve Owner's PR
-
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
-
 jobs:
   auto-approve-owner:
     if: |
