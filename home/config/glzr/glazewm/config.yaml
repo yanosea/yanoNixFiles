@@ -120,13 +120,13 @@ keybindings:
     bindings: ["alt+down"]
   - commands: ["resize --height -2%"]
     bindings: ["alt+up"]
-  # # as an alternative to the resize keybindings above, resize mode enables resizing via
-  # # HJKL or arrow keys. The binding mode is defined above with the name "resize".
-  # - commands: ["wm-enable-binding-mode --name resize"]
-  #   bindings: ["alt+shift+s"]
-
   # disables window management and all other keybindings
   - commands: ["wm-toggle-pause"]
+    # # as an alternative to the resize keybindings above, resize mode enables resizing via
+    # # HJKL or arrow keys. The binding mode is defined above with the name "resize".
+    # - commands: ["wm-enable-binding-mode --name resize"]
+    #   bindings: ["alt+shift+s"]
+
     bindings: ["alt+/"]
   # change tiling direction. This determines where new tiling windows will be inserted.
   - commands: ["toggle-tiling-direction"]
@@ -149,12 +149,12 @@ keybindings:
   # close focused window.
   - commands: ["close"]
     bindings: ["alt+shift+f1"]
-  # # kill GlazeWM process safely.
-  # - commands: ["wm-exit"]
-  #   bindings: ["alt+shift+e"]
-
   # re-evaluate configuration file.
   - commands: ["wm-reload-config"]
+    # # kill GlazeWM process safely.
+    # - commands: ["wm-exit"]
+    #   bindings: ["alt+shift+e"]
+
     bindings: ["alt+shift+f4"]
   # Launch CMD terminal. Alternatively, use `shell-exec wt` or
   # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
@@ -166,12 +166,12 @@ keybindings:
     bindings: ["alt+n"]
   - commands: ["focus --prev-active-workspace"]
     bindings: ["alt+shift+n"]
-  # # focus the workspace that last had focus.
-  # - commands: ["focus --recent-workspace"]
-  #   bindings: ["alt+shift+z"]
-
   # Redraw all windows.
   - commands: ["wm-redraw"]
+    # # focus the workspace that last had focus.
+    # - commands: ["focus --recent-workspace"]
+    #   bindings: ["alt+shift+z"]
+
     bindings: ["alt+shift+d"]
   # change focus to a workspace defined in `workspaces` config.
   - commands: ["focus --workspace 01"]
