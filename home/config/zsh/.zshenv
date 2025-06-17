@@ -75,6 +75,8 @@ export PATH=$PATH:$PYENV_ROOT/bin
 ## ghq
 export GHQ_ROOT="$HOME"/ghq
 # credentials
+## anthropic
+export ANTHROPIC_API_KEY=$(cat $XDG_DATA_HOME/credentials/anthropic/ANTHROPIC_API_KEY)
 ## openai
 export OPENAI_API_KEY=$(cat $XDG_DATA_HOME/credentials/openapi/OPENAI_API_KEY)
 ## spotify
