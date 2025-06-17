@@ -12,8 +12,8 @@ jobs:
   find-pr:
     runs-on: ubuntu-latest
     if: |
-      github.event_name == 'workflow_run' &&
-      github.event.workflow_run.conclusion == 'success'
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+      (github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name, 'dependencies'))
     outputs:
       pr_number: ${{ steps.find-pr.outputs.pr_number }}
       branch_name: ${{ steps.find-pr.outputs.branch_name }}
@@ -25,32 +25,7 @@ jobs:
         id: find-pr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # alternative approach using direct PR search
-          echo "Searching for dependency update PRs..."
-
-          # get recent PRs and filter for our criteria
-          PR_LIST=$(gh pr list --base main --limit 10 --json number,headRefName,labels --jq '.')
-          echo "$PR_LIST" > /tmp/pr_list.json
-
-          # extract matching PR with jq
-          MATCHING_PR=$(jq -r '[.[] |
-            select(.headRefName | startswith("auto-update/flake-lock/")) |
-            select(.labels | map(.name) | any(. == "dependencies" or . == "automated")) |
-            {number: .number, headRefName: .headRefName}] | first // {}' /tmp/pr_list.json)
-
-          # check if we found a matching PR
-          if [[ $(echo "$MATCHING_PR" | jq 'has("number")') == "true" ]]; then
-            PR_NUMBER=$(echo "$MATCHING_PR" | jq -r '.number')
-            HEAD_REF=$(echo "$MATCHING_PR" | jq -r '.headRefName')
-            echo "PR #$PR_NUMBER ($HEAD_REF) is a valid dependency update PR"
-            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
-            echo "branch_name=$HEAD_REF" >> $GITHUB_OUTPUT
-            echo "found=true" >> $GITHUB_OUTPUT
-          else
-            echo "No matching PR found"
-            echo "found=false" >> $GITHUB_OUTPUT
-          fi
+        run: "if [ \"${{ github.event_name }}\" = \"pull_request_target\" ]; then\n  # Direct PR information from pull_request_target event\n  PR_NUMBER=\"${{ github.event.pull_request.number }}\"\n  HEAD_REF=\"${{ github.event.pull_request.head.ref }}\"\n  \n  echo \"Using PR from pull_request_target event: #$PR_NUMBER ($HEAD_REF)\"\n  echo \"pr_number=$PR_NUMBER\" >> $GITHUB_OUTPUT\n  echo \"branch_name=$HEAD_REF\" >> $GITHUB_OUTPUT\n  echo \"found=true\" >> $GITHUB_OUTPUT\nelse\n  # Search for PR when triggered by workflow_run\n  echo \"Searching for dependency update PRs...\"\n\n  # get recent PRs and filter for our criteria\n  PR_LIST=$(gh pr list --base main --limit 10 --json number,headRefName,labels --jq '.')\n  echo \"$PR_LIST\" > /tmp/pr_list.json\n\n  # extract matching PR with jq\n  MATCHING_PR=$(jq -r '[.[] |\n    select(.headRefName | startswith(\"auto-update/flake-lock/\")) |\n    select(.labels | map(.name) | any(. == \"dependencies\" or . == \"automated\")) |\n    {number: .number, headRefName: .headRefName}] | first // {}' /tmp/pr_list.json)\n\n  # check if we found a matching PR\n  if [[ $(echo \"$MATCHING_PR\" | jq 'has(\"number\")') == \"true\" ]]; then\n    PR_NUMBER=$(echo \"$MATCHING_PR\" | jq -r '.number')\n    HEAD_REF=$(echo \"$MATCHING_PR\" | jq -r '.headRefName')\n    echo \"PR #$PR_NUMBER ($HEAD_REF) is a valid dependency update PR\"\n    echo \"pr_number=$PR_NUMBER\" >> $GITHUB_OUTPUT\n    echo \"branch_name=$HEAD_REF\" >> $GITHUB_OUTPUT\n    echo \"found=true\" >> $GITHUB_OUTPUT\n  else\n    echo \"No matching PR found\"\n    echo \"found=false\" >> $GITHUB_OUTPUT\n  fi\nfi\n"
   auto-approve-and-merge:
     runs-on: ubuntu-latest
     needs: find-pr
@@ -67,16 +42,12 @@ jobs:
         with:
           github-token: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
           pull-request-number: ${{ needs.find-pr.outputs.pr_number }}
+      - name: wait for required checks to complete
+        run: "echo \"Waiting for required status checks to complete...\"\n\nMAX_WAIT_TIME=1800  # 30 minutes\nWAIT_INTERVAL=30    # 30 seconds\nelapsed_time=0\n\nwhile [ $elapsed_time -lt $MAX_WAIT_TIME ]; do\n  # Get PR status and check rollup\n  PR_DATA=$(gh pr view \"$PR_NUMBER\" --json mergeable,mergeStateStatus,statusCheckRollup)\n  \n  MERGEABLE=$(echo \"$PR_DATA\" | jq -r '.mergeable')\n  MERGE_STATE=$(echo \"$PR_DATA\" | jq -r '.mergeStateStatus')\n  \n  echo \"Current state - Mergeable: $MERGEABLE, Merge State: $MERGE_STATE\"\n  \n  # Check if all required checks are successful\n  if [ \"$MERGEABLE\" = \"MERGEABLE\" ] && [ \"$MERGE_STATE\" = \"CLEAN\" ]; then\n    echo \"All required checks have passed. Ready to merge.\"\n    break\n  fi\n  \n  # Check for any failing checks\n  FAILING_CHECKS=$(echo \"$PR_DATA\" | jq -r '.statusCheckRollup[] | select(.conclusion == \"FAILURE\" or .conclusion == \"CANCELLED\") | .name')\n  if [ -n \"$FAILING_CHECKS\" ]; then\n    echo \"The following checks have failed:\"\n    echo \"$FAILING_CHECKS\"\n    echo \"Auto-merge cancelled due to failing checks.\"\n    exit 1\n  fi\n  \n  # Check for any pending checks\n  PENDING_CHECKS=$(echo \"$PR_DATA\" | jq -r '.statusCheckRollup[] | select(.status == \"IN_PROGRESS\" or .status == \"QUEUED\" or .status == \"PENDING\") | .name')\n  if [ -n \"$PENDING_CHECKS\" ]; then\n    echo \"Waiting for the following checks to complete:\"\n    echo \"$PENDING_CHECKS\"\n  fi\n  \n  echo \"Waiting ${WAIT_INTERVAL} seconds before next check... (${elapsed_time}/${MAX_WAIT_TIME}s elapsed)\"\n  sleep $WAIT_INTERVAL\n  elapsed_time=$((elapsed_time + WAIT_INTERVAL))\ndone\n\nif [ $elapsed_time -ge $MAX_WAIT_TIME ]; then\n  echo \"Timeout waiting for required checks to complete\"\n  exit 1\nfi\n"
       - name: enable auto-merge and wait for completion
-        run: |
-          gh pr merge --auto --merge "$PR_NUMBER"
-          while true; do
-            PR_STATE=$(gh pr view "$PR_NUMBER" --json state --jq .state)
-            if [ "$PR_STATE" == "MERGED" ]; then
-              break
-            fi
-            sleep 5
-          done
+        run: "echo \"Enabling auto-merge for PR #$PR_NUMBER\"\ngh pr merge --auto --merge \"$PR_NUMBER\"\n\necho \"Waiting for auto-merge to complete...\"\nMAX_MERGE_WAIT=300  # 5 minutes\nelapsed=0\n\nwhile [ $elapsed -lt $MAX_MERGE_WAIT ]; do\n  PR_STATE=$(gh pr view \"$PR_NUMBER\" --json state --jq .state)\n  echo \"Current PR state: $PR_STATE\"\n  \n  if [ \"$PR_STATE\" == \"MERGED\" ]; then\n    echo \"PR successfully merged!\"\n    break\n  elif [ \"$PR_STATE\" == \"CLOSED\" ]; then\n    echo \"PR was closed without merging\"\n    exit 1\n  fi\n  \n  sleep 10\n  elapsed=$((elapsed + 10))\ndone\n\nif [ $elapsed -ge $MAX_MERGE_WAIT ]; then\n  echo \"Timeout waiting for merge to complete\"\n  exit 1\nfi\n"
       - name: delete source branch if it exists
+        if: success()
         run: |
-          git push origin --delete "$BRANCH_NAME"
+          echo "Deleting source branch: $BRANCH_NAME"
+          git push origin --delete "$BRANCH_NAME" || echo "Branch already deleted or does not exist"
