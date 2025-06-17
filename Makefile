@@ -65,7 +65,7 @@ MAKEFLAGS += --no-print-directory
 #
 # nixos
 #
-.PHONY: nixos.update nixos.apply.system nixos.apply.home
+.PHONY: nixos.update nixos.apply.system nixos.apply.home nixos.test
 
 # initialize nixos (these are notes for the initial environment construction)
 # nixos.init:
@@ -161,10 +161,32 @@ else
 	@echo "$(COLOR_ERROR)this target is only for nixos...$(COLOR_RESET)"
 endif
 
+# test nixos configuration
+nixos.test:
+ifeq ($(IS_NIXOS),1)
+	@echo "$(COLOR_TITLE)test nixos configuration...$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)validate system configuration syntax and dependencies...$(COLOR_RESET)"
+	nix eval .#nixosConfigurations.yanoNixOs.config.system.build.toplevel.drvPath --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)validate home configuration syntax and dependencies...$(COLOR_RESET)"
+	nix eval .#homeConfigurations."yanosea@yanoNixOs".activationPackage.drvPath --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)check system build dependencies without actual building...$(COLOR_RESET)"
+	nix build .#nixosConfigurations.yanoNixOs.config.system.build.toplevel --dry-run --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)check home build dependencies without actual building...$(COLOR_RESET)"
+	nix build .#homeConfigurations."yanosea@yanoNixOs".activationPackage --dry-run --show-trace
+	@echo ""
+	@echo "$(COLOR_DONE)test done!$(COLOR_RESET)"
+else
+	@echo "$(COLOR_ERROR)this target is only for nixos...$(COLOR_RESET)"
+endif
+
 #
 # nixos wsl
 #
-.PHONY: nixoswsl.update nixoswsl.apply.system nixoswsl.apply.home
+.PHONY: nixoswsl.update nixoswsl.apply.system nixoswsl.apply.home nixoswsl.test
 
 # initialize nixos wsl (these are notes for the initial environment construction)
 # nixoswsl.init:
@@ -253,6 +275,28 @@ else
 	@echo "$(COLOR_ERROR)this target is only for nixos wsl...$(COLOR_RESET)"
 endif
 
+# test nixos wsl configuration
+nixoswsl.test:
+ifeq ($(IS_NIXOS_WSL),1)
+	@echo "$(COLOR_TITLE)test nixos wsl configuration...$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)validate system configuration syntax and dependencies...$(COLOR_RESET)"
+	nix eval .#nixosConfigurations.yanoNixOsWsl.config.system.build.toplevel.drvPath --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)validate home configuration syntax and dependencies...$(COLOR_RESET)"
+	nix eval .#homeConfigurations."yanosea@yanoNixOsWsl".activationPackage.drvPath --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)check system build dependencies without actual building...$(COLOR_RESET)"
+	nix build .#nixosConfigurations.yanoNixOsWsl.config.system.build.toplevel --dry-run --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)check home build dependencies without actual building...$(COLOR_RESET)"
+	nix build .#homeConfigurations."yanosea@yanoNixOsWsl".activationPackage --dry-run --show-trace
+	@echo ""
+	@echo "$(COLOR_DONE)test done!$(COLOR_RESET)"
+else
+	@echo "$(COLOR_ERROR)this target is only for nixos wsl...$(COLOR_RESET)"
+endif
+
 #
 # darwin (mac common)
 #
@@ -279,7 +323,7 @@ endif
 #
 # mac
 #
-.PHONY: mac.update mac.apply.system mac.apply.home
+.PHONY: mac.update mac.apply.system mac.apply.home mac.test
 
 # initialize mac (these are notes for the initial environment construction)
 mac.init:
@@ -371,10 +415,32 @@ else
 	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
 endif
 
+# test mac configuration
+mac.test:
+ifeq ($(IS_MAC),1)
+	@echo "$(COLOR_TITLE)test mac configuration...$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)validate system configuration syntax and dependencies...$(COLOR_RESET)"
+	nix eval .#darwinConfigurations.yanoMac.system.drvPath --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)validate home configuration syntax and dependencies...$(COLOR_RESET)"
+	nix eval .#homeConfigurations."yanosea@yanoMac".activationPackage.drvPath --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)check system build dependencies without actual building...$(COLOR_RESET)"
+	nix build .#darwinConfigurations.yanoMac.system --dry-run --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)check home build dependencies without actual building...$(COLOR_RESET)"
+	nix build .#homeConfigurations."yanosea@yanoMac".activationPackage --dry-run --show-trace
+	@echo ""
+	@echo "$(COLOR_DONE)test done!$(COLOR_RESET)"
+else
+	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
+endif
+
 #
 # macbook
 #
-.PHONY: macbook.update macbook.apply.system macbook.apply.home
+.PHONY: macbook.update macbook.apply.system macbook.apply.home macbook.test
 
 # initialize macbook (these are notes for the initial environment construction)
 # macbook.init:
@@ -466,6 +532,28 @@ else
 	@echo "$(COLOR_ERROR)this target is only for macbook...$(COLOR_RESET)"
 endif
 
+# test macbook configuration
+macbook.test:
+ifeq ($(IS_MACBOOK),1)
+	@echo "$(COLOR_TITLE)test macbook configuration...$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)validate system configuration syntax and dependencies...$(COLOR_RESET)"
+	nix eval .#darwinConfigurations.yanoMacBook.system.drvPath --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)validate home configuration syntax and dependencies...$(COLOR_RESET)"
+	nix eval .#homeConfigurations."yanosea@yanoMacBook".activationPackage.drvPath --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)check system build dependencies without actual building...$(COLOR_RESET)"
+	nix build .#darwinConfigurations.yanoMacBook.system --dry-run --show-trace
+	@echo ""
+	@echo "$(COLOR_HEADER)check home build dependencies without actual building...$(COLOR_RESET)"
+	nix build .#homeConfigurations."yanosea@yanoMacBook".activationPackage --dry-run --show-trace
+	@echo ""
+	@echo "$(COLOR_DONE)test done!$(COLOR_RESET)"
+else
+	@echo "$(COLOR_ERROR)this target is only for macbook...$(COLOR_RESET)"
+endif
+
 #
 # windows
 #
@@ -534,7 +622,7 @@ endif
 #
 # nix
 #
-.PHONY: nix.check nix.clean nix.format nix.gc.all nix.gc.system nix.gc.user nix.update all clean test
+.PHONY: nix.check nix.format nix.gc.all nix.gc.system nix.gc.user nix.update
 
 # nix check flake
 nix.check:
@@ -548,19 +636,6 @@ else
 	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
 endif
 
-# nix clean result directory
-nix.clean:
-ifeq ($(IS_WINDOWS),0)
-	@echo "$(COLOR_TITLE)clean result directory...$(COLOR_RESET)"
-	@echo ""
-	rm -fr result
-	@echo ""
-	@echo "$(COLOR_DONE)clean done!$(COLOR_RESET)"
-	@echo ""
-else
-	@echo ""
-	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
-endif
 
 # nix format files
 nix.format:
@@ -625,13 +700,52 @@ else
 	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
 endif
 
-# required phony targets for standards
-all: help
-clean: nix.clean
-test: nix.check
+#
+# universal
+#
+.PHONY: all clean test help
 
-# help
-.PHONY: help
+# all runs help
+all: help
+
+# clean removes result directory
+clean:
+ifeq ($(IS_WINDOWS),0)
+	@echo "$(COLOR_TITLE)clean result directory...$(COLOR_RESET)"
+	@echo ""
+	rm -fr result
+	@echo "$(COLOR_DONE)clean done!$(COLOR_RESET)"
+else
+	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
+endif
+
+# test runs tests for current platform
+test:
+ifeq ($(IS_NIXOS),1)
+	@echo "$(COLOR_TITLE)running tests for nixos...$(COLOR_RESET)"
+	@echo ""
+	make nixos.test
+endif
+ifeq ($(IS_NIXOS_WSL),1)
+	@echo "$(COLOR_TITLE)running tests for nixos wsl...$(COLOR_RESET)"
+	@echo ""
+	make nixoswsl.test
+endif
+ifeq ($(IS_MAC),1)
+	@echo "$(COLOR_TITLE)running tests for mac...$(COLOR_RESET)"
+	@echo ""
+	make mac.test
+endif
+ifeq ($(IS_MACBOOK),1)
+	@echo "$(COLOR_TITLE)running tests for macbook...$(COLOR_RESET)"
+	@echo ""
+	make macbook.test
+endif
+ifeq ($(IS_WINDOWS),1)
+	@Write-Host "this target is not available for windows..." $(COLOR_ERROR)
+endif
+
+# help shows available targets
 help:
 ifeq ($(IS_NIXOS),1)
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
@@ -640,15 +754,20 @@ ifeq ($(IS_NIXOS),1)
 	@echo "    $(COLOR_CMD)nixos.update$(COLOR_RESET)        - update whole yanoNixOs (settings, packages)"
 	@echo "    $(COLOR_CMD)nixos.apply.system$(COLOR_RESET)  - apply yanoNixOs system configuration"
 	@echo "    $(COLOR_CMD)nixos.apply.home$(COLOR_RESET)    - apply yanoNixOs home configuration"
+	@echo "    $(COLOR_CMD)nixos.test$(COLOR_RESET)          - test yanoNixOs configuration (dry-run)"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)           - check configuration"
-	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)           - remove result directory"
 	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)          - run treefmt"
 	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)          - run nix garbage collection (all)"
 	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)       - run nix garbage collection (system)"
 	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)         - run nix garbage collection (user)"
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)          - update flake.lock file"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [universal]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)all$(COLOR_RESET)                 - show help message"
+	@echo "    $(COLOR_CMD)clean$(COLOR_RESET)               - remove result directory"
+	@echo "    $(COLOR_CMD)test$(COLOR_RESET)                - run tests for current platform"
 endif
 ifeq ($(IS_NIXOS_WSL),1)
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
@@ -657,35 +776,45 @@ ifeq ($(IS_NIXOS_WSL),1)
 	@echo "    $(COLOR_CMD)nixoswsl.update$(COLOR_RESET)        - update whole yanoNixOsWsl (settings, packages)"
 	@echo "    $(COLOR_CMD)nixoswsl.apply.system$(COLOR_RESET)  - apply yanoNixOsWsl system configuration"
 	@echo "    $(COLOR_CMD)nixoswsl.apply.home$(COLOR_RESET)    - apply yanoNixOsWsl home configuration"
+	@echo "    $(COLOR_CMD)nixoswsl.test$(COLOR_RESET)          - test yanoNixOsWsl configuration (dry-run)"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)              - check configuration"
-	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)              - remove result directory"
 	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)             - run treefmt"
 	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)             - run nix garbage collection (all)"
 	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)          - run nix garbage collection (system)"
 	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)            - run nix garbage collection (user)"
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)             - update flake.lock file"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [universal]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)all$(COLOR_RESET)                    - show help message"
+	@echo "    $(COLOR_CMD)clean$(COLOR_RESET)                  - remove result directory"
+	@echo "    $(COLOR_CMD)test$(COLOR_RESET)                   - run tests for current platform"
 endif
 ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for mac]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)mac.update$(COLOR_RESET)           - update whole yanoMac (settings, packages)"
-	@echo "    $(COLOR_CMD)mac.apply.system$(COLOR_RESET)     - apply yanoMac system configuration"
-	@echo "    $(COLOR_CMD)mac.apply.home$(COLOR_RESET)       - apply yanoMac home configuration"
+	@echo "    $(COLOR_CMD)mac.update$(COLOR_RESET)            - update whole yanoMac (settings, packages)"
+	@echo "    $(COLOR_CMD)mac.apply.system$(COLOR_RESET)      - apply yanoMac system configuration"
+	@echo "    $(COLOR_CMD)mac.apply.home$(COLOR_RESET)        - apply yanoMac home configuration"
+	@echo "    $(COLOR_CMD)mac.test$(COLOR_RESET)              - test yanoMac configuration (dry-run)"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for darwin]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)darwin.reload.agents$(COLOR_RESET) - reload darwin agents"
+	@echo "    $(COLOR_CMD)darwin.reload.agents$(COLOR_RESET)  - reload darwin agents"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
-	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)            - check configuration"
-	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)            - remove result directory"
-	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)           - run treefmt"
-	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)           - run nix garbage collection (all)"
-	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)        - run nix garbage collection (system)"
-	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)          - run nix garbage collection (user)"
-	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)           - update flake.lock file"
+	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)             - check configuration"
+	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)            - run treefmt"
+	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)            - run nix garbage collection (all)"
+	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)         - run nix garbage collection (system)"
+	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)           - run nix garbage collection (user)"
+	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)            - update flake.lock file"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [universal]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)all$(COLOR_RESET)                   - show help message"
+	@echo "    $(COLOR_CMD)clean$(COLOR_RESET)                 - remove result directory"
+	@echo "    $(COLOR_CMD)test$(COLOR_RESET)                  - run tests for current platform"
 endif
 ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)available targets:$(COLOR_RESET)"
@@ -694,18 +823,23 @@ ifeq ($(IS_MACBOOK),1)
 	@echo "    $(COLOR_CMD)macbook.update$(COLOR_RESET)        - update whole yanoMacBook (settings, packages)"
 	@echo "    $(COLOR_CMD)macbook.apply.system$(COLOR_RESET)  - apply yanoMacBook system configuration"
 	@echo "    $(COLOR_CMD)macbook.apply.home$(COLOR_RESET)    - apply yanoMacBook home configuration"
+	@echo "    $(COLOR_CMD)macbook.test$(COLOR_RESET)          - test yanoMacBook configuration (dry-run)"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for darwin]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)darwin.reload.agents$(COLOR_RESET)  - reload darwin agents"
 	@echo ""
 	@echo "$(COLOR_HEADER)  [for nix]$(COLOR_RESET)"
 	@echo "    $(COLOR_CMD)nix.check$(COLOR_RESET)             - check configuration"
-	@echo "    $(COLOR_CMD)nix.clean$(COLOR_RESET)             - remove result directory"
 	@echo "    $(COLOR_CMD)nix.format$(COLOR_RESET)            - run treefmt"
 	@echo "    $(COLOR_CMD)nix.gc.all$(COLOR_RESET)            - run nix garbage collection (all)"
 	@echo "    $(COLOR_CMD)nix.gc.system$(COLOR_RESET)         - run nix garbage collection (system)"
 	@echo "    $(COLOR_CMD)nix.gc.user$(COLOR_RESET)           - run nix garbage collection (user)"
 	@echo "    $(COLOR_CMD)nix.update$(COLOR_RESET)            - update flake.lock file"
+	@echo ""
+	@echo "$(COLOR_HEADER)  [universal]$(COLOR_RESET)"
+	@echo "    $(COLOR_CMD)all$(COLOR_RESET)                   - show help message"
+	@echo "    $(COLOR_CMD)clean$(COLOR_RESET)                 - remove result directory"
+	@echo "    $(COLOR_CMD)test$(COLOR_RESET)                  - run tests for current platform"
 endif
 ifeq ($(IS_WINDOWS),1)
 	@Write-Host "available targets:" $(COLOR_TITLE)
