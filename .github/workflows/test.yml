@@ -1,0 +1,140 @@
+name: Test Nix Flake
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: check flake syntax
+        run: nix flake check
+      - name: check formatting
+        run: |
+          # run formatter and check if any files changed
+          nix fmt
+          if ! git diff --exit-code; then
+            echo "Files are not properly formatted. Please run 'nix fmt' locally and commit the changes."
+            exit 1
+          fi
+  test-nixos-builds:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - yanoNixOs
+          - yanoNixOsWsl
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: check NixOS configuration - ${{ matrix.configuration }}
+        run: |
+          # validate configuration syntax and dependencies
+          nix eval .#nixosConfigurations.${{ matrix.configuration }}.config.system.build.toplevel.drvPath \
+            --show-trace
+      - name: build NixOS configuration (dry-run) - ${{ matrix.configuration }}
+        run: |
+          # check build dependencies without actual building
+          nix build .#nixosConfigurations.${{ matrix.configuration }}.config.system.build.toplevel \
+            --dry-run \
+            --show-trace
+  test-darwin-builds:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - yanoMac
+          - yanoMacBook
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: check Darwin configuration - ${{ matrix.configuration }}
+        run: |
+          # validate configuration syntax and dependencies
+          nix eval .#darwinConfigurations.${{ matrix.configuration }}.system.drvPath \
+            --show-trace
+      - name: build Darwin configuration (dry-run) - ${{ matrix.configuration }}
+        run: |
+          # check build dependencies without actual building
+          nix build .#darwinConfigurations.${{ matrix.configuration }}.system \
+            --dry-run \
+            --show-trace
+  test-home-manager-builds:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - "yanosea@yanoNixOs"
+          - "yanosea@yanoNixOsWsl"
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: check Home Manager configuration - ${{ matrix.configuration }}
+        run: |
+          # validate configuration syntax and dependencies
+          nix eval .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage.drvPath \
+            --show-trace
+      - name: build Home Manager configuration (dry-run) - ${{ matrix.configuration }}
+        run: |
+          # check build dependencies without actual building
+          nix build .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage \
+            --dry-run \
+            --show-trace
+  test-home-manager-darwin-builds:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - "yanosea@yanoMac"
+          - "yanosea@yanoMacBook"
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: check Home Manager configuration - ${{ matrix.configuration }}
+        run: |
+          # validate configuration syntax and dependencies
+          nix eval .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage.drvPath \
+            --show-trace
+      - name: build Home Manager configuration (dry-run) - ${{ matrix.configuration }}
+        run: |
+          # check build dependencies without actual building
+          nix build .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage \
+            --dry-run \
+            --show-trace
