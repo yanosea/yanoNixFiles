@@ -59,6 +59,9 @@ MAKEFLAGS += --no-print-directory
 # not show command all
 .SILENT:
 
+# ignore errors all
+.IGNORE:
+
 #
 # unified targets
 #
