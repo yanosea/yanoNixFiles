@@ -32,7 +32,7 @@ body,
   grid-template-columns: 1fr 1fr;
   align-items: center;
   height: 100%;
-  padding: 4px 1.5vw;
+  padding: 0;
 }
 
 .left,
@@ -55,10 +55,10 @@ body,
 .audio,
 .date {
   background: #374247;
-  padding: 4px 8px;
+  padding: 5px;
   color: #d3c6aa;
   border: none;
-  margin-right: 10px;
+  margin: 5px;
 }
 
 .workspaces,
@@ -69,8 +69,8 @@ body,
 
 .workspace {
   background: #374247;
-  margin-right: 4px;
-  padding: 4px 8px;
+  margin: 5px;
+  padding: 5px;
   color: #d3c6aa;
   border: none;
   cursor: pointer;
@@ -93,9 +93,10 @@ body,
 
 .focused-window-title {
   background: #374247;
-  padding: 4px 8px;
+  padding: 5px;
   color: #d3c6aa;
   border: none;
+  margin: 5px;
   white-space: nowrap;
 }
 
@@ -104,18 +105,15 @@ body,
   background: #374247;
   color: #d3c6aa;
   line-height: 1;
-  padding: 4px 8px;
+  padding: 5px;
   border: none;
+  margin: 5px;
   cursor: pointer;
 
   &:hover {
     background: #475266;
     color: #7fbbb3;
   }
-}
-
-.binding-mode {
-  margin-right: 4px;
 }
 
 .cpu .high-usage {

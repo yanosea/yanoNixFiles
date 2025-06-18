@@ -1,0 +1,50 @@
+{
+  "$schema": "https://github.com/glzr-io/zebar/raw/v3.1.0/resources/zpack-schema.json",
+  "name": "yanoZebar",
+  "version": "0.0.1",
+  "description": "",
+  "tags": [],
+  "previewImages": [
+    "./resources/preview-image-1.png"
+  ],
+  "repositoryUrl": "",
+  "widgets": [
+    {
+      "name": "default",
+      "htmlPath": "default/index.html",
+      "zOrder": "normal",
+      "shownInTaskbar": false,
+      "focused": false,
+      "resizable": false,
+      "transparent": false,
+      "includeFiles": [
+        "default/**"
+      ],
+      "caching": {
+        "defaultDuration": 604800,
+        "rules": []
+      },
+      "privileges": {
+        "shellCommands": []
+      },
+      "presets": [
+        {
+          "name": "default",
+          "anchor": "top_center",
+          "offsetX": "0px",
+          "offsetY": "10px",
+          "width": "99%",
+          "height": "35px",
+          "monitorSelection": {
+            "type": "all"
+          },
+          "dockToEdge": {
+            "enabled": false,
+            "edge": null,
+            "windowMargin": "0px"
+          }
+        }
+      ]
+    }
+  ]
+}
