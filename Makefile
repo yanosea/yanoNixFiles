@@ -161,6 +161,7 @@ home:
 ifeq ($(IS_NIXOS),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
+	rm -fr $HOME/.config/fcitx5/config
 	home-manager switch --flake .#yanosea@yanoNixOs
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_NIXOS_WSL),1)
@@ -171,13 +172,13 @@ else ifeq ($(IS_NIXOS_WSL),1)
 else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
-	rm -fr ~/.config/karabiner/karabiner.json
+	rm -fr $HOME/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMac
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
-	rm -fr ~/.config/karabiner/karabiner.json
+	rm -fr $HOME/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMacBook
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_WINDOWS),1)
