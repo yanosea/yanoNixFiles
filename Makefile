@@ -161,7 +161,7 @@ home:
 ifeq ($(IS_NIXOS),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
-	rm -fr $HOME/.config/fcitx5/config
+	rm -fr $$HOME/.config/fcitx5/config
 	home-manager switch --flake .#yanosea@yanoNixOs
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_NIXOS_WSL),1)
@@ -172,13 +172,13 @@ else ifeq ($(IS_NIXOS_WSL),1)
 else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
-	rm -fr $HOME/.config/karabiner/karabiner.json
+	rm -fr $$HOME/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMac
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
-	rm -fr $HOME/.config/karabiner/karabiner.json
+	rm -fr $$HOME/.config/karabiner/karabiner.json
 	home-manager switch --flake .#yanosea@yanoMacBook
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_WINDOWS),1)
@@ -192,14 +192,14 @@ agents:
 ifeq ($(IS_DARWIN),1)
 	@echo "$(COLOR_TITLE)reload darwin agents...$(COLOR_RESET)"
 	@echo ""
-	launchctl unload ~/Library/LaunchAgents/org.nix-community.home.borders.plist
-	launchctl load ~/Library/LaunchAgents/org.nix-community.home.borders.plist
-	launchctl unload ~/Library/LaunchAgents/org.nix-community.home.sketchybar.plist
-	launchctl load ~/Library/LaunchAgents/org.nix-community.home.sketchybar.plist
-	launchctl unload ~/Library/LaunchAgents/org.nix-community.home.skhd.plist
-	launchctl load ~/Library/LaunchAgents/org.nix-community.home.skhd.plist
-	launchctl unload ~/Library/LaunchAgents/org.nix-community.home.yabai.plist
-	launchctl load ~/Library/LaunchAgents/org.nix-community.home.yabai.plist
+	launchctl unload $$HOME/Library/LaunchAgents/org.nix-community.home.borders.plist
+	launchctl load $$HOME/Library/LaunchAgents/org.nix-community.home.borders.plist
+	launchctl unload $$HOME/Library/LaunchAgents/org.nix-community.home.sketchybar.plist
+	launchctl load $$HOME/Library/LaunchAgents/org.nix-community.home.sketchybar.plist
+	launchctl unload $$HOME/Library/LaunchAgents/org.nix-community.home.skhd.plist
+	launchctl load $$HOME/Library/LaunchAgents/org.nix-community.home.skhd.plist
+	launchctl unload $$HOME/Library/LaunchAgents/org.nix-community.home.yabai.plist
+	launchctl load $$HOME/Library/LaunchAgents/org.nix-community.home.yabai.plist
 	@echo "$(COLOR_DONE)reload done!$(COLOR_RESET)"
 else
 	@echo "$(COLOR_ERROR)this target is only for darwin...$(COLOR_RESET)"
