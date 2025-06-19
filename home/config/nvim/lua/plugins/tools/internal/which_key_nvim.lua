@@ -55,6 +55,12 @@ return {
 					{ "<LEADER>ags", "<CMD>Gpchatnew split<CR>", desc = "gpchat: new split" },
 					{ "<LEADER>agt", "<CMD>Gpchatnew tabnew<CR>", desc = "gpchat: new tabnew" },
 					{ "<LEADER>agv", "<CMD>GpChatNew vsplit<CR>", desc = "gpchat: new vsplit" },
+					-- claude
+					{ "<LEADER>al", group = "claude" },
+					{ "<LEADER>alc", "<CMD>ClaudeCodeContinue<CR>", desc = "claude: continue conversation" },
+					{ "<LEADER>all", "<CMD>ClaudeCode<CR>", desc = "claude: toggle" },
+					{ "<LEADER>alr", "<CMD>ClaudeCodeResume<CR>", desc = "claude: resume conversation" },
+					{ "<LEADER>alv", "<CMD>ClaudeCodeVerbose<CR>", desc = "claude: verbose mode" },
 					-- buffers
 					{ "<LEADER>b", group = "buffers" },
 					{ "<LEADER>bb", "<CMD>BufferLineCyclePrev<CR>", desc = "buffer: switch to previous" },
