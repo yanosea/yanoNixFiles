@@ -1,4 +1,5 @@
 # IGNORE DIRECTORY
+.claude/
 home/config/go/
 home/config/glzr/zebar/tmp-*
 home/config/lf/lf/
