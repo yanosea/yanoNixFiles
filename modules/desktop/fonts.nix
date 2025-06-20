@@ -12,24 +12,6 @@
     ];
     fontconfig = {
       enable = true;
-      subpixel = {
-        lcdfilter = "light";
-      };
-      defaultFonts = {
-        serif = [
-          "plemoljp-nf"
-          "Noto Color Emoji"
-        ];
-        sansSerif = [
-          "plemoljp-nf"
-          "Noto Color Emoji"
-        ];
-        monospace = [
-          "plemoljp-nf"
-          "Noto Color Emoji"
-        ];
-        emoji = [ "Noto Color Emoji" ];
-      };
     };
   };
 }
