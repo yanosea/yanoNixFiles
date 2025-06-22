@@ -1,5 +1,4 @@
 # IGNORE DIRECTORY
-.claude/
 home/config/go/
 home/config/glzr/zebar/tmp-*
 home/config/lf/lf/
@@ -9,6 +8,8 @@ home/config/vim/undo
 home/config/vim/viminfo
 home/config/wakatime/
 home/config/vim/plugged/
+.claude/
+.opencode/
 # IGNORE FILE
 home/config/gh/hosts.yml
 home/config/github-copilot/apps.json
