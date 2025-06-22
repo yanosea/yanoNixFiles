@@ -360,6 +360,256 @@ else
 	@echo "$(COLOR_ERROR)this target is only for non-windows...$(COLOR_RESET)"
 endif
 
+#
+# initializing memos
+#
+
+# initialize nixos (these are notes for the initial environment construction)
+# nixos.init:
+# ifeq ($(IS_NIXOS),1)
+# 	@echo ""
+# 	@echo "$(COLOR_TITLE)initialize nixos...$(COLOR_RESET)"
+# 	@echo ""
+# 	make nixos.apply.system
+# 	@echo ""
+# 	make nixos.apply.home
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
+# 	@echo ""
+# 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
+# 	@echo ""
+# 	mkdir -p $$HOME/.local/bin
+# 	mkdir -p $$XDG_DATA_HOME/skk
+# 	mkdir -p $$XDG_STATE_HOME/skk
+# 	mkdir -p $$XDG_STATE_HOME/zsh
+# 	mkdir -p $$XDG_CONFIG_HOME/github-copilot
+# 	mkdir -p $$XDG_CONFIG_HOME/wakatime
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)initialize rclone...$(COLOR_RESET)"
+# 	@echo ""
+# 	sudo mkdir -p /mnt/google_drive/yanosea
+# 	sudo rclone config
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
+# 	@echo ""
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/clipboard-history $$HOME/.local/bin/clipboard-history
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/ime $$HOME/.local/bin/ime
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/check-recording $$HOME/.local/bin/check-recording
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	sudo ln -s /root/.config/rclone/rclone.conf /.rclone.conf
+# 	ln -s /mnt/google_drive/yanosea $$HOME/google_drive
+# 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
+# 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
+# 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
+# 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install skk dictionaries...$(COLOR_RESET)"
+# 	@echo ""
+# 	jisyo d
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
+# 	@echo ""
+# 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# 	@echo ""
+# 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
+# 	@echo ""
+# else
+# 	@echo ""
+# 	@echo "$(COLOR_ERROR)this target is only for nixos...$(COLOR_RESET)"
+# 	@echo ""
+# endif
+
+# initialize nixos wsl (these are notes for the initial environment construction)
+# nixoswsl.init:
+# ifeq ($(IS_NIXOS_WSL),1)
+# 	@echo ""
+# 	@echo "$(COLOR_TITLE)initialize nixos wsl...$(COLOR_RESET)"
+# 	@echo ""
+# 	make nixoswsl.apply.system
+# 	@echo ""
+# 	make nixoswsl.apply.home
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
+# 	@echo ""
+# 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
+# 	@echo ""
+# 	mkdir -p $$HOME/.local/bin
+# 	mkdir -p $$XDG_DATA_HOME/skk
+# 	mkdir -p $$XDG_STATE_HOME/skk
+# 	mkdir -p $$XDG_STATE_HOME/zsh
+# 	mkdir -p $$XDG_CONFIG_HOME/github-copilot
+# 	mkdir -p $$XDG_CONFIG_HOME/wakatime
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
+# 	@echo ""
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
+# 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
+# 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
+# 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
+# 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
+# 	ln -s <WINDOWS_HOME_PATH> $$HOME/windows_home
+# 	ln -s <WINDOWS_WIN32YANK_PATH> $$HOME/.local/bin/win32yank.exe
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install skk dictionaries...$(COLOR_RESET)"
+# 	@echo ""
+# 	jisyo d
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
+# 	@echo ""
+# 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# 	@echo ""
+# 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
+# 	@echo ""
+# else
+# 	@echo ""
+# 	@echo "$(COLOR_ERROR)this target is only for nixos wsl...$(COLOR_RESET)"
+# 	@echo ""
+# endif
+
+# initialize mac (these are notes for the initial environment construction)
+mac.init:
+# ifeq ($(IS_MAC),1)
+# 	@echo ""
+# 	@echo "$(COLOR_TITLE)initialize mac...$(COLOR_RESET)"
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install homebrew...$(COLOR_RESET)"
+# 	@echo ""
+# 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# 	@echo ""
+# 	make mac.apply.system
+# 	@echo ""
+# 	make mac.apply.home
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
+# 	@echo ""
+# 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
+# 	@echo ""
+# 	mkdir -p $$HOME/.local/bin
+# 	mkdir -p $$XDG_DATA_HOME/skk
+# 	mkdir -p $$XDG_STATE_HOME/skk
+# 	mkdir -p $$XDG_STATE_HOME/zsh
+# 	mkdir -p $$XDG_CONFIG_HOME/github-copilot
+# 	mkdir -p $$XDG_CONFIG_HOME/wakatime
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
+# 	@echo ""
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
+# 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
+# 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
+# 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
+# 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install skk dictionaries...$(COLOR_RESET)"
+# 	@echo ""
+# 	jisyo d
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
+# 	@echo ""
+# 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# 	@echo ""
+# 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
+# 	@echo ""
+# else
+# 	@echo ""
+# 	@echo "$(COLOR_ERROR)this target is only for mac...$(COLOR_RESET)"
+# 	@echo ""
+# endif
+
+# initialize macbook (these are notes for the initial environment construction)
+# macbook.init:
+# ifeq ($(IS_MACBOOK),1)
+# 	@echo ""
+# 	@echo "$(COLOR_TITLE)initialize macbook...$(COLOR_RESET)"
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install homebrew...$(COLOR_RESET)"
+# 	@echo ""
+# 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# 	@echo ""
+# 	make macbook.apply.system
+# 	@echo ""
+# 	make macbook.apply.home
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)load zsh configuration...$(COLOR_RESET)"
+# 	@echo ""
+# 	source $$HOME/.config/zsh/.zshenv && source $$HOME/.config/zsh/.zshrc
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
+# 	@echo ""
+# 	mkdir -p $$HOME/.local/bin
+# 	mkdir -p $$XDG_DATA_HOME/skk
+# 	mkdir -p $$XDG_STATE_HOME/skk
+# 	mkdir -p $$XDG_STATE_HOME/zsh
+# 	mkdir -p $$XDG_CONFIG_HOME/github-copilot
+# 	mkdir -p $$XDG_CONFIG_HOME/wakatime
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
+# 	@echo ""
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
+# 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
+# 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
+# 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
+# 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install skk dictionaries...$(COLOR_RESET)"
+# 	@echo ""
+# 	jisyo d
+# 	@echo ""
+# 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
+# 	@echo ""
+# 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# 	@echo ""
+# 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
+# 	@echo ""
+# else
+# 	@echo ""
+# 	@echo "$(COLOR_ERROR)this target is only for macbook...$(COLOR_RESET)"
+# 	@echo ""
+# endif
+
+# initialize windows (these are notes for the initial environment construction)
+# windows.init:
+# ifeq ($(IS_WINDOWS),1)
+# 	@Write-Host ""
+# 	@Write-Host "initialize windows..." $(COLOR_TITLE)
+# 	@Write-Host ""
+# 	@Write-Host "install pwsh..." $(COLOR_HEADER)
+# 	@Write-Host ""
+# 	winget install Microsoft.PowerShell
+# 	@Write-Host ""
+# 	@Write-Host "install git..." $(COLOR_HEADER)
+# 	@Write-Host ""
+# 	winget install git
+# 	@Write-Host ""
+# 	@Write-Host "install scoop..." $(COLOR_HEADER)
+# 	@Write-Host ""
+# 	Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+# 	Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+# 	@Write-Host ""
+# 	@Write-Host "install ghq..." $(COLOR_HEADER)
+# 	@Write-Host ""
+# 	scoop install ghq
+# 	@Write-Host ""
+# 	@Write-Host "install winget packages..." $(COLOR_HEADER)
+# 	@Write-Host ""
+# 	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+# 	@Write-Host ""
+# 	@Write-Host "initialize windows done!" $(COLOR_DONE)
+# 	@Write-Host ""
+# else
+# 	@echo ""
+# 	@echo "$(COLOR_ERROR)this target is only for windows...$(COLOR_RESET)"
+# 	@echo ""
+# endif
+
 # help shows available targets
 help:
 ifeq ($(IS_NIXOS),1)
