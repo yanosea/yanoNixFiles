@@ -1,5 +1,14 @@
 { hostname, username, ... }:
 {
+  # networking
+  networking = {
+    applicationFirewall = {
+      enable = true;
+      allowSigned = true;
+      allowSignedApp = true;
+      enableStealthMode = false;
+    };
+  };
   # nix
   nix = {
     enable = false;
@@ -119,13 +128,6 @@
         StageManagerHideWidgets = false;
         StandardHideDesktopIcons = false;
         StandardHideWidgets = false;
-      };
-      alf = {
-        allowdownloadsignedenabled = 1;
-        allowsignedenabled = 1;
-        globalstate = 1;
-        loggingenabled = 1;
-        stealthenabled = 0;
       };
       controlcenter = {
         AirDrop = false;
