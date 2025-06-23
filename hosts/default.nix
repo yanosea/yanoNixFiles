@@ -1,163 +1,84 @@
+# hosts
 inputs:
 let
-  mkNixOsSystem =
-    {
-      homePath,
-      hostname,
-      modules,
-      system,
-      username,
-    }:
-    inputs.nixpkgs.lib.nixosSystem {
-      inherit modules system;
-      specialArgs = {
-        inherit
-          homePath
-          hostname
-          inputs
-          username
-          ;
-      };
+  lib = import ../lib inputs;
+  inherit (lib)
+    mkNixOsSystem
+    mkNixOsWslSystem
+    mkDarwinSystem
+    mkHomeManagerConfiguration
+    ;
+  # common settings
+  username = "yanosea";
+  # host definitions with common settings
+  hosts = {
+    yanoNixOs = {
+      type = "nixos";
+      system = "x86_64-linux";
+      homePath = "/home";
     };
-  mkNixOsWslSystem =
-    {
-      homePath,
-      hostname,
-      modules,
-      system,
-      username,
-    }:
-    inputs.nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [ inputs.nixos-wsl.nixosModules.wsl ] ++ modules;
-      specialArgs = {
-        inherit
-          homePath
-          hostname
-          inputs
-          username
-          ;
-      };
+    yanoNixOsWsl = {
+      type = "nixos-wsl";
+      system = "x86_64-linux";
+      homePath = "/home";
     };
-  mkDarwinSystem =
-    {
-      homePath,
-      hostname,
-      modules,
-      system,
-      username,
-    }:
-    inputs.darwin.lib.darwinSystem {
-      inherit modules system;
-      specialArgs = {
-        inherit
-          homePath
-          hostname
-          inputs
-          username
-          ;
-      };
+    yanoMac = {
+      type = "darwin";
+      system = "aarch64-darwin";
+      homePath = "/Users";
     };
-  mkHomeManagerConfiguration =
-    {
-      homePath,
-      modules,
-      overlays,
-      system,
-      username,
-    }:
-    inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = import inputs.nixpkgs {
-        inherit overlays system;
-        config = {
-          allowUnfree = true;
-        };
-      };
-      extraSpecialArgs = {
-        inherit homePath inputs username;
-      };
-      modules = modules ++ [
-        {
-          home = {
-            inherit username;
-            homeDirectory = "${homePath}/${username}";
-          };
-        }
-      ];
+    yanoMacBook = {
+      type = "darwin";
+      system = "aarch64-darwin";
+      homePath = "/Users";
     };
+  };
+  # system type to function mapping
+  systemFunctions = {
+    nixos = mkNixOsSystem;
+    nixos-wsl = mkNixOsWslSystem;
+    darwin = mkDarwinSystem;
+  };
+  # generate all configurations
+  mkConfigs = hostname: config: {
+    system = systemFunctions.${config.type} {
+      inherit hostname username;
+      modules = [ ./${hostname} ];
+      inherit (config) homePath system;
+    };
+    home = mkHomeManagerConfiguration {
+      modules = [ ./${hostname}/home.nix ];
+      inherit username;
+      overlays = import ../overlays inputs;
+      inherit (config) homePath system;
+    };
+  };
+  # all configurations for each host
+  allConfigs = builtins.mapAttrs mkConfigs hosts;
+  # nixos hosts
+  nixosHosts = builtins.filter (h: hosts.${h}.type == "nixos" || hosts.${h}.type == "nixos-wsl") (
+    builtins.attrNames hosts
+  );
+  # darwin hosts
+  darwinHosts = builtins.filter (h: hosts.${h}.type == "darwin") (builtins.attrNames hosts);
 in
 {
-  # nixos
-  nixos = {
-    # nixos
-    yanoNixOs = mkNixOsSystem {
-      homePath = "/home";
-      hostname = "yanoNixOs";
-      modules = [ ./yanoNixOs ];
-      system = "x86_64-linux";
-      username = "yanosea";
-    };
-    # nixos wsl
-    yanoNixOsWsl = mkNixOsWslSystem {
-      homePath = "/home";
-      hostname = "yanoNixOsWsl";
-      modules = [ ./yanoNixOsWsl ];
-      system = "x86_64-linux";
-      username = "yanosea";
-    };
-  };
-  # darwin
-  darwin = {
-    # mac
-    yanoMac = mkDarwinSystem {
-      homePath = "/Users";
-      hostname = "yanoMac";
-      modules = [ ./yanoMac ];
-      system = "aarch64-darwin";
-      username = "yanosea";
-    };
-    # macbook
-    yanoMacBook = mkDarwinSystem {
-      homePath = "/Users";
-      hostname = "yanoMacBook";
-      modules = [ ./yanoMacBook ];
-      system = "aarch64-darwin";
-      username = "yanosea";
-    };
-  };
-  # home-manager
-  home-manager = {
-    # nixos
-    "yanosea@yanoNixOs" = mkHomeManagerConfiguration {
-      homePath = "/home";
-      modules = [ ./yanoNixOs/home.nix ];
-      overlays = import ../overlays inputs;
-      system = "x86_64-linux";
-      username = "yanosea";
-    };
-    # nixos wsl
-    "yanosea@yanoNixOsWsl" = mkHomeManagerConfiguration {
-      homePath = "/home";
-      modules = [ ./yanoNixOsWsl/home.nix ];
-      overlays = import ../overlays inputs;
-      system = "x86_64-linux";
-      username = "yanosea";
-    };
-    # mac
-    "yanosea@yanoMac" = mkHomeManagerConfiguration {
-      homePath = "/Users";
-      modules = [ ./yanoMac/home.nix ];
-      overlays = import ../overlays inputs;
-      system = "aarch64-darwin";
-      username = "yanosea";
-    };
-    # macbook
-    "yanosea@yanoMacBook" = mkHomeManagerConfiguration {
-      homePath = "/Users";
-      modules = [ ./yanoMacBook/home.nix ];
-      overlays = import ../overlays inputs;
-      system = "aarch64-darwin";
-      username = "yanosea";
-    };
-  };
+  nixos = builtins.listToAttrs (
+    map (h: {
+      name = h;
+      value = allConfigs.${h}.system;
+    }) nixosHosts
+  );
+  darwin = builtins.listToAttrs (
+    map (h: {
+      name = h;
+      value = allConfigs.${h}.system;
+    }) darwinHosts
+  );
+  home-manager = builtins.listToAttrs (
+    map (h: {
+      name = "${username}@${h}";
+      value = allConfigs.${h}.home;
+    }) (builtins.attrNames hosts)
+  );
 }
