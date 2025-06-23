@@ -82,11 +82,6 @@ let
             inherit username;
             homeDirectory = "${homePath}/${username}";
           };
-          programs = {
-            home-manager = {
-              enable = true;
-            };
-          };
         }
       ];
     };
