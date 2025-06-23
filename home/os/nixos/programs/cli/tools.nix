@@ -5,7 +5,6 @@
     packages = with pkgs; [
       clipse
       fuseiso
-      rclone
       systemctl-tui
     ];
   };

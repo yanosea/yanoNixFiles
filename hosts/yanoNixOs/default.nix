@@ -19,8 +19,6 @@
     # programs
     ## game
     ../../modules/programs/game.nix
-    ## google-drive
-    ../../modules/programs/google-drive.nix
     ## nix-ld
     ../../modules/programs/nix-ld.nix
     ## shell

@@ -389,7 +389,7 @@ endif
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)initialize rclone...$(COLOR_RESET)"
 # 	@echo ""
-# 	sudo mkdir -p /mnt/google_drive/yanosea
+# 	sudo mkdir -p $$HOME/google_drive/yanosea
 # 	sudo rclone config
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
@@ -399,7 +399,6 @@ endif
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/nixos/check-recording $$HOME/.local/bin/check-recording
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 # 	sudo ln -s /root/.config/rclone/rclone.conf /.rclone.conf
-# 	ln -s /mnt/google_drive/yanosea $$HOME/google_drive
 # 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
 # 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
 # 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
