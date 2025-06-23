@@ -80,7 +80,7 @@ dotfile is mine.
 
   ```sh
   # enter nix-shell
-  nix-shell -p git ghq home-manager
+  nix-shell -p git ghq
   ```
 
 - **4.** Clone this repository and change the directory.
@@ -182,7 +182,7 @@ dotfile is mine.
   #
 
   # enter nix-shell
-  nix-shell -p git ghq home-manager
+  nix-shell -p git ghq
   ```
 
 - **7**. Clone this repository and change the directory.
@@ -246,7 +246,7 @@ dotfile is mine.
 
   ```sh
   # enter nix-shell
-  nix-shell -p git ghq home-manager
+  nix-shell -p git ghq
   ```
 
 - **5.** Clone this repository and change the directory.

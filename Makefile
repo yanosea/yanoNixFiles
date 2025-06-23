@@ -163,27 +163,27 @@ ifeq ($(IS_NIXOS),1)
 	@echo ""
 	rm -fr $$HOME/.config/claude/CLAUDE.md
 	rm -fr $$HOME/.config/fcitx5/config
-	home-manager switch --flake .#yanosea@yanoNixOs
+	nix run .#homeConfigurations."yanosea@yanoNixOs".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_NIXOS_WSL),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
 	rm -fr $$HOME/.config/claude/CLAUDE.md
-	home-manager switch --flake .#yanosea@yanoNixOsWsl
+	nix run .#homeConfigurations."yanosea@yanoNixOsWsl".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
 	rm -fr $$HOME/.config/claude/CLAUDE.md
 	rm -fr $$HOME/.config/karabiner/karabiner.json
-	home-manager switch --flake .#yanosea@yanoMac
+	nix run .#homeConfigurations."yanosea@yanoMac".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
 	rm -fr $$HOME/.config/claude/CLAUDE.md
 	rm -fr $$HOME/.config/karabiner/karabiner.json
-	home-manager switch --flake .#yanosea@yanoMacBook
+	nix run .#homeConfigurations."yanosea@yanoMacBook".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 else ifeq ($(IS_WINDOWS),1)
 	@Write-Host "home configuration is not supported on windows..." $(COLOR_ERROR)
