@@ -112,12 +112,12 @@ else ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	@Write-Host "install new packages..." $(COLOR_HEADER)
 	@Write-Host ""
-	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json"
 	@Write-Host ""
 	@Write-Host "update winget package list..." $(COLOR_TITLE)
 	@Write-Host ""
-	winget export -o "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
-	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json" | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' | Set-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+	winget export -o "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json"
+	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json" | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' | Set-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json"
 	@Write-Host ""
 	@Write-Host "update done!" $(COLOR_DONE)
 else
@@ -394,10 +394,10 @@ endif
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 # 	@echo ""
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/clipboard-history $$HOME/.local/bin/clipboard-history
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/ime $$HOME/.local/bin/ime
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/nixos/check-recording $$HOME/.local/bin/check-recording
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/nixos/clipboard-history $$HOME/.local/bin/clipboard-history
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/nixos/ime $$HOME/.local/bin/ime
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/nixos/check-recording $$HOME/.local/bin/check-recording
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 # 	sudo ln -s /root/.config/rclone/rclone.conf /.rclone.conf
 # 	ln -s /mnt/google_drive/yanosea $$HOME/google_drive
 # 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
@@ -446,7 +446,7 @@ endif
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 # 	@echo ""
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 # 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
 # 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
 # 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
@@ -500,7 +500,7 @@ mac.init:
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 # 	@echo ""
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 # 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
 # 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
 # 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
@@ -552,7 +552,7 @@ mac.init:
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 # 	@echo ""
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/utils/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 # 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
 # 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
 # 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
@@ -600,7 +600,7 @@ mac.init:
 # 	@Write-Host ""
 # 	@Write-Host "install winget packages..." $(COLOR_HEADER)
 # 	@Write-Host ""
-# 	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\pkglist\winget\pkglist.json"
+# 	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json"
 # 	@Write-Host ""
 # 	@Write-Host "initialize windows done!" $(COLOR_DONE)
 # 	@Write-Host ""
