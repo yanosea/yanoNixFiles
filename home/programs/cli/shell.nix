@@ -16,6 +16,7 @@
           echo "update sheldon plugins..."
           echo ""
           ${script}
+          echo ""
         '';
     };
     packages = with pkgs; [
