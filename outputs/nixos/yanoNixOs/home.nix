@@ -1,15 +1,12 @@
+# nixos home configuration
 { homePath, username, ... }:
 {
   imports = [
-    # cli
-    ../../home-manager/modules/cli
-    # gui
-    ../../home-manager/modules/gui
-    # languages
-    ../../home-manager/modules/languages
+    # host specific
+    ../../home-manager/hosts/yanoNixOs
     # nixos specific
     ../../home-manager/os/nixos
-    # config
+    # config (dotfiles)
     ../../../config
   ];
   # home
@@ -21,11 +18,5 @@
     };
     stateVersion = "24.05"; # DO NOT CHANGE
     username = username;
-  };
-  # programs
-  programs = {
-    zsh = {
-      enable = true;
-    };
   };
 }

@@ -1,0 +1,15 @@
+# shared cli modules for home
+{
+  imports = [
+    ./ai.nix
+    ./core.nix
+    ./docker.nix
+    ./editor.nix
+    ./git.nix
+    ./jookey.nix
+    ./media.nix
+    ./shell.nix
+    ./tools.nix
+    ./xdg.nix
+  ];
+}

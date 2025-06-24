@@ -1,5 +1,6 @@
+# darwin specific modules for home
 {
   imports = [
-    ./programs/cli
+    ./cli
   ];
 }

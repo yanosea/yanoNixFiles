@@ -1,5 +1,5 @@
+# config (dotfiles)
 { lib, ... }:
-
 let
   contents = builtins.readDir ./.;
   filteredContents = lib.filterAttrs (name: _: name != "default.nix") contents;
