@@ -8,12 +8,12 @@
 {
   imports = [
     # nix
-    ../../modules/nix/nix-darwin.nix
+    ../../../modules/nix/nix-darwin.nix
     # programs
     ## brew
-    ../../modules/programs/brew.nix
+    ../../../modules/programs/brew.nix
     ## shell
-    ../../modules/programs/shell.nix
+    ../../../modules/programs/shell.nix
   ];
   # fonts
   fonts = {

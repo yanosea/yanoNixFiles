@@ -7,14 +7,14 @@
 {
   imports = [
     # core
-    ../../modules/core
+    ../../../modules/core
     # nix
-    ../../modules/nix/nix.nix
+    ../../../modules/nix/nix.nix
     # programs
     ## nix-ld
-    ../../modules/programs/nix-ld.nix
+    ../../../modules/programs/nix-ld.nix
     ## shell
-    ../../modules/programs/shell.nix
+    ../../../modules/programs/shell.nix
   ];
   # boot
   boot = {

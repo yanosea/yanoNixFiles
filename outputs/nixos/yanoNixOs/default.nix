@@ -11,18 +11,18 @@
     # hardware-configuration
     ./hardware-configuration.nix
     # core
-    ../../modules/core
+    ../../../modules/core
     # desktop
-    ../../modules/desktop
+    ../../../modules/desktop
     # nix
-    ../../modules/nix/nix.nix
+    ../../../modules/nix/nix.nix
     # programs
     ## game
-    ../../modules/programs/game.nix
+    ../../../modules/programs/game.nix
     ## nix-ld
-    ../../modules/programs/nix-ld.nix
+    ../../../modules/programs/nix-ld.nix
     ## shell
-    ../../modules/programs/shell.nix
+    ../../../modules/programs/shell.nix
   ] ++ (with inputs.nixos-hardware.nixosModules; [ common-pc-ssd ]);
   # boot
   boot = {

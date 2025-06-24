@@ -77,12 +77,12 @@
   };
   outputs = inputs: {
     # nixos
-    nixosConfigurations = (import ./hosts inputs).nixos;
+    nixosConfigurations = (import ./outputs inputs).nixos;
     # darwin
-    darwinConfigurations = (import ./hosts inputs).darwin;
+    darwinConfigurations = (import ./outputs inputs).darwin;
     # home-manager
-    homeConfigurations = (import ./hosts inputs).home-manager;
+    homeConfigurations = (import ./outputs inputs).home-manager;
     # formatter
-    formatter = import ./formatter inputs;
+    formatter = (import ./outputs inputs).formatter;
   };
 }
