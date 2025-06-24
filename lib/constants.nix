@@ -1,11 +1,5 @@
 # global constants
 {
-  # user configuration
+  # username
   username = "yanosea";
-  # shell configurations
-  shells = {
-    zsh = {
-      zdotdir = ".config/zsh";
-    };
-  };
 }
