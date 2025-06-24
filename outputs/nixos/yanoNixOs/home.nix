@@ -2,15 +2,15 @@
 {
   imports = [
     # cli
-    ../../home/programs/cli
+    ../../home-manager/modules/cli
     # gui
-    ../../home/programs/gui
+    ../../home-manager/modules/gui
     # languages
-    ../../home/programs/languages
+    ../../home-manager/modules/languages
     # nixos specific
-    ../../home/os/nixos
+    ../../home-manager/os/nixos
     # config
-    ../../home/config
+    ../../../config
   ];
   # home
   home = {

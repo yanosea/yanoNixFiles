@@ -2,13 +2,13 @@
 {
   imports = [
     # cli
-    ../../home/programs/cli
+    ../../home-manager/modules/cli
     # languages
-    ../../home/programs/languages
+    ../../home-manager/modules/languages
     # darwin specific
-    ../../home/os/darwin
+    ../../home-manager/os/darwin
     # config
-    ../../home/config
+    ../../../config
   ];
   # home
   home = {
