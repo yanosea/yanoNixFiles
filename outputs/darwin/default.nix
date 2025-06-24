@@ -2,9 +2,9 @@
 { username, ... }@inputs:
 let
   lib = import ../../lib inputs;
-  inherit (lib) mkDarwinSystem;
-  system = "aarch64-darwin";
-  homePath = "/Users";
+  inherit (lib) mkDarwinSystem getSystemConfig;
+  systemConfig = getSystemConfig "aarch64-darwin";
+  inherit (systemConfig) system homePath;
 in
 {
   # mac configuration

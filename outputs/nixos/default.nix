@@ -5,9 +5,10 @@ let
   inherit (lib)
     mkNixOsSystem
     mkNixOsWslSystem
+    getSystemConfig
     ;
-  system = "x86_64-linux";
-  homePath = "/home";
+  systemConfig = getSystemConfig "x86_64-linux";
+  inherit (systemConfig) system homePath;
 in
 {
   # nixos configuration

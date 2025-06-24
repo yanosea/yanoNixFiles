@@ -1,5 +1,5 @@
 # home google-drive module
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 {
   # home
   home = {
@@ -18,7 +18,7 @@
       Service = {
         Type = "simple";
         ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/google_drive";
-        ExecStart = "${pkgs.rclone}/bin/rclone mount yanosea: %h/google_drive --allow-other --vfs-cache-mode full --buffer-size 128M --vfs-read-ahead 512M --drive-chunk-size 64M --config %h/.config/rclone/rclone.conf -v";
+        ExecStart = "${pkgs.rclone}/bin/rclone mount ${username}: %h/google_drive --allow-other --vfs-cache-mode full --buffer-size 128M --vfs-read-ahead 512M --drive-chunk-size 64M --config %h/.config/rclone/rclone.conf -v";
         ExecStop = "${pkgs.util-linux}/bin/umount %h/google_drive";
         Restart = "on-failure";
         RestartSec = "15s";

@@ -34,7 +34,7 @@
   # wsl
   wsl = {
     enable = true;
-    defaultUser = "yanosea";
+    defaultUser = username;
     wslConf = {
       automount = {
         root = "/mnt";

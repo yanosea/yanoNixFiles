@@ -1,8 +1,9 @@
 # outputs
 inputs:
 let
-  # common username
-  username = "yanosea";
+  # import lib for constants
+  lib = import ../lib inputs;
+  inherit (lib) username;
   # os configurations
   nixos = import ./nixos (inputs // { inherit username; });
   darwin = import ./darwin (inputs // { inherit username; });

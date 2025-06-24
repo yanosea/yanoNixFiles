@@ -1,5 +1,23 @@
 # lib
-inputs: {
+inputs:
+let
+  # import system and constant configurations
+  systems = import ./systems.nix;
+  constants = import ./constants.nix;
+in
+{
+  # export system and constant configurations
+  inherit (systems)
+    supportedSystems
+    systemConfigs
+    getSystemConfig
+    linuxSystems
+    darwinSystems
+    ;
+  inherit (constants)
+    username
+    shells
+    ;
   mkNixOsSystem =
     {
       homePath,

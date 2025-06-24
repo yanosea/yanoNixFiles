@@ -2,48 +2,50 @@
 { username, ... }@inputs:
 let
   lib = import ../../lib inputs;
-  inherit (lib) mkHomeManagerConfiguration;
+  inherit (lib) mkHomeManagerConfiguration getSystemConfig;
   overlays = import ../../overlays inputs;
+
+  # host configurations mapping
+  hostConfigs = {
+    yanoNixOs = {
+      system = "x86_64-linux";
+      osType = "nixos";
+    };
+    yanoNixOsWsl = {
+      system = "x86_64-linux";
+      osType = "nixos";
+    };
+    yanoMac = {
+      system = "aarch64-darwin";
+      osType = "darwin";
+    };
+    yanoMacBook = {
+      system = "aarch64-darwin";
+      osType = "darwin";
+    };
+  };
+
+  # helper function to create home-manager configuration
+  mkHostHomeConfig =
+    hostname: hostConfig:
+    let
+      systemConfig = getSystemConfig hostConfig.system;
+    in
+    mkHomeManagerConfiguration {
+      modules = [
+        ./shared-modules
+        ../${hostConfig.osType}/${hostname}/home.nix
+      ];
+      inherit username overlays;
+      inherit (systemConfig) system homePath;
+    };
 in
-{
-  # nixos
-  "${username}@yanoNixOs" = mkHomeManagerConfiguration {
-    modules = [
-      ./shared-modules
-      ../nixos/yanoNixOs/home.nix
-    ];
-    inherit username overlays;
-    system = "x86_64-linux";
-    homePath = "/home";
-  };
-  # nixos (wsl)
-  "${username}@yanoNixOsWsl" = mkHomeManagerConfiguration {
-    modules = [
-      ./shared-modules
-      ../nixos/yanoNixOsWsl/home.nix
-    ];
-    inherit username overlays;
-    system = "x86_64-linux";
-    homePath = "/home";
-  };
-  # mac
-  "${username}@yanoMac" = mkHomeManagerConfiguration {
-    modules = [
-      ./shared-modules
-      ../darwin/yanoMac/home.nix
-    ];
-    inherit username overlays;
-    system = "aarch64-darwin";
-    homePath = "/Users";
-  };
-  # macbook
-  "${username}@yanoMacBook" = mkHomeManagerConfiguration {
-    modules = [
-      ./shared-modules
-      ../darwin/yanoMacBook/home.nix
-    ];
-    inherit username overlays;
-    system = "aarch64-darwin";
-    homePath = "/Users";
-  };
-}
+# generate configurations for all hosts
+builtins.listToAttrs (
+  builtins.attrValues (
+    builtins.mapAttrs (hostname: hostConfig: {
+      name = "${username}@${hostname}";
+      value = mkHostHomeConfig hostname hostConfig;
+    }) hostConfigs
+  )
+)
