@@ -47,21 +47,10 @@ if [ ! -d ".git" ]; then
 fi
 
 # check if nix is available
-if ! command -v nix &> /dev/null; then
+if ! command -v nix &>/dev/null; then
 	echo -e "${RED}Error: 'nix' command not found.${CLEAR}"
 	echo "Please ensure Nix is installed and available in PATH..."
 	exit 1
-fi
-
-# check if existing pre-commit hook exists
-if [ -f ".git/hooks/pre-commit" ]; then
-	echo -e "${YELLOW}Warning: A pre-commit hook already exists.${CLEAR}"
-	echo -e -n "Do you want to overwrite it? [y/N] "
-	read -r response
-	if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-		echo -e "${YELLOW}Installation aborted${CLEAR}"
-		exit 0
-	fi
 fi
 
 # confirm with user
@@ -78,14 +67,14 @@ mkdir -p .git/hooks
 cat >.git/hooks/pre-commit <<'EOF'
 #!/usr/bin/env bash
 
-# Run nix fmt before commit
+# run nix fmt before commit
 echo "Running nix fmt..."
 if ! nix fmt; then
   echo "nix fmt failed. Please fix formatting issues and try again."
   exit 1
 fi
 
-# Stage any changes made by nix fmt
+# stage any changes made by nix fmt
 git add -A
 
 echo "nix fmt completed successfully."
@@ -96,10 +85,3 @@ chmod +x .git/hooks/pre-commit
 
 echo ""
 echo -e "${GREEN}Nix Format Pre-commit Hook has been successfully installed to the current repository!${CLEAR}"
-echo ""
-echo -e "${YELLOW}Usage:${CLEAR}"
-echo "  From now on, 'nix fmt' will automatically run before each commit."
-echo "  If formatting fails, the commit will be aborted."
-echo ""
-echo -e "${YELLOW}To test:${CLEAR}"
-echo "  git commit -m \"test: your commit message\""
