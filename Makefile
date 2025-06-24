@@ -381,6 +381,7 @@ endif
 # 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
 # 	@echo ""
 # 	mkdir -p $$HOME/.local/bin
+# 	mkdir -p $$HOME/google_drive
 # 	mkdir -p $$XDG_DATA_HOME/skk
 # 	mkdir -p $$XDG_STATE_HOME/skk
 # 	mkdir -p $$XDG_STATE_HOME/zsh
@@ -389,17 +390,16 @@ endif
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)initialize rclone...$(COLOR_RESET)"
 # 	@echo ""
-# 	sudo mkdir -p $$HOME/google_drive/yanosea
-# 	sudo rclone config
+# 	rclone config
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 # 	@echo ""
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/nixos/clipboard-history $$HOME/.local/bin/clipboard-history
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/nixos/ime $$HOME/.local/bin/ime
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/nixos/check-recording $$HOME/.local/bin/check-recording
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
-# 	sudo ln -s /root/.config/rclone/rclone.conf /.rclone.conf
-# 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/install/installNixFmtPreCommitHook $$HOME/.local/bin/installNixFmtPreCommitHook
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/nixos/clipboard-history $$HOME/.local/bin/clipboard-history
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/nixos/ime $$HOME/.local/bin/ime
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/nixos/check-recording $$HOME/.local/bin/check-recording
+# 	ln -s $$HOME/google_drive/yanosea/credentials $$XDG_DATA_HOME/credentials
 # 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
 # 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
 # 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
@@ -445,8 +445,9 @@ endif
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 # 	@echo ""
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
-# 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/install/installNixFmtPreCommitHook $$HOME/.local/bin/installNixFmtPreCommitHook
+# 	ln -s <WINDOWS_GOOGLE_DRIVE_PATH> $$HOME/google_drive
 # 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
 # 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
 # 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
@@ -499,7 +500,8 @@ mac.init:
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 # 	@echo ""
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/install/installNixFmtPreCommitHook $$HOME/.local/bin/installNixFmtPreCommitHook
 # 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
 # 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
 # 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
@@ -551,7 +553,8 @@ mac.init:
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)make necessary symbolic links...$(COLOR_RESET)"
 # 	@echo ""
-# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
+# 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/install/installNixFmtPreCommitHook $$HOME/.local/bin/installNixFmtPreCommitHook
 # 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
 # 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
 # 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
