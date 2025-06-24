@@ -1,3 +1,4 @@
+# nixos desktop game module
 {
   # programs
   programs = {

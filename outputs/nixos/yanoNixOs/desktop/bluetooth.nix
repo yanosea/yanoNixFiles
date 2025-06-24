@@ -1,3 +1,4 @@
+# nixos desktop bluetooth configuration
 {
   # hardware
   hardware = {

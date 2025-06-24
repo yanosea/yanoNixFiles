@@ -1,3 +1,4 @@
+# nixos time module
 {
   # time
   time = {

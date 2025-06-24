@@ -1,3 +1,4 @@
+# nixos desktop fonts module
 { pkgs, ... }:
 {
   # fonts

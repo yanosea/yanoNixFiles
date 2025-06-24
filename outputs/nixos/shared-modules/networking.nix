@@ -1,3 +1,4 @@
+# nixos networking module
 { hostname, ... }:
 {
   # networking

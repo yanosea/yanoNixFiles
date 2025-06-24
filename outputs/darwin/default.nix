@@ -7,16 +7,22 @@ let
   homePath = "/Users";
 in
 {
-  # mac
+  # mac configuration
   yanoMac = mkDarwinSystem {
     hostname = "yanoMac";
     inherit username system homePath;
-    modules = [ ./yanoMac ];
+    modules = [
+      ./shared-modules
+      ./yanoMac
+    ];
   };
-  # macbook
+  # macbook configuration
   yanoMacBook = mkDarwinSystem {
     hostname = "yanoMacBook";
     inherit username system homePath;
-    modules = [ ./yanoMacBook ];
+    modules = [
+      ./shared-modules
+      ./yanoMacBook
+    ];
   };
 }

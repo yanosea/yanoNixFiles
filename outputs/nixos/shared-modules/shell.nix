@@ -1,3 +1,4 @@
+# nixos shell module
 {
   # programs
   programs = {

@@ -1,3 +1,4 @@
+# nixos desktop sound module
 { pkgs, ... }:
 {
   # environment

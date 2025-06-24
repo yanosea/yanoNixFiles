@@ -1,3 +1,4 @@
+# nixos virtualisation module
 {
   # virtualisation
   virtualisation = {

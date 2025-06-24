@@ -1,3 +1,4 @@
+# nixos system packages module
 { pkgs, ... }:
 {
   # environment

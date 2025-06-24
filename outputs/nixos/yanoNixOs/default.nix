@@ -1,3 +1,4 @@
+# nixos configuration
 {
   config,
   homePath,
@@ -10,19 +11,8 @@
   imports = [
     # hardware-configuration
     ./hardware-configuration.nix
-    # core
-    ../../../modules/core
     # desktop
-    ../../../modules/desktop
-    # nix
-    ../../../modules/nix/nix.nix
-    # programs
-    ## game
-    ../../../modules/programs/game.nix
-    ## nix-ld
-    ../../../modules/programs/nix-ld.nix
-    ## shell
-    ../../../modules/programs/shell.nix
+    ./desktop
   ] ++ (with inputs.nixos-hardware.nixosModules; [ common-pc-ssd ]);
   # boot
   boot = {

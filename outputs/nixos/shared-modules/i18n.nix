@@ -1,3 +1,4 @@
+# nixos i18n module
 { pkgs, ... }:
 {
   # i18n

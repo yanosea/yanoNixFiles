@@ -1,3 +1,4 @@
+# nixos (wsl) configuration
 {
   homePath,
   pkgs,
@@ -5,17 +6,6 @@
   ...
 }:
 {
-  imports = [
-    # core
-    ../../../modules/core
-    # nix
-    ../../../modules/nix/nix.nix
-    # programs
-    ## nix-ld
-    ../../../modules/programs/nix-ld.nix
-    ## shell
-    ../../../modules/programs/shell.nix
-  ];
   # boot
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;

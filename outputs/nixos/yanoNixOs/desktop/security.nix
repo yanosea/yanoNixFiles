@@ -1,3 +1,4 @@
+# nixos desktop security module
 { pkgs, username, ... }:
 {
   # programs

@@ -1,6 +1,8 @@
+# darwin shell module
 {
+  # programs
   programs = {
-    nix-ld = {
+    zsh = {
       enable = true;
     };
   };

@@ -1,3 +1,4 @@
+# nixos scurity module
 {
   # security
   security = {

@@ -10,16 +10,22 @@ let
   homePath = "/home";
 in
 {
-  # nixos
+  # nixos configuration
   yanoNixOs = mkNixOsSystem {
     hostname = "yanoNixOs";
     inherit username system homePath;
-    modules = [ ./yanoNixOs ];
+    modules = [
+      ./shared-modules
+      ./yanoNixOs
+    ];
   };
-  # nixos (wsl)
+  # nixos (wsl) configuration
   yanoNixOsWsl = mkNixOsWslSystem {
     hostname = "yanoNixOsWsl";
     inherit username system homePath;
-    modules = [ ./yanoNixOsWsl ];
+    modules = [
+      ./shared-modules
+      ./yanoNixOsWsl
+    ];
   };
 }

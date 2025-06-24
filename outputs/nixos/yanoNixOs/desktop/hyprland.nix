@@ -1,3 +1,4 @@
+# nixos desktop hyprland module
 { inputs, ... }:
 {
   imports = [ inputs.hyprland.nixosModules.default ];

@@ -1,3 +1,4 @@
+# nixos desktop fuse module
 {
   # programs
   programs = {

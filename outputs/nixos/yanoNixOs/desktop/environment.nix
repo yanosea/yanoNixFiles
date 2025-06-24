@@ -1,3 +1,4 @@
+# nixos desktop environment module
 {
   # environment
   environment = {

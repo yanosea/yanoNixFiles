@@ -1,3 +1,4 @@
+# nixos hardware clock module
 { pkgs, ... }:
 {
   # services

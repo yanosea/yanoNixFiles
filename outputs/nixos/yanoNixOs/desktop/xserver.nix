@@ -1,3 +1,4 @@
+# nixos desktop xserver module
 {
   # services
   services = {
