@@ -92,6 +92,8 @@ else ifeq ($(IS_MAC),1)
 	@echo ""
 	make home
 	@echo ""
+	make agents
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)update macbook...$(COLOR_RESET)"
@@ -99,6 +101,8 @@ else ifeq ($(IS_MACBOOK),1)
 	make system
 	@echo ""
 	make home
+	@echo ""
+	make agents
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 else ifeq ($(IS_WINDOWS),1)
@@ -174,6 +178,8 @@ else ifeq ($(IS_NIXOS_WSL),1)
 else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
+	rm $$HOME/.config/AquaSKK/DictionarySet.plist
+	rm $$HOME/.config/AquaSKK/BlacklistApps.plist
 	rm -fr $$HOME/.config/claude/CLAUDE.md
 	rm -fr $$HOME/.config/karabiner/karabiner.json
 	nix run .#homeConfigurations."yanosea@yanoMac".activationPackage
@@ -181,6 +187,8 @@ else ifeq ($(IS_MAC),1)
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
+	rm $$HOME/.config/AquaSKK/DictionarySet.plist
+	rm $$HOME/.config/AquaSKK/BlacklistApps.plist
 	rm -fr $$HOME/.config/claude/CLAUDE.md
 	rm -fr $$HOME/.config/karabiner/karabiner.json
 	nix run .#homeConfigurations."yanosea@yanoMacBook".activationPackage
