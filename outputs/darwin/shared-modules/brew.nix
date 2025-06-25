@@ -23,6 +23,7 @@
       "easyfind"
       "font-sf-mono"
       "font-sf-pro"
+      "font-sketchybar-app-font"
       "github@beta"
       "google-drive"
       "hammerspoon"
