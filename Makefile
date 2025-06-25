@@ -389,7 +389,6 @@ endif
 # 	@echo "$(COLOR_HEADER)make necessary directories...$(COLOR_RESET)"
 # 	@echo ""
 # 	mkdir -p $$HOME/.local/bin
-# 	mkdir -p $$HOME/google_drive
 # 	mkdir -p $$XDG_DATA_HOME/skk
 # 	mkdir -p $$XDG_STATE_HOME/skk
 # 	mkdir -p $$XDG_STATE_HOME/zsh
@@ -407,9 +406,6 @@ endif
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/nixos/clipboard-history $$HOME/.local/bin/clipboard-history
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/nixos/ime $$HOME/.local/bin/ime
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/nixos/check-recording $$HOME/.local/bin/check-recording
-# 	ln -s $$HOME/google_drive/yanosea/credentials $$XDG_DATA_HOME/credentials
-# 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
-# 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
 # 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)install skk dictionaries...$(COLOR_RESET)"
@@ -456,9 +452,6 @@ endif
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/install/installNixFmtPreCommitHook $$HOME/.local/bin/installNixFmtPreCommitHook
 # 	ln -s <WINDOWS_GOOGLE_DRIVE_PATH> $$HOME/google_drive
-# 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
-# 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
-# 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
 # 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 # 	ln -s <WINDOWS_HOME_PATH> $$HOME/windows_home
 # 	ln -s <WINDOWS_WIN32YANK_PATH> $$HOME/.local/bin/win32yank.exe
@@ -511,9 +504,6 @@ mac.init:
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/install/installNixFmtPreCommitHook $$HOME/.local/bin/installNixFmtPreCommitHook
 # 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
-# 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
-# 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
-# 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
 # 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)install skk dictionaries...$(COLOR_RESET)"
@@ -564,9 +554,6 @@ mac.init:
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/installGitEmojiPrefixTemplate $$HOME/.local/bin/installGitEmojiPrefixTemplate
 # 	ln -s $$HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/common/install/installNixFmtPreCommitHook $$HOME/.local/bin/installNixFmtPreCommitHook
 # 	ln -s <GOOGLE_DRIVE_PATH> $$HOME/google_drive
-# 	ln -s $$HOME/google_drive/credentials $$XDG_DATA_HOME/credentials
-# 	ln -s $$XDG_DATA_HOME/credentials/github-copilot/apps.json $$XDG_CONFIG_HOME/github-copilot/apps.json
-# 	ln -s $$XDG_DATA_HOME/credentials/wakatime/.wakatime.cfg $$XDG_CONFIG_HOME/wakatime/.wakatime.cfg
 # 	ln -s $$XDG_CONFIG_HOME/vim $$HOME/.vim
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)install skk dictionaries...$(COLOR_RESET)"

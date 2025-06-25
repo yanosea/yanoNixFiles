@@ -95,6 +95,7 @@ in
         inherit homePath inputs username;
       };
       modules = modules ++ [
+        inputs.sops-nix.homeManagerModules.sops
         {
           home = {
             inherit username;
