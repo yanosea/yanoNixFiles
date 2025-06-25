@@ -4,8 +4,8 @@
   imports = [
     # darwin specific
     ../../home-manager/os/darwin
-    # config (dotfiles)
-    ../../../config
+    # configs (dotfiles)
+    ../../../configs
   ];
   # home
   home = {

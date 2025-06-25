@@ -1,4 +1,4 @@
-# config (dotfiles)
+# configs (dotfiles)
 { lib, ... }:
 let
   contents = builtins.readDir ./.;

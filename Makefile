@@ -116,12 +116,12 @@ else ifeq ($(IS_WINDOWS),1)
 	@Write-Host ""
 	@Write-Host "install new packages..." $(COLOR_HEADER)
 	@Write-Host ""
-	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json"
+	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package-managers\winget\packages.json"
 	@Write-Host ""
 	@Write-Host "update winget package list..." $(COLOR_TITLE)
 	@Write-Host ""
-	winget export -o "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json"
-	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json" | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' | Set-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json"
+	winget export -o "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package-managers\winget\packages.json"
+	Get-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package-managers\winget\packages.json" | jq '.Sources[].Packages |= sort_by(.PackageIdentifier | ascii_downcase)' | Set-Content -Path "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package-managers\winget\packages.json"
 	@Write-Host ""
 	@Write-Host "update done!" $(COLOR_DONE)
 else
@@ -610,7 +610,7 @@ mac.init:
 # 	@Write-Host ""
 # 	@Write-Host "install winget packages..." $(COLOR_HEADER)
 # 	@Write-Host ""
-# 	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package_managers\winget\packages.json"
+# 	winget import "$$HOME\ghq\github.com\yanosea\yanoNixFiles\ops\package-managers\winget\packages.json"
 # 	@Write-Host ""
 # 	@Write-Host "initialize windows done!" $(COLOR_DONE)
 # 	@Write-Host ""

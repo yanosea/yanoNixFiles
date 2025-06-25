@@ -6,8 +6,8 @@
     ../../home-manager/hosts/yanoNixOs
     # nixos specific
     ../../home-manager/os/nixos
-    # config (dotfiles)
-    ../../../config
+    # configs (dotfiles)
+    ../../../configs
   ];
   # home
   home = {
