@@ -9,6 +9,7 @@
     ./jookey.nix
     ./media.nix
     ./shell.nix
+    ./secrets.nix
     ./tools.nix
     ./xdg.nix
   ];

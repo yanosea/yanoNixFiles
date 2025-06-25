@@ -74,26 +74,26 @@ export PYENV_ROOT=$HOME/.pyenv
 export PATH=$PATH:$PYENV_ROOT/bin
 ## ghq
 export GHQ_ROOT="$HOME"/ghq
-# credentials
+# credentials (sops-managed)
 ## anthropic
-export ANTHROPIC_API_KEY=$(cat $XDG_DATA_HOME/credentials/anthropic/ANTHROPIC_API_KEY)
+export ANTHROPIC_API_KEY=$(cat $XDG_DATA_HOME/sops/ANTHROPIC_API_KEY)
 ## openai
-export OPENAI_API_KEY=$(cat $XDG_DATA_HOME/credentials/openapi/OPENAI_API_KEY)
+export OPENAI_API_KEY=$(cat $XDG_DATA_HOME/sops/OPENAI_API_KEY)
 ## spotify
-export SPOTIFY_ID=$(cat $XDG_DATA_HOME/credentials/spotify/SPOTIFY_ID)
-export SPOTIFY_SECRET=$(cat $XDG_DATA_HOME/credentials/spotify/SPOTIFY_SECRET)
-export SPOTIFY_REDIRECT_URI=$(cat $XDG_DATA_HOME/credentials/spotify/SPOTIFY_REDIRECT_URI)
-export SPOTIFY_REFRESH_TOKEN=$(cat $XDG_DATA_HOME/credentials/spotify/SPOTIFY_REFRESH_TOKEN)
+export SPOTIFY_ID=$(cat $XDG_DATA_HOME/sops/SPOTIFY_ID)
+export SPOTIFY_SECRET=$(cat $XDG_DATA_HOME/sops/SPOTIFY_SECRET)
+export SPOTIFY_REDIRECT_URI=$(cat $XDG_DATA_HOME/sops/SPOTIFY_REDIRECT_URI)
+export SPOTIFY_REFRESH_TOKEN=$(cat $XDG_DATA_HOME/sops/SPOTIFY_REFRESH_TOKEN)
 ## trello
-export TRELLO_USER=$(cat $XDG_DATA_HOME/credentials/trello/TRELLO_USER)
-export TRELLO_KEY=$(cat $XDG_DATA_HOME/credentials/trello/TRELLO_KEY)
-export TRELLO_TOKEN=$(cat $XDG_DATA_HOME/credentials/trello/TRELLO_TOKEN)
+export TRELLO_USER=$(cat $XDG_DATA_HOME/sops/TRELLO_USER)
+export TRELLO_KEY=$(cat $XDG_DATA_HOME/sops/TRELLO_KEY)
+export TRELLO_TOKEN=$(cat $XDG_DATA_HOME/sops/TRELLO_TOKEN)
 # starship
 export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
 # wakatime
 export WAKATIME_HOME=$XDG_CONFIG_HOME/wakatime
 # tavily
-export TAVILY_API_KEY=$(cat $XDG_DATA_HOME/credentials/tavily/TAVILY_API_KEY)
+export TAVILY_API_KEY=$(cat $XDG_DATA_HOME/sops/TAVILY_API_KEY)
 # darwin
 if [[ "$OS" = "Darwin" ]]; then
 	# model
