@@ -7,7 +7,7 @@
   ...
 }:
 let
-  ageKeyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+  ageKeyFile = "${config.xdg.configHome}/sops/age/keys.txt";
 in
 {
   # home

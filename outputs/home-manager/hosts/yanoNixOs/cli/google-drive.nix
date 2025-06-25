@@ -1,5 +1,10 @@
 # home google-drive module
-{ pkgs, username, ... }:
+{
+  config,
+  pkgs,
+  username,
+  ...
+}:
 let
   # rclone mount script
   rcloneMountScript = pkgs.writeShellScript "rclone-mount-google-drive" ''
@@ -24,14 +29,14 @@ let
     # cleanup existing mounts and prepare directory
     echo "preparing mount directory..."
     # attempt to unmount any existing mounts
-    ${pkgs.fuse}/bin/fusermount -uz "$HOME/google_drive" 2>/dev/null || true
-    ${pkgs.util-linux}/bin/umount -l "$HOME/google_drive" 2>/dev/null || true
+    ${pkgs.fuse}/bin/fusermount -uz "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
+    ${pkgs.util-linux}/bin/umount -l "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
     # wait briefly for unmount to complete
     ${pkgs.coreutils}/bin/sleep 2
     # force remove problematic directory if exists
-    ${pkgs.coreutils}/bin/rmdir "$HOME/google_drive" 2>/dev/null || ${pkgs.coreutils}/bin/rm -rf "$HOME/google_drive" 2>/dev/null || true
+    ${pkgs.coreutils}/bin/rmdir "${config.home.homeDirectory}/google_drive" 2>/dev/null || ${pkgs.coreutils}/bin/rm -rf "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
     # recreate directory
-    ${pkgs.coreutils}/bin/mkdir -p "$HOME/google_drive"
+    ${pkgs.coreutils}/bin/mkdir -p "${config.home.homeDirectory}/google_drive"
     echo "mount directory ready"
     # wait for network with timeout
     echo "waiting for network connectivity..."
@@ -56,26 +61,26 @@ let
     # start rclone mount
     echo "starting rclone mount..."
     # start rclone mount
-    ${pkgs.rclone}/bin/rclone mount ${username}: "$HOME/google_drive" \
+    ${pkgs.rclone}/bin/rclone mount ${username}: "${config.home.homeDirectory}/google_drive" \
       --allow-other \
       --vfs-cache-mode full \
       --buffer-size 128M \
       --vfs-read-ahead 512M \
       --drive-chunk-size 64M \
-      --config "$HOME/.config/rclone/rclone.conf" \
+      --config "${config.xdg.configHome}/rclone/rclone.conf" \
       --log-level INFO \
-      --log-file "$HOME/.cache/rclone-mount.log"
+      --log-file "${config.xdg.cacheHome}/rclone-mount.log"
   '';
   # rclone unomnt script
   rcloneUnmountScript = pkgs.writeShellScript "rclone-unmount-google-drive" ''
     #!/bin/bash
     echo "stopping rclone mount..."
     # gracefully unmount
-    ${pkgs.fuse}/bin/fusermount -u "$HOME/google_drive" 2>/dev/null || true
+    ${pkgs.fuse}/bin/fusermount -u "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
     # brief wait for unmount
     ${pkgs.coreutils}/bin/sleep 2
     # verify unmount completed
-    if ! ${pkgs.util-linux}/bin/mountpoint -q "$HOME/google_drive" 2>/dev/null; then
+    if ! ${pkgs.util-linux}/bin/mountpoint -q "${config.home.homeDirectory}/google_drive" 2>/dev/null; then
       echo "unmount completed"
     else
       echo "unmount may still be pending"

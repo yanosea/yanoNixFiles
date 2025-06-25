@@ -1,5 +1,4 @@
 # dock configuration
-{ hostname, username, ... }:
 {
   dock = {
     enable-spring-load-actions-on-all-items = true;

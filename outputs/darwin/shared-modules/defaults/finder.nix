@@ -1,5 +1,4 @@
 # finder configuration
-{ hostname, username, ... }:
 {
   finder = {
     AppleShowAllExtensions = true;

@@ -1,5 +1,4 @@
 # input devices configuration (trackpad, mouse, keyboard)
-{ hostname, username, ... }:
 {
   magicmouse = {
     MouseButtonMode = "TwoButton";

@@ -1,5 +1,4 @@
 # UI and window management configuration
-{ hostname, username, ... }:
 {
   ActivityMonitor = {
     IconType = 5;

@@ -1,5 +1,10 @@
 # nixos (wsl) home configuration
-{ homePath, username, ... }:
+{
+  config,
+  homePath,
+  username,
+  ...
+}:
 {
   imports = [
     # nixos specific
@@ -12,7 +17,7 @@
     enableNixpkgsReleaseCheck = true;
     homeDirectory = "${homePath}/${username}";
     sessionVariables = {
-      ZDOTDIR = "${homePath}/${username}/.config/zsh";
+      ZDOTDIR = "${config.xdg.configHome}/zsh";
     };
     stateVersion = "24.05"; # DO NOT CHANGE
     username = username;

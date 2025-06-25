@@ -22,7 +22,7 @@
           ];
           script = pkgs.writeShellScript "sync-go-packages" ''
             set -euo pipefail
-            export GOPATH="$HOME/go"
+            export GOPATH="${config.home.homeDirectory}/go"
             export GOBIN="$GOPATH/bin"
             export PATH="${pkgs.go}/bin:$GOBIN:$PATH"
             for pkg in ${builtins.concatStringsSep " " goPackages}; do
