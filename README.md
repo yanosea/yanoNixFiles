@@ -109,7 +109,7 @@ dotfile is mine.
   # change the directory
   cd ghq/github.com/yanosea/yanoNixFiles
   # execute update task
-  make nixos.update
+  make update
   ```
 
 ## 🪟 WSL
@@ -225,7 +225,7 @@ dotfile is mine.
   # change the directory
   cd ghq/github.com/yanosea/yanoNixFiles
   # execute update task
-  make nixoswsl.update
+  make update
   ```
 
 ## 🍎 Darwin
@@ -288,9 +288,9 @@ dotfile is mine.
   # change the directory
   cd ghq/github.com/yanosea/yanoNixFiles
   # execute update task
-  make mac.update
+  make update
   # or
-  make macbook.update
+  make update
   ```
 
 ## 📚 Refferences
