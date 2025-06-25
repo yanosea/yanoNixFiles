@@ -1,5 +1,4 @@
 # global preferences and NSGlobalDomain
-{ hostname, username, ... }:
 {
   ".GlobalPreferences" = {
     "com.apple.mouse.scaling" = 17.0;

@@ -2,11 +2,11 @@
 { hostname, username, ... }:
 let
   # import all defaults modules
-  global = import ./defaults/global.nix { inherit hostname username; };
-  dock = import ./defaults/dock.nix { inherit hostname username; };
-  finder = import ./defaults/finder.nix { inherit hostname username; };
-  input = import ./defaults/input.nix { inherit hostname username; };
-  ui = import ./defaults/ui.nix { inherit hostname username; };
+  global = import ./defaults/global.nix;
+  dock = import ./defaults/dock.nix;
+  finder = import ./defaults/finder.nix;
+  input = import ./defaults/input.nix;
+  ui = import ./defaults/ui.nix;
   system = import ./defaults/system.nix { inherit hostname username; };
 in
 {
