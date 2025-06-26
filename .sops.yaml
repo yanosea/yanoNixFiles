@@ -1,9 +1,11 @@
 keys:
   - &yanoNixOs age1txahjqjmv45xrgzkgzfryqepv2dqqratjcd404rk8zmq0lkzdgcshqv2gd
   - &yanoMacBook age1hx27t6ks23xpktwrazezvdvls0rjtxspar0prk8c9t2l8mpwx35s39gpm5
+  - &yanoNixOsWsl age19en9tcyq3hz3my9rcuz55uqvgadkfl9qjnmludsx2p6ecj7kw57sq4psy3
 creation_rules:
   - path_regex: ops/sops/.*\.yaml$
     key_groups:
       - age:
           - *yanoNixOs 
           - *yanoMacBook 
+          - *yanoNixOsWsl 
