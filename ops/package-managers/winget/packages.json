@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-06-12T11:50:33.991-00:00",
+  "CreationDate": "2025-06-27T00:10:04.974-00:00",
   "Sources": [
     {
       "Packages": [
@@ -228,9 +228,6 @@
         },
         {
           "PackageIdentifier": "vim.vim.nightly"
-        },
-        {
-          "PackageIdentifier": "VirtualDesktop.Streamer"
         },
         {
           "PackageIdentifier": "Vivaldi.Vivaldi"
