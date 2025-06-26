@@ -10,7 +10,6 @@ updates:
     commit-message:
       prefix: "⚡deps(workflow)"
       prefix-development: "⚡deps(workflow)"
-      include: "scope"
     labels:
       - "dependencies"
       - "github-actions"
