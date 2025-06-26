@@ -116,7 +116,7 @@ jobs:
           } >> $GITHUB_OUTPUT
       - name: create pull request
         if: steps.update-flake.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
           commit-message: ${{ steps.update-flake.outputs.commit_message }}
