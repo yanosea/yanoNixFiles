@@ -1,15 +1,19 @@
-name: Auto Merge Dependency Update PR
+name: Auto Merge Dependency PR
 on:
   workflow_run:
     workflows: ["Update Nix Flake Dependencies"]
     types: [completed]
+  pull_request:
+    types: [opened, synchronize]
 permissions:
   contents: write
   pull-requests: write
 jobs:
   find-pr:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    if: >
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'pull_request' && github.actor == 'dependabot[bot]')
+
     outputs:
       pr_number: ${{ steps.find-pr.outputs.pr_number }}
       branch_name: ${{ steps.find-pr.outputs.branch_name }}
@@ -22,30 +26,38 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Search for PR when triggered by workflow_run
-          echo "Searching for dependency update PRs..."
-
-          # get recent PRs and filter for our criteria
-          PR_LIST=$(gh pr list --base main --limit 10 --json number,headRefName,labels --jq '.')
-          echo "$PR_LIST" > /tmp/pr_list.json
-
-          # extract matching PR with jq
-          MATCHING_PR=$(jq -r '[.[] |
-            select(.headRefName | startswith("auto-update/flake-lock/")) |
-            select(.labels | map(.name) | any(. == "dependencies" or . == "automated")) |
-            {number: .number, headRefName: .headRefName}] | first // {}' /tmp/pr_list.json)
-
-          # check if we found a matching PR
-          if [[ $(echo "$MATCHING_PR" | jq 'has("number")') == "true" ]]; then
-            PR_NUMBER=$(echo "$MATCHING_PR" | jq -r '.number')
-            HEAD_REF=$(echo "$MATCHING_PR" | jq -r '.headRefName')
-            echo "PR #$PR_NUMBER ($HEAD_REF) is a valid dependency update PR"
-            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
-            echo "branch_name=$HEAD_REF" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            # Direct PR trigger from dependabot
+            echo "PR #${{ github.event.number }} is a dependabot PR"
+            echo "pr_number=${{ github.event.number }}" >> $GITHUB_OUTPUT
+            echo "branch_name=${{ github.head_ref }}" >> $GITHUB_OUTPUT
             echo "found=true" >> $GITHUB_OUTPUT
           else
-            echo "No matching PR found"
-            echo "found=false" >> $GITHUB_OUTPUT
+            # Search for PR when triggered by workflow_run
+            echo "Searching for dependency update PRs..."
+
+            # get recent PRs and filter for our criteria
+            PR_LIST=$(gh pr list --base main --limit 10 --json number,headRefName,labels --jq '.')
+            echo "$PR_LIST" > /tmp/pr_list.json
+
+            # extract matching PR with jq
+            MATCHING_PR=$(jq -r '[.[] |
+              select(.headRefName | startswith("auto-update/flake-lock/")) |
+              select(.labels | map(.name) | any(. == "dependencies" or . == "automated")) |
+              {number: .number, headRefName: .headRefName}] | first // {}' /tmp/pr_list.json)
+
+            # check if we found a matching PR
+            if [[ $(echo "$MATCHING_PR" | jq 'has("number")') == "true" ]]; then
+              PR_NUMBER=$(echo "$MATCHING_PR" | jq -r '.number')
+              HEAD_REF=$(echo "$MATCHING_PR" | jq -r '.headRefName')
+              echo "PR #$PR_NUMBER ($HEAD_REF) is a valid dependency update PR"
+              echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+              echo "branch_name=$HEAD_REF" >> $GITHUB_OUTPUT
+              echo "found=true" >> $GITHUB_OUTPUT
+            else
+              echo "No matching PR found"
+              echo "found=false" >> $GITHUB_OUTPUT
+            fi
           fi
   auto-approve-and-merge:
     runs-on: ubuntu-latest
