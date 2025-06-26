@@ -10,6 +10,7 @@
     ./media.nix
     ./shell.nix
     ./secrets.nix
+    ./symlinks.nix
     ./tools.nix
     ./xdg.nix
   ];

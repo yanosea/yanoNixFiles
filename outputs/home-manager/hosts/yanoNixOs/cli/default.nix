@@ -2,6 +2,7 @@
 {
   imports = [
     ./google-drive.nix
+    ./symlinks.nix
     ./tools.nix
     ./wine.nix
   ];

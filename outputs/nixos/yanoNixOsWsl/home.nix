@@ -7,6 +7,8 @@
 }:
 {
   imports = [
+    # host specific
+    ../../home-manager/hosts/yanoNixOsWsl
     # nixos specific
     ../../home-manager/os/nixos
     # configs (dotfiles)
