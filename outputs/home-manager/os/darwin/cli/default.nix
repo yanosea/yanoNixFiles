@@ -2,5 +2,6 @@
 {
   imports = [
     ./desktop.nix
+    ./symlinks.nix
   ];
 }
