@@ -18,17 +18,21 @@
    - `chore:` - Use for changes to build process, auxiliary tools, or libraries
    - `merge:` - Use for merge commits
 
-2. In the body, list the changes as bullet points, each starting with "- ".
+2. Add () after prefix and full it with the changed tool.
+   For example, if GitHub Workflow file was changed: (workflow)
+   If git config file was changed: (git)
 
-3. Leave one line between the title and body text.
+3. In the body, list the changes as bullet points, each starting with "- ".
 
-4. All sentences must start with lower case. Use capital letters only for proper nouns.
+4. Leave one line between the title and body text.
 
-5. Surround keywords with \`\`.
+5. All sentences must start with lower case. Use capital letters only for proper nouns.
 
-6. Do not add your signature.
+6. Surround keywords with \`\`.
 
-7. If the reason for the changes is not clear from looking at the source,
+7. Do not add your signature.
+
+8. If the reason for the changes is not clear from looking at the source,
    please ask questions before creating the commit message and include the answers in your considerations.
 
 **IMPORTANT: Commit messages must be in English, but your reply must be in Japanese.**
