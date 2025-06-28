@@ -35,7 +35,6 @@
       "microsoft-teams"
       "obs"
       "omnidisksweeper"
-      "onyx"
       "processing"
       "qmk-toolbox"
       "raycast"
