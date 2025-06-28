@@ -6,6 +6,7 @@
     packages = with pkgs; [
       aider-chat
       claude-code
+      gemini-cli
       opencode
     ];
   };
