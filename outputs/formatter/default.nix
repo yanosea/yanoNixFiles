@@ -32,6 +32,9 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
       mdformat = {
         enable = true;
         includes = [ "*.md" ];
+        settings = {
+          number = true;
+        };
       };
       # nix
       nixfmt = {
