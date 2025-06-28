@@ -21,7 +21,7 @@ show_help() {
 	echo ""
 	echo -e "${YELLOW}What it does:${CLEAR}"
 	echo "  - Runs 'nix fmt' on all files in the repository"
-	echo "  - Stages any changes made by nix fmt"
+	echo "  - Re-stages only the files that were originally staged"
 	echo "  - Prevents commit if nix fmt fails"
 	echo ""
 	echo -e "Example: ${GREEN}git commit -m \"feat: Add new feature\"${CLEAR} → ${GREEN}automatically formats code before commit${CLEAR}"
@@ -67,6 +67,9 @@ mkdir -p .git/hooks
 cat >.git/hooks/pre-commit <<'EOF'
 #!/usr/bin/env bash
 
+# get list of staged files before running nix fmt
+staged_files=$(git diff --cached --name-only)
+
 # run nix fmt before commit
 echo "Running nix fmt..."
 if ! nix fmt; then
@@ -74,8 +77,10 @@ if ! nix fmt; then
   exit 1
 fi
 
-# stage any changes made by nix fmt
-git add -A
+# only re-stage the files that were originally staged
+if [ -n "$staged_files" ]; then
+  echo "$staged_files" | xargs git add
+fi
 
 echo "nix fmt completed successfully."
 EOF
