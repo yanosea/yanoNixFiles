@@ -1,0 +1,7 @@
+# wofi configuration file
+# search behavior
+allow_images=true
+allow_markup=true
+insensitive=true
+# performance
+cache_file=/dev/null
