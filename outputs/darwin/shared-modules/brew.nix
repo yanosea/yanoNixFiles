@@ -14,6 +14,7 @@
       "aquaskk"
       "arc"
       "bitwarden"
+      "bitwig-studio"
       "blackhole-16ch"
       "blender"
       "chrome-remote-desktop-host"

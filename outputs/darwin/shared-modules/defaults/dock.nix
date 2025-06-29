@@ -28,6 +28,9 @@
         app = "/Applications/Ableton Live 12 Suite.app";
       }
       {
+        app = "/Applications/Bitwig Studio.app";
+      }
+      {
         app = "/Applications/Native Instruments/Traktor DJ 2/Traktor DJ.app";
       }
       {
