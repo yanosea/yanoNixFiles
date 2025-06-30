@@ -8,9 +8,15 @@
 alias ls='ls --color=auto'
 PROMPT='[%n@%m %~]$ '
 # zellij auto-start
-if command -v zellij &>/dev/null; then
-	if [ -z "$INSIDE_ZELLIJ" ]; then
-		export INSIDE_ZELLIJ=1
+if command -v zellij &>/dev/null && [ -z "$ZELLIJ" ]; then
+	# check for existing sessions (excluding EXITED)
+	sessions=$(zellij list-sessions 2>/dev/null | grep -v "EXITED")
+	if [ -n "$sessions" ]; then
+		# connect to the most recent session (first in list)
+		session_name=$(echo "$sessions" | head -1 | sed 's/\x1b\[[0-9;]*m//g' | cut -d' ' -f1)
+		exec zellij attach "$session_name"
+	else
+		# no sessions exist, create new
 		exec zellij
 	fi
 fi
@@ -59,4 +65,3 @@ autoload -Uz zmv
 autoload -Uz compinit && compinit -d "$ZSH_COMPDUMP"
 # display random ascii art
 show_random_aa
-

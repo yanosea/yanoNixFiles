@@ -31,6 +31,9 @@ alias gitgraph="git log --graph --all --oneline --decorate"
 ## editors
 alias nvimdiff="$(which nvim) -d"
 alias lg="lazygit"
+# session management
+## zellij
+alias zl="zellij"
 # system management
 ## systemctl-tui
 alias st="systemctl-tui"
@@ -46,4 +49,3 @@ alias trello="trello-tui -board yanoBoard"
 # utilities
 ## zmv (bulk rename)
 alias zmv="noglob zmv -W"
-
