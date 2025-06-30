@@ -1,5 +1,5 @@
 -- claude code plugin
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>al)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>al)
 return {
 	{
 		"greggh/claude-code.nvim",
@@ -128,15 +128,16 @@ return {
 				-- Escape text only for single quotes (minimal escaping)
 				local escaped_text = text:gsub("'", "'\"'\"'")
 				-- Send text to Claude pane with Enter key
+				-- IMPORTANT : Claude pane must be positioned above the neovim pane in Zellij
 				local script = string.format(
 					[[
-					zellij action move-focus right
+					zellij action move-focus up
 					sleep 0.1
 					zellij action write-chars '%s'
 					sleep 0.1
 					zellij action write-chars $'\r'
 					sleep 0.1
-					zellij action move-focus left
+					zellij action move-focus down
 				]],
 					escaped_text
 				)
