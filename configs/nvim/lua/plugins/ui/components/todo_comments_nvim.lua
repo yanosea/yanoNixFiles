@@ -1,5 +1,5 @@
 -- highlight and search for todo comments
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>lT)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>lT)
 return {
 	{
 		"folke/todo-comments.nvim",

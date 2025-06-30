@@ -1,5 +1,5 @@
 -- github copilot assistant plugin for avante.nvim
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>aa)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>aa)
 return {
 	{
 		"yetone/avante.nvim",

@@ -1,5 +1,5 @@
 -- lsp config
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER><SPACE>)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER><SPACE>)
 return {
 	{
 		"neovim/nvim-lspconfig",

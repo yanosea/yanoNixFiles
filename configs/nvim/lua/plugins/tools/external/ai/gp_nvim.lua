@@ -1,5 +1,5 @@
 -- chatgpt for neovim
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>ag)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>ag)
 return {
 	{
 		"robitx/gp.nvim",

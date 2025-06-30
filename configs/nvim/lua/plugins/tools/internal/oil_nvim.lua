@@ -1,5 +1,5 @@
 -- buffer like netrw
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>o)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>o)
 return {
 	{
 		"stevearc/oil.nvim",

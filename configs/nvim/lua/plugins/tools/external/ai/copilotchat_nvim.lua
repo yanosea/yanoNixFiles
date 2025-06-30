@@ -1,5 +1,5 @@
 -- github copilot chat for neovim
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>aC)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>aC)
 return {
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
