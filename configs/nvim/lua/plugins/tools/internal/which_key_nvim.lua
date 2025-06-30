@@ -61,6 +61,9 @@ return {
 					{ "<LEADER>all", "<CMD>ClaudeCode<CR>", desc = "claude: toggle" },
 					{ "<LEADER>alr", "<CMD>ClaudeCodeResume<CR>", desc = "claude: resume conversation" },
 					{ "<LEADER>alv", "<CMD>ClaudeCodeVerbose<CR>", desc = "claude: verbose mode" },
+					-- claude × neovim × zellij integration
+					{ "<LEADER>als", "<CMD>ClaudeCodeSendBuffer<CR>", desc = "claude: send buffer to pane" },
+					{ "<LEADER>alS", "<CMD>ClaudeCodeSendLine<CR>", desc = "claude: send line to pane" },
 					-- buffers
 					{ "<LEADER>b", group = "buffers" },
 					{ "<LEADER>bb", "<CMD>BufferLineCyclePrev<CR>", desc = "buffer: switch to previous" },
