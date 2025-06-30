@@ -1,5 +1,5 @@
 -- jump to fuzzy match word
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER><SPACE>)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER><SPACE>)
 return {
 	{
 		"yuki-yano/fuzzy-motion.vim",

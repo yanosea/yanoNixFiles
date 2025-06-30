@@ -1,5 +1,5 @@
 -- neovim org-mode
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>o, for grouping)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>o, for grouping)
 return {
 	{
 		"nvim-orgmode/orgmode",

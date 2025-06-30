@@ -1,5 +1,5 @@
 -- enhance the look of the editor
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>n)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>n)
 return {
 	{
 		"folke/noice.nvim",

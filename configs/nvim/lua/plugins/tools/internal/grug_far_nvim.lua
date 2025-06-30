@@ -1,5 +1,5 @@
 -- search and replace text
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>G)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>G)
 return {
 	{
 		"MagicDuck/grug-far.nvim",

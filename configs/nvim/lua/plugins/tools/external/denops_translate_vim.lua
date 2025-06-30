@@ -1,5 +1,5 @@
 -- translate text
--- keymaps are set in lua/pulugins/tools/internal/which_key_nvim.lua (<LEADER>T)
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>T)
 return {
 	{
 		"skanehira/denops-translate.vim",
