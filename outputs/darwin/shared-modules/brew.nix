@@ -48,6 +48,7 @@
       "the-unarchiver"
       "touchdesigner"
       "via"
+      "vibetunnel"
       "visual-studio-code"
       "vivaldi"
       "wezterm"
