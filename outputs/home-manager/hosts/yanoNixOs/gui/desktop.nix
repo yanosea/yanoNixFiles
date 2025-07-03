@@ -72,6 +72,7 @@
         wl-clipboard
         wofi
         wofi-emoji
+        yad
       ]
     );
     pointerCursor = {
