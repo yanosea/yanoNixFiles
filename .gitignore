@@ -9,7 +9,6 @@ configs/vim/viminfo
 configs/wakatime/
 configs/vim/plugged/
 .claude/
-.opencode/
 # IGNORE FILE
 configs/gh/hosts.yml
 configs/github-copilot/apps.json
