@@ -65,6 +65,7 @@
         hyprshot
         kdePackages.dolphin
         playerctl
+        quickshell
         waybar
         wayvnc
         wev
