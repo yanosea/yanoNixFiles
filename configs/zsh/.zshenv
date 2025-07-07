@@ -4,7 +4,7 @@
 #
 
 # load .zshrc for interactive features
-[[ -f ./.zshrc ]] && . ./.zshrc
+[[ -f "$HOME/.zshrc" ]] && . "$HOME/.zshrc"
 
 # determine config directory
 if [[ -n "$ZDOTDIR" ]]; then
