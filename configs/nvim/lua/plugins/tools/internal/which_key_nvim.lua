@@ -239,6 +239,12 @@ return {
 					},
 					-- translate
 					{ "<LEADER>T", "<CMD>Translate<CR>", desc = "translate current line" },
+					-- zellij integration
+					{ "<LEADER>z", group = "zellij" },
+					{ "<LEADER>zs", "<CMD>ZellijSendBuffer<CR>", desc = "zellij: send buffer (delete)" },
+					{ "<LEADER>zS", "<CMD>ZellijSendLine<CR>", desc = "zellij: send line (delete)" },
+					{ "<LEADER>zk", "<CMD>ZellijSendBufferKeep<CR>", desc = "zellij: send buffer (keep)" },
+					{ "<LEADER>zK", "<CMD>ZellijSendLineKeep<CR>", desc = "zellij: send line (keep)" },
 					-- comment
 					{ "<LEADER>/", "<Plug>(comment_toggle_linewise_current)", desc = "comment toggle current line" },
 					-- fuzzymotion
