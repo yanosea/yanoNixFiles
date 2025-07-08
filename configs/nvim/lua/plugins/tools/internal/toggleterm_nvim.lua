@@ -12,7 +12,7 @@ return {
 			"ToggleTermSendVisualLines",
 			"ToggleTermSendVisualSelection",
 		},
-		keys = { "g", "<LEADER>gg", "<LEADER>t" },
+		keys = { "g", "<LEADER>gg", "<LEADER>ts", "<LEADER>tv" },
 		init = function()
 			-- define the function to toggle lazygit
 			_G.ToggleLazyGit = function()
@@ -39,24 +39,37 @@ return {
 		config = function()
 			-- toggleterm.nvim config
 			require("toggleterm").setup({
-				open_mapping = nil, -- disable default mapping and use which_key_nvim.lua instead
+				open_mapping = nil,
 				shading_factor = 2,
 				persist_size = false,
 				direction = "horizontal",
+				size = function(term)
+					if term.direction == "horizontal" then
+						return 15
+					elseif term.direction == "vertical" then
+						return vim.o.columns * 0.5
+					end
+				end,
 			})
-			-- kempaps
+			-- keymaps
 			-- to avoid not opening terminal after opened and exited, set keymaps here again
-			vim.keymap.set(
-				"n",
-				"<LEADER>t",
-				"<CMD>ToggleTerm<CR>",
-				{ desc = "continue", silent = true, noremap = true }
-			)
 			vim.keymap.set(
 				"n",
 				"<LEADER>gg",
 				"<CMD>lua ToggleLazyGit()<CR>",
 				{ desc = "lazygit", silent = true, noremap = true }
+			)
+			vim.keymap.set(
+				"n",
+				"<LEADER>ts",
+				"<CMD>ToggleTerm direction=horizontal<CR>",
+				{ desc = "terminal: horizontal", silent = true, noremap = true }
+			)
+			vim.keymap.set(
+				"n",
+				"<LEADER>tv",
+				"<CMD>ToggleTerm direction=vertical<CR>",
+				{ desc = "terminal: vertical", silent = true, noremap = true }
 			)
 			vim.keymap.set("t", "<ESC><ESC>", [[<C-\><C-n>]], { noremap = true })
 			vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { noremap = true, silent = true })

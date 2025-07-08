@@ -226,7 +226,17 @@ return {
 					-- smear cursor
 					{ "<LEADER>S", "<CMD>SmearCursorToggle<CR>", desc = "smearcursor: toggle" },
 					-- terminal
-					{ "<LEADER>t", "<CMD>ToggleTerm<CR>", desc = "terminal" },
+					{ "<LEADER>t", group = "terminal" },
+					{
+						"<LEADER>ts",
+						"<CMD>ToggleTerm direction=horizontal<CR>",
+						desc = "terminal: horizontal",
+					},
+					{
+						"<LEADER>tv",
+						"<CMD>ToggleTerm direction=vertical<CR>",
+						desc = "terminal: vertical",
+					},
 					-- translate
 					{ "<LEADER>T", "<CMD>Translate<CR>", desc = "translate current line" },
 					-- comment
