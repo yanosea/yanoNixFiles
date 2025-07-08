@@ -89,6 +89,32 @@ return {
 				local index = math.ceil(line_ratio * #chars)
 				return chars[index]
 			end
+			-- define the function to get codeium status
+			local function get_codeium_status()
+				-- check if codeium is available and loaded
+				local ok, _ = pcall(require, "codeium")
+				if not ok then
+					return false
+				end
+				-- check if codeium config is available
+				local config_ok, config = pcall(require, "codeium.config")
+				if not config_ok or not config then
+					return false
+				end
+				-- check if codeium is enabled (multiple possible config paths)
+				if config.config then
+					-- check if codeium is generally enabled
+					if config.config.enable ~= nil then
+						return config.config.enable == true
+					end
+					-- fallback to cmp source check
+					if config.config.enable_cmp_source ~= nil then
+						return config.config.enable_cmp_source == true
+					end
+				end
+				-- if no specific config found, assume enabled if module loaded successfully
+				return true
+			end
 			-- define the function to get lsp info
 			local function get_lsp_info()
 				local buf_clients = vim.lsp.get_clients({ bufnr = 0 })
@@ -98,6 +124,7 @@ return {
 				end
 				local buf_client_names = {}
 				local copilot_active = false
+				local codeium_active = get_codeium_status()
 				local efm_active = false
 				local efm_tools = {}
 				-- each client
@@ -145,15 +172,22 @@ return {
 				-- process client names
 				local unique_client_names = table.concat(buf_client_names, ", ")
 				local language_servers = string.format("[%s]", unique_client_names)
-				-- update the color of the LualineCopilot highlight group
+				-- update the color of the ai assistants highlight groups
+				local ai_status = ""
 				if copilot_active then
 					vim.api.nvim_set_hl(0, "LualineCopilot", { fg = colors.Green })
-					language_servers = language_servers .. " %#LualineCopilot#" .. icons.git.Octoface .. " " .. "%*"
-				elseif language_servers == "[]" then
-					return "#{LualineCopilot}" .. icons.git.Octoface .. " " .. "%*"
+					ai_status = ai_status .. " %#LualineCopilot#" .. icons.git.Octoface .. " " .. "%*"
 				end
-				-- if the language servers are empty, return "lsp inactive"
-				if language_servers == "[]" then
+				if codeium_active then
+					vim.api.nvim_set_hl(0, "LualineCodeium", { fg = colors.Blue })
+					ai_status = ai_status .. " %#LualineCodeium#" .. icons.misc.Robot .. " " .. "%*"
+				end
+				language_servers = language_servers .. ai_status
+				-- handle empty language servers case
+				if language_servers == "[]" and (copilot_active or codeium_active) then
+					-- remove leading space
+					return ai_status:sub(2)
+				elseif language_servers == "[]" then
 					return "lsp inactive"
 				end
 				return language_servers
