@@ -6,6 +6,8 @@ require("config.autocmds")
 if vim.env.WSL_DISTRO_NAME ~= nil then
 	require("config.wsl")
 end
+-- zellij integration only if available
+require("config.zellij")
 -- plugin manager
 require("config.plugin_manager")
 -- neovim plugins

@@ -61,9 +61,6 @@ return {
 					{ "<LEADER>all", "<CMD>ClaudeCode<CR>", desc = "claude: toggle" },
 					{ "<LEADER>alr", "<CMD>ClaudeCodeResume<CR>", desc = "claude: resume conversation" },
 					{ "<LEADER>alv", "<CMD>ClaudeCodeVerbose<CR>", desc = "claude: verbose mode" },
-					-- claude × neovim × zellij integration
-					{ "<LEADER>als", "<CMD>ClaudeCodeSendBuffer<CR>", desc = "claude: send buffer to pane" },
-					{ "<LEADER>alS", "<CMD>ClaudeCodeSendLine<CR>", desc = "claude: send line to pane" },
 					-- buffers
 					{ "<LEADER>b", group = "buffers" },
 					{ "<LEADER>bb", "<CMD>BufferLineCyclePrev<CR>", desc = "buffer: switch to previous" },
@@ -229,9 +226,25 @@ return {
 					-- smear cursor
 					{ "<LEADER>S", "<CMD>SmearCursorToggle<CR>", desc = "smearcursor: toggle" },
 					-- terminal
-					{ "<LEADER>t", "<CMD>ToggleTerm<CR>", desc = "terminal" },
+					{ "<LEADER>t", group = "terminal" },
+					{
+						"<LEADER>ts",
+						"<CMD>ToggleTerm direction=horizontal<CR>",
+						desc = "terminal: horizontal",
+					},
+					{
+						"<LEADER>tv",
+						"<CMD>ToggleTerm direction=vertical<CR>",
+						desc = "terminal: vertical",
+					},
 					-- translate
 					{ "<LEADER>T", "<CMD>Translate<CR>", desc = "translate current line" },
+					-- zellij integration
+					{ "<LEADER>z", group = "zellij" },
+					{ "<LEADER>zs", "<CMD>ZellijSendBuffer<CR>", desc = "zellij: send buffer (delete)" },
+					{ "<LEADER>zS", "<CMD>ZellijSendLine<CR>", desc = "zellij: send line (delete)" },
+					{ "<LEADER>zk", "<CMD>ZellijSendBufferKeep<CR>", desc = "zellij: send buffer (keep)" },
+					{ "<LEADER>zK", "<CMD>ZellijSendLineKeep<CR>", desc = "zellij: send line (keep)" },
 					-- comment
 					{ "<LEADER>/", "<Plug>(comment_toggle_linewise_current)", desc = "comment toggle current line" },
 					-- fuzzymotion
