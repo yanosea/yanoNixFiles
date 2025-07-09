@@ -139,6 +139,8 @@ return {
 					{ "<LEADER>gU", "<CMD>OpenGitHubUrlUnderCursor<CR>", desc = "git: open github url" },
 					-- grug far
 					{ "<LEADER>G", "<CMD>GrugFar<CR>", desc = "grug far: search and replace text" },
+					-- hardtime
+					{ "<LEADER>H", "<CMD>Hardtime toggle<CR>", desc = "hardtime: toggle" },
 					-- lsp
 					{ "<LEADER>l", group = "lsp" },
 					{ "<LEADER>la", "<CMD>lua vim.lsp.buf.code_action()<CR>", desc = "lsp: code action" },
