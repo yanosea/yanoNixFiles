@@ -16,5 +16,11 @@ source "$ZSHRC_DIR/interactive.zsh"
 # external tools initialization
 source "$ZSHRC_DIR/tools.zsh"
 
+# zellij configuration
+source "$ZSHRC_DIR/zellij.zsh"
+
 # aliases and shortcuts
 source "$ZSHRC_DIR/aliases.zsh"
+
+# display random ascii art
+show_random_aa

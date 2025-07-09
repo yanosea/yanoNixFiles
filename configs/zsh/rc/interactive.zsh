@@ -7,19 +7,6 @@
 # default prompt (may be overridden by starship)
 alias ls='ls --color=auto'
 PROMPT='[%n@%m %~]$ '
-# zellij auto-start
-if command -v zellij &>/dev/null && [ -z "$ZELLIJ" ]; then
-	# check for existing sessions (excluding EXITED)
-	sessions=$(zellij list-sessions 2>/dev/null | grep -v "EXITED")
-	if [ -n "$sessions" ]; then
-		# connect to the most recent session (first in list)
-		session_name=$(echo "$sessions" | head -1 | sed 's/\x1b\[[0-9;]*m//g' | cut -d' ' -f1)
-		exec zellij attach "$session_name"
-	else
-		# no sessions exist, create new
-		exec zellij
-	fi
-fi
 # create zsh state directory if it doesn't exist
 if [[ ! -d "$XDG_STATE_HOME/zsh" ]]; then
 	mkdir -p "$XDG_STATE_HOME/zsh"
@@ -63,5 +50,3 @@ zstyle ":completion:*" matcher-list "m:{a-z}={A-Z}"
 # autoloads
 autoload -Uz zmv
 autoload -Uz compinit && compinit -d "$ZSH_COMPDUMP"
-# display random ascii art
-show_random_aa
