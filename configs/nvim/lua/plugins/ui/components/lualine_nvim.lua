@@ -174,7 +174,7 @@ return {
 				local language_servers = string.format("[%s]", unique_client_names)
 				-- update the color of the ai assistants highlight groups
 				local ai_status = ""
-				if copilot_active then
+				if copilot_active and not vim.g.copilot_monthly_limit_reached then
 					vim.api.nvim_set_hl(0, "LualineCopilot", { fg = colors.Green })
 					ai_status = ai_status .. " %#LualineCopilot#" .. icons.git.Octoface .. " " .. "%*"
 				end
