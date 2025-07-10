@@ -133,21 +133,18 @@ return {
 					-- ai completion sources (highest priority)
 					{
 						name = "codeium",
-						max_item_count = 5,
+						max_item_count = 3,
 						priority = 1000,
-						group_index = 1,
 					},
 					{
 						name = "copilot",
 						max_item_count = 3,
 						priority = 900,
-						group_index = 1,
 					},
 					-- lsp and snippet sources (middle priority)
 					{
 						name = "nvim_lsp",
 						priority = 800,
-						group_index = 2,
 						entry_filter = function(entry, ctx)
 							local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
 							if kind == "Snippet" and ctx.prev_context.filetype == "java" then
@@ -156,15 +153,15 @@ return {
 							return true
 						end,
 					},
-					{ name = "luasnip", priority = 700, group_index = 2 },
-					{ name = "nvim_lsp_signature_help", priority = 650, group_index = 2 },
+					{ name = "luasnip", priority = 700 },
+					{ name = "nvim_lsp_signature_help", priority = 650 },
 					-- other sources (lower priority)
-					{ name = "buffer", priority = 500, group_index = 3 },
-					{ name = "path", priority = 400, group_index = 3 },
-					{ name = "calc", priority = 300, group_index = 3 },
-					{ name = "treesitter", priority = 200, group_index = 3 },
-					{ name = "emoji", priority = 100, group_index = 3 },
-					{ name = "nerdfont", priority = 50, group_index = 3 },
+					{ name = "buffer", priority = 500 },
+					{ name = "path", priority = 400 },
+					{ name = "calc", priority = 300 },
+					{ name = "treesitter", priority = 200 },
+					{ name = "emoji", priority = 100 },
+					{ name = "nerdfont", priority = 50 },
 				},
 				mapping = cmp_mapping.preset.insert({
 					["<Down>"] = cmp_mapping(
