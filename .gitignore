@@ -8,6 +8,7 @@ configs/vim/undo
 configs/vim/viminfo
 configs/wakatime/
 configs/vim/plugged/
+temp/
 .claude/
 # IGNORE FILE
 AGENTS.md
