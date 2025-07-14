@@ -11,6 +11,8 @@ vim.opt.backup = false
 vim.opt.swapfile = false
 -- show line number
 vim.opt.number = true
+-- show relative line number
+vim.opt.relativenumber = true
 -- highlight current line
 vim.opt.cursorline = true
 -- show cursor position
