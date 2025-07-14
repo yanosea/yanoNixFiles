@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-06-27T00:10:04.974-00:00",
+  "CreationDate": "2025-07-14T14:54:14.653-00:00",
   "Sources": [
     {
       "Packages": [
@@ -42,6 +42,9 @@
         },
         {
           "PackageIdentifier": "equalsraf.win32yank"
+        },
+        {
+          "PackageIdentifier": "eza-community.eza"
         },
         {
           "PackageIdentifier": "gerardog.gsudo"
