@@ -8,6 +8,7 @@
       broot
       cron
       delta
+      eza
       fd
       ffmpeg
       fzf
