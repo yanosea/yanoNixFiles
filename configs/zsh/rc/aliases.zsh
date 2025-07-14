@@ -6,7 +6,7 @@
 ## cat alternative
 alias cat="$(which bat)"
 ## ls alternative
-alias ls="$(which lsd)"
+alias ls="$(which eza) --icons"
 ## tree alternative
 alias tree="$(which eza) --tree"
 ## rm alternative (safe delete)

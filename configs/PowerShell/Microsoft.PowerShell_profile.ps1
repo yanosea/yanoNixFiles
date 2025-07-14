@@ -28,7 +28,8 @@ Set-PSReadLineKeyHandler -Key "Ctrl+n" -Function NextHistory
 Set-Alias cat bat
 Set-Alias dot "$HOME\.local\bin\dot.ps1"
 Set-Alias grep rg
-Set-Alias ls lsd
+Remove-Alias -Name ls -Force -ErrorAction SilentlyContinue
+function ls { eza --icons $args }
 Set-Alias lg lazygit
 Set-Alias yz yazi
 # starship
