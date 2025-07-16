@@ -1,20 +1,19 @@
 # IGNORE DIRECTORY
-configs/go/
 configs/glzr/zebar/tmp-*
-configs/lf/lf/
-configs/scoop
+configs/go/
+configs/scoop/
 configs/vim/autoload/
+configs/vim/plugged/
 configs/vim/undo
 configs/vim/viminfo
 configs/wakatime/
-configs/vim/plugged/
-temp/
 .claude/
 # IGNORE FILE
 AGENTS.md
 configs/gh/hosts.yml
 configs/github-copilot/apps.json
 configs/github-copilot/versions.json
+configs/lf/files
 configs/nvim/lazy-lock.json
 result
 .DS_Store
