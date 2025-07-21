@@ -29,6 +29,7 @@
       "google-drive"
       "hammerspoon"
       "hiddenbar"
+      "homerow"
       "karabiner-elements"
       "libreoffice"
       "libreoffice-language-pack"
