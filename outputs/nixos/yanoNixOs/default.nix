@@ -13,7 +13,8 @@
     ./hardware-configuration.nix
     # desktop
     ./desktop
-  ] ++ (with inputs.nixos-hardware.nixosModules; [ common-pc-ssd ]);
+  ]
+  ++ (with inputs.nixos-hardware.nixosModules; [ common-pc-ssd ]);
   # boot
   boot = {
     binfmt = {
