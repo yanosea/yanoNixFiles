@@ -31,6 +31,7 @@
       "hiddenbar"
       "homerow"
       "karabiner-elements"
+      "kiro"
       "libreoffice"
       "libreoffice-language-pack"
       "microsoft-auto-update"
