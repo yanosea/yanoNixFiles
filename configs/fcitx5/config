@@ -11,8 +11,7 @@ EnumerateSkipFirst=False
 ModifierOnlyKeyTimeout=250
 
 [Hotkey/TriggerKeys]
-0=Tools
-1=Control+Control_R
+0=Control+Control_R
 
 [Hotkey/AltTriggerKeys]
 0=Shift_L
