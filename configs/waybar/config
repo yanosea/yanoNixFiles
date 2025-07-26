@@ -2,7 +2,7 @@
   {
     "output": "HDMI-A-1",
     "height": 37,
-    "layer": "top",
+    "layer": "bottom",
     "margin": "10px 10px 0px 10px",
     "modules-left": [
       "custom/os_icon",
@@ -121,7 +121,7 @@
   {
     "output": "DP-3",
     "height": 37,
-    "layer": "top",
+    "layer": "bottom",
     "margin": "10px 10px 0px 10px",
     "modules-left": [
       "custom/os_icon",
@@ -240,7 +240,7 @@
   {
     "output": "DP-2",
     "height": 37,
-    "layer": "top",
+    "layer": "bottom",
     "margin": "10px 10px 0px 10px",
     "modules-left": [
       "custom/os_icon",
