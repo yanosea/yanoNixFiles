@@ -50,7 +50,6 @@
       gotests
       gotools
       mockgen
-      wails
     ];
   };
 }
