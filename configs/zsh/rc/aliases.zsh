@@ -3,6 +3,8 @@
 #
 
 # file operations
+## ccusage
+alias ccusage="bunx ccusage"
 ## cat alternative
 alias cat="$(which bat)"
 ## ls alternative
