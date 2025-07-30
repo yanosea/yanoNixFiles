@@ -33,6 +33,22 @@
         "type": "github"
       }
     },
+    "claude-code-spec": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1753635076,
+        "narHash": "sha256-tdbLmKHVEYmLySxlEGhkDA1SsynS/poV6Q/x2ita2ig=",
+        "owner": "gotalab",
+        "repo": "claude-code-spec",
+        "rev": "68a50df9a21f6ef0efe471ffcdc6200edfe682bd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gotalab",
+        "repo": "claude-code-spec",
+        "type": "github"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -527,6 +543,7 @@
     },
     "root": {
       "inputs": {
+        "claude-code-spec": "claude-code-spec",
         "darwin": "darwin",
         "fenix": "fenix",
         "home-manager": "home-manager",
