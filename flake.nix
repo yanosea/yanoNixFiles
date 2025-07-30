@@ -56,6 +56,11 @@
       };
     };
     # packages
+    ## claude-code-spec
+    claude-code-spec = {
+      flake = false;
+      url = "github:gotalab/claude-code-spec";
+    };
     ## hyprland
     hyprland = {
       url = "github:hyprwm/Hyprland";
