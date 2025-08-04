@@ -47,7 +47,6 @@ function M.setup()
 				-- go
 				go = {
 					require("efmls-configs.formatters.goimports"),
-					require("efmls-configs.linters.golangci_lint"),
 				},
 				-- lua
 				lua = {
