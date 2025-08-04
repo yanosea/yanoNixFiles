@@ -13,6 +13,7 @@ return {
 				{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 				{ "2kabhishek/nerdy.nvim", dependencies = { "folke/snacks.nvim" } },
 				"nvim-telescope/telescope-ui-select.nvim",
+				"debugloop/telescope-undo.nvim",
 			},
 		},
 		lazy = true,
@@ -107,6 +108,10 @@ return {
 						override_file_sorter = true,
 						case_mode = "smart_case",
 					},
+					undo = {
+						use_delta = true,
+						side_by_side = true,
+					},
 				},
 			})
 			-- load extensions
@@ -114,6 +119,7 @@ return {
 			require("telescope").load_extension("fzf")
 			require("telescope").load_extension("nerdy")
 			require("telescope").load_extension("ui-select")
+			require("telescope").load_extension("undo")
 		end,
 	},
 }
