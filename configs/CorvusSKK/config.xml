@@ -464,11 +464,11 @@
       <row ro="xx" hi="っ" ka="ッ" an="ｯ" so="1" />
       <row ro="yy" hi="っ" ka="ッ" an="ｯ" so="1" />
       <row ro="zz" hi="っ" ka="ッ" an="ｯ" so="1" />
-      <row ro="la" hi="ぁ" ka="ァ" an="ｧ" so="0" />
-      <row ro="li" hi="ぃ" ka="ィ" an="ｨ" so="0" />
-      <row ro="lu" hi="ぅ" ka="ゥ" an="ｩ" so="0" />
-      <row ro="le" hi="ぇ" ka="ェ" an="ｪ" so="0" />
-      <row ro="lo" hi="ぉ" ka="ォ" an="ｫ" so="0" />
+      <row ro="xa" hi="ぁ" ka="ァ" an="ｧ" so="0" />
+      <row ro="xi" hi="ぃ" ka="ィ" an="ｨ" so="0" />
+      <row ro="xu" hi="ぅ" ka="ゥ" an="ｩ" so="0" />
+      <row ro="xe" hi="ぇ" ka="ェ" an="ｪ" so="0" />
+      <row ro="xo" hi="ぉ" ka="ォ" an="ｫ" so="0" />
       <row ro="xya" hi="ゃ" ka="ャ" an="ｬ" so="0" />
       <row ro="xyi" hi="い" ka="イ" an="ｲ" so="0" />
       <row ro="xyu" hi="ゅ" ka="ュ" an="ｭ" so="0" />
