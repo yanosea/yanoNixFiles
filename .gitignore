@@ -8,6 +8,7 @@ configs/vim/undo
 configs/vim/viminfo
 configs/wakatime/
 .claude/
+.serena/
 # IGNORE FILE
 AGENTS.md
 configs/gh/hosts.yml
