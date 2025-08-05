@@ -10,7 +10,6 @@ configs/wakatime/
 .claude/
 .serena/
 # IGNORE FILE
-AGENTS.md
 configs/gh/hosts.yml
 configs/github-copilot/apps.json
 configs/github-copilot/versions.json
