@@ -7,6 +7,7 @@
       syncGitRepos =
         let
           repositories = [
+            "github.com/dimdenGD/OldTweetDeck"
             "github.com/tmux-plugins/tpm"
             "github.com/yanosea/cmf"
             "github.com/yanosea/jrp"
