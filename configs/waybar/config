@@ -38,7 +38,11 @@
     "hyprland/window": {
       "max-length": 50,
       "separate-outputs": true,
-      "format": "  {}",
+      "format": "{title}",
+      "rewrite": {
+        "": "  Desktop",
+        "(.+)": "  $1"
+      }
     },
     "custom/recorder-hdmi": {
       "exec": "~/.local/bin/check-recording HDMI-A-1",
@@ -178,7 +182,11 @@
     "hyprland/window": {
       "max-length": 50,
       "separate-outputs": true,
-      "format": "  {}",
+      "format": "{title}",
+      "rewrite": {
+        "": "  Desktop",
+        "(.+)": "  $1"
+      }
     },
     "custom/recorder-dp-3": {
       "exec": "~/.local/bin/check-recording DP-3",
@@ -318,7 +326,11 @@
     "hyprland/window": {
       "max-length": 50,
       "separate-outputs": true,
-      "format": "  {}",
+      "format": "{title}",
+      "rewrite": {
+        "": "  Desktop",
+        "(.+)": "  $1"
+      }
     },
     "custom/recorder-dp-2": {
       "exec": "~/.local/bin/check-recording DP-2",
