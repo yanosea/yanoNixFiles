@@ -37,7 +37,8 @@
     },
     "hyprland/window": {
       "max-length": 50,
-      "separate-outputs": true
+      "separate-outputs": true,
+      "format": "  {}",
     },
     "custom/recorder-hdmi": {
       "exec": "~/.local/bin/check-recording HDMI-A-1",
@@ -176,7 +177,8 @@
     },
     "hyprland/window": {
       "max-length": 50,
-      "separate-outputs": true
+      "separate-outputs": true,
+      "format": "  {}",
     },
     "custom/recorder-dp-3": {
       "exec": "~/.local/bin/check-recording DP-3",
@@ -315,7 +317,8 @@
     },
     "hyprland/window": {
       "max-length": 50,
-      "separate-outputs": true
+      "separate-outputs": true,
+      "format": "  {}",
     },
     "custom/recorder-dp-2": {
       "exec": "~/.local/bin/check-recording DP-2",
