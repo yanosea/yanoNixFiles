@@ -20,7 +20,7 @@ jobs:
       found: ${{ steps.find-pr.outputs.found }}
     steps:
       - name: checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: find associated PR
         id: find-pr
         env:
@@ -69,7 +69,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
     steps:
       - name: checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: auto approve PR
         uses: hmarr/auto-approve-action@v4
         with:
