@@ -30,7 +30,7 @@ jobs:
             # Direct PR trigger from dependabot
             echo "PR #${{ github.event.number }} is a dependabot PR"
             echo "pr_number=${{ github.event.number }}" >> $GITHUB_OUTPUT
-            echo "branch_name=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+            echo "branch_name=${{ github.event.pull_request.head.ref }}" >> $GITHUB_OUTPUT
             echo "found=true" >> $GITHUB_OUTPUT
           else
             # Search for PR when triggered by workflow_run
