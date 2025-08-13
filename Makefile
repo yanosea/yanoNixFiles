@@ -65,7 +65,7 @@ MAKEFLAGS += --no-print-directory
 #
 # unified targets
 #
-.PHONY: update system home agents format gc gc.system gc.user
+.PHONY: update system home experiment agents format gc gc.system gc.user
 
 # update whole system (settings, packages)
 update:
@@ -154,8 +154,6 @@ else ifeq ($(IS_MACBOOK),1)
 	sudo darwin-rebuild switch --flake .#yanoMacBook
 	@echo ""
 	@echo "$(COLOR_DONE)apply system configuration done!$(COLOR_RESET)"
-else ifeq ($(IS_WINDOWS),1)
-	@Write-Host "system configuration is not supported on windows..." $(COLOR_ERROR)
 else
 	@echo "$(COLOR_ERROR)unsupported platform...$(COLOR_RESET)"
 endif
@@ -193,8 +191,75 @@ else ifeq ($(IS_MACBOOK),1)
 	rm -fr $$HOME/.config/karabiner/karabiner.json
 	nix run .#homeConfigurations."yanosea@yanoMacBook".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
-else ifeq ($(IS_WINDOWS),1)
-	@Write-Host "home configuration is not supported on windows..." $(COLOR_ERROR)
+else
+	@echo "$(COLOR_ERROR)unsupported platform...$(COLOR_RESET)"
+endif
+
+# experimental update (git, go, and sheldon updates are disabled)
+experiment:
+ifeq ($(IS_NIXOS),1)
+	@echo "$(COLOR_TITLE)update nixos experimentally...$(COLOR_RESET)"
+	@echo ""
+	make system
+	@echo ""
+	@echo "$(COLOR_TITLE)apply home configuration experimentally...$(COLOR_RESET)"
+	@echo ""
+	rm -fr $$HOME/.config/claude/CLAUDE.md
+	rm -fr $$HOME/.config/fcitx5/config
+	EXPERIMENTAL_MODE=1 nix run --impure .#homeConfigurations."yanosea@yanoNixOs".activationPackage
+	@echo ""
+	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
+else ifeq ($(IS_NIXOS_WSL),1)
+	@echo "$(COLOR_TITLE)update nixos wsl experimentally...$(COLOR_RESET)"
+	@echo ""
+	make system
+	@echo ""
+	@echo "$(COLOR_TITLE)apply home configuration experimentally...$(COLOR_RESET)"
+	@echo ""
+	rm -fr $$HOME/.config/claude/CLAUDE.md
+	EXPERIMENTAL_MODE=1 nix run --impure .#homeConfigurations."yanosea@yanoNixOsWsl".activationPackage
+	@echo ""
+	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
+else ifeq ($(IS_MAC),1)
+	@echo "$(COLOR_TITLE)update mac experimentally...$(COLOR_RESET)"
+	@echo ""
+	make system
+	@echo ""
+	@echo "$(COLOR_TITLE)apply home configuration experimentally...$(COLOR_RESET)"
+	@echo ""
+	rm $$HOME/.config/AquaSKK/DictionarySet.plist
+	rm $$HOME/.config/AquaSKK/BlacklistApps.plist
+	rm -fr $$HOME/.config/claude/CLAUDE.md
+	rm -fr $$HOME/.config/karabiner/karabiner.json
+	EXPERIMENTAL_MODE=1 nix run --impure .#homeConfigurations."yanosea@yanoMac".activationPackage
+	@echo ""
+	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
+	@echo ""
+	make agents
+	@echo ""
+	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
+else ifeq ($(IS_MACBOOK),1)
+	 @echo "$(COLOR_TITLE)update macbook experimentally...$(COLOR_RESET)"
+	@echo ""
+	make system
+	@echo ""
+	@echo "$(COLOR_TITLE)apply home configuration experimentally...$(COLOR_RESET)"
+	@echo ""
+	rm $$HOME/.config/AquaSKK/DictionarySet.plist
+	rm $$HOME/.config/AquaSKK/BlacklistApps.plist
+	rm -fr $$HOME/.config/claude/CLAUDE.md
+	rm -fr $$HOME/.config/karabiner/karabiner.json
+	EXPERIMENTAL_MODE=1 nix run --impure .#homeConfigurations."yanosea@yanoMacBook".activationPackage
+	@echo ""
+	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
+	@echo ""
+	make agents
+	@echo ""
+	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
 else
 	@echo "$(COLOR_ERROR)unsupported platform...$(COLOR_RESET)"
 endif
@@ -602,6 +667,7 @@ ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "    $(COLOR_HEADER)[main operations]$(COLOR_RESET)"
 	@echo "      $(COLOR_CMD)update$(COLOR_RESET)     - update whole system (settings, packages)"
+	@echo "      $(COLOR_CMD)experiment$(COLOR_RESET) - experimental update (git, go, and sheldon updates are disabled)"
 	@echo "      $(COLOR_CMD)system$(COLOR_RESET)     - apply system configuration"
 	@echo "      $(COLOR_CMD)home$(COLOR_RESET)       - apply home configuration"
 	@echo "      $(COLOR_CMD)format$(COLOR_RESET)     - format files"
