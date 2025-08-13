@@ -57,15 +57,17 @@
       [
         dconf
         dunst
+        gvfs
         hyprcursor
         hypridle
         hyprlock
         hyprpaper
         hyprpicker
         hyprshot
-        kdePackages.dolphin
+        nemo
         playerctl
         quickshell
+        udisks2
         waybar
         wayvnc
         wev
