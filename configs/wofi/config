@@ -1,7 +1,46 @@
 # wofi configuration file
+# window behavior
+width=600
+height=600
+location=center
+show=drun
+columns=1
+lines=8
+no_actions=true
+sort_order=default
+gtk_dark=true
 # search behavior
 allow_images=true
 allow_markup=true
 insensitive=true
+matching=fuzzy
+filter_rate=100
 # performance
 cache_file=/dev/null
+# key bindings (vim-like)
+key_left=h
+key_right=l
+key_up=k
+key_down=j
+key_backward=ISO_Left_Tab
+key_submit=Return
+key_exit=Escape
+# appearance
+hide_scroll=false
+prompt=
+orientation=vertical
+content_halign=fill
+halign=fill
+line_wrap=word
+dynamic_lines=false
+parse_search=false
+print_command=false
+click_to_exit=hide
+copy_exec=none
+# misc options
+exec_search=false
+hide_search=false
+parse_search=false
+ignoore_exclusive=false
+multi_select=false
+show_all=false
