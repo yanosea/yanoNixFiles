@@ -5,7 +5,10 @@
   home = {
     packages = with pkgs; [
       evince
+      feh
+      imv
       mediaplayer
+      mpv
       spotify
       totem
     ];
