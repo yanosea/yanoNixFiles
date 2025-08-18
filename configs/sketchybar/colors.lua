@@ -18,8 +18,8 @@ return {
 		bg = 0xc02d353b,
 		border = 0xff7a8478,
 	},
-	bg1 = 0xff374247,
-	bg2 = 0xff374247,
+	bg1 = 0xff343f44,
+	bg2 = 0xff343f44,
 
 	with_alpha = function(color, alpha)
 		if alpha > 1.0 or alpha < 0.0 then
