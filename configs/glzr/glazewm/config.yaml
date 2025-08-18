@@ -30,7 +30,7 @@ window_effects:
   other_windows:
     border:
       enabled: true
-      color: "#475266"
+      color: "#475258"
     hide_title_bar:
       enabled: false
     corner_style:

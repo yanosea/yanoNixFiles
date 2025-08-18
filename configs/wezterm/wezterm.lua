@@ -152,7 +152,7 @@ return {
 				fg_color = "#2d353b",
 			},
 			inactive_tab = {
-				bg_color = "#374247",
+				bg_color = "#343f44",
 				fg_color = "#83c092",
 			},
 		},

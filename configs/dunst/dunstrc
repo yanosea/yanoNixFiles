@@ -59,21 +59,21 @@ ignore_dbusclose = false
 mouse_left_click = close_current
 mouse_middle_click = do_action, close_current
 mouse_right_click = close_all
-# colors and urgency levels (everforest dark hard)
-background = "#2b3339"
+# colors and urgency levels (everforest dark medium)
+background = "#2d353b"
 foreground = "#d3c6aa"
 timeout = 3
 highlight = "#a7c080"
 # urgency_low
 [urgency_low]
-background = "#2b3339"
+background = "#2d353b"
 foreground = "#d3c6aa"
 frame_color = "#a7c080"
 timeout = 3
 highlight = "#a7c080"
 # urgency_normal
 [urgency_normal]
-background = "#2b3339"
+background = "#2d353b"
 foreground = "#d3c6aa"
 frame_color = "#83c092"
 timeout = 3
