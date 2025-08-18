@@ -16,13 +16,12 @@ show_help() {
 	echo "  -h, --help    Display this help message"
 	echo ""
 	echo -e "${YELLOW}Description:${CLEAR}"
-	echo "  This script installs Serena MCP Server for the current project."
-	echo "  Serena is an IDE assistant that helps with code understanding and development."
+	echo "  This script installs Serena MCP Server for the current project's Claude Code configuration."
 	echo ""
 	echo -e "${YELLOW}What it does:${CLEAR}"
-	echo "  - Adds Serena MCP server to Claude Code"
-	echo "  - Configures it with IDE assistant context"
-	echo "  - Sets up the project path automatically"
+	echo "  - Adds Serena MCP Server to the current project only"
+	echo "  - Configures it with IDE assistant context and project path"
+	echo "  - Does not affect global or other project configurations"
 	echo ""
 	echo -e "${YELLOW}After installation:${CLEAR}"
 	echo "  Run ${GREEN}/mcp__serena__initial_instructions${CLEAR} in Claude Code to get started"
@@ -55,7 +54,7 @@ if ! command -v uvx &>/dev/null; then
 fi
 
 # confirm with user
-echo -e -n "Do you want to install Serena MCP Server for the current project? [y/N] "
+echo -e -n "Do you want to install Serena MCP Server to this project? [y/N] "
 read -r response
 if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	echo -e "${YELLOW}Installation aborted${CLEAR}"
@@ -64,10 +63,14 @@ fi
 
 # run the installation command
 echo ""
-echo "Installing Serena MCP Server..."
-if claude mcp add -s user serena -- uvx --from git+https://github.com/oraios/serena serena-mcp-server --context ide-assistant --project "$(pwd)"; then
+echo "Installing Serena MCP Server to current project..."
+if claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena-mcp-server --context ide-assistant --project "$(pwd)"; then
 	echo ""
-	echo -e "${GREEN}Serena MCP Server has been successfully installed!${CLEAR}"
+	echo -e "${GREEN}Serena MCP Server has been successfully installed to this project!${CLEAR}"
+	echo ""
+	echo -e "${YELLOW}Note:${CLEAR}"
+	echo "  - Restart Claude Code for changes to take effect"
+	echo "  - This only adds Serena MCP to the current project"
 	echo ""
 	echo -e "${YELLOW}Next step:${CLEAR}"
 	echo -e "  Run ${GREEN}/mcp__serena__initial_instructions${CLEAR} in Claude Code to get started with Serena"
@@ -77,4 +80,3 @@ else
 	echo "Please check the error messages above and try again..."
 	exit 1
 fi
-
