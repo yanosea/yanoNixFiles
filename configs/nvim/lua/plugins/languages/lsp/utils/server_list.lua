@@ -32,6 +32,9 @@ M.servers = {
 	"sqlls",
 	-- tailwind
 	"tailwindcss",
+	-- typescript
+	"denols",
+	"ts_ls",
 	-- toml
 	"taplo",
 	-- yaml
