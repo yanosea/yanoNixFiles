@@ -12,6 +12,7 @@
     ./secrets.nix
     ./symlinks.nix
     ./tools.nix
+    ./web.nix
     ./xdg.nix
   ];
 }
