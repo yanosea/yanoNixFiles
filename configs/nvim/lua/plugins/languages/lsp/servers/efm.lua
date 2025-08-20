@@ -83,16 +83,16 @@ function M.setup()
 				},
 				-- web
 				javascript = {
-					require("efmls-configs.formatters.prettier"),
+					require("efmls-configs.formatters.deno_fmt"),
 				},
 				typescript = {
-					require("efmls-configs.formatters.prettier"),
+					require("efmls-configs.formatters.deno_fmt"),
 				},
 				javascriptreact = {
-					require("efmls-configs.formatters.prettier"),
+					require("efmls-configs.formatters.deno_fmt"),
 				},
 				typescriptreact = {
-					require("efmls-configs.formatters.prettier"),
+					require("efmls-configs.formatters.deno_fmt"),
 				},
 				vue = {
 					require("efmls-configs.formatters.prettier"),
