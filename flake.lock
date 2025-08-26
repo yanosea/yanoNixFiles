@@ -36,11 +36,11 @@
     "claude-code-spec": {
       "flake": false,
       "locked": {
-        "lastModified": 1756066629,
-        "narHash": "sha256-f0PIOyzUSAYWBRHjW0Y9aF03SX16WI1TAiWyHvzl4zU=",
+        "lastModified": 1756141130,
+        "narHash": "sha256-8ro8z627/WVeXdDSdEQy/O8jS80rUu4QnfKuUZmMD3E=",
         "owner": "gotalab",
         "repo": "claude-code-spec",
-        "rev": "2e7d0508980af6f3fae5e598d77c7a79ece367be",
+        "rev": "29ad8871a7fb05f85d39c2f344033d9e56b95d6e",
         "type": "github"
       },
       "original": {
@@ -484,11 +484,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1755615617,
-        "narHash": "sha256-HMwfAJBdrr8wXAkbGhtcby1zGFvs+StOp19xNsbqdOg=",
+        "lastModified": 1756125398,
+        "narHash": "sha256-XexyKZpf46cMiO5Vbj+dWSAXOnr285GHsMch8FBoHbc=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "20075955deac2583bb12f07151c2df830ef346b4",
+        "rev": "3b9f00d7a7bf68acd4c4abb9d43695afb04e03a5",
         "type": "github"
       },
       "original": {
