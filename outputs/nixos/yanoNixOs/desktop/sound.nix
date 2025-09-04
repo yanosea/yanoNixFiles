@@ -14,6 +14,12 @@
       enable = true;
     };
   };
+  # security
+  security = {
+    rtkit = {
+      enable = true;
+    };
+  };
   # services
   services = {
     pipewire = {
@@ -28,6 +34,12 @@
       pulse = {
         enable = true;
       };
+      wireplumber = {
+        enable = true;
+      };
+    };
+    pulseaudio = {
+      enable = false;
     };
   };
 }

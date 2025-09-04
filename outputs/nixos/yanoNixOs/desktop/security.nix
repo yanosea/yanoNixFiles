@@ -14,6 +14,9 @@
     };
     pam = {
       services = {
+        greetd = {
+          enableGnomeKeyring = true;
+        };
         login = {
           enableGnomeKeyring = true;
         };

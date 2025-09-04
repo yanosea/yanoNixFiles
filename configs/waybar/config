@@ -1,7 +1,7 @@
 [
   {
     "output": "HDMI-A-1",
-    "height": 37,
+    "height": 35,
     "layer": "bottom",
     "margin": "10px 10px 0px 10px",
     "modules-left": [
