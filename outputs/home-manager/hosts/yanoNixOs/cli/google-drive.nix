@@ -28,13 +28,24 @@ let
     fi
     # cleanup existing mounts and prepare directory
     echo "preparing mount directory..."
-    # attempt to unmount any existing mounts
-    ${pkgs.fuse}/bin/fusermount -uz "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
-    ${pkgs.util-linux}/bin/umount -l "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
-    # wait briefly for unmount to complete
-    ${pkgs.coreutils}/bin/sleep 2
-    # force remove problematic directory if exists
-    ${pkgs.coreutils}/bin/rmdir "${config.home.homeDirectory}/google_drive" 2>/dev/null || ${pkgs.coreutils}/bin/rm -rf "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
+    # check if directory is a stale mount point
+    if [ -e "${config.home.homeDirectory}/google_drive" ]; then
+      # check if it's a stale mount (transport endpoint not connected)
+      if ! ${pkgs.coreutils}/bin/stat "${config.home.homeDirectory}/google_drive" >/dev/null 2>&1; then
+        echo "detected stale mount, forcing cleanup..."
+        # force unmount with sudo if available
+        if command -v sudo >/dev/null 2>&1; then
+          sudo ${pkgs.util-linux}/bin/umount -l "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
+        fi
+      fi
+      # attempt to unmount any existing mounts
+      ${pkgs.fuse}/bin/fusermount -uz "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
+      ${pkgs.util-linux}/bin/umount -l "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
+      # wait briefly for unmount to complete
+      ${pkgs.coreutils}/bin/sleep 2
+      # force remove directory if it still exists
+      ${pkgs.coreutils}/bin/rm -rf "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
+    fi
     # recreate directory
     ${pkgs.coreutils}/bin/mkdir -p "${config.home.homeDirectory}/google_drive"
     echo "mount directory ready"
@@ -75,10 +86,18 @@ let
   rcloneUnmountScript = pkgs.writeShellScript "rclone-unmount-google-drive" ''
     #!/bin/bash
     echo "stopping rclone mount..."
+    # kill any existing rclone processes for this mount
+    ${pkgs.procps}/bin/pkill -f "rclone mount ${username}:" || true
     # gracefully unmount
     ${pkgs.fuse}/bin/fusermount -u "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
+    # force unmount if still mounted
+    if ${pkgs.util-linux}/bin/mountpoint -q "${config.home.homeDirectory}/google_drive" 2>/dev/null; then
+      echo "forcing unmount..."
+      ${pkgs.fuse}/bin/fusermount -uz "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
+      ${pkgs.util-linux}/bin/umount -l "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
+    fi
     # brief wait for unmount
-    ${pkgs.coreutils}/bin/sleep 2
+    ${pkgs.coreutils}/bin/sleep 3
     # verify unmount completed
     if ! ${pkgs.util-linux}/bin/mountpoint -q "${config.home.homeDirectory}/google_drive" 2>/dev/null; then
       echo "unmount completed"
@@ -109,13 +128,15 @@ in
         Type = "exec";
         ExecStart = "${rcloneMountScript}";
         ExecStop = "${rcloneUnmountScript}";
+        ExecStopPost = "${pkgs.coreutils}/bin/sleep 2";
         Restart = "on-failure";
         RestartSec = "10s";
         KillMode = "mixed";
         KillSignal = "SIGTERM";
         TimeoutStartSec = "120s";
-        TimeoutStopSec = "30s";
+        TimeoutStopSec = "60s";
         StartLimitBurst = 3;
+        StartLimitIntervalSec = 300;
       };
       Install = {
         WantedBy = [ "default.target" ];
