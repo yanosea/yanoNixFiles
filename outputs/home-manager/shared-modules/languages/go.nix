@@ -63,7 +63,8 @@ in
                 set -euo pipefail
                 export GOPATH="${config.home.homeDirectory}/go"
                 export GOBIN="$GOPATH/bin"
-                export PATH="${pkgs.go}/bin:$GOBIN:$PATH"
+                export PATH="${pkgs.gcc}/bin:${pkgs.go}/bin:$GOBIN:$PATH"
+                export CC="${pkgs.gcc}/bin/gcc"
                 for pkg in ${builtins.concatStringsSep " " goPackages}; do
                   ${pkgs.go}/bin/go install "$pkg"
                 done
