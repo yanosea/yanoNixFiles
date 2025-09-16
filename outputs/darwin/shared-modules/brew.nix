@@ -5,9 +5,11 @@
     enable = true;
     onActivation = {
       autoUpdate = true;
-      cleanup = "uninstall";
       upgrade = true;
     };
+    brews = [
+      "goku"
+    ];
     casks = [
       "ableton-live-suite"
       "appcleaner"
@@ -24,7 +26,6 @@
       "easyfind"
       "font-sf-mono"
       "font-sf-pro"
-      "font-sketchybar-app-font"
       "github@beta"
       "google-drive"
       "hammerspoon"
@@ -34,8 +35,10 @@
       "kiro"
       "libreoffice"
       "libreoffice-language-pack"
+      "mediosz/tap/swipeaerospace"
       "microsoft-auto-update"
       "microsoft-teams"
+      "nikitabobko/tap/aerospace"
       "obs"
       "omnidisksweeper"
       "processing"
@@ -55,6 +58,11 @@
       "visual-studio-code"
       "vivaldi"
       "wezterm"
+    ];
+    taps = [
+      "mediosz/tap"
+      "nikitabobko/tap"
+      "yqrashawn/goku"
     ];
   };
 }

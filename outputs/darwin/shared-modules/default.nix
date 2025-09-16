@@ -1,8 +1,8 @@
 # shared modules for darwin
 {
   imports = [
+    ./defaults
     ./brew.nix
-    ./defaults.nix
     ./fonts.nix
     ./networking.nix
     ./nix.nix
