@@ -33,6 +33,7 @@ in
           deno
           nodePackages_latest.nodejs
           nodePackages_latest.pnpm
+          wrangler
         ];
       };
     }
