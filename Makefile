@@ -65,7 +65,7 @@ MAKEFLAGS += --no-print-directory
 #
 # unified targets
 #
-.PHONY: update system home experiment agents format gc gc.system gc.user
+.PHONY: update system home experiment format gc gc.system gc.user
 
 # update whole system (settings, packages)
 update:
@@ -92,8 +92,6 @@ else ifeq ($(IS_MAC),1)
 	@echo ""
 	make home
 	@echo ""
-	make agents
-	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)update macbook...$(COLOR_RESET)"
@@ -101,8 +99,6 @@ else ifeq ($(IS_MACBOOK),1)
 	make system
 	@echo ""
 	make home
-	@echo ""
-	make agents
 	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
 else ifeq ($(IS_WINDOWS),1)
@@ -239,11 +235,9 @@ else ifeq ($(IS_MAC),1)
 	@echo ""
 	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
 	@echo ""
-	make agents
-	@echo ""
 	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
-	 @echo "$(COLOR_TITLE)update macbook experimentally...$(COLOR_RESET)"
+	@echo "$(COLOR_TITLE)update macbook experimentally...$(COLOR_RESET)"
 	@echo ""
 	make system
 	@echo ""
@@ -257,29 +251,9 @@ else ifeq ($(IS_MACBOOK),1)
 	@echo ""
 	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
 	@echo ""
-	make agents
-	@echo ""
 	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
 else
 	@echo "$(COLOR_ERROR)unsupported platform...$(COLOR_RESET)"
-endif
-
-# reload agents (darwin only)
-agents:
-ifeq ($(IS_DARWIN),1)
-	@echo "$(COLOR_TITLE)reload darwin agents...$(COLOR_RESET)"
-	@echo ""
-	launchctl unload $$HOME/Library/LaunchAgents/org.nix-community.home.borders.plist
-	launchctl load $$HOME/Library/LaunchAgents/org.nix-community.home.borders.plist
-	launchctl unload $$HOME/Library/LaunchAgents/org.nix-community.home.sketchybar.plist
-	launchctl load $$HOME/Library/LaunchAgents/org.nix-community.home.sketchybar.plist
-	launchctl unload $$HOME/Library/LaunchAgents/org.nix-community.home.skhd.plist
-	launchctl load $$HOME/Library/LaunchAgents/org.nix-community.home.skhd.plist
-	launchctl unload $$HOME/Library/LaunchAgents/org.nix-community.home.yabai.plist
-	launchctl load $$HOME/Library/LaunchAgents/org.nix-community.home.yabai.plist
-	@echo "$(COLOR_DONE)reload done!$(COLOR_RESET)"
-else
-	@echo "$(COLOR_ERROR)this target is only for darwin...$(COLOR_RESET)"
 endif
 
 # nix format files (alias for nix.format)
@@ -680,9 +654,6 @@ else
 	@Write-Host ""
 	@Write-Host "    [main operations]" $(COLOR_HEADER)
 	@Write-Host "      update  - update whole system (settings, packages)" $(COLOR_CMD)
-endif
-ifeq ($(IS_DARWIN),1)
-	@echo "      $(COLOR_CMD)agents$(COLOR_RESET)     - reload darwin agents"
 endif
 ifeq ($(IS_WINDOWS),0)
 	@echo ""

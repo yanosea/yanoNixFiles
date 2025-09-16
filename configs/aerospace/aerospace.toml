@@ -1,0 +1,71 @@
+# aerospace configuration
+# start at login
+start-at-login = true
+# normalization settings
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+# layout settings
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+# gaps configuration
+gaps.inner.horizontal = 5
+gaps.inner.vertical = 5
+gaps.outer.left = 5
+gaps.outer.bottom = 5
+gaps.outer.top = 5
+gaps.outer.right = 5
+# mouse behavior
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+on-focus-changed = ['move-mouse window-lazy-center']
+# key bindings
+[mode.main.binding]
+# application shortcuts
+cmd-t = 'exec-and-forget open -n /Applications/WezTerm.app'
+cmd-b = 'exec-and-forget open -n /Applications/Vivaldi.app'
+cmd-q = 'close-all-windows-but-current'
+# move focus
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+# move windows
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+# resize windows
+alt-left = 'resize width -50'
+alt-right = 'resize width +50'
+alt-up = 'resize height -50'
+alt-down = 'resize height +50'
+# toggle behaviors
+alt-s = 'layout tiles horizontal vertical'
+alt-shift-space = 'layout floating tiling'
+alt-x = 'fullscreen'
+# minimize
+alt-m = 'macos-native-minimize'
+# workspace switching
+alt-q = 'workspace 1'
+alt-w = 'workspace 2'
+alt-e = 'workspace 3'
+alt-r = 'workspace 4'
+alt-t = 'workspace 5'
+alt-y = 'workspace 6'
+alt-u = 'workspace 7'
+alt-i = 'workspace 8'
+alt-o = 'workspace 9'
+# move window to workspace
+alt-shift-q = 'move-node-to-workspace 1'
+alt-shift-w = 'move-node-to-workspace 2'
+alt-shift-e = 'move-node-to-workspace 3'
+alt-shift-r = 'move-node-to-workspace 4'
+alt-shift-t = 'move-node-to-workspace 5'
+alt-shift-y = 'move-node-to-workspace 6'
+alt-shift-u = 'move-node-to-workspace 7'
+alt-shift-i = 'move-node-to-workspace 8'
+alt-shift-o = 'move-node-to-workspace 9'
+# layout changes
+alt-comma = 'layout accordion horizontal vertical'
+alt-period = 'layout tiles horizontal vertical'
+# system controls
+cmd-shift-h = 'reload-config'
