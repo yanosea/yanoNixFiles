@@ -64,6 +64,7 @@
         hyprpaper
         hyprpicker
         hyprshot
+        linux-wallpaperengine
         nemo
         playerctl
         quickshell
