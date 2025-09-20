@@ -11,6 +11,7 @@
       fastfetch
       fontforge
       fzf-make
+      gum
       htop
       hyperfine
       jnv
