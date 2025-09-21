@@ -298,10 +298,19 @@ launch_wallpaper_with_id() {
 			rm -f "$pid_file"
 		fi
 	done
-	# kill existing processes
-	for pid in "${existing_pids[@]}"; do
-		kill -9 "$pid" 2>/dev/null || true
-	done
+	# gracefully terminate existing processes with fade effect
+	if [ ${#existing_pids[@]} -gt 0 ]; then
+		# first send SIGTERM to allow fade effect
+		for pid in "${existing_pids[@]}"; do
+			kill "$pid" 2>/dev/null || true
+		done
+		# force kill any remaining processes
+		for pid in "${existing_pids[@]}"; do
+			if kill -0 "$pid" 2>/dev/null; then
+				kill -9 "$pid" 2>/dev/null || true
+			fi
+		done
+	fi
 	# build command with multiple --screen-root options and additional flags
 	local cmd_args=("$wallpaper_id" "--fps" "120" "--no-fullscreen-pause" "--silent" "--scaling" "fill")
 	for monitor in "${monitors[@]}"; do
@@ -497,7 +506,6 @@ while true; do
 		else
 			echo "[$(date '+%Y-%m-%d %H:%M:%S')] Failed to launch wallpaper: $selected_wallpaper, retrying..."
 			retry_count=$((retry_count + 1))
-			sleep 1
 		fi
 	done
 	# wait specified interval before next rotation
