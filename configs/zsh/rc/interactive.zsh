@@ -13,7 +13,7 @@ if [[ ! -d "$XDG_STATE_HOME/zsh" ]]; then
 fi
 # history configuration
 HISTFILE=$XDG_STATE_HOME/zsh/.zhistory
-HISTSIZE=1000
+HISTSIZE=10000
 SAVEHIST=10000
 # completion dump file location
 export ZSH_COMPDUMP=$XDG_STATE_HOME/zsh/.zcompdump
@@ -37,11 +37,16 @@ setopt IGNORE_EOF      # disable C-d
 setopt extendedglob nomatch # enable glob
 setopt globdots             # glob with dot
 ## history
-setopt inc_append_history      # write history immediately
-setopt append_history          # append history
-setopt extended_history        # save time stamp in history
-setopt hist_ignore_space       # ignore history start with space
-setopt inc_append_history_time # when to append history
+unsetopt APPEND_HISTORY         # use share_history instead
+setopt HIST_IGNORE_DUPS         # ignore duplicate entries
+unsetopt HIST_IGNORE_ALL_DUPS   # keep some duplicates for context
+unsetopt HIST_SAVE_NO_DUPS      # save some duplicates
+unsetopt HIST_FIND_NO_DUPS      # find duplicates when needed
+setopt HIST_IGNORE_SPACE        # ignore entries starting with space
+unsetopt HIST_EXPIRE_DUPS_FIRST # don't expire duplicates first
+setopt SHARE_HISTORY            # share history between sessions
+unsetopt EXTENDED_HISTORY       # don't save timestamps for simplicity
+setopt HIST_FCNTL_LOCK          # use fcntl for locking
 # completion styling
 ## choose completion with arrow keys
 zstyle ":completion:*:default" menu select=2
@@ -49,4 +54,9 @@ zstyle ":completion:*:default" menu select=2
 zstyle ":completion:*" matcher-list "m:{a-z}={A-Z}"
 # autoloads
 autoload -Uz zmv
-autoload -Uz compinit && compinit -d "$ZSH_COMPDUMP"
+# load custom functions
+for file in $XDG_CONFIG_HOME/zsh/functions/*; do
+	if [ -f "$file" ]; then
+		source "$file"
+	fi
+done
