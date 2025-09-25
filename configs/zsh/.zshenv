@@ -3,9 +3,6 @@
 # loaded for all zsh sessions (login, interactive, non-interactive)
 #
 
-# load .zshrc for interactive features
-[[ -f "$HOME/.zshrc" ]] && . "$HOME/.zshrc"
-
 # determine config directory
 if [[ -n "$ZDOTDIR" ]]; then
 	ZSHENV_DIR="$ZDOTDIR/env"
@@ -24,7 +21,6 @@ source "$ZSHENV_DIR/languages.zsh"
 
 # application-specific settings
 source "$ZSHENV_DIR/applications.zsh"
-source "$ZSHENV_DIR/credentials.zsh"
 
 # platform-specific settings
 source "$ZSHENV_DIR/darwin.zsh"

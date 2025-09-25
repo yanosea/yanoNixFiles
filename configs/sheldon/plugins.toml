@@ -1,15 +1,3 @@
-# `sheldon` configuration file
-# ----------------------------
-#
-# You can modify this file directly or you can use one of the following
-# `sheldon` commands which are provided to assist in editing the config file:
-#
-# - `sheldon add` to add a new plugin to the config file
-# - `sheldon edit` to open up the config file in the default editor
-# - `sheldon remove` to remove a plugin from the config file
-#
-# See the documentation for more https://github.com/rossmacarthur/sheldon#readme
-
 shell = "zsh"
 
 [plugins.zsh-defer]
@@ -19,23 +7,30 @@ github = "romkatv/zsh-defer"
 defer = '{% for file in files %}zsh-defer source "{{ file }}"{% endfor %}'
 fpath_comp = 'fpath=("{{ dir }}/completions" $fpath)'
 
-[plugins.starship]
-inline = 'eval "$(starship init zsh)"'
-
 [plugins.compinit]
-inline = 'autoload -Uz compinit && zsh-defer compinit -d $XDG_STATE_HOME/zsh/.zcompdump'
+inline = "autoload -Uz compinit && compinit -d $XDG_STATE_HOME/zsh/.zcompdump"
 
-[plugins.zsh-syntax-highlighting]
-github = "zsh-users/zsh-syntax-highlighting"
+[plugins.starship]
+inline = "eval \"$(starship init zsh)\""
+
+[plugins.zsh-vim-mode]
+github = "jeffreytse/zsh-vi-mode"
+
+[plugins.fzf]
+github = "junegunn/fzf"
+use = ["shell/completion.zsh", "shell/key-bindings.zsh"]
 
 [plugins.zsh-autosuggestions]
-github = 'zsh-users/zsh-autosuggestions'
-use = ['{{ name }}.zsh']
+github = "zsh-users/zsh-autosuggestions"
+use = ["{{ name }}.zsh"]
 apply = ["defer"]
+
+[plugins.zsh-abbrev-alias]
+github = "momo-lab/zsh-abbrev-alias"
 
 [plugins.zsh-completions]
 github = "zsh-users/zsh-completions"
-apply = ["defer"]
+apply = ["fpath_comp", "defer"]
 
 [plugins.per-directory-history]
 github = "jimhester/per-directory-history"
@@ -45,9 +40,11 @@ apply = ["defer"]
 github = "MichaelAquilina/zsh-you-should-use"
 apply = ["defer"]
 
-[plugins.zsh-vim-mode]
-github = "jeffreytse/zsh-vi-mode"
+[plugins.zoxide]
+inline = "zsh-defer eval \"$(zoxide init zsh)\""
 
-[plugins.fzf]
-github = "junegunn/fzf"
-use = ["shell/completion.zsh", "shell/key-bindings.zsh"]
+[plugins.pyenv]
+inline = "zsh-defer eval \"$(pyenv init -)\""
+
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"
