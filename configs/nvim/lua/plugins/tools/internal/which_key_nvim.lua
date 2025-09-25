@@ -16,9 +16,6 @@ return {
 				{
 					-- normal
 					mode = "n",
-					-- ai
-					{ "<LEADER>a", group = "ai" },
-					{ "<LEADER>at", "<CMD>Aibo -opener=vsplit claude<CR>", desc = "ai: toggle chat" },
 					-- buffers
 					{ "<LEADER>b", group = "buffers" },
 					{ "<LEADER>bb", "<CMD>BufferLineCyclePrev<CR>", desc = "buffer: switch to previous" },
