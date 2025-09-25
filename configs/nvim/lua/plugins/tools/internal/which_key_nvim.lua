@@ -16,6 +16,14 @@ return {
 				{
 					-- normal
 					mode = "n",
+					-- ai
+					{ "<LEADER>a", group = "ai" },
+					{
+						"<LEADER>ar",
+						"<CMD>lua require('config.claude_code').resume_session()<CR>",
+						desc = "ai: resume claude code",
+					},
+					{ "<LEADER>at", "<CMD>ClaudeCode<CR>", desc = "ai: toggle claude code" },
 					-- buffers
 					{ "<LEADER>b", group = "buffers" },
 					{ "<LEADER>bb", "<CMD>BufferLineCyclePrev<CR>", desc = "buffer: switch to previous" },
