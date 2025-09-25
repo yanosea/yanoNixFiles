@@ -6,6 +6,8 @@ require("config.autocmds")
 if vim.env.WSL_DISTRO_NAME ~= nil then
 	require("config.wsl")
 end
+-- claude code integration if available
+require("config.claude_code")
 -- zellij integration only if available
 require("config.zellij")
 -- plugin manager
