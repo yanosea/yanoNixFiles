@@ -64,7 +64,7 @@ fi
 # run the installation command
 echo ""
 echo "Installing Chrome DevTools MCP Server to current project..."
-if claude mcp add chrome-devtools npx chrome-devtools-mcp@latest; then
+if claude mcp add chrome-devtools npx -- chrome-devtools-mcp@latest --headless --isolated; then
 	echo ""
 	echo -e "${GREEN}Chrome DevTools MCP Server has been successfully installed to this project!${CLEAR}"
 	echo ""
