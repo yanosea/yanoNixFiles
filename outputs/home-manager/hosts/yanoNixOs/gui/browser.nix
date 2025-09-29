@@ -4,6 +4,7 @@
   # home
   home = {
     packages = with pkgs; [
+      google-chrome
       vivaldi
     ];
   };

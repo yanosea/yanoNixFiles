@@ -27,6 +27,7 @@
       "font-sf-mono"
       "font-sf-pro"
       "github@beta"
+      "google-chrome"
       "google-drive"
       "hammerspoon"
       "hiddenbar"
