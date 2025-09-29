@@ -51,7 +51,7 @@
       "splice"
       "spotify"
       "supercollider"
-      "tailscale"
+      "tailscale-app"
       "the-unarchiver"
       "touchdesigner"
       "via"
