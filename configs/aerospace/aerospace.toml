@@ -54,6 +54,7 @@ alt-y = 'workspace 6'
 alt-u = 'workspace 7'
 alt-i = 'workspace 8'
 alt-o = 'workspace 9'
+alt-p = 'workspace 10'
 # move window to workspace
 alt-shift-q = 'move-node-to-workspace 1'
 alt-shift-w = 'move-node-to-workspace 2'
@@ -64,8 +65,21 @@ alt-shift-y = 'move-node-to-workspace 6'
 alt-shift-u = 'move-node-to-workspace 7'
 alt-shift-i = 'move-node-to-workspace 8'
 alt-shift-o = 'move-node-to-workspace 9'
+alt-shift-p = 'move-node-to-workspace 10'
 # layout changes
 alt-comma = 'layout accordion horizontal vertical'
 alt-period = 'layout tiles horizontal vertical'
 # system controls
 cmd-shift-h = 'reload-config'
+# workspace assignments
+[workspace-to-monitor-force-assignment]
+1 = 1
+2 = 1
+3 = 1
+4 = 1
+5 = 1
+6 = 2
+7 = 2
+8 = 2
+9 = 2
+10 = 2
