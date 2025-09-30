@@ -10,7 +10,7 @@ nix-latest() {
     # package execution
     run|shell)
       shift
-      local cmd="NIXPKGS_ALLOW_UNFREE=1 nix shell"
+      local cmd="NIXPKGS_ALLOW_UNFREE=1 nix shell --impure"
       for pkg in "$@"; do
         cmd="$cmd 'github:nixos/nixpkgs/master#$pkg'"
       done
@@ -44,7 +44,7 @@ nix-latest() {
     run-once)
       shift
       if [ $# -eq 1 ]; then
-        NIXPKGS_ALLOW_UNFREE=1 nix run "github:nixos/nixpkgs/master#$1"
+        NIXPKGS_ALLOW_UNFREE=1 nix run --impure "github:nixos/nixpkgs/master#$1"
       else
         echo -e "[31merror: run-once accepts only one package[0m" >&2
         return 1
