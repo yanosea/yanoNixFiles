@@ -32,6 +32,9 @@ abbrev-alias fr="fzf-make repeat"
 abbrev-alias gbp='git branch --merged | grep -v "\* $(git rev-parse --abbrev-ref HEAD)" | grep -v "^\s*$" | xargs -r git branch -d'
 ### git hub dashboard
 abbrev-alias ghd="gh-dash"
+### git hub copilot
+abbrev-alias ghcs="gh-copilot-suggestion"
+abbrev-alias ghce="gh-copilot-explain"
 ### git branch fzf
 abbrev-alias gbf='git switch $(git branch -l | fzf | tr -d "* ")'
 ### git reposirory fzf
@@ -64,5 +67,7 @@ abbrev-alias rtty='rtty run zellij --font "PlemolJP Console NF"'
 abbrev-alias trello="trello-tui -board yanoBoard"
 
 # utilities
+## nix-latest
+abbrev-alias nixl="nix-latest"
 ## zmv (bulk rename)
 abbrev-alias zmv="noglob zmv -W"

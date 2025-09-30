@@ -1,4 +1,4 @@
-ghcs() {
+gh-copilot-suggestion() {
 	FUNCNAME="$funcstack[1]"
 	TARGET="shell"
 	local GH_DEBUG="$GH_DEBUG"
@@ -79,7 +79,7 @@ ghcs() {
 	fi
 }
 
-ghce() {
+gh-copilot-explain() {
 	FUNCNAME="$funcstack[1]"
 	local GH_DEBUG="$GH_DEBUG"
 

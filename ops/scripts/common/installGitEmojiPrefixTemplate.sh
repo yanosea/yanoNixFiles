@@ -8,52 +8,52 @@ CLEAR='\033[0m' # clear color
 
 # function to display help message
 show_help() {
-	echo -e "${YELLOW}Git Emoji Prefix Installer${CLEAR}"
-	echo ""
-	echo "Usage: $0 [options]"
-	echo ""
-	echo "Options:"
-	echo "  -h, --help    Display this help message"
-	echo ""
-	echo -e "${YELLOW}Supported prefixes:${CLEAR}"
-	echo "  - chore:     🧹 chores"
-	echo "  - feat:      ✨ new feature"
-	echo "  - fix:       🐞 bug fix"
-	echo "  - docs:      📚 documentation"
-	echo "  - merge:     🔀 merge"
-	echo "  - perf:      🚀 performance improvement"
-	echo "  - refactor:  🔧 refactoring"
-	echo "  - style:     💄 styling"
-	echo "  - test:      🧪 testing"
-	echo ""
-	echo -e "Example: ${GREEN}git commit -m \"feat: Add new feature\"${CLEAR} → ${GREEN}\"✨feat: Add new feature\"${CLEAR}"
-	exit 0
+  echo -e "${YELLOW}Git Emoji Prefix Installer${CLEAR}"
+  echo ""
+  echo "Usage: $0 [options]"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help    Display this help message"
+  echo ""
+  echo -e "${YELLOW}Supported prefixes:${CLEAR}"
+  echo "  - chore:     🧹 chores"
+  echo "  - feat:      ✨ new feature"
+  echo "  - fix:       🐞 bug fix"
+  echo "  - docs:      📚 documentation"
+  echo "  - merge:     🔀 merge"
+  echo "  - perf:      🚀 performance improvement"
+  echo "  - refactor:  🔧 refactoring"
+  echo "  - style:     💄 styling"
+  echo "  - test:      🧪 testing"
+  echo ""
+  echo -e "Example: ${GREEN}git commit -m \"feat: Add new feature\"${CLEAR} → ${GREEN}\"✨feat: Add new feature\"${CLEAR}"
+  exit 0
 }
 
 # process command line arguments
 for arg in "$@"; do
-	case $arg in
-	-h | --help)
-		show_help
-		;;
-	esac
+  case $arg in
+  -h | --help)
+    show_help
+    ;;
+  esac
 done
 
 echo -e "${YELLOW}Git Emoji Prefix Installer${CLEAR}"
 
 # check if current directory is a Git repository
 if [ ! -d ".git" ]; then
-	echo -e "${RED}Error: The current directory is not a Git repository.${CLEAR}"
-	echo "Please run this script inside a Git repository..."
-	exit 1
+  echo -e "${RED}Error: The current directory is not a Git repository.${CLEAR}"
+  echo "Please run this script inside a Git repository..."
+  exit 1
 fi
 
 # confirm with user
 echo -e -n "Do you want to install Git Emoji Prefix to the current repository? [y/N] "
 read -r response
-if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-	echo -e "${YELLOW}Installation aborted${CLEAR}"
-	exit 0
+if [[ ! $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+  echo -e "${YELLOW}Installation aborted${CLEAR}"
+  exit 0
 fi
 
 # create prepare-commit-msg hook
