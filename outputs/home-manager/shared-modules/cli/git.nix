@@ -15,7 +15,7 @@ in
     home = {
       cli = {
         git = {
-          syncRepos = mkOption {
+          syncGitRepos = mkOption {
             type = types.bool;
             default = if builtins.getEnv "EXPERIMENTAL_MODE" == "1" then false else true;
             description = "sync Git repositories during activation";
@@ -40,7 +40,7 @@ in
         ];
       };
     }
-    (mkIf cfg.syncRepos {
+    (mkIf cfg.syncGitRepos {
       # home
       home = {
         activation = {

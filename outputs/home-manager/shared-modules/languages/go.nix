@@ -15,7 +15,7 @@ in
     home = {
       languages = {
         go = {
-          syncPackages = mkOption {
+          syncGoPackages = mkOption {
             type = types.bool;
             default = if builtins.getEnv "EXPERIMENTAL_MODE" == "1" then false else true;
             description = "sync Go packages during activation";
@@ -39,7 +39,7 @@ in
         ];
       };
     }
-    (mkIf cfg.syncPackages {
+    (mkIf cfg.syncGoPackages {
       # home
       home = {
         activation = {
