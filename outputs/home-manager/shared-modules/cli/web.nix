@@ -15,7 +15,7 @@ in
     home = {
       cli = {
         web = {
-          syncPackages = mkOption {
+          syncWebTools = mkOption {
             type = types.bool;
             default = if builtins.getEnv "EXPERIMENTAL_MODE" == "1" then false else true;
             description = "sync web development tools during activation";
@@ -37,7 +37,7 @@ in
         ];
       };
     }
-    (mkIf cfg.syncPackages {
+    (mkIf cfg.syncWebTools {
       # home
       home = {
         activation = {
