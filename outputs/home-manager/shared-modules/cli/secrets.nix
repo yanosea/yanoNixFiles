@@ -46,6 +46,9 @@ in
       OPENAI_API_KEY = {
         path = "${config.xdg.dataHome}/sops/OPENAI_API_KEY";
       };
+      RCLONE_CONFIG = {
+        path = "${config.xdg.configHome}/rclone/rclone.conf";
+      };
       SPOTIFY_ID = {
         path = "${config.xdg.dataHome}/sops/SPOTIFY_ID";
       };
