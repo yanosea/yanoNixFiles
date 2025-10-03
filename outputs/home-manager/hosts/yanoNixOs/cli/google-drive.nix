@@ -6,49 +6,15 @@
   ...
 }:
 let
-  # rclone mount script
-  rcloneMountScript = pkgs.writeShellScript "rclone-mount-google-drive" ''
+  # rclone bisync script
+  rcloneBisyncScript = pkgs.writeShellScript "rclone-bisync-google-drive" ''
     #!/bin/bash
     set -euo pipefail
-    echo "starting rclone mount script..."
-    # wait for FUSE to be properly initialized
-    echo "Waiting for FUSE device to be ready..."
-    timeout=30
-    while [ $timeout -gt 0 ]; do
-      if [ -c /dev/fuse ] && [ -w /dev/fuse ]; then
-        echo "fuse device is ready"
-        break
-      fi
-      echo "fuse device not ready, waiting... ($timeout seconds left)"
-      ${pkgs.coreutils}/bin/sleep 1
-      timeout=$((timeout - 1))
-    done
-    if [ $timeout -le 0 ]; then
-      echo "fuse device timeout, proceeding anyway..."
-    fi
-    # cleanup existing mounts and prepare directory
-    echo "preparing mount directory..."
-    # check if directory is a stale mount point
-    if [ -e "${config.home.homeDirectory}/google_drive" ]; then
-      # check if it's a stale mount (transport endpoint not connected)
-      if ! ${pkgs.coreutils}/bin/stat "${config.home.homeDirectory}/google_drive" >/dev/null 2>&1; then
-        echo "detected stale mount, forcing cleanup..."
-        # force unmount with sudo if available
-        if command -v sudo >/dev/null 2>&1; then
-          sudo ${pkgs.util-linux}/bin/umount -l "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
-        fi
-      fi
-      # attempt to unmount any existing mounts
-      ${pkgs.fuse}/bin/fusermount -uz "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
-      ${pkgs.util-linux}/bin/umount -l "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
-      # wait briefly for unmount to complete
-      ${pkgs.coreutils}/bin/sleep 2
-      # force remove directory if it still exists
-      ${pkgs.coreutils}/bin/rm -rf "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
-    fi
-    # recreate directory
+    echo "starting rclone bisync..."
+    # prepare sync directory
+    echo "preparing sync directory..."
     ${pkgs.coreutils}/bin/mkdir -p "${config.home.homeDirectory}/google_drive"
-    echo "mount directory ready"
+    echo "sync directory ready"
     # wait for network with timeout
     echo "waiting for network connectivity..."
     timeout=60
@@ -64,46 +30,74 @@ let
     if [ $timeout -le 0 ]; then
       echo "network timeout, proceeding anyway..."
     fi
-    # verify fusermount is available
-    if ! command -v ${pkgs.fuse}/bin/fusermount >/dev/null 2>&1; then
-      echo "ERROR: fusermount not available"
-      exit 1
-    fi
-    # start rclone mount
-    echo "starting rclone mount..."
-    # start rclone mount
-    ${pkgs.rclone}/bin/rclone mount ${username}: "${config.home.homeDirectory}/google_drive" \
-      --allow-other \
-      --vfs-cache-mode full \
-      --buffer-size 128M \
-      --vfs-read-ahead 512M \
-      --drive-chunk-size 64M \
-      --config "${config.xdg.configHome}/rclone/rclone.conf" \
-      --log-level INFO \
-      --log-file "${config.xdg.cacheHome}/rclone-mount.log"
-  '';
-  # rclone unomnt script
-  rcloneUnmountScript = pkgs.writeShellScript "rclone-unmount-google-drive" ''
-    #!/bin/bash
-    echo "stopping rclone mount..."
-    # kill any existing rclone processes for this mount
-    ${pkgs.procps}/bin/pkill -f "rclone mount ${username}:" || true
-    # gracefully unmount
-    ${pkgs.fuse}/bin/fusermount -u "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
-    # force unmount if still mounted
-    if ${pkgs.util-linux}/bin/mountpoint -q "${config.home.homeDirectory}/google_drive" 2>/dev/null; then
-      echo "forcing unmount..."
-      ${pkgs.fuse}/bin/fusermount -uz "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
-      ${pkgs.util-linux}/bin/umount -l "${config.home.homeDirectory}/google_drive" 2>/dev/null || true
-    fi
-    # brief wait for unmount
-    ${pkgs.coreutils}/bin/sleep 3
-    # verify unmount completed
-    if ! ${pkgs.util-linux}/bin/mountpoint -q "${config.home.homeDirectory}/google_drive" 2>/dev/null; then
-      echo "unmount completed"
+    # check for first-time sync or resync needed
+    BISYNC_WORKDIR="${config.xdg.cacheHome}/rclone/bisync"
+    if [ ! -d "$BISYNC_WORKDIR" ] || ! ls "$BISYNC_WORKDIR"/${username}_*.path1.lst >/dev/null 2>&1; then
+      echo "first time sync or resync needed, performing initial sync..."
+      ${pkgs.rclone}/bin/rclone bisync "${username}:/" "${config.home.homeDirectory}/google_drive" \
+        --config "${config.xdg.configHome}/rclone/rclone.conf" \
+        --resync \
+        --create-empty-src-dirs \
+        --compare size,modtime \
+        --drive-acknowledge-abuse \
+        --drive-skip-gdocs \
+        --drive-skip-shortcuts \
+        --drive-skip-dangling-shortcuts \
+        --metadata \
+        --fix-case \
+        --resilient \
+        --recover \
+        --max-lock 2m \
+        --transfers 32 \
+        --checkers 64 \
+        --tpslimit 20 \
+        --tpslimit-burst 40 \
+        --drive-chunk-size 256M \
+        --fast-list \
+        --buffer-size 512M \
+        --use-mmap \
+        --multi-thread-streams 8 \
+        --multi-thread-cutoff 50M \
+        --log-level INFO \
+        --log-file "${config.xdg.cacheHome}/rclone-bisync.log"
     else
-      echo "unmount may still be pending"
+      echo "performing regular bisync..."
+      ${pkgs.rclone}/bin/rclone bisync "${username}:/" "${config.home.homeDirectory}/google_drive" \
+        --config "${config.xdg.configHome}/rclone/rclone.conf" \
+        --create-empty-src-dirs \
+        --compare size,modtime \
+        --drive-acknowledge-abuse \
+        --drive-skip-gdocs \
+        --drive-skip-shortcuts \
+        --drive-skip-dangling-shortcuts \
+        --metadata \
+        --fix-case \
+        --resilient \
+        --recover \
+        --max-lock 2m \
+        --track-renames \
+        --transfers 32 \
+        --checkers 64 \
+        --tpslimit 20 \
+        --tpslimit-burst 40 \
+        --drive-chunk-size 256M \
+        --fast-list \
+        --buffer-size 512M \
+        --use-mmap \
+        --multi-thread-streams 8 \
+        --multi-thread-cutoff 50M \
+        --log-level INFO \
+        --log-file "${config.xdg.cacheHome}/rclone-bisync.log"
     fi
+    echo "bisync completed"
+  '';
+  # cleanup script for bisync
+  rcloneCleanupScript = pkgs.writeShellScript "rclone-cleanup-google-drive" ''
+    #!/bin/bash
+    echo "cleaning up rclone bisync..."
+    # kill any existing rclone processes for bisync
+    ${pkgs.procps}/bin/pkill -f "rclone bisync ${username}:" || true
+    echo "cleanup completed"
   '';
 in
 {
@@ -113,33 +107,41 @@ in
       rclone
     ];
   };
-  # use systemd user service with better handling
+  # use systemd user service and timer for periodic bisync
   systemd.user.services = {
-    rclone-google-drive = {
+    rclone-google-drive-bisync = {
       Unit = {
-        Description = "rclone Google Drive mount service";
-        After = [
-          "graphical-session.target"
-          "network-online.target"
-        ];
+        Description = "rclone Google Drive bisync service";
+        After = [ "network-online.target" ];
         Wants = [ "network-online.target" ];
+        # Prevent timer from killing manual execution
+        RefuseManualStart = false;
+        RefuseManualStop = false;
       };
       Service = {
-        Type = "exec";
-        ExecStart = "${rcloneMountScript}";
-        ExecStop = "${rcloneUnmountScript}";
-        ExecStopPost = "${pkgs.coreutils}/bin/sleep 2";
-        Restart = "on-failure";
-        RestartSec = "10s";
-        KillMode = "mixed";
-        KillSignal = "SIGTERM";
-        TimeoutStartSec = "120s";
-        TimeoutStopSec = "60s";
-        StartLimitBurst = 3;
-        StartLimitIntervalSec = 300;
+        Type = "oneshot";
+        ExecStart = "${rcloneBisyncScript}";
+        ExecStopPost = "${rcloneCleanupScript}";
+        StandardOutput = "journal";
+        StandardError = "journal";
+        TimeoutStartSec = "infinity";
+      };
+    };
+  };
+
+  systemd.user.timers = {
+    rclone-google-drive-bisync = {
+      Unit = {
+        Description = "rclone Google Drive bisync timer";
+        After = [ "network-online.target" ];
+      };
+      Timer = {
+        OnBootSec = "30s";
+        OnUnitInactiveSec = "15min";
+        Persistent = true;
       };
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = [ "timers.target" ];
       };
     };
   };
