@@ -46,14 +46,12 @@
         egl-wayland
         libGL
         libglvnd
-        libvdpau-va-gl
         mesa
         nvidia-vaapi-driver
         vaapiVdpau
       ];
       extraPackages32 = with pkgs.pkgsi686Linux; [
         libGL
-        libvdpau-va-gl
         mesa
         vaapiVdpau
       ];
