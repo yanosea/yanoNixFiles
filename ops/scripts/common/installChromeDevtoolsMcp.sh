@@ -61,25 +61,84 @@ if [[ ! $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   exit 0
 fi
 
-# run the installation command
+# detect platform and set Chrome path
 echo ""
 echo "Installing Chrome DevTools MCP Server to current project..."
-if claude mcp add chrome-devtools npx -- chrome-devtools-mcp@latest --headless --isolated; then
+
+# check if macOS
+if [[ $OSTYPE == "darwin"* ]]; then
+  echo -e "${GREEN}macOS detected:${CLEAR} Using Chrome auto-detection"
+  if claude mcp add chrome-devtools npx -- chrome-devtools-mcp@latest --headless --isolated; then
+    INSTALL_SUCCESS=true
+  else
+    INSTALL_SUCCESS=false
+  fi
+else
+  # nix explicitly specify `/opt/google/chrome/chrome`
+  CHROME_PATH="/opt/google/chrome/chrome"
+  if [ -f "$CHROME_PATH" ]; then
+    echo -e "${GREEN}Chrome detected:${CLEAR} $CHROME_PATH"
+    if claude mcp add chrome-devtools npx -- chrome-devtools-mcp@latest --headless --isolated --executable-path="$CHROME_PATH"; then
+      INSTALL_SUCCESS=true
+    else
+      INSTALL_SUCCESS=false
+    fi
+  else
+    echo -e "${RED}Error: Chrome not found at $CHROME_PATH${CLEAR}"
+    echo "Please ensure Google Chrome is installed via Nix:"
+    echo "  Add 'pkgs.google-chrome' to your Nix configuration"
+    echo "  Then rebuild your system: nixos-rebuild switch (NixOS)"
+    echo "  Or: home-manager switch (Home Manager)"
+    exit 1
+  fi
+fi
+
+# display result
+if [ "$INSTALL_SUCCESS" = true ]; then
   echo ""
   echo -e "${GREEN}Chrome DevTools MCP Server has been successfully installed to this project!${CLEAR}"
   echo ""
-  echo -e "${YELLOW}Note:${CLEAR}"
+  echo -e "${YELLOW}Configuration:${CLEAR}"
+  echo "  - Mode: Headless + Isolated"
+  if [[ $OSTYPE == "darwin"* ]]; then
+    echo "  - Platform: macOS"
+    echo "  - Chrome executable: Auto-detected"
+  else
+    echo "  - Platform: Nix/Linux"
+    echo "  - Chrome executable: /opt/google/chrome/chrome"
+  fi
+  echo ""
+  echo -e "${YELLOW}Notes:${CLEAR}"
   echo "  - Restart Claude Code for changes to take effect"
-  echo "  - This only adds Chrome DevTools MCP to the current project"
+  echo "  - This configuration is scoped to the current project only"
+  echo "  - Headless mode: Browser runs without UI (recommended)"
+  echo "  - Isolated mode: Temporary user-data-dir with auto-cleanup"
   echo ""
   echo -e "${YELLOW}Available features:${CLEAR}"
   echo "  - Browser automation and testing"
   echo "  - Page navigation and interaction"
   echo "  - Network request monitoring"
   echo "  - Performance profiling"
+  echo "  - Screenshot and snapshot capture"
 else
   echo ""
   echo -e "${RED}Failed to install Chrome DevTools MCP Server.${CLEAR}"
   echo "Please check the error messages above and try again..."
+  echo ""
+  echo -e "${YELLOW}Troubleshooting:${CLEAR}"
+  echo "  - Check Node.js version: node --version (requires v20.19+)"
+  echo "  - Verify npx is available: npx --version"
+  echo ""
+  if [[ $OSTYPE == "darwin"* ]]; then
+    echo -e "${YELLOW}macOS installation:${CLEAR}"
+    echo "  - Download from: https://www.google.com/chrome/"
+    echo "  - Default location: /Applications/Google Chrome.app"
+  else
+    echo -e "${YELLOW}Nix/Linux installation:${CLEAR}"
+    echo "  - Add to configuration: pkgs.google-chrome"
+    echo "  - NixOS: nixos-rebuild switch"
+    echo "  - Home Manager: home-manager switch"
+    echo "  - Expected location: /opt/google/chrome/chrome"
+  fi
   exit 1
 fi
