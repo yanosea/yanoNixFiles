@@ -25,13 +25,6 @@ let
       value = {
         source = ./ai/commands + "/${name}";
       };
-    }) localAiCommands
-    # add local ai commands to opencode instructions
-    // lib.mapAttrs' (name: _: {
-      name = "opencode/instructions/${name}";
-      value = {
-        source = ./ai/commands + "/${name}";
-      };
     }) localAiCommands;
 in
 {
