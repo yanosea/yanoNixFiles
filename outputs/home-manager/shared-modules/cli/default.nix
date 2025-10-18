@@ -3,6 +3,7 @@
   imports = [
     ./ai.nix
     ./core.nix
+    ./development.nix
     ./docker.nix
     ./editor.nix
     ./git.nix
