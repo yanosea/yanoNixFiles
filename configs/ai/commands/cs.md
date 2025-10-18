@@ -1,7 +1,9 @@
 # Commit staged command
 
-- Please commit with message in English for these staged changes.
-- Do not stage and commit not any staging files or lines.
+- Please generate a commit message in English for these staged changes.
+- Show the `git commit` command with the generated message.
+- Do not execute the commit command, only show it for the user to run manually.
+- Do not stage any files or lines.
 
 ## Rules
 
