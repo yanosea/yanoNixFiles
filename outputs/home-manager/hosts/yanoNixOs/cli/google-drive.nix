@@ -108,40 +108,43 @@ in
     ];
   };
   # use systemd user service and timer for periodic bisync
-  systemd.user.services = {
-    rclone-google-drive-bisync = {
-      Unit = {
-        Description = "rclone Google Drive bisync service";
-        After = [ "network-online.target" ];
-        Wants = [ "network-online.target" ];
-        # Prevent timer from killing manual execution
-        RefuseManualStart = false;
-        RefuseManualStop = false;
+  systemd = {
+    user = {
+      services = {
+        rclone-google-drive-bisync = {
+          Unit = {
+            Description = "rclone Google Drive bisync service";
+            After = [ "network-online.target" ];
+            Wants = [ "network-online.target" ];
+            # Prevent timer from killing manual execution
+            RefuseManualStart = false;
+            RefuseManualStop = false;
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${rcloneBisyncScript}";
+            ExecStopPost = "${rcloneCleanupScript}";
+            StandardOutput = "journal";
+            StandardError = "journal";
+            TimeoutStartSec = "infinity";
+          };
+        };
       };
-      Service = {
-        Type = "oneshot";
-        ExecStart = "${rcloneBisyncScript}";
-        ExecStopPost = "${rcloneCleanupScript}";
-        StandardOutput = "journal";
-        StandardError = "journal";
-        TimeoutStartSec = "infinity";
-      };
-    };
-  };
-
-  systemd.user.timers = {
-    rclone-google-drive-bisync = {
-      Unit = {
-        Description = "rclone Google Drive bisync timer";
-        After = [ "network-online.target" ];
-      };
-      Timer = {
-        OnBootSec = "30s";
-        OnUnitInactiveSec = "15min";
-        Persistent = true;
-      };
-      Install = {
-        WantedBy = [ "timers.target" ];
+      timers = {
+        rclone-google-drive-bisync = {
+          Unit = {
+            Description = "rclone Google Drive bisync timer";
+            After = [ "network-online.target" ];
+          };
+          Timer = {
+            OnBootSec = "30s";
+            OnUnitInactiveSec = "15min";
+            Persistent = true;
+          };
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
+        };
       };
     };
   };

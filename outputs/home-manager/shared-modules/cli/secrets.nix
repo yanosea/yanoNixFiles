@@ -12,8 +12,8 @@ in
 {
   # home
   home = {
-    # automatic age key generation
     activation = {
+      # automatic age key generation
       generateAgeKey = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         if [[ ! -f "${ageKeyFile}" ]]; then
           echo "Generating age key..."
@@ -27,11 +27,38 @@ in
           echo ""
         fi
       '';
+      # automatic gpg key import
+      importGpgKey = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if [[ -f "${config.xdg.dataHome}/sops/GPG_PRIVATE_KEY" ]]; then
+          echo "Importing GPG key..."
+          ${pkgs.gnupg}/bin/gpg --import "${config.xdg.dataHome}/sops/GPG_PRIVATE_KEY" 2>/dev/null || true
+          # Set trust level to ultimate
+          GPG_KEY_ID=$(${pkgs.gnupg}/bin/gpg --list-keys --with-colons 81510859+yanosea@users.noreply.github.com 2>/dev/null | grep '^fpr' | head -1 | cut -d: -f10)
+          if [[ -n "$GPG_KEY_ID" ]]; then
+            echo "Setting GPG key trust level to ultimate..."
+            echo "$GPG_KEY_ID:6:" | ${pkgs.gnupg}/bin/gpg --import-ownertrust 2>/dev/null || true
+            echo "GPG key trust level set successfully"
+          fi
+          echo "GPG key imported successfully"
+        fi
+      '';
     };
     packages = with pkgs; [
       age
+      gnupg
+      pinentry-curses
       sops
     ];
+  };
+  # services
+  services = {
+    gpg-agent = {
+      enable = true;
+      pinentry = {
+        package = pkgs.pinentry-curses;
+      };
+      enableSshSupport = false;
+    };
   };
   # sops
   sops = {
@@ -72,6 +99,9 @@ in
       };
       TRELLO_USER = {
         path = "${config.xdg.dataHome}/sops/TRELLO_USER";
+      };
+      GPG_PRIVATE_KEY = {
+        path = "${config.xdg.dataHome}/sops/GPG_PRIVATE_KEY";
       };
     };
   };
