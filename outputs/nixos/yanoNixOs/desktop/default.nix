@@ -3,7 +3,6 @@
   imports = [
     ./bluetooth.nix
     ./environment.nix
-    ./fonts.nix
     ./fuse.nix
     ./game.nix
     ./graphics-tools.nix
