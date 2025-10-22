@@ -50,6 +50,7 @@
       "splashtop-personal"
       "splice"
       "spotify"
+      "stats"
       "supercollider"
       "tailscale-app"
       "the-unarchiver"
