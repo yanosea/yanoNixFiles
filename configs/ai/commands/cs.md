@@ -1,8 +1,23 @@
 # Commit staged command
 
 - Please generate a commit message in English for these staged changes.
-- Show the `git commit` command with the generated message.
-- Do not execute the commit command, only show it for the user to run manually.
+- Show the following commands for the user to run manually in order:
+  1. `gh issue create` command:
+     - title format: `(scope) description` (e.g., `(ai) expand workflow`)
+     - no body
+     - label: `bug` for `fix:` prefix, `enhancement` for others
+     - assignee: self (`@me`)
+  2. `gh issue develop` command to create a branch for the issue
+  3. `git checkout` command to checkout the created branch
+  4. `git commit` command with the generated message
+  5. `git push` command to push the changes to remote
+  6. `gh pr create` command:
+     - no title/body specification (auto-populated from commit/branch)
+     - label: same as issue
+     - assignee: same as issue (`@me`)
+  7. `gh pr merge` command to merge the pull request
+- Do not show the commit message separately; only show it in the commands.
+- Do not execute any commands, only show them for the user to run manually.
 - Do not stage any files or lines.
 
 ## Rules

@@ -1,0 +1,102 @@
+{
+  "version": 3,
+  "lines": [
+    [
+      {
+        "id": "42943a48-f130-49c7-8ae8-7c3f2328a384",
+        "type": "current-working-dir",
+        "backgroundColor": "bgBrightGreen"
+      },
+      {
+        "id": "f631a396-591d-4cbc-8b94-19b95ee601fb",
+        "type": "git-branch",
+        "backgroundColor": "bgCyan"
+      },
+      {
+        "id": "ae7648ef-7753-4bc0-b7f1-958d08d33a11",
+        "type": "git-changes",
+        "backgroundColor": "bgRed"
+      }
+    ],
+    [
+      {
+        "id": "a8209618-b204-4d5d-b075-fc23779b640b",
+        "type": "tokens-input",
+        "backgroundColor": "bgRed"
+      },
+      {
+        "id": "6bc808f8-3c29-43d6-bc7b-e84317aa6e2d",
+        "type": "tokens-output",
+        "backgroundColor": "bgBrightGreen"
+      },
+      {
+        "id": "ca286dde-e9b2-47fe-8bc1-516b49e1f0ac",
+        "type": "tokens-cached",
+        "backgroundColor": "bgRed"
+      },
+      {
+        "id": "a547e65d-4295-49c4-ad60-88d92d7e7f5a",
+        "type": "tokens-total",
+        "backgroundColor": "bgBrightGreen"
+      },
+      {
+        "id": "2ffbc6fd-35ae-49ad-8c13-303516ee4e21",
+        "type": "context-length",
+        "backgroundColor": "bgWhite"
+      },
+      {
+        "id": "b5bf1652-024e-4565-9c96-eed31e8611bc",
+        "type": "context-percentage",
+        "backgroundColor": "bgBrightMagenta"
+      },
+      {
+        "id": "2ca20b6f-c11e-4001-b728-db90180102fb",
+        "type": "session-clock",
+        "backgroundColor": "bgBrightRed"
+      },
+      {
+        "id": "0aee47e1-c195-44e4-9758-69dab5dde97d",
+        "type": "session-cost",
+        "backgroundColor": "bgBrightYellow"
+      }
+    ],
+    [
+      {
+        "id": "2e2d4c92-ae45-42e5-9159-7db9dc9b4713",
+        "type": "model",
+        "backgroundColor": "bgBrightBlue"
+      },
+      {
+        "id": "1cd579e7-4274-4c33-9ed3-cb1127adf987",
+        "type": "output-style",
+        "backgroundColor": "bgMagenta"
+      },
+      {
+        "id": "45e6fdb8-fc54-4cdc-a513-2a25ecc55791",
+        "type": "version",
+        "backgroundColor": "bgGreen"
+      }
+    ]
+  ],
+  "flexMode": "full-minus-40",
+  "compactThreshold": 60,
+  "colorLevel": 2,
+  "defaultPadding": " ",
+  "inheritSeparatorColors": false,
+  "globalBold": false,
+  "powerline": {
+    "enabled": true,
+    "separators": [
+      ""
+    ],
+    "separatorInvertBackground": [
+      false
+    ],
+    "startCaps": [],
+    "endCaps": [
+      ""
+    ],
+    "theme": "nord",
+    "autoAlign": false
+  }
+}

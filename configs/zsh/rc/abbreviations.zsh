@@ -59,8 +59,10 @@ abbrev-alias reboot="sudo systemctl reboot"
 abbrev-alias shutdown="sudo systemctl poweroff"
 
 # applications
+## ccexp
+abbrev-alias ccexp="bunx ccexp@latest"
 ## ccusage
-abbrev-alias ccusage="bunx ccusage"
+abbrev-alias ccusage="bunx ccusage@latest"
 ## rtty terminal
 abbrev-alias rtty='rtty run zellij --font "PlemolJP Console NF"'
 ## trello
