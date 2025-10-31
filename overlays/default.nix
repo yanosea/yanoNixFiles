@@ -1,14 +1,20 @@
 # overlays
 inputs: [
   # rust
-  inputs.fenix.overlays.default
+  (
+    _: super:
+    let
+      pkgs = inputs.fenix.inputs.nixpkgs.legacyPackages.${super.system};
+    in
+    inputs.fenix.overlays.default pkgs pkgs
+  )
   # packages
   ## mediaplayer
   (final: prev: {
     mediaplayer = inputs.mediaplayer.packages.${prev.system}.default;
   })
-  # quickshell
+  ## wrangler - use emrldnix flake with cachix for better cache hits
   (final: prev: {
-    quickshell = inputs.quickshell.packages.${prev.system}.default;
+    wrangler = inputs.wrangler.packages.${prev.system}.default;
   })
 ]
