@@ -4,8 +4,16 @@
   # home
   home = {
     packages = with pkgs; [
-      vesktop
       steam
+      (pkgs.vesktop.overrideAttrs (oldAttrs: {
+        postFixup = (oldAttrs.postFixup or "") + ''
+          wrapProgram $out/bin/vesktop \
+            --add-flags "--enable-features=UseOzonePlatform,WaylandWindowDecorations,WebRTCPipeWireCapturer" \
+            --add-flags "--ozone-platform=wayland" \
+            --add-flags "--disable-features=WebRtcHideLocalIpsWithMdns" \
+            --add-flags "--enable-blink-features=PipeWireCamera"
+        '';
+      }))
     ];
   };
 }
