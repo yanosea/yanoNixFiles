@@ -1,0 +1,195 @@
+/* import theme modules */
+@import url("https://refact0r.github.io/system24/build/system24.css");
+
+body {
+  /* font, change to '' for default discord font */
+  --font: "plemoljp-nf";
+  --code-font: "plemoljp-nf";
+  font-weight: 300;
+  letter-spacing: -0.05ch;
+
+  /* sizes */
+  --gap: 12px;
+  --divider-thickness: 4px;
+  --border-thickness: 2px;
+  --border-hover-transition: 0.2s ease;
+
+  /* animation/transition options */
+  --animations: on;
+  --list-item-transition: 0.2s ease;
+  --dms-icon-svg-transition: 0.4s ease;
+
+  /* top bar options */
+  --top-bar-height: var(--gap);
+  --top-bar-button-position: titlebar;
+  --top-bar-title-position: off;
+  --subtle-top-bar-title: off;
+
+  /* window controls */
+  --custom-window-controls: off;
+  --window-control-size: 14px;
+
+  /* dms button options */
+  --custom-dms-icon: off;
+  --dms-icon-svg-url: url("");
+  --dms-icon-svg-size: 90%;
+  --dms-icon-color-before: var(--icon-secondary);
+  --dms-icon-color-after: var(--white);
+  --custom-dms-background: off;
+  --dms-background-image-url: url("");
+  --dms-background-image-size: cover;
+  --dms-background-color: linear-gradient(
+    70deg,
+    var(--blue-1),
+    var(--purple-1),
+    var(--aqua-1)
+  );
+
+  /* background image options */
+  --background-image: off;
+  --background-image-url: url("");
+
+  /* transparency/blur options */
+  --transparency-tweaks: off;
+  --remove-bg-layer: off;
+  --panel-blur: off;
+  --blur-amount: 12px;
+  --bg-floating: var(--bg-3);
+
+  /* other options */
+  --small-user-panel: on;
+
+  /* unrounding options */
+  --unrounding: on;
+
+  /* styling options */
+  --custom-spotify-bar: on;
+  --ascii-titles: on;
+  --ascii-loader: system24;
+
+  /* panel labels */
+  --panel-labels: on;
+  --label-color: var(--text-muted);
+  --label-font-weight: 500;
+}
+
+/* Everforest Dark Medium color palette */
+:root {
+  --colors: on;
+
+  /* Everforest Dark Medium - Background colors (from palette1) */
+  --bg-dim: #232a2e;
+  --bg-0: #2d353b;
+  --bg-1: #343f44;
+  --bg-2: #3d484d;
+  --bg-3-base: #475258;
+  --bg-4-base: #4f585e;
+  --bg-5: #56635f;
+
+  /* text colors based on Everforest palette */
+  --text-0: var(--bg-4-base); /* text on colored elements */
+  --text-1: #d3c6aa; /* foreground - normally white text */
+  --text-2: #d3c6aa; /* foreground - headings and important text */
+  --text-3: #d3c6aa; /* foreground - normal text */
+  --text-4: #9da9a0; /* grey2 - icon buttons and channels */
+  --text-5: #7a8478; /* grey0 - muted channels/chats and timestamps */
+
+  /* background and dark colors */
+  --bg-1: var(--bg-1);
+  --bg-2: var(--bg-2);
+  --bg-3: var(--bg-3-base);
+  --bg-4: var(--bg-0); /* main background */
+  --hover: var(--bg-1);
+  --active: var(--bg-2);
+  --active-2: var(--bg-3-base);
+  --message-hover: var(--hover);
+
+  /* accent colors - using green as primary accent (Everforest signature) */
+  --accent-1: #a7c080; /* green - links */
+  --accent-2: #a7c080; /* green - small accent elements */
+  --accent-3: #a7c080; /* green - accent buttons */
+  --accent-4: #83c092; /* aqua - accent buttons when hovered */
+  --accent-5: #7a8478; /* grey0 - accent buttons when clicked */
+  --accent-new: #e67e80; /* red - mute/deafen buttons */
+  --mention: linear-gradient(
+    to right,
+    color-mix(in hsl, #a7c080, transparent 90%) 40%,
+    transparent
+  );
+  --mention-hover: linear-gradient(
+    to right,
+    color-mix(in hsl, #a7c080, transparent 95%) 40%,
+    transparent
+  );
+  --reply: linear-gradient(
+    to right,
+    color-mix(in hsl, #d3c6aa, transparent 90%) 40%,
+    transparent
+  );
+  --reply-hover: linear-gradient(
+    to right,
+    color-mix(in hsl, #d3c6aa, transparent 95%) 40%,
+    transparent
+  );
+
+  /* status indicator colors */
+  --online: #a7c080; /* green */
+  --dnd: #e67e80; /* red */
+  --idle: #dbbc7f; /* yellow */
+  --streaming: #d699b6; /* purple */
+  --offline: #7a8478; /* grey0 */
+
+  /* border colors */
+  --border-light: #475258; /* bg3 */
+  --border: #56635f; /* bg5 */
+  --border-hover: #a7c080; /* green */
+  --button-border: rgba(167, 192, 128, 0.3); /* green */
+
+  /* Everforest color palette (palette2) */
+  --red-1: #e67e80;
+  --red-2: #e67e80;
+  --red-3: #e67e80;
+  --red-4: #e67e80;
+  --red-5: #514045; /* bg_red */
+
+  --orange-1: #e69875;
+  --orange-2: #e69875;
+  --orange-3: #e69875;
+  --orange-4: #e69875;
+  --orange-5: #e69875;
+
+  --yellow-1: #dbbc7f;
+  --yellow-2: #dbbc7f;
+  --yellow-3: #dbbc7f;
+  --yellow-4: #dbbc7f;
+  --yellow-5: #4d4c43; /* bg_yellow */
+
+  --green-1: #a7c080;
+  --green-2: #a7c080;
+  --green-3: #a7c080;
+  --green-4: #a7c080;
+  --green-5: #425047; /* bg_green */
+
+  --aqua-1: #83c092;
+  --aqua-2: #83c092;
+  --aqua-3: #83c092;
+  --aqua-4: #83c092;
+  --aqua-5: #83c092;
+
+  --blue-1: #7fbbb3;
+  --blue-2: #7fbbb3;
+  --blue-3: #7fbbb3;
+  --blue-4: #7fbbb3;
+  --blue-5: #3a515d; /* bg_blue */
+
+  --purple-1: #d699b6;
+  --purple-2: #d699b6;
+  --purple-3: #d699b6;
+  --purple-4: #d699b6;
+  --purple-5: #4a444e; /* bg_purple */
+
+  /* grey tones */
+  --grey-0: #7a8478;
+  --grey-1: #859289;
+  --grey-2: #9da9a0;
+}

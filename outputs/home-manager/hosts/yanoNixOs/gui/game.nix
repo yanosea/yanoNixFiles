@@ -4,7 +4,7 @@
   # home
   home = {
     packages = with pkgs; [
-      discord
+      vesktop
       steam
     ];
   };
