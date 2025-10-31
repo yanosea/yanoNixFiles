@@ -5,7 +5,7 @@
   home = {
     packages = with pkgs; [
       baobab
-      bitwarden
+      bitwarden-desktop
       blender
       remmina
     ];
