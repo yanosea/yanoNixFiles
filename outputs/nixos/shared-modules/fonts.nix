@@ -8,8 +8,8 @@
       enable = true;
     };
     packages = with pkgs; [
+      noto-fonts-color-emoji
       plemoljp-nf
-      noto-fonts-emoji
     ];
     fontconfig = {
       enable = true;
