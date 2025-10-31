@@ -4,7 +4,7 @@
   # fonts
   fonts = {
     packages = with pkgs; [
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       plemoljp-nf
     ];
   };

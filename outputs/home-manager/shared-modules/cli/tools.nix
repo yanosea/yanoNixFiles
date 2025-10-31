@@ -4,6 +4,7 @@
   # home
   home = {
     packages = with pkgs; [
+      bitwarden-cli
       btop
       duf
       dust
@@ -20,7 +21,7 @@
       ncdu
       onefetch
       vhs
-      wakatime
+      wakatime-cli
     ];
   };
 }

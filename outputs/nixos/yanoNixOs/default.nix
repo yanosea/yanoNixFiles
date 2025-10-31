@@ -48,12 +48,12 @@
         libglvnd
         mesa
         nvidia-vaapi-driver
-        vaapiVdpau
+        libva-vdpau-driver
       ];
       extraPackages32 = with pkgs.pkgsi686Linux; [
         libGL
         mesa
-        vaapiVdpau
+        libva-vdpau-driver
       ];
     };
     nvidia = {

@@ -4,7 +4,6 @@
   # environment
   environment = {
     systemPackages = with pkgs; [
-      glxinfo
       libva-utils
       mesa-demos
       vdpauinfo
