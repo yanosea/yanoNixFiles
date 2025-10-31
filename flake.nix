@@ -56,15 +56,6 @@
       };
     };
     # packages
-    ## hyprland
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
-    };
     ## mediaplayer
     mediaplayer = {
       url = "github:nomisreual/mediaplayer";
@@ -74,18 +65,18 @@
         };
       };
     };
-    ## quickshell
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+    ## treefmt-nix
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
       inputs = {
         nixpkgs = {
           follows = "nixpkgs";
         };
       };
     };
-    ## treefmt-nix
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
+    ## wrangler
+    wrangler = {
+      url = "github:emrldnix/wrangler";
       inputs = {
         nixpkgs = {
           follows = "nixpkgs";
