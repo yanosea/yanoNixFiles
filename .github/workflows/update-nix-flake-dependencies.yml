@@ -46,14 +46,16 @@ jobs:
                 local input_name="${BASH_REMATCH[1]}"
 
                 if read -r old_line && read -r new_line; then
-                  if [[ "$old_line" =~ github:[^/]+/[^/]+/([0-9a-f]+) ]] && [[ "$new_line" =~ github:[^/]+/[^/]+/([0-9a-f]+) ]]; then
+                  if [[ "$old_line" =~ github:[^/]+/[^/]+/([0-9a-f]+) ]]; then
                     local old_hash="${BASH_REMATCH[1]:0:8}"
-                    local new_hash="${BASH_REMATCH[1]:0:8}"
+                    if [[ "$new_line" =~ github:[^/]+/[^/]+/([0-9a-f]+) ]]; then
+                      local new_hash="${BASH_REMATCH[1]:0:8}"
 
-                    if [ -z "$commit_body" ]; then
-                      commit_body="- update \`$input_name\` from \`$old_hash\` to \`$new_hash\`"
-                    else
-                      commit_body="$commit_body"$'\n'"- update \`$input_name\` from \`$old_hash\` to \`$new_hash\`"
+                      if [ -z "$commit_body" ]; then
+                        commit_body="- update \`$input_name\` from \`$old_hash\` to \`$new_hash\`"
+                      else
+                        commit_body="$commit_body"$'\n'"- update \`$input_name\` from \`$old_hash\` to \`$new_hash\`"
+                      fi
                     fi
                   fi
                 fi
