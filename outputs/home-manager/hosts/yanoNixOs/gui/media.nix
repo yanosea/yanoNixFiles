@@ -19,10 +19,4 @@
       enable = true;
     };
   };
-  # programs
-  programs = {
-    obs-studio = {
-      enable = true;
-    };
-  };
 }
