@@ -2,12 +2,14 @@
 {
   imports = [
     ./bluetooth.nix
+    ./camera-priority.nix
     ./environment.nix
     ./fuse.nix
     ./game.nix
     ./graphics-tools.nix
     ./hwclock.nix
     ./hyprland.nix
+    ./media.nix
     ./security.nix
     ./sound.nix
     ./xdg-mime.nix
