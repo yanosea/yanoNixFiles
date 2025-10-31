@@ -20,7 +20,7 @@
       ncdu
       onefetch
       vhs
-      wakatime
+      wakatime-cli
     ];
   };
 }
