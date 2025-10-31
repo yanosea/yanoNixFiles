@@ -1,5 +1,5 @@
 # nixos desktop hyprland module
-{ ... }:
+{ pkgs, ... }:
 {
   # programs
   programs = {
@@ -8,12 +8,30 @@
     };
     hyprland = {
       enable = true;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
       xwayland = {
         enable = true;
       };
     };
     waybar = {
       enable = true;
+    };
+  };
+
+  # xdg
+  xdg = {
+    portal = {
+      config = {
+        common = {
+          default = "*";
+        };
+      };
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-hyprland
+        xdg-desktop-portal-gtk
+      ];
+
     };
   };
 }
