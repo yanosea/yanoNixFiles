@@ -50,6 +50,8 @@ M.tools = {
 	"delve",
 	"goimports",
 	"golangci-lint",
+	-- kdl
+	"kdlfmt",
 	-- lua
 	"stylua",
 	-- make

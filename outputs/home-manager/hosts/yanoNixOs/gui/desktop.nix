@@ -55,8 +55,12 @@
     packages = (
       with pkgs;
       [
+        cava
+        cliphist
         dconf
+        ddcutil
         dunst
+        gpu-screen-recorder
         gvfs
         hyprcursor
         hypridle
@@ -65,15 +69,18 @@
         hyprpicker
         hyprshot
         linux-wallpaperengine
+        matugen
         nemo
+        niri
         playerctl
         quickshell
         udisks2
-        waybar
         wayvnc
+        waybar
         wev
         wf-recorder
         wl-clipboard
+        wlsunset
         wofi
         wofi-emoji
         yad

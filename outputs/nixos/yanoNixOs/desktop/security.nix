@@ -34,8 +34,9 @@
       enable = true;
       settings = {
         default_session = {
+          # default session is niri-session (required for OBS screen capture)
           command = ''
-            ${pkgs.tuigreet}/bin/tuigreet --time --cmd hyprland
+            ${pkgs.tuigreet}/bin/tuigreet --time --cmd niri-session
           '';
           user = username;
         };

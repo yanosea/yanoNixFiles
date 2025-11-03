@@ -9,6 +9,7 @@
     ./graphics-tools.nix
     ./hwclock.nix
     ./hyprland.nix
+    ./niri.nix
     ./media.nix
     ./security.nix
     ./sound.nix

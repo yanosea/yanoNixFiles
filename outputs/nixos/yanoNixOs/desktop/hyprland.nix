@@ -17,7 +17,6 @@
       enable = true;
     };
   };
-
   # xdg
   xdg = {
     portal = {
