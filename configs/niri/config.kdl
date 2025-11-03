@@ -1,0 +1,419 @@
+// input
+input {
+    focus-follows-mouse
+    keyboard {
+        xkb {
+            layout "us"
+        }
+    }
+    mod-key "Alt"
+    mouse {
+        accel-speed 0.75
+        natural-scroll
+        scroll-factor 0.25
+    }
+    touchpad {
+        accel-speed 0.75
+        natural-scroll
+        scroll-factor 0.25
+        tap
+    }
+    warp-mouse-to-focus mode="center-xy"
+}
+// monitors
+output "HDMI-A-1" {
+    mode "1920x1080@60"
+    position x=0 y=0
+    variable-refresh-rate on-demand=true
+}
+output "DP-3" {
+    focus-at-startup
+    mode "1920x1080@239.964"
+    position x=1920 y=0
+    variable-refresh-rate on-demand=true
+}
+output "DP-2" {
+    mode "1920x1080@60"
+    position x=3840 y=0
+    variable-refresh-rate on-demand=true
+}
+// cursor
+cursor {
+    hide-when-typing
+    hide-after-inactive-ms 5000
+    xcursor-theme "Bibata-Original-Classic"
+    xcursor-size 16
+}
+// layout
+layout {
+    background-color "#2d353b"
+    border {
+        off
+    }
+    center-focused-column "never"
+    default-column-display "tabbed"
+    default-column-width {
+        proportion 0.99999
+    }
+    focus-ring {
+        width 2
+        active-gradient from="#83c092" to="#7fbbb3" angle=45 relative-to="workspace-view"
+        inactive-color "#475266"
+        urgent-color "#e67e80"
+    }
+    gaps 10
+    insert-hint {
+        color "#7fbbb3"
+    }
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+        proportion 0.99999
+    }
+    preset-window-heights {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+        proportion 0.99999
+    }
+    shadow {
+        on
+    }
+    struts {
+        left 2.5
+        right 2.5
+        top 2.5
+        bottom 2.5
+    }
+    tab-indicator {
+        gap 5
+        length total-proportion=0.75
+        position "left"
+        width 2.5
+        gaps-between-tabs 5
+    }
+}
+// overview
+overview {
+    zoom 0.75
+    backdrop-color "#2d353b"
+    workspace-shadow {
+        softness 50
+        spread 50
+        offset x=10 y=10
+        color "#232a2e"
+    }
+}
+// animations
+animations {
+    slowdown 1.25
+}
+// spawn-at-startup
+//// desktop portals for screen capture (delayed to ensure Niri ScreenCast is ready)
+spawn-at-startup "sh" "-c" "sleep 2 && systemctl --user restart xdg-desktop-portal-gnome"
+//// quickShell
+spawn-at-startup "qs"
+//// ime
+spawn-at-startup "fcitx5" "-D"
+//// clipboard history (but niri does not uses, just for saving)
+spawn-at-startup "clipse" "-listen"
+//// vesktop
+spawn-at-startup "sh" "-c" "sleep 3 && vesktop --start-minimized"
+//// steam
+spawn-at-startup "steam" "-silent"
+// env
+environment {
+    //// for graphic
+    WLR_DRM_NO_ATOMIC "1"
+    //// for ime
+    QT_IM_MODULE "fcitx"
+    XMODIFIERS "@im=fcitx"
+    XDG_CURRENT_DESKTOP "niri"
+    XDG_SESSION_TYPE "wayland"
+    XDG_SESSION_DESKTOP "niri"
+}
+// window rules
+//// vim via wezterm for ime
+window-rule {
+    match app-id="FloatingVim"
+    open-floating true
+}
+//// clipse via wezterm for clipboard history
+window-rule {
+    match app-id="FloatingClipse"
+    open-floating true
+}
+//// mod the spire - force tiling
+window-rule {
+    match app-id="com-evacipated-cardcrawl-modthespire-Loader"
+    open-floating false
+}
+window-rule {
+    match title="ModTheSpire"
+    open-floating false
+}
+// keybindings
+binds {
+    // window management with keyboard
+    //// move window focus
+    Mod+H {
+        focus-column-or-monitor-left
+    }
+    Mod+J {
+        focus-window-or-workspace-down
+    }
+    Mod+K {
+        focus-window-or-workspace-up
+    }
+    Mod+L {
+        focus-column-or-monitor-right
+    }
+    Mod+Home {
+        focus-column-first
+    }
+    Mod+End {
+        focus-column-last
+    }
+    //// move active window
+    Mod+Shift+H {
+        move-column-left-or-to-monitor-left
+    }
+    Mod+Shift+J {
+        move-window-down-or-to-workspace-down
+    }
+    Mod+Shift+K {
+        move-window-up-or-to-workspace-up
+    }
+    Mod+Shift+L {
+        move-column-right-or-to-monitor-right
+    }
+    Mod+Shift+Home {
+        move-column-to-first
+    }
+    Mod+Shift+End {
+        move-column-to-last
+    }
+    //// resize active window
+    Mod+Left {
+        set-column-width "-5%"
+    }
+    Mod+Right {
+        set-column-width "+5%"
+    }
+    Mod+Up {
+        set-window-height "-5%"
+    }
+    Mod+Down {
+        set-window-height "+5%"
+    }
+    //// workspace switching and move window focus with mouse wheel
+    Mod+WheelScrollDown cooldown-ms=150 {
+        focus-workspace-down
+    }
+    Mod+WheelScrollUp cooldown-ms=150 {
+        focus-workspace-up
+    }
+    Mod+WheelScrollRight {
+        focus-column-right
+    }
+    Mod+WheelScrollLeft {
+        focus-column-left
+    }
+    //// move active window to another workspace
+    Super+Shift+J {
+        move-column-to-workspace-down
+    }
+    Super+Shift+K {
+        move-column-to-workspace-up
+    }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 {
+        move-column-to-workspace-down
+    }
+    Mod+Ctrl+WheelScrollUp cooldown-ms=150 {
+        move-column-to-workspace-up
+    }
+    //// move workspace to left/right monitor
+    Mod+Shift+A {
+        move-workspace-to-monitor-left
+    }
+    Mod+Shift+F {
+        move-workspace-to-monitor-right
+    }
+    //// consume/expel windows in columns
+    Mod+Comma {
+        consume-window-into-column
+    }
+    Mod+Period {
+        expel-window-from-column
+    }
+    //// column sizing presets
+    Mod+BackSpace {
+        switch-preset-column-width
+    }
+    Mod+P {
+        switch-preset-window-height
+    }
+    Mod+O {
+        reset-window-height
+    }
+    //// column positioning
+    Mod+C {
+        center-column
+    }
+    //// toggle tab or split
+    Mod+T {
+        toggle-column-tabbed-display
+    }
+    Mod+X {
+        set-column-width "99.999%"
+    }
+    Mod+Shift+X {
+        fullscreen-window
+    }
+    Mod+Shift+Space {
+        toggle-window-floating
+    }
+    Mod+Shift+V {
+        switch-focus-between-floating-and-tiling
+    }
+    // shortcuts
+    //// screenshots
+    Super+Shift+S {
+        screenshot
+    }
+    Super+Shift+X {
+        screenshot-window
+    }
+    Super+Shift+Z {
+        screenshot-screen
+    }
+    //// Screen Recording
+    Super+Shift+Q {
+        spawn-sh "wf-recorder -a -o HDMI-A-1 --audio=\"alsa_output.usb-Roland_Rubix24-00.analog-surround-40.monitor\" --audio-volume=1.5 -f ~/google_drive/movs/rec/$(date +%Y-%m-%d-%H-%M-%S)-HDMI-A-1.mp4"
+    }
+    Super+Shift+W {
+        spawn-sh "wf-recorder -a -o DP-3 --audio=\"alsa_output.usb-Roland_Rubix24-00.analog-surround-40.monitor\" --audio-volume=1.5 -f ~/google_drive/movs/rec/$(date +%Y-%m-%d-%H-%M-%S)-DP-3.mp4"
+    }
+    Super+Shift+E {
+        spawn-sh "wf-recorder -a -o DP-2 --audio=\"alsa_output.usb-Roland_Rubix24-00.analog-surround-40.monitor\" --audio-volume=1.5 -f ~/google_drive/movs/rec/$(date +%Y-%m-%d-%H-%M-%S)-DP-2.mp4"
+    }
+    Super+Shift+P {
+        spawn "killall" "-s" "SIGINT" "wf-recorder"
+    }
+    //// color picker
+    Super+Shift+C {
+        spawn "hyprpicker" "-a" "-f" "hex"
+    }
+    //// reload niri config
+    Super+Shift+N {
+        spawn-sh "niri msg action do-screen-transition; niri msg action reload-config; dunstify \"Niri\" \"Configuration reloaded!\""
+    }
+    //// reload quickshell config
+    Super+Shift+B {
+        spawn-sh "pkill quickshell; qs -p ~/.config/quickshell; dunstify \"QuickShell\" \"Configuration reloaded!\""
+    }
+    // system controls
+    //// reboot
+    Super+Shift+R {
+        spawn "qs" "ipc" "call" "sessionMenu" "reboot"
+    }
+    //// shutdown
+    Super+Shift+D {
+        spawn "qs" "ipc" "call" "sessionMenu" "shutdown"
+    }
+    //// logout
+    Ctrl+Alt+Delete {
+        quit
+    }
+    // media keys
+    XF86AudioRaiseVolume allow-when-locked=true {
+        spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"
+    }
+    XF86AudioLowerVolume allow-when-locked=true {
+        spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"
+    }
+    XF86AudioMute allow-when-locked=true {
+        spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    }
+    XF86AudioMicMute allow-when-locked=true {
+        spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+    }
+    XF86AudioPlay allow-when-locked=true {
+        spawn-sh "playerctl play-pause"
+    }
+    XF86AudioStop allow-when-locked=true {
+        spawn-sh "playerctl stop"
+    }
+    XF86AudioPrev allow-when-locked=true {
+        spawn-sh "playerctl previous"
+    }
+    XF86AudioNext allow-when-locked=true {
+        spawn-sh "playerctl next"
+    }
+    XF86MonBrightnessUp allow-when-locked=true {
+        spawn "brightnessctl" "--class=backlight" "set" "+10%"
+    }
+    XF86MonBrightnessDown allow-when-locked=true {
+        spawn "brightnessctl" "--class=backlight" "set" "10%-"
+    }
+    // overview
+    Mod+Slash repeat=false {
+        toggle-overview
+    }
+    // keyboard shortcuts inhibit
+    Mod+Escape allow-inhibiting=false {
+        toggle-keyboard-shortcuts-inhibit
+    }
+    // application
+    Super+T {
+        spawn "wezterm"
+    }
+    Super+B {
+        spawn "vivaldi"
+    }
+    Super+E {
+        spawn "nemo"
+    }
+    Super+L {
+        spawn "qs" "ipc" "call" "lockScreen" "lock"
+    }
+    Super+Q {
+        close-window
+    }
+    Mod+Space {
+        spawn "qs" "ipc" "call" "launcher" "toggle"
+    }
+    Ctrl+Shift+Escape {
+        spawn "wezterm" "-e" "btop"
+    }
+    Ctrl+Shift+Q {
+        spawn "qs" "ipc" "call" "launcher" "clipboard"
+    }
+}
+// gestures
+gestures {
+    dnd-edge-view-scroll {
+        delay-ms 100
+        max-speed 1500
+        trigger-width 30
+    }
+    dnd-edge-workspace-switch {
+        delay-ms 100
+        max-speed 1500
+        trigger-height 30
+    }
+    hot-corners {
+        off
+    }
+}
+// misc
+hotkey-overlay {
+    hide-not-bound
+    skip-at-startup
+}
+prefer-no-csd
+screenshot-path "~/google_drive/pics/%Y-%m-%d-%H-%M-%S.png"
+xwayland-satellite {
+    path "xwayland-satellite"
+}

@@ -13,6 +13,9 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
           "*.css"
           "*.html"
         ];
+        excludes = [
+          "configs/quickshell/Assets/MatugenTemplates/**"
+        ];
       };
       # json
       jsonfmt = {

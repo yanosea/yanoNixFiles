@@ -23,6 +23,7 @@
       pciutils
       pkg-config
       vim
+      xwayland-satellite
     ];
   };
   # systemd
