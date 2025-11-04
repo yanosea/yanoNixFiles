@@ -1,6 +1,14 @@
 # home desktop module
 { config, pkgs, ... }:
 {
+  # dconf
+  dconf = {
+    settings = {
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+      };
+    };
+  };
   # gtk
   gtk = {
     enable = true;
@@ -111,6 +119,17 @@
           env = [ ];
         };
       };
+    };
+  };
+  # xdg
+  xdg = {
+    portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-gnome
+        xdg-desktop-portal-gtk
+      ];
+      xdgOpenUsePortal = true;
     };
   };
 }

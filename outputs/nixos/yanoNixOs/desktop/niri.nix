@@ -1,6 +1,12 @@
 # nixos desktop niri module
 { pkgs, ... }:
 {
+  # environment
+  environment = {
+    systemPackages = with pkgs; [
+      nautilus
+    ];
+  };
   # programs
   programs = {
     dconf = {
@@ -21,6 +27,8 @@
             "gtk"
           ];
           "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+          "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+          "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
         };
       };
       enable = true;
