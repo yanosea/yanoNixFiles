@@ -280,8 +280,28 @@ quit_wallpaper() {
 launch_wallpaper_with_id() {
   local wallpaper_id="$1"
   local is_random_mode="${2:-false}"
-  # get available monitors from hyprctl
-  monitors=($(hyprctl monitors | grep -E '^Monitor ' | awk '{print $2}' | sort))
+  # get available monitors based on current compositor
+  # auto-detect compositor environment variables from wezterm if not set
+  local wezterm_pid=$(pgrep -x wezterm-gui | head -1)
+  if [ -n "$wezterm_pid" ]; then
+    if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+      export HYPRLAND_INSTANCE_SIGNATURE=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
+    fi
+    if [ -z "$NIRI_SOCKET" ]; then
+      export NIRI_SOCKET=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
+    fi
+  fi
+  # try hyprctl first, fallback to niri
+  if monitors=($(hyprctl monitors 2>/dev/null | grep -E '^Monitor ' | awk '{print $2}' | sort)) && [ ${#monitors[@]} -gt 0 ]; then
+    # hyprland compositor
+    :
+  elif monitors=($(niri msg outputs 2>/dev/null | grep '^Output' | grep -oP '\([^)]+\)$' | tr -d '()' | sort)) && [ ${#monitors[@]} -gt 0 ]; then
+    # niri compositor
+    :
+  else
+    echo -e "${RED}❌ Error: Could not detect compositor or no monitors found${NC}"
+    return 1
+  fi
   if [ ${#monitors[@]} -eq 0 ]; then
     echo -e "${RED}❌ Error: No monitors found${NC}"
     return 1
@@ -388,8 +408,28 @@ launch_wallpaper() {
   selected_wallpaper="${wallpaper_map["$selected_wallpaper_option"]}"
   echo -e "${GREEN}✅ Selected wallpaper: ${CYAN}$selected_wallpaper${NC}"
   echo
-  # get available monitors from hyprctl
-  monitors=($(hyprctl monitors | grep -E '^Monitor ' | awk '{print $2}' | sort))
+  # get available monitors based on current compositor
+  # auto-detect compositor environment variables from wezterm if not set
+  local wezterm_pid=$(pgrep -x wezterm-gui | head -1)
+  if [ -n "$wezterm_pid" ]; then
+    if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+      export HYPRLAND_INSTANCE_SIGNATURE=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
+    fi
+    if [ -z "$NIRI_SOCKET" ]; then
+      export NIRI_SOCKET=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
+    fi
+  fi
+  # try hyprctl first, fallback to niri
+  if monitors=($(hyprctl monitors 2>/dev/null | grep -E '^Monitor ' | awk '{print $2}' | sort)) && [ ${#monitors[@]} -gt 0 ]; then
+    # hyprland compositor
+    :
+  elif monitors=($(niri msg outputs 2>/dev/null | grep '^Output' | grep -oP '\([^)]+\)$' | tr -d '()' | sort)) && [ ${#monitors[@]} -gt 0 ]; then
+    # niri compositor
+    :
+  else
+    echo -e "${RED}❌ Error: Could not detect compositor or no monitors found${NC}"
+    return 1
+  fi
   if [ ${#monitors[@]} -eq 0 ]; then
     echo -e "${RED}❌ Error: No monitors found${NC}"
     return 1
@@ -481,10 +521,21 @@ launch_random_wallpaper() {
     fi
     rm -f "$rotate_pid_file"
   fi
+  # detect compositor environment variables from wezterm
+  local wezterm_pid=$(pgrep -x wezterm-gui | head -1)
+  local detected_hyprland_sig=""
+  local detected_niri_socket=""
+  if [ -n "$wezterm_pid" ]; then
+    detected_hyprland_sig=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
+    detected_niri_socket=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
+  fi
   # create rotation script
   cat >"$PID_DIR/rotate.sh" <<'ROTATE_SCRIPT'
 #!/usr/bin/env bash
 # wallpaper rotation script
+# set compositor environment variables
+export HYPRLAND_INSTANCE_SIGNATURE="HYPRLAND_SIG_PLACEHOLDER"
+export NIRI_SOCKET="NIRI_SOCKET_PLACEHOLDER"
 while true; do
 	# get filtered wallpapers
 	wallpapers=($("SCRIPT_PATH_PLACEHOLDER" get-wallpapers))
@@ -517,6 +568,8 @@ ROTATE_SCRIPT
   # replace placeholders in rotation script
   sed -i "s|SCRIPT_PATH_PLACEHOLDER|$(realpath "$0")|g" "$PID_DIR/rotate.sh"
   sed -i "s|INTERVAL_SECONDS_PLACEHOLDER|$interval_seconds|g" "$PID_DIR/rotate.sh"
+  sed -i "s|HYPRLAND_SIG_PLACEHOLDER|$detected_hyprland_sig|g" "$PID_DIR/rotate.sh"
+  sed -i "s|NIRI_SOCKET_PLACEHOLDER|$detected_niri_socket|g" "$PID_DIR/rotate.sh"
   chmod +x "$PID_DIR/rotate.sh"
   # start rotation script in background
   nohup "$PID_DIR/rotate.sh" >"$PID_DIR/rotate.log" 2>&1 &
