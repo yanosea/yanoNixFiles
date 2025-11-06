@@ -9,6 +9,7 @@
     };
     brews = [
       "goku"
+      "pinentry-mac"
     ];
     casks = [
       "ableton-live-suite"
@@ -55,6 +56,7 @@
       "tailscale-app"
       "the-unarchiver"
       "touchdesigner"
+      "vesktop"
       "via"
       "vibetunnel"
       "visual-studio-code"
