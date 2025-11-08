@@ -61,3 +61,14 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		end
 	end,
 })
+-- show winbar for terminal buffers
+vim.api.nvim_create_autocmd("TermOpen", {
+	desc = "terminal buffer winbar",
+	pattern = "*",
+	callback = function()
+		vim.wo.winbar = "  TERMINAL"
+		vim.wo.number = false
+		vim.wo.relativenumber = false
+		vim.wo.winhighlight = "Normal:TerminalNormal,NormalNC:TerminalNormal"
+	end,
+})
