@@ -13,7 +13,7 @@ inputs: [
   (final: prev: {
     mediaplayer = inputs.mediaplayer.packages.${prev.stdenv.hostPlatform.system}.default;
   })
-  ## wrangler - use emrldnix flake with cachix for better cache hits
+  ## wrangler
   (final: prev: {
     wrangler = inputs.wrangler.packages.${prev.stdenv.hostPlatform.system}.default;
   })
