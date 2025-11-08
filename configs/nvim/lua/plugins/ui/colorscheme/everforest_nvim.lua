@@ -4,10 +4,14 @@ return {
 		"neanias/everforest-nvim",
 		lazy = false,
 		priority = 1000,
-		init = function()
-			-- set everforest background to medium
-			vim.g.everforest_background = "medium"
-			-- set neovim colorscheme
+		config = function()
+			require("everforest").setup({
+				background = "medium",
+				on_highlights = function(hl, palette)
+					hl.TerminalNormal = { bg = palette.bg_dim }
+					hl.TerminalNormalNC = { bg = palette.bg_dim }
+				end,
+			})
 			vim.cmd("colorscheme everforest")
 		end,
 	},

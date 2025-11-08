@@ -84,6 +84,8 @@ function M._recreate_split_layout()
 	-- bind existing terminal buffer
 	M._windows.terminal_win = right_win
 	vim.api.nvim_win_set_buf(right_win, M._windows.terminal_buf)
+	-- set winbar for terminal
+	vim.api.nvim_win_set_option(right_win, "winbar", "  CLAUDE CODE")
 	-- create horizontal split for prompt
 	vim.cmd("split")
 	local prompt_win = vim.api.nvim_get_current_win()
@@ -95,6 +97,8 @@ function M._recreate_split_layout()
 	vim.api.nvim_win_set_height(prompt_win, total_height - terminal_height)
 	-- bind existing prompt buffer
 	vim.api.nvim_win_set_buf(prompt_win, M._windows.prompt_buf)
+	-- set winbar for prompt
+	vim.api.nvim_win_set_option(prompt_win, "winbar", "  PROMPT")
 end
 
 -- close windows but keep buffers and process
@@ -115,7 +119,10 @@ end
 
 -- setup terminal buffer keymaps
 -- @param terminal_buf: number - terminal buffer number
-function M._setup_terminal_keymaps(terminal_buf)
+-- @param terminal_win: number - terminal window number
+function M._setup_terminal_keymaps(terminal_buf, terminal_win)
+	-- set winbar for claude code terminal
+	vim.api.nvim_win_set_option(terminal_win, "winbar", "  CLAUDE CODE")
 	-- hide layout with double Esc in normal mode
 	vim.api.nvim_buf_set_keymap(terminal_buf, "n", "<Esc><Esc>", "", {
 		callback = M.hide_layout,
@@ -142,6 +149,8 @@ function M._setup_prompt_buffer(prompt_buf, prompt_win)
 	-- set buffer options
 	vim.api.nvim_buf_set_option(prompt_buf, "buftype", "nofile")
 	vim.api.nvim_buf_set_option(prompt_buf, "filetype", "markdown")
+	-- set winbar for prompt buffer
+	vim.api.nvim_win_set_option(prompt_win, "winbar", "  PROMPT")
 	-- clear buffer content
 	vim.api.nvim_buf_set_lines(prompt_buf, 0, -1, false, {})
 	-- position cursor
@@ -194,7 +203,7 @@ function M._start_claude_terminal(terminal_buf, terminal_win, command)
 	end
 
 	M._windows.claude_job_id = job_id
-	M._setup_terminal_keymaps(terminal_buf)
+	M._setup_terminal_keymaps(terminal_buf, terminal_win)
 	return true
 end
 

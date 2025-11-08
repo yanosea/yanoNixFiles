@@ -50,6 +50,10 @@ return {
 						return vim.o.columns * 0.5
 					end
 				end,
+				highlights = {
+					Normal = { link = "TerminalNormal" },
+					NormalNC = { link = "TerminalNormal" },
+				},
 			})
 			-- keymaps
 			-- to avoid not opening terminal after opened and exited, set keymaps here again
