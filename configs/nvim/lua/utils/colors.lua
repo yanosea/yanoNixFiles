@@ -1,15 +1,30 @@
--- define colors
+-- define colors using everforest palette
 local M = {}
--- everforest colors
+
+local function get_palette()
+	local _, everforest = pcall(require, "everforest")
+	local config = everforest.config or {}
+	local background = config.background or "medium"
+	local colours = require("everforest.colours")
+	local theme = vim.o.background or "dark"
+	local options = {
+		background = background,
+		colours_override = function() end,
+	}
+	return colours.generate_palette(options, theme)
+end
+-- generate colors from palette
+local palette = get_palette()
 M.colors = {
-	Bg = "#2d353b",
-	Fg = "#d3c6aa",
-	Red = "#e67e80",
-	Green = "#a7c080",
-	Yellow = "#dbbc7f",
-	Blue = "#7fbbb3",
-	Purple = "#d699b6",
-	Aqua = "#83c092",
-	Orange = "#e69875",
+	Bg = palette.bg0,
+	Fg = palette.fg,
+	Red = palette.red,
+	Green = palette.green,
+	Yellow = palette.yellow,
+	Blue = palette.blue,
+	Purple = palette.purple,
+	Aqua = palette.aqua,
+	Orange = palette.orange,
 }
+
 return M
