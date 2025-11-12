@@ -72,3 +72,8 @@ vim.api.nvim_create_autocmd("TermOpen", {
 		vim.wo.winhighlight = "Normal:TerminalNormal,NormalNC:TerminalNormal"
 	end,
 })
+-- auto reload files changed outside of nvim
+vim.api.nvim_create_autocmd({ "WinEnter", "FocusGained", "BufEnter" }, {
+	pattern = "*",
+	command = "checktime",
+})
