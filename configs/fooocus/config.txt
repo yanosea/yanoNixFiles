@@ -1,0 +1,39 @@
+{
+  "path_checkpoints": [
+    "/home/yanosea/google_drive/ai/models"
+  ],
+  "path_loras": [
+    "/home/yanosea/google_drive/ai/loras"
+  ],
+  "path_embeddings": [
+    "/home/yanosea/google_drive/ai/embeddings"
+  ],
+  "path_vae": [
+    "/home/yanosea/google_drive/ai/vae"
+  ],
+  "path_upscale_models": [
+    "/home/yanosea/google_drive/ai/upscalers"
+  ],
+  "path_inpaint": [
+    "/home/yanosea/google_drive/ai/inpaint"
+  ],
+  "path_controlnet": [
+    "/home/yanosea/google_drive/ai/controlnet"
+  ],
+  "path_outputs": "/home/yanosea/google_drive/ai/outputs/fooocus",
+  "default_model": "juggernautXL_v8Rundiffusion.safetensors",
+  "default_refiner": "",
+  "default_loras": [],
+  "default_cfg_scale": 7.0,
+  "default_sample_sharpness": 2.0,
+  "default_sampler": "dpmpp_2m_sde_gpu",
+  "default_scheduler": "karras",
+  "default_styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "Fooocus Sharp"
+  ],
+  "default_prompt_negative": "(worst quality, low quality:1.4), watermark, signature, ugly, poorly drawn",
+  "default_aspect_ratio": "1152×896",
+  "default_performance": "Speed"
+}

@@ -1,0 +1,8 @@
+comfyui:
+  base_path: /home/yanosea/google_drive/ai/
+  checkpoints: models/
+  loras: loras/
+  embeddings: embeddings/
+  vae: vae/
+  controlnet: controlnet/
+  upscale_models: upscalers/
