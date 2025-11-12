@@ -11,6 +11,7 @@
       eza
       fd
       ffmpeg
+      file
       fzf
       lf
       lsd
