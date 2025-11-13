@@ -1,5 +1,5 @@
 # home media module
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   # home
   home = {
@@ -25,7 +25,7 @@
       services = {
         easyeffects = {
           Service = {
-            TimeoutStopSec = 5;
+            TimeoutStopSec = lib.mkForce 5;
           };
         };
       };
