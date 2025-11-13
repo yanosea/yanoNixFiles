@@ -19,4 +19,16 @@
       enable = true;
     };
   };
+  # systemd
+  systemd = {
+    user = {
+      services = {
+        easyeffects = {
+          Service = {
+            TimeoutStopSec = 5;
+          };
+        };
+      };
+    };
+  };
 }
