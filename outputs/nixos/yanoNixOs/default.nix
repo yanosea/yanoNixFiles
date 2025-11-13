@@ -23,10 +23,12 @@
     initrd = {
       kernelModules = [
         "fuse"
-        "nvidia"
       ];
     };
     kernelPackages = pkgs.linuxPackages_latest;
+    kernelParams = [
+      "usbcore.autosuspend=-1"
+    ];
     loader = {
       systemd-boot = {
         enable = true;
