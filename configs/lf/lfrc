@@ -26,6 +26,9 @@ set icons
 # show hidden
 set hidden true
 
+# image preview with chafa (cross-platform)
+set previewer ~/.config/lf/preview.sh
+
 # use enter for shell commands
 map <enter> shell
 

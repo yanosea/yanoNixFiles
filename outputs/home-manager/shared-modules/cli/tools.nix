@@ -6,6 +6,7 @@
     packages = with pkgs; [
       bitwarden-cli
       btop
+      chafa
       duf
       dust
       era
