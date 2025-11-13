@@ -30,10 +30,14 @@ inputs: [
           pkgs:
           (with pkgs; [
             alsa-lib
+            gcc
             glib
+            gnumake
             gtk3
             libGL
             libGLU
+            opencv4
+            pkg-config
             python311
             python311Packages.pip
             python311Packages.virtualenv
