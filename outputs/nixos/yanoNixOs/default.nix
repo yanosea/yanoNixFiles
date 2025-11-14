@@ -77,6 +77,14 @@
       enable = true;
     };
   };
+  # systemd
+  systemd = {
+    user = {
+      extraConfig = ''
+        DefaultTimeoutStopSec=5s
+      '';
+    };
+  };
   # users
   users = {
     users = {
