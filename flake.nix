@@ -56,18 +56,11 @@
       };
     };
     # packages
-    ## mediaplayer
+    # ai
     nix-comfyui = {
       url = "github:dyscorv/nix-comfyui";
     };
-    nixified-ai = {
-      url = "github:nixified-ai/flake";
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
-    };
+    ## mediaplayer
     mediaplayer = {
       url = "github:nomisreual/mediaplayer";
       inputs = {

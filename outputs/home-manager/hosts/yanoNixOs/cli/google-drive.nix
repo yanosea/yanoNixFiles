@@ -10,6 +10,10 @@ let
   rcloneBisyncScript = pkgs.writeShellScript "rclone-bisync-google-drive" ''
     #!/bin/bash
     set -euo pipefail
+    if ${pkgs.procps}/bin/pgrep -f "rclone bisync ${username}:" > /dev/null; then
+      echo "bisync already running, skipping this execution..."
+      exit 0
+    fi
     echo "starting rclone bisync..."
     # prepare sync directory
     echo "preparing sync directory..."

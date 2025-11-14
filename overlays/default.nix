@@ -1,6 +1,7 @@
 # overlays
 inputs: [
-  # rust
+  # modules
+  ## rust
   (
     _: super:
     let
@@ -9,57 +10,10 @@ inputs: [
     inputs.fenix.overlays.default pkgs pkgs
   )
   # packages
-  ## mediaplayer
+  ## cuda-comfyui
   (final: prev: {
-    mediaplayer = inputs.mediaplayer.packages.${prev.stdenv.hostPlatform.system}.default;
+    cuda-comfyui = inputs.nix-comfyui.packages.${prev.stdenv.hostPlatform.system}.cuda-comfyui;
   })
-  ## wrangler
-  (final: prev: {
-    wrangler = inputs.wrangler.packages.${prev.stdenv.hostPlatform.system}.default;
-  })
-  ## invokeai
-  (
-    final: prev:
-    let
-      buildFHSUserEnv = prev.buildFHSUserEnv or prev.buildFHSEnv;
-    in
-    {
-      invokeai = buildFHSUserEnv {
-        name = "invokeai";
-        targetPkgs =
-          pkgs:
-          (with pkgs; [
-            alsa-lib
-            gcc
-            glib
-            gnumake
-            gtk3
-            libGL
-            libGLU
-            opencv4
-            pkg-config
-            python311
-            python311Packages.pip
-            python311Packages.virtualenv
-            stdenv.cc.cc.lib
-            xorg.libX11
-            xorg.libXext
-            xorg.libXrender
-            zlib
-          ]);
-        profile = ''
-          export INVOKEAI_ROOT=~/.local/share/invokeai
-        '';
-        runScript = "${prev.bash}/bin/bash";
-        meta = with prev.lib; {
-          description = "InvokeAI";
-          homepage = "https://invoke-ai.github.io/InvokeAI";
-          license = licenses.mit;
-          platforms = platforms.linux;
-        };
-      };
-    }
-  )
   ## fooocus
   (
     final: prev:
@@ -128,8 +82,55 @@ inputs: [
       };
     }
   )
-  ## cuda-comfyui
+  ## invokeai
+  (
+    final: prev:
+    let
+      buildFHSUserEnv = prev.buildFHSUserEnv or prev.buildFHSEnv;
+    in
+    {
+      invokeai = buildFHSUserEnv {
+        name = "invokeai";
+        targetPkgs =
+          pkgs:
+          (with pkgs; [
+            alsa-lib
+            gcc
+            glib
+            gnumake
+            gtk3
+            libGL
+            libGLU
+            opencv4
+            pkg-config
+            python311
+            python311Packages.pip
+            python311Packages.virtualenv
+            stdenv.cc.cc.lib
+            xorg.libX11
+            xorg.libXext
+            xorg.libXrender
+            zlib
+          ]);
+        profile = ''
+          export INVOKEAI_ROOT=~/.local/share/invokeai
+        '';
+        runScript = "${prev.bash}/bin/bash";
+        meta = with prev.lib; {
+          description = "InvokeAI";
+          homepage = "https://invoke-ai.github.io/InvokeAI";
+          license = licenses.mit;
+          platforms = platforms.linux;
+        };
+      };
+    }
+  )
+  ## mediaplayer
   (final: prev: {
-    cuda-comfyui = inputs.nix-comfyui.packages.${prev.stdenv.hostPlatform.system}.cuda-comfyui;
+    mediaplayer = inputs.mediaplayer.packages.${prev.stdenv.hostPlatform.system}.default;
+  })
+  ## wrangler
+  (final: prev: {
+    wrangler = inputs.wrangler.packages.${prev.stdenv.hostPlatform.system}.default;
   })
 ]
