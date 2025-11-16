@@ -278,15 +278,25 @@ binds {
         switch-focus-between-floating-and-tiling
     }
     // shortcuts
-    //// screenshots
+    //// screenshots (clipboard only)
+    Super+S {
+        screenshot write-to-disk=false
+    }
+    Super+X {
+        screenshot-window write-to-disk=false
+    }
+    Super+Z {
+        screenshot-screen write-to-disk=false
+    }
+    //// screenshots (clipboard + save to disk)
     Super+Shift+S {
-        screenshot
+        screenshot write-to-disk=true
     }
     Super+Shift+X {
-        screenshot-window
+        screenshot-window write-to-disk=true
     }
     Super+Shift+Z {
-        screenshot-screen
+        screenshot-screen write-to-disk=true
     }
     //// Screen Recording
     Super+Shift+Q {
