@@ -279,8 +279,9 @@ binds {
     }
     // shortcuts
     //// screenshots (clipboard only)
+    ////// regional screenshot must change save or not in the ui
     Super+S {
-        screenshot write-to-disk=false
+        screenshot
     }
     Super+X {
         screenshot-window write-to-disk=false
@@ -290,13 +291,13 @@ binds {
     }
     //// screenshots (clipboard + save to disk)
     Super+Shift+S {
-        screenshot write-to-disk=true
+        screenshot
     }
     Super+Shift+X {
-        screenshot-window write-to-disk=true
+        screenshot-window
     }
     Super+Shift+Z {
-        screenshot-screen write-to-disk=true
+        screenshot-screen
     }
     //// Screen Recording
     Super+Shift+Q {
