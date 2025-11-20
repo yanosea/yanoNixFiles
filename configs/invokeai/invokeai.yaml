@@ -9,7 +9,7 @@ allow_headers:
   - "*"
 log_tokenization: false
 patchmatch: true
-models_dir: /home/yanosea/google_drive/ai/models
+models_dir: /home/yanosea/.local/share/invokeai/models
 convert_cache_dir: models/.convert_cache
 download_cache_dir: models/.download_cache
 legacy_conf_dir: configs

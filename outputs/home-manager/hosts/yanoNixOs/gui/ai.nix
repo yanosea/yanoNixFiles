@@ -90,6 +90,41 @@
           # Setup config
           rm -f ${config.home.homeDirectory}/.local/share/invokeai/invokeai.yaml
           cp ${config.xdg.configHome}/invokeai/invokeai.yaml ${config.home.homeDirectory}/.local/share/invokeai/invokeai.yaml
+          # Setup models directory and symlinks
+          mkdir -p ${config.home.homeDirectory}/.local/share/invokeai/models
+          echo "Creating symlinks for AI resources from Google Drive..."
+          # Function to link files from a directory
+          link_resources() {
+            local source_dir=$1
+            local resource_type=$2
+            local extensions=$3
+            if [ -d "$source_dir" ]; then
+              for ext in $extensions; do
+                for file in "$source_dir"/*."$ext"; do
+                  if [ -f "$file" ]; then
+                    file_name=$(basename "$file")
+                    target="${config.home.homeDirectory}/.local/share/invokeai/models/$file_name"
+                    if [ ! -e "$target" ]; then
+                      ln -s "$file" "$target"
+                      echo "  Linked $resource_type: $file_name"
+                    fi
+                  fi
+                done
+              done
+            fi
+          }
+          # Link main models
+          link_resources "${config.home.homeDirectory}/google_drive/ai/models" "model" "safetensors ckpt"
+          # Link LoRAs
+          link_resources "${config.home.homeDirectory}/google_drive/ai/loras" "LoRA" "safetensors"
+          # Link embeddings
+          link_resources "${config.home.homeDirectory}/google_drive/ai/embeddings" "embedding" "safetensors pt bin"
+          # Link VAE
+          link_resources "${config.home.homeDirectory}/google_drive/ai/vae" "VAE" "safetensors pt pth ckpt"
+          # Link ControlNet
+          link_resources "${config.home.homeDirectory}/google_drive/ai/controlnet" "ControlNet" "safetensors pth"
+          # Link upscalers
+          link_resources "${config.home.homeDirectory}/google_drive/ai/upscalers" "upscaler" "pth"
           # Set environment
           export CUDA_VISIBLE_DEVICES=0
           export INVOKEAI_ROOT=${config.home.homeDirectory}/.local/share/invokeai
@@ -124,7 +159,6 @@
                             git clone https://github.com/Trase1/clipInterrogator-invokeai-node.git
                             cd clipInterrogator-invokeai-node
                             pip install clip-interrogator==0.6.0
-
                             # Patch for InvokeAI 6.9.0 compatibility
                             echo "Patching CLIP Interrogator node for InvokeAI 6.9.0..."
                             cat > clipInterrogator_node.py << 'PATCH_EOF'
@@ -140,21 +174,16 @@
             )
             from PIL import Image
             import torch
-
             try:
                 from clip_interrogator import Config, Interrogator
             except ImportError:
                 print("clip-interrogator is not installed, please install it with 'pip install clip-interrogator'")
                 exit(1)
-
-
             @invocation_output("clip_interrogator_output")
             class CLIPInterrogatorOutput(BaseInvocationOutput):
                 """Output for CLIP Interrogator with positive and negative prompts"""
                 positive: str = OutputField(description="Positive prompt describing the image")
                 negative: str = OutputField(description="Negative prompt for undesired elements")
-
-
             @invocation(
                 "CLIPInterrogator",
                 title="CLIP Interrogator",
@@ -164,7 +193,6 @@
             )
             class clipInterrogatorInvocation(BaseInvocation):
                 """Generates prompt from given picture with CLIP interrogator"""
-
                 image: ImageField = InputField(description="The input image")
                 clip_model: str = InputField(
                     default="ViT-L-14/openai",
@@ -198,12 +226,10 @@
                     default=32,
                     description="Minimum flavor phrases for best mode (higher = more consistent detail, default: 8, recommended: 16-24)"
                 )
-
                 def invoke(self, context: InvocationContext) -> CLIPInterrogatorOutput:
                     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
                     if not torch.cuda.is_available():
                         context.logger.warning("CUDA is not available, using CPU. Warning: this will be very slow!")
-
                     config = Config(
                         device=device,
                         clip_model_name=self.clip_model,
@@ -213,10 +239,8 @@
                         flavor_intermediate_count=self.flavor_intermediate_count,
                         quiet=False
                     )
-
                     image = context.images.get_pil(self.image.image_name).convert('RGB')
                     ci = Interrogator(config)
-
                     # Generate positive prompt based on mode
                     if self.mode == 'best':
                         prompt = ci.interrogate(image, min_flavors=self.min_flavors, max_flavors=self.max_flavors)
@@ -226,12 +250,9 @@
                         prompt = ci.interrogate_classic(image)
                     else:
                         prompt = ci.interrogate_fast(image, max_flavors=self.max_flavors)  # fallback to fast
-
                     context.logger.info(f"Generated prompt ({self.mode} mode): {prompt}")
-
                     return CLIPInterrogatorOutput(positive=prompt, negative="")
             PATCH_EOF
-
                             echo "CLIP Interrogator node patched successfully!"
                             cd ../..
                           fi
@@ -265,6 +286,7 @@
           "d ${config.home.homeDirectory}/.local/share/comfyui 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/comfyui/custom_nodes 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/invokeai 0755 - - -"
+          "d ${config.home.homeDirectory}/.local/share/invokeai/models 0755 - - -"
         ];
       };
     };
