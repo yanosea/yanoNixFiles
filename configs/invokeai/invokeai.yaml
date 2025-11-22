@@ -13,7 +13,7 @@ models_dir: /home/yanosea/.local/share/invokeai/models
 convert_cache_dir: models/.convert_cache
 download_cache_dir: models/.download_cache
 legacy_conf_dir: configs
-db_dir: databases
+db_dir: /home/yanosea/.local/share/invokeai/databases
 outputs_dir: /home/yanosea/google_drive/ai/outputs/invokeai
 custom_nodes_dir: nodes
 style_presets_dir: style_presets
