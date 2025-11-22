@@ -56,10 +56,6 @@
       };
     };
     # packages
-    # ai
-    nix-comfyui = {
-      url = "github:dyscorv/nix-comfyui";
-    };
     ## mediaplayer
     mediaplayer = {
       url = "github:nomisreual/mediaplayer";

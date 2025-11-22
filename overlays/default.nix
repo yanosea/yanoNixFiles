@@ -10,10 +10,50 @@ inputs: [
     inputs.fenix.overlays.default pkgs pkgs
   )
   # packages
-  ## cuda-comfyui
-  (final: prev: {
-    cuda-comfyui = inputs.nix-comfyui.packages.${prev.stdenv.hostPlatform.system}.cuda-comfyui;
-  })
+  ## comfyui (FHS environment for full compatibility)
+  (
+    final: prev:
+    let
+      buildFHSUserEnv = prev.buildFHSUserEnv or prev.buildFHSEnv;
+    in
+    {
+      comfyui = buildFHSUserEnv {
+        name = "comfyui";
+        targetPkgs =
+          pkgs:
+          (with pkgs; [
+            cudaPackages.cudatoolkit
+            cudaPackages.cudnn
+            gcc
+            git
+            git-lfs
+            glib
+            gnumake
+            gtk3
+            libGL
+            libGLU
+            linuxPackages.nvidia_x11
+            pkg-config
+            python311
+            python311Packages.pip
+            python311Packages.virtualenv
+            stdenv.cc.cc.lib
+            wget
+            zlib
+          ]);
+        profile = ''
+          export COMFYUI_ROOT=~/.local/share/comfyui
+        '';
+        runScript = "${prev.bash}/bin/bash";
+        meta = with prev.lib; {
+          description = "ComfyUI in FHS environment";
+          homepage = "https://github.com/comfyanonymous/ComfyUI";
+          license = licenses.gpl3;
+          platforms = platforms.linux;
+        };
+      };
+    }
+  )
   ## fooocus
   (
     final: prev:

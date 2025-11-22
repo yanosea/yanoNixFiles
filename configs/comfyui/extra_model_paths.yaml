@@ -6,3 +6,4 @@ comfyui:
   vae: vae/
   controlnet: controlnet/
   upscale_models: upscalers/
+  svd: svd/
