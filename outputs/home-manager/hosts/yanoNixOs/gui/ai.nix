@@ -9,7 +9,7 @@
   # home
   home = {
     packages = with pkgs; [
-      cuda-comfyui
+      comfyui
       invokeai
       fooocus
     ];
@@ -19,18 +19,70 @@
         text = ''
           #!/usr/bin/env bash
           set -e
-          # Setup config
-          mkdir -p ${config.home.homeDirectory}/.local/share/comfyui
-          ln -sf ${config.xdg.configHome}/comfyui/extra_model_paths.yaml ${config.home.homeDirectory}/.local/share/comfyui/extra_model_paths.yaml
-          cd ${config.home.homeDirectory}/.local/share/comfyui
+          # Setup config directories
+          mkdir -p ${config.home.homeDirectory}/google_drive/ai/workflows
+          ln -sf ${config.xdg.configHome}/comfyui/extra_model_paths.yaml ${config.home.homeDirectory}/.local/share/extra_model_paths.yaml
           # Set environment
           export CUDA_VISIBLE_DEVICES=0
-          export NIX_COMFYUI_STATE_DIRS=custom_nodes
+          export COMFYUI_ROOT=${config.home.homeDirectory}/.local/share/comfyui
           export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
           echo "Starting ComfyUI on http://127.0.0.1:8188"
           echo "Press Ctrl+C to stop"
-          # Start ComfyUI
-          exec ${lib.getExe' pkgs.cuda-comfyui "comfyui"} --listen 127.0.0.1 --port 8188 --output-directory ${config.home.homeDirectory}/google_drive/ai/outputs/comfyui
+          # Run inside FHS environment
+          exec ${pkgs.comfyui}/bin/comfyui ${pkgs.writeShellScript "comfyui-inner" ''
+            set -e
+            cd ${config.home.homeDirectory}/.local/share
+            # Initial setup if needed
+            if [ ! -f "comfyui/.comfyui-installed" ]; then
+              # Check if ComfyUI is actually cloned (not just an empty directory)
+              if [ ! -f "comfyui/main.py" ]; then
+                echo "Cloning ComfyUI repository..."
+                rm -rf comfyui
+                git clone https://github.com/comfyanonymous/ComfyUI.git comfyui
+              fi
+              cd comfyui
+              echo "Creating virtual environment..."
+              python3.11 -m venv venv
+              source venv/bin/activate
+              echo "Installing dependencies..."
+              pip install --upgrade pip
+              pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
+              pip install -r requirements.txt
+              # Setup custom_nodes and workflows directories
+              mkdir -p custom_nodes
+              mkdir -p user/default
+              # Setup workflows symlink to Google Drive
+              if [ ! -L "user/default/workflows" ]; then
+                rm -rf user/default/workflows
+                ln -sf ${config.home.homeDirectory}/google_drive/ai/workflows user/default/workflows
+                echo "Created symlink: workflows -> ~/google_drive/ai/workflows"
+              fi
+              # Link extra_model_paths.yaml
+              ln -sf ${config.home.homeDirectory}/.local/share/extra_model_paths.yaml extra_model_paths.yaml
+              # Install ComfyUI Manager
+              echo "Installing ComfyUI Manager..."
+              cd custom_nodes
+              git clone https://github.com/ltdrdata/ComfyUI-Manager.git
+              cd ComfyUI-Manager
+              pip install -r requirements.txt
+              cd ../..
+              if [ $? -eq 0 ]; then
+                touch .comfyui-installed
+              else
+                echo "Installation failed!"
+                exit 1
+              fi
+            fi
+            # Start ComfyUI
+            cd ${config.home.homeDirectory}/.local/share/comfyui
+            if [ -f ".comfyui-installed" ] && [ -d "venv" ]; then
+              source venv/bin/activate
+              exec python main.py --listen 127.0.0.1 --port 8188 --output-directory ${config.home.homeDirectory}/google_drive/ai/outputs/comfyui
+            else
+              echo "ComfyUI not properly installed!"
+              exit 1
+            fi
+          ''}
         '';
       };
       ".local/bin/start-fooocus" = {
@@ -282,9 +334,10 @@
           "d ${config.home.homeDirectory}/google_drive/ai/vae 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/controlnet 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/upscalers 0755 - - -"
+          "d ${config.home.homeDirectory}/google_drive/ai/svd 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/outputs 0755 - - -"
-          "d ${config.home.homeDirectory}/.local/share/comfyui 0755 - - -"
-          "d ${config.home.homeDirectory}/.local/share/comfyui/custom_nodes 0755 - - -"
+          "d ${config.home.homeDirectory}/google_drive/ai/outputs/comfyui 0755 - - -"
+          "d ${config.home.homeDirectory}/google_drive/ai/workflows 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/invokeai 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/invokeai/models 0755 - - -"
         ];
