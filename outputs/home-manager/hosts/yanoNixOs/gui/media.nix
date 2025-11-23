@@ -1,5 +1,10 @@
 # home media module
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   # home
   home = {
@@ -25,7 +30,13 @@
       services = {
         easyeffects = {
           Service = {
+            ExecStart = lib.mkForce "${pkgs.easyeffects}/bin/easyeffects --service-mode";
+            TimeoutStartSec = lib.mkForce 30;
             TimeoutStopSec = lib.mkForce 5;
+            Type = lib.mkForce "simple";
+          };
+          Unit = {
+            After = lib.mkForce [ "pipewire.service" ];
           };
         };
       };
