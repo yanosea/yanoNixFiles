@@ -26,6 +26,9 @@
             app = "/Applications/Vivaldi.app";
           }
           {
+            app = "/Applications/Vesktop.app";
+          }
+          {
             app = "/Applications/WezTerm.app";
           }
           {
