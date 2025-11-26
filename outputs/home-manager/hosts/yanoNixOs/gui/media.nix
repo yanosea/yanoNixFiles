@@ -30,7 +30,7 @@
       services = {
         easyeffects = {
           Service = {
-            ExecStart = lib.mkForce "${pkgs.easyeffects}/bin/easyeffects --service-mode";
+            ExecStart = lib.mkForce "${pkgs.easyeffects}/bin/easyeffects --gapplication-service";
             TimeoutStartSec = lib.mkForce 30;
             TimeoutStopSec = lib.mkForce 5;
             Type = lib.mkForce "simple";
