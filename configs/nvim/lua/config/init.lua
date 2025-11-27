@@ -8,6 +8,8 @@ if vim.env.WSL_DISTRO_NAME ~= nil then
 end
 -- claude code integration if available
 require("config.claude_code")
+-- discordo integration if available
+require("config.discordo")
 -- zellij integration only if available
 require("config.zellij")
 -- plugin manager
