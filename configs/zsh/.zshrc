@@ -27,4 +27,3 @@ source "$ZSHRC_DIR/zellij.zsh"
 
 # display random ascii art
 show_random_aa
-
