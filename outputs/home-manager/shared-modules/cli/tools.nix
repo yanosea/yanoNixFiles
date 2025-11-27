@@ -7,6 +7,7 @@
       bitwarden-cli
       btop
       chafa
+      discordo
       duf
       dust
       era

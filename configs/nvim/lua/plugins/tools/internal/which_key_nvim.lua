@@ -24,6 +24,8 @@ return {
 						desc = "ai: resume claude code",
 					},
 					{ "<LEADER>at", "<CMD>ClaudeCode<CR>", desc = "ai: toggle claude code" },
+					-- discordo
+					{ "<LEADER>D", "<CMD>Discordo<CR>", desc = "discordo" },
 					-- buffers
 					{ "<LEADER>b", group = "buffers" },
 					{ "<LEADER>bb", "<CMD>BufferLineCyclePrev<CR>", desc = "buffer: switch to previous" },
