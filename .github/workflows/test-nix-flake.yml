@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -37,7 +37,7 @@ jobs:
           - yanoNixOsWsl
     steps:
       - name: checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -64,7 +64,7 @@ jobs:
           - yanoMacBook
     steps:
       - name: checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -91,7 +91,7 @@ jobs:
           - "yanosea@yanoNixOsWsl"
     steps:
       - name: checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -118,7 +118,7 @@ jobs:
           - "yanosea@yanoMacBook"
     steps:
       - name: checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: install Nix
         uses: cachix/install-nix-action@v31
         with:
