@@ -107,4 +107,36 @@ M.buffer_kill = function(kill_command, bufnr, force)
 		vim.cmd(string.format("%s %d", kc, bufnr))
 	end
 end
+-- yank_buffer_path function yanks the current buffer's path to clipboard
+-- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>by* : yank buffer paths)
+M.yank_buffer_full_path = function()
+	local bufname = vim.api.nvim_buf_get_name(0)
+	if bufname == "" then
+		vim.notify("Error: Cannot yank path from unnamed buffer", vim.log.levels.ERROR)
+		return
+	end
+	local path = vim.fn.expand("%:p")
+	vim.fn.setreg("+", path)
+	vim.notify("Yanked full path: " .. path, vim.log.levels.INFO)
+end
+M.yank_buffer_filename = function()
+	local bufname = vim.api.nvim_buf_get_name(0)
+	if bufname == "" then
+		vim.notify("Error: Cannot yank filename from unnamed buffer", vim.log.levels.ERROR)
+		return
+	end
+	local filename = vim.fn.expand("%:t")
+	vim.fn.setreg("+", filename)
+	vim.notify("Yanked filename: " .. filename, vim.log.levels.INFO)
+end
+M.yank_buffer_directory = function()
+	local bufname = vim.api.nvim_buf_get_name(0)
+	if bufname == "" then
+		vim.notify("Error: Cannot yank directory path from unnamed buffer", vim.log.levels.ERROR)
+		return
+	end
+	local dirpath = vim.fn.expand("%:p:h")
+	vim.fn.setreg("+", dirpath)
+	vim.notify("Yanked directory path: " .. dirpath, vim.log.levels.INFO)
+end
 return M

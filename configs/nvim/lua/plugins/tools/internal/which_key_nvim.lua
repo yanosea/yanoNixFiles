@@ -32,7 +32,7 @@ return {
 						"<CMD>lua require('utils.functions').buffer_kill()<CR>",
 						desc = "buffer: close current",
 					},
-					{ "<LEADER>bd", "<CMD>BufferLineSortByDirectory<CR>", desc = "sort by directory" },
+					{ "<LEADER>bd", "<CMD>BufferLineSortByDirectory<CR>", desc = "buffer: sort by directory" },
 					{ "<LEADER>be", "<CMD>BufferLinePickClose<CR>", desc = "buffer: pick which to close" },
 					{ "<LEADER>bf", "<CMD>Telescope buffers previewer=false<CR>", desc = "buffer: find and jump to" },
 					{ "<LEADER>bh", "<CMD>BufferLineCloseLeft<CR>", desc = "buffer: close all to the left" },
@@ -44,6 +44,22 @@ return {
 					{ "<LEADER>bp", "<CMD>BufferLineTogglePin<CR>", desc = "buffer: toggle pin" },
 					{ "<LEADER>bw", "<CMD>w!<CR>", desc = "buffer: save" },
 					{ "<LEADER>bW", "<CMD>noautocmd w<CR>", desc = "buffer: save without formatting" },
+					{ "<LEADER>by", group = "yank" },
+					{
+						"<LEADER>byf",
+						"<CMD>lua require('utils.functions').yank_buffer_full_path()<CR>",
+						desc = "buffer yank: full path",
+					},
+					{
+						"<LEADER>byn",
+						"<CMD>lua require('utils.functions').yank_buffer_filename()<CR>",
+						desc = "buffer yank: filename",
+					},
+					{
+						"<LEADER>byd",
+						"<CMD>lua require('utils.functions').yank_buffer_directory()<CR>",
+						desc = "buffer yank: directory path",
+					},
 					-- close buffer
 					{
 						"<LEADER>c",
