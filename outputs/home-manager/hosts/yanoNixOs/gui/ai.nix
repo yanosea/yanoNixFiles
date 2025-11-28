@@ -48,6 +48,7 @@
               pip install --upgrade pip
               pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
               pip install -r requirements.txt
+              pip install websocket-client
               # Setup custom_nodes and workflows directories
               mkdir -p custom_nodes
               mkdir -p user/default
@@ -60,12 +61,16 @@
               # Link extra_model_paths.yaml
               ln -sf ${config.home.homeDirectory}/.local/share/extra_model_paths.yaml extra_model_paths.yaml
               # Install ComfyUI Manager
-              echo "Installing ComfyUI Manager..."
-              cd custom_nodes
-              git clone https://github.com/ltdrdata/ComfyUI-Manager.git
-              cd ComfyUI-Manager
-              pip install -r requirements.txt
-              cd ../..
+              if [ ! -d "custom_nodes/ComfyUI-Manager" ]; then
+                echo "Installing ComfyUI Manager..."
+                cd custom_nodes
+                git clone https://github.com/ltdrdata/ComfyUI-Manager.git
+                cd ComfyUI-Manager
+                pip install -r requirements.txt
+                cd ../..
+              else
+                echo "ComfyUI Manager already installed, skipping..."
+              fi
               if [ $? -eq 0 ]; then
                 touch .comfyui-installed
               else
