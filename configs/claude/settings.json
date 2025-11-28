@@ -13,7 +13,7 @@
       }
     ]
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "statusLine": {
     "type": "command",
     "command": "bunx -y ccstatusline@latest",
