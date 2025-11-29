@@ -11,7 +11,6 @@
     packages = with pkgs; [
       comfyui
       invokeai
-      fooocus
     ];
     file = {
       ".local/bin/start-comfyui" = {
@@ -52,6 +51,16 @@
               # Setup custom_nodes and workflows directories
               mkdir -p custom_nodes
               mkdir -p user/default
+              # Link custom nodes from Google Drive
+              for node_dir in ${config.home.homeDirectory}/google_drive/ai/custom_nodes/*/; do
+                if [ -d "$node_dir" ]; then
+                  node_name=$(basename "$node_dir")
+                  if [ ! -e "custom_nodes/$node_name" ]; then
+                    ln -sf "$node_dir" "custom_nodes/$node_name"
+                    echo "Linked custom node: $node_name"
+                  fi
+                fi
+              done
               # Setup workflows symlink to Google Drive
               if [ ! -L "user/default/workflows" ]; then
                 rm -rf user/default/workflows
@@ -71,6 +80,14 @@
               else
                 echo "ComfyUI Manager already installed, skipping..."
               fi
+              # Install custom node dependencies
+              echo "Installing custom node dependencies..."
+              for req_file in custom_nodes/*/requirements.txt; do
+                if [ -f "$req_file" ]; then
+                  echo "Installing dependencies from $req_file..."
+                  pip install -r "$req_file" --quiet || true
+                fi
+              done
               if [ $? -eq 0 ]; then
                 touch .comfyui-installed
               else
@@ -82,58 +99,35 @@
             cd ${config.home.homeDirectory}/.local/share/comfyui
             if [ -f ".comfyui-installed" ] && [ -d "venv" ]; then
               source venv/bin/activate
+              # Link custom nodes from Google Drive (check on every startup)
+              for node_dir in ${config.home.homeDirectory}/google_drive/ai/custom_nodes/*/; do
+                if [ -d "$node_dir" ]; then
+                  node_name=$(basename "$node_dir")
+                  if [ ! -e "custom_nodes/$node_name" ]; then
+                    ln -sf "$node_dir" "custom_nodes/$node_name"
+                    echo "Linked custom node: $node_name"
+                  fi
+                fi
+              done
+              # Check if custom node dependencies need to be installed
+              deps_hash=$(find custom_nodes -name "requirements.txt" -exec cat {} \; 2>/dev/null | md5sum | cut -d' ' -f1)
+              if [ ! -f ".deps_hash" ] || [ "$(cat .deps_hash 2>/dev/null)" != "$deps_hash" ]; then
+                echo "Installing custom node dependencies (this only runs when requirements change)..."
+                for req_file in custom_nodes/*/requirements.txt; do
+                  if [ -f "$req_file" ]; then
+                    node_name=$(dirname "$req_file" | xargs basename)
+                    echo "  Installing deps for $node_name..."
+                    pip install -r "$req_file" --quiet 2>/dev/null || true
+                  fi
+                done
+                # Install extra dependencies not listed in requirements.txt
+                pip install soundfile av --quiet 2>/dev/null || true
+                echo "$deps_hash" > .deps_hash
+              fi
+              echo "Starting ComfyUI server..."
               exec python main.py --listen 127.0.0.1 --port 8188 --output-directory ${config.home.homeDirectory}/google_drive/ai/outputs/comfyui
             else
               echo "ComfyUI not properly installed!"
-              exit 1
-            fi
-          ''}
-        '';
-      };
-      ".local/bin/start-fooocus" = {
-        executable = true;
-        text = ''
-          #!/usr/bin/env bash
-          set -e
-          # Setup config
-          ln -sf ${config.xdg.configHome}/fooocus/config.txt ${config.home.homeDirectory}/.local/share/Fooocus/config.txt
-          # Set environment
-          export CUDA_VISIBLE_DEVICES=0
-          export FOOOCUS_ROOT=${config.home.homeDirectory}/.local/share/Fooocus
-          export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-          echo "Starting Fooocus on http://127.0.0.1:7865"
-          echo "Press Ctrl+C to stop"
-          # Run inside FHS environment
-          exec ${pkgs.fooocus}/bin/fooocus ${pkgs.writeShellScript "fooocus-inner" ''
-            set -e
-            cd ${config.home.homeDirectory}/.local/share
-            # Initial setup if needed
-            if [ ! -f "Fooocus/.fooocus-installed" ]; then
-              if [ ! -d "Fooocus" ]; then
-                echo "Cloning Fooocus repository..."
-                git clone https://github.com/lllyasviel/Fooocus.git
-              fi
-              cd ${config.home.homeDirectory}/.local/share/Fooocus
-              echo "Creating virtual environment..."
-              python3.11 -m venv venv
-              source venv/bin/activate
-              echo "Installing dependencies..."
-              pip install --upgrade pip
-              pip install -r requirements_versions.txt
-              if [ $? -eq 0 ]; then
-                touch ${config.home.homeDirectory}/.local/share/Fooocus/.fooocus-installed
-              else
-                echo "Installation failed!"
-                exit 1
-              fi
-            fi
-            # Start  Fooocus
-            if [ -f "Fooocus/.fooocus-installed" ] && [ -d "Fooocus/venv" ]; then
-              cd ${config.home.homeDirectory}/.local/share/Fooocus
-              source venv/bin/activate
-              exec python launch.py --listen 127.0.0.1 --port 7865
-            else
-              echo "Fooocus not properly installed!"
               exit 1
             fi
           ''}
@@ -343,6 +337,8 @@
           "d ${config.home.homeDirectory}/google_drive/ai/outputs 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/outputs/comfyui 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/workflows 0755 - - -"
+          "d ${config.home.homeDirectory}/google_drive/ai/custom_nodes 0755 - - -"
+          "d ${config.home.homeDirectory}/google_drive/ai/prompts 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/invokeai 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/invokeai/models 0755 - - -"
         ];
