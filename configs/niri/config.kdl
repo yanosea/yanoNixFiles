@@ -153,6 +153,11 @@ window-rule {
     match title="ModTheSpire"
     open-floating false
 }
+// Wuthering Waves - force fullscreen
+window-rule {
+    match app-id="steam_app_3513350"
+    open-fullscreen true
+}
 // keybindings
 binds {
     // window management with keyboard
