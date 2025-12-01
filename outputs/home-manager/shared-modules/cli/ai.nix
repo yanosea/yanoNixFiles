@@ -6,6 +6,7 @@
     packages = with pkgs; [
       claude-code
       gemini-cli
+      spec-kit
     ];
   };
 }
