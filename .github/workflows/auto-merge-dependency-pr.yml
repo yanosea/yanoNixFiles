@@ -73,7 +73,7 @@ jobs:
       - name: auto approve PR
         uses: hmarr/auto-approve-action@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
           pull-request-number: ${{ needs.find-pr.outputs.pr_number }}
       - name: wait for required checks to complete
         env:
