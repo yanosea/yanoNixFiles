@@ -45,12 +45,12 @@ return {
 				exclude = {},
 			},
 			colors = {
-				error = { "DiagnosticError", "ErrorMsg", require("utils.colors").colors.red },
-				warning = { "DiagnosticWarn", "WarningMsg", require("utils.colors").colors.yellow },
-				info = { "DiagnosticInfo", require("utils.colors").colors.blue },
-				hint = { "DiagnosticHint", require("utils.colors").colors.green },
-				default = { "Identifier", require("utils.colors").colors.purple },
-				test = { "Identifier", require("utils.colors").colors.orange },
+				error = { "DiagnosticError", "ErrorMsg", require("utils.colors").colors.Red },
+				warning = { "DiagnosticWarn", "WarningMsg", require("utils.colors").colors.Yellow },
+				info = { "DiagnosticInfo", require("utils.colors").colors.Blue },
+				hint = { "DiagnosticHint", require("utils.colors").colors.Green },
+				default = { "Identifier", require("utils.colors").colors.Purple },
+				test = { "Identifier", require("utils.colors").colors.Orange },
 			},
 			search = {
 				command = "rg",
