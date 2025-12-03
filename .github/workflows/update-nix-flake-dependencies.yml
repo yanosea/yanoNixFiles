@@ -117,6 +117,7 @@ jobs:
             echo "EOF"
           } >> $GITHUB_OUTPUT
       - name: create pull request
+        id: create-pr
         if: steps.update-flake.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
@@ -133,3 +134,11 @@ jobs:
           labels: |
             dependencies
             automated
+      - name: trigger test workflow
+        if: steps.create-pr.outputs.pull-request-number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api repos/${{ github.repository }}/dispatches \
+            -f event_type=test-flake \
+            -f 'client_payload={"branch": "${{ steps.update-flake.outputs.branch_name }}", "pr_number": "${{ steps.create-pr.outputs.pull-request-number }}"}'
