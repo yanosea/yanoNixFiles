@@ -8,8 +8,7 @@ configs/vim/undo
 configs/vim/viminfo
 configs/wakatime/
 .claude/
-.kiro/
-.serena/
+.specify/
 # IGNORE FILE
 configs/gh/hosts.yml
 configs/github-copilot/apps.json

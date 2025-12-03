@@ -19,6 +19,9 @@ inline = 'zvm_after_init() { source <(fzf --zsh); }'
 [plugins.zsh-vim-mode]
 github = "jeffreytse/zsh-vi-mode"
 
+[plugins.zsh-vi-man]
+github = "TunaCuma/zsh-vi-man"
+
 [plugins.zsh-autosuggestions]
 github = "zsh-users/zsh-autosuggestions"
 use = ["{{ name }}.zsh"]
