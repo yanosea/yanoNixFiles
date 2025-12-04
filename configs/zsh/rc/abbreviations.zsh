@@ -4,17 +4,17 @@
 
 # alternatives
 ## cat alternative
-abbrev-alias cat="$(which bat)"
+abbrev-alias cat="bat"
 ## diff alternative
-abbrev-alias diff="$(which delta)"
+abbrev-alias diff="delta"
 ## ls alternative
-abbrev-alias ls="$(which eza) --icons"
+abbrev-alias ls="eza --icons"
 ## tree alternative
-abbrev-alias tree="$(which eza) --tree"
+abbrev-alias tree="eza --tree"
 ## rm alternative (safe delete)
-abbrev-alias rm="$(which trash)"
+abbrev-alias rm="trash"
 ## real rm
-abbrev-alias rrm="$(which rm)"
+abbrev-alias rrm="rm"
 
 # navigation
 ## cd to dotfiles
@@ -44,7 +44,7 @@ abbrev-alias ggl="git log --graph --all --oneline --decorate"
 ## lazy git
 abbrev-alias lg="lazygit"
 ## editor
-abbrev-alias nvimdiff="$(which nvim) -d"
+abbrev-alias nvimdiff="nvim -d"
 
 # session management
 ## zellij
