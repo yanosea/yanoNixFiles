@@ -1,7 +1,7 @@
-# ignore folders
+# IGNORE DIRECTORY
 home/dotfiles/glzr/glzr/zebar/tmp*
-
-# ignore files
-.DS_Store
-*.log
+# IGNORE FILE
 desktop.ini
+.DS_Store
+.wakatime-project
+*.log

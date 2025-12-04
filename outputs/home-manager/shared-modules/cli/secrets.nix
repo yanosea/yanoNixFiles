@@ -103,6 +103,9 @@ in
       GPG_PRIVATE_KEY = {
         path = "${config.xdg.dataHome}/sops/GPG_PRIVATE_KEY";
       };
+      WAKATIME_CONFIG = {
+        path = "${config.xdg.configHome}/wakatime/.wakatime.cfg";
+      };
     };
   };
 }
