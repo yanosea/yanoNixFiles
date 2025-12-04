@@ -13,6 +13,8 @@ return {
 				end,
 			})
 			vim.cmd("colorscheme everforest")
+			-- terminal bright black for zsh-autosuggestions
+			vim.g.terminal_color_8 = "#5C6A72"
 		end,
 	},
 }
