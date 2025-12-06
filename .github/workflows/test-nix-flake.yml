@@ -8,6 +8,8 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  statuses: write
+  pull-requests: read
 jobs:
   lint-and-format:
     runs-on: ubuntu-latest
@@ -147,3 +149,43 @@ jobs:
           nix build .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage \
             --dry-run \
             --show-trace
+  report-status:
+    runs-on: ubuntu-latest
+    needs:
+      - lint-and-format
+      - test-nixos-builds
+      - test-darwin-builds
+      - test-home-manager-builds
+      - test-home-manager-darwin-builds
+    if: always() && github.event_name == 'repository_dispatch'
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: determine overall status
+        id: status
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+            echo "state=failure" >> $GITHUB_OUTPUT
+            echo "description=Some tests failed" >> $GITHUB_OUTPUT
+          elif [[ "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "state=error" >> $GITHUB_OUTPUT
+            echo "description=Tests were cancelled" >> $GITHUB_OUTPUT
+          else
+            echo "state=success" >> $GITHUB_OUTPUT
+            echo "description=All tests passed" >> $GITHUB_OUTPUT
+          fi
+      - name: get PR head SHA
+        id: pr
+        run: |
+          SHA=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.client_payload.pr_number }} --jq '.head.sha')
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+      - name: report commit status
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/statuses/${{ steps.pr.outputs.sha }} \
+            -f state='${{ steps.status.outputs.state }}' \
+            -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}' \
+            -f description='${{ steps.status.outputs.description }}' \
+            -f context='Test Nix Flake'
