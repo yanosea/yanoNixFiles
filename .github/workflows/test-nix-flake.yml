@@ -157,7 +157,7 @@ jobs:
       - test-darwin-builds
       - test-home-manager-builds
       - test-home-manager-darwin-builds
-    if: always() && github.event_name == 'repository_dispatch'
+    if: always() && (github.event_name == 'repository_dispatch' || github.event_name == 'pull_request')
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -174,17 +174,21 @@ jobs:
             echo "state=success" >> $GITHUB_OUTPUT
             echo "description=All tests passed" >> $GITHUB_OUTPUT
           fi
-      - name: get PR head SHA
-        id: pr
+      - name: get commit SHA
+        id: sha
         run: |
-          SHA=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.client_payload.pr_number }} --jq '.head.sha')
-          echo "sha=$SHA" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+          else
+            SHA=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.client_payload.pr_number }} --jq '.head.sha')
+            echo "sha=$SHA" >> $GITHUB_OUTPUT
+          fi
       - name: report commit status
         run: |
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/statuses/${{ steps.pr.outputs.sha }} \
+            /repos/${{ github.repository }}/statuses/${{ steps.sha.outputs.sha }} \
             -f state='${{ steps.status.outputs.state }}' \
             -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}' \
             -f description='${{ steps.status.outputs.description }}' \
