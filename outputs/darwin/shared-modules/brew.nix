@@ -34,7 +34,6 @@
       "hiddenbar"
       "homerow"
       "karabiner-elements"
-      "kiro"
       "libreoffice"
       "libreoffice-language-pack"
       "mediosz/tap/swipeaerospace"
