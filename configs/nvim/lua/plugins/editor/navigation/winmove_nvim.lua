@@ -27,7 +27,7 @@ return {
 			},
 		},
 		config = function()
-			require("winmove").setup()
+			require("winmove").configure()
 		end,
 	},
 }
