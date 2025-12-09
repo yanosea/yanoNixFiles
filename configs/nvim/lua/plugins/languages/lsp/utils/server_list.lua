@@ -13,15 +13,10 @@ M.servers = {
 	-- go
 	"golangci_lint_ls",
 	"gopls",
-	-- web
-	"astro",
-	"cssls",
-	"html",
-	"jsonls",
-	-- markdown
-	"marksman",
 	-- lua
 	"lua_ls",
+	-- markdown
+	"markdown_oxide",
 	-- nix
 	"nil_ls",
 	-- rust
@@ -32,11 +27,16 @@ M.servers = {
 	"sqlls",
 	-- tailwind
 	"tailwindcss",
+	-- toml
+	"taplo",
 	-- typescript
 	"denols",
 	"ts_ls",
-	-- toml
-	"taplo",
+	-- web
+	"astro",
+	"cssls",
+	"html",
+	"jsonls",
 	-- yaml
 	"yamlls",
 }
