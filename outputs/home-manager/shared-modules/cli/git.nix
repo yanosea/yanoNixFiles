@@ -36,6 +36,7 @@ in
           git-credential-oauth
           git-lfs
           github-cli
+          gitlogue
           lazygit
         ];
       };

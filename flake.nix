@@ -56,6 +56,15 @@
       };
     };
     # packages
+    ## gitlogue
+    gitlogue = {
+      url = "github:unhappychoice/gitlogue";
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
+    };
     ## mediaplayer
     mediaplayer = {
       url = "github:nomisreual/mediaplayer";
