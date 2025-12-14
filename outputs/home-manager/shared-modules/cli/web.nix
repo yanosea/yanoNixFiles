@@ -33,7 +33,10 @@ in
           deno
           nodePackages_latest.nodejs
           nodePackages_latest.pnpm
+          posting
+          wget
           wrangler
+          xh
         ];
       };
     }
