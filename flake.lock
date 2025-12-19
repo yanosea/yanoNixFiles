@@ -306,11 +306,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1766047970,
-        "narHash": "sha256-q4MavoG1xkCoEpgPT5Dq7glfycZWc5ej74V4KZXf384=",
+        "lastModified": 1766106455,
+        "narHash": "sha256-tbSetIx+35/PrxmjKcouc54o7VyNdDQpmQePrSlrvJg=",
         "owner": "emrldnix",
         "repo": "wrangler",
-        "rev": "e464c8855767f7181fa780ff265fdb03f45149de",
+        "rev": "a2608cad80249755e58c2fad90ac940917250da5",
         "type": "github"
       },
       "original": {
