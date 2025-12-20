@@ -112,6 +112,33 @@ dotfile is mine.
   make update
   ```
 
+### 🔄 Migration
+
+- **1.** Initialize NixOS on the new disk following [here](#-initialize).
+
+- **2.** Update `hardware-configuration.nix` in new NixOS environment to match the new disk's UUID.
+
+  ```sh
+  # generate new hardware configuration
+  sudo nixos-generate-config
+  # copy to flake
+  cp /etc/nixos/hardware-configuration.nix ~/ghq/github.com/yanosea/yanoNixFiles/outputs/nixos/yanoNixOs/hardware-configuration.nix
+  # rebuild
+  make update
+  ```
+
+- **3.** Migrate user data from old disk.
+
+  ```sh
+  # mount old disk (adjust device name as needed)
+  sudo mkdir -p /mnt/old
+  sudo mount /dev/sdX1 /mnt/old
+  # copy user data
+  rsync -aAXHv --progress /mnt/old/home/yanosea/ ~/
+  # unmount old disk
+  sudo umount /mnt/old
+  ```
+
 ## 🪟 WSL
 
 ### 🌠 Initialize
