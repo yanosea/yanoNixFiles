@@ -6,8 +6,8 @@ return {
 		event = { "BufReadPost", "BufNewFile" },
 		config = function()
 			-- vim-matchup config
-			require("nvim-treesitter.configs").setup({
-				matchup = {
+			require("match-up").setup({
+				treesitter = {
 					enable = true,
 				},
 			})
