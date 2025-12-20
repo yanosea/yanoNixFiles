@@ -83,15 +83,6 @@
         };
       };
     };
-    ## wrangler
-    wrangler = {
-      url = "github:emrldnix/wrangler";
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
-    };
   };
   outputs = inputs: {
     # nixos
