@@ -6,6 +6,7 @@
     packages = with pkgs; [
       helix
       neovim
+      tree-sitter
       vim
     ];
   };
