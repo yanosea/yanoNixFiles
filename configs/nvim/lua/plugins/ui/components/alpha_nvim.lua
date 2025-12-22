@@ -97,7 +97,7 @@ return {
 				dashboard.button("g", icons.git.Git .. "  lazygit", "<CMD>lua ToggleLazyGit()<CR>"),
 				dashboard.button("l", icons.misc.Lazy .. "  lazy", "<CMD>Lazy<CR>"),
 				dashboard.button("m", icons.misc.Mason .. "  mason lsp", "<CMD>Mason<CR>"),
-				dashboard.button("T", icons.ui.Tree .. "  sync tree-sitter parser", "<CMD>TSUpdateSync<CR>"),
+				dashboard.button("T", icons.ui.Tree .. "  sync tree-sitter parser", "<CMD>TSUpdate<CR>"),
 				dashboard.button("q", icons.ui.Close .. "  quit", "<CMD>quit<CR>"),
 			}
 			-- layout
