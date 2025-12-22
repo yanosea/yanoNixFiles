@@ -80,12 +80,12 @@ wezterm.on("format-tab-title", function(tab, tabs)
 
 	if start_pos then
 		active_pane_title = string.sub(active_pane_title, end_pos + 3)
+	end
 
-		local title_length = #active_pane_title
+	local title_length = #active_pane_title
 
-		if title_length > limit_length then
-			active_pane_title = string.sub(active_pane_title, 1, limit_length) .. suffix
-		end
+	if title_length > limit_length then
+		active_pane_title = string.sub(active_pane_title, 1, limit_length) .. suffix
 	end
 
 	return {
