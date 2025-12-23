@@ -8,7 +8,7 @@ return {
 			-- which-key.nvim config
 			require("which-key").setup({
 				preset = "modern",
-				delay = 500,
+				delay = 0,
 				sort = { "local", "order", "alphanum", "mod" },
 			})
 			-- which-key mappings (start with <LEADER>)
