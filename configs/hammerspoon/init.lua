@@ -5,3 +5,5 @@ require("config.keymaps")
 require("config.open")
 -- apps
 require("config.apps")
+-- watcher
+require("config.watcher")
