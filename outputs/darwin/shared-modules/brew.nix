@@ -45,6 +45,7 @@
       "processing"
       "qmk-toolbox"
       "raycast"
+      "readdle-spark"
       "sf-symbols"
       "sonic-pi"
       "splashtop-personal"
