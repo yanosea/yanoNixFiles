@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-  "CreationDate": "2025-07-15T23:25:14.387-00:00",
+  "CreationDate": "2025-12-27T01:52:17.386-00:00",
   "Sources": [
     {
       "Packages": [
@@ -33,9 +33,6 @@
         },
         {
           "PackageIdentifier": "DenoLand.Deno"
-        },
-        {
-          "PackageIdentifier": "Discord.Discord"
         },
         {
           "PackageIdentifier": "EpicGames.EpicGamesLauncher"
@@ -185,9 +182,6 @@
           "PackageIdentifier": "pixivInc.VRoidStudio"
         },
         {
-          "PackageIdentifier": "Pyonkichi.CLaunch"
-        },
-        {
           "PackageIdentifier": "Python.Launcher"
         },
         {
@@ -204,6 +198,9 @@
         },
         {
           "PackageIdentifier": "Rustlang.Rustup"
+        },
+        {
+          "PackageIdentifier": "sakura-editor.sakura"
         },
         {
           "PackageIdentifier": "Splashtop.SplashtopPersonal"
@@ -230,6 +227,9 @@
           "PackageIdentifier": "Valve.Steam"
         },
         {
+          "PackageIdentifier": "Vencord.Vesktop"
+        },
+        {
           "PackageIdentifier": "vim.vim.nightly"
         },
         {
@@ -254,7 +254,20 @@
         "Name": "winget",
         "Type": "Microsoft.PreIndexed.Package"
       }
+    },
+    {
+      "Packages": [
+        {
+          "PackageIdentifier": "XPFCS9QJBKTHVZ"
+        }
+      ],
+      "SourceDetails": {
+        "Argument": "https://storeedgefd.dsx.mp.microsoft.com/v9.0",
+        "Identifier": "StoreEdgeFD",
+        "Name": "msstore",
+        "Type": "Microsoft.Rest"
+      }
     }
   ],
-  "WinGetVersion": "1.11.400"
+  "WinGetVersion": "1.12.350"
 }
