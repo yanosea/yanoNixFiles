@@ -26,6 +26,9 @@
             app = "/Applications/Vivaldi.app";
           }
           {
+            app = "/Applications/Spark Desktop.app";
+          }
+          {
             app = "/Applications/Vesktop.app";
           }
           {
