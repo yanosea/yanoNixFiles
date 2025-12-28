@@ -48,6 +48,9 @@ in
         };
         zsh = {
           enable = true;
+          dotDir = "${config.xdg.configHome}/zsh";
+          envExtra = ''source "$ZDOTDIR/env/init.zsh"'';
+          initContent = ''source "$ZDOTDIR/rc/init.zsh"'';
         };
       };
     }
