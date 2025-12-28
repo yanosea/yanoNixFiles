@@ -1,5 +1,5 @@
 #
-# .zshenv - zsh environment file
+# init.zsh - zsh environment file
 # loaded for all zsh sessions (login, interactive, non-interactive)
 #
 

@@ -1,5 +1,5 @@
 #
-# .zshrc - zsh interactive shell configuration
+# init.zsh - zsh interactive shell configuration
 # loaded for interactive zsh sessions
 #
 
