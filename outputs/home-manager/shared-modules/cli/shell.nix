@@ -29,7 +29,6 @@ in
       # home
       home = {
         packages = with pkgs; [
-          inshellisense
           sheldon
           starship
           tmux
