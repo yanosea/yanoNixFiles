@@ -50,7 +50,6 @@ return {
 				"css",
 				"html",
 				"json",
-				"jsonc",
 				"scss",
 				-- yaml
 				"yaml",
