@@ -18,12 +18,22 @@ return {
 					mode = "n",
 					-- ai
 					{ "<LEADER>a", group = "ai" },
+					-- ai: claude
+					{ "<LEADER>ac", group = "claude" },
 					{
-						"<LEADER>ar",
+						"<LEADER>acr",
 						"<CMD>lua require('config.claude_code').resume_session()<CR>",
-						desc = "ai: resume claude code",
+						desc = "ai claude: resume",
 					},
-					{ "<LEADER>at", "<CMD>ClaudeCode<CR>", desc = "ai: toggle claude code" },
+					{ "<LEADER>act", "<CMD>ClaudeCode<CR>", desc = "ai claude: toggle" },
+					-- ai: gemini
+					{ "<LEADER>ag", group = "gemini" },
+					{
+						"<LEADER>agr",
+						"<CMD>lua require('config.gemini').resume_session()<CR>",
+						desc = "ai gemini: resume",
+					},
+					{ "<LEADER>agt", "<CMD>Gemini<CR>", desc = "ai gemini: toggle" },
 					-- discordo
 					{ "<LEADER>D", "<CMD>Discordo<CR>", desc = "discordo" },
 					-- buffers

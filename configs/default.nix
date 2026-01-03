@@ -4,21 +4,10 @@
   ...
 }:
 let
-  # local ai commands
-  localAiCommands = builtins.readDir ./ai/commands;
-  # create ai-related configuration entries
-  aiConfigEntries =
-    # add local ai commands to claude
-    lib.mapAttrs' (name: _: {
-      name = "claude/commands/${name}";
-      value = {
-        source = ./ai/commands + "/${name}";
-      };
-    }) localAiCommands;
-  # regular config files (excluding default.nix, ai, and zsh directories)
+  # regular config files (excluding default.nix, zsh, and gemini directories)
   contents = builtins.readDir ./.;
   filteredContents = lib.filterAttrs (
-    name: _: name != "default.nix" && name != "ai" && name != "zsh"
+    name: _: name != "default.nix" && name != "gemini" && name != "zsh"
   ) contents;
   mkEntry = name: type: {
     name = name;
@@ -61,8 +50,15 @@ let
   }) zshContents;
 in
 {
+  # home directory files
+  home.file = {
+    ".gemini" = {
+      source = ./gemini;
+      recursive = true;
+    };
+  };
   # xdg
   xdg = {
-    configFile = configFiles // aiConfigEntries // hyprConfigEntries // zshConfigEntries;
+    configFile = configFiles // hyprConfigEntries // zshConfigEntries;
   };
 }
