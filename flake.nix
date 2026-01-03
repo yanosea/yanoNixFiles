@@ -56,6 +56,10 @@
       };
     };
     # packages
+    ## claude-code
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+    };
     ## gitlogue
     gitlogue = {
       url = "github:unhappychoice/gitlogue";
@@ -77,6 +81,15 @@
     ## treefmt-nix
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
+    };
+    ## wrangler
+    wrangler = {
+      url = "github:emrldnix/wrangler";
       inputs = {
         nixpkgs = {
           follows = "nixpkgs";

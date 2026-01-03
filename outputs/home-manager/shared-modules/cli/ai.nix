@@ -5,7 +5,7 @@
   home = {
     packages = with pkgs; [
       claude-code
-      gemini-cli
+      gemini-cli-bin
       spec-kit
     ];
   };
