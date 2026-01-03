@@ -9,6 +9,7 @@ configs/vim/viminfo
 configs/wakatime/
 specs/
 .claude/
+.gemini/
 .specify/
 # IGNORE FILE
 configs/gh/hosts.yml
@@ -17,6 +18,7 @@ configs/github-copilot/versions.json
 configs/lf/files
 configs/nvim/lazy-lock.json
 CLAUDE.md
+GEMINI.md
 result
 .DS_Store
 *.log

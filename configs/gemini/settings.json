@@ -1,0 +1,41 @@
+{
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    },
+    "folderTrust": {
+      "enabled": true
+    }
+  },
+  "ui": {
+    "theme": "GitHub",
+    "showStatusInTitle": true,
+    "footer": {
+      "hideContextPercentage": false
+    },
+    "showMemoryUsage": true,
+    "showLineNumbers": true,
+    "showCitations": true,
+    "showModelInfoInChat": true
+  },
+  "general": {
+    "previewFeatures": true,
+    "vimMode": true,
+    "disableAutoUpdate": true,
+    "enablePromptCompletion": true
+  },
+  "output": {
+    "format": "text"
+  },
+  "context": {
+    "loadMemoryFromIncludeDirectories": true
+  },
+  "tools": {
+    "shell": {
+      "showColor": true
+    }
+  },
+  "ide": {
+    "enabled": true
+  }
+}
