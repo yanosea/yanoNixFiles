@@ -333,7 +333,7 @@ binds {
     }
     //// logout
     Ctrl+Alt+Delete {
-        quit
+        spawn "qs" "ipc" "call" "sessionMenu" "logout"
     }
     // media keys
     XF86AudioRaiseVolume allow-when-locked=true {
