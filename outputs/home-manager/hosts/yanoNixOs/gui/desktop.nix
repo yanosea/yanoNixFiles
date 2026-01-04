@@ -71,7 +71,6 @@
         gvfs
         hyprcursor
         hypridle
-        hyprlock
         hyprpaper
         hyprpicker
         hyprshot
@@ -88,7 +87,6 @@
         wf-recorder
         wl-clipboard
         wlsunset
-        yad
       ]
     );
     pointerCursor = {
