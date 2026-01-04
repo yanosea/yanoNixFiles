@@ -34,10 +34,14 @@
       enable = true;
       settings = {
         default_session = {
-          # default session is niri-session
+          # hyprland
           command = ''
-            ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd niri-session
+            ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd start-hyprland
           '';
+          # niri
+          # command = ''
+          #   ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd niri-session
+          # '';
           user = "greeter";
         };
       };
