@@ -15,6 +15,7 @@
       },
       "original": {
         "owner": "sadjow",
+        "ref": "main",
         "repo": "claude-code-nix",
         "type": "github"
       }
@@ -28,13 +29,14 @@
       "locked": {
         "lastModified": 1767028240,
         "narHash": "sha256-0/fLUqwJ4Z774muguUyn5t8AQ6wyxlNbHexpje+5hRo=",
-        "owner": "lnl7",
+        "owner": "nix-darwin",
         "repo": "nix-darwin",
         "rev": "c31afa6e76da9bbc7c9295e39c7de9fca1071ea1",
         "type": "github"
       },
       "original": {
-        "owner": "lnl7",
+        "owner": "nix-darwin",
+        "ref": "master",
         "repo": "nix-darwin",
         "type": "github"
       }
@@ -56,6 +58,7 @@
       },
       "original": {
         "owner": "nix-community",
+        "ref": "main",
         "repo": "fenix",
         "type": "github"
       }
@@ -132,6 +135,7 @@
       },
       "original": {
         "owner": "unhappychoice",
+        "ref": "main",
         "repo": "gitlogue",
         "type": "github"
       }
@@ -152,6 +156,7 @@
       },
       "original": {
         "owner": "nix-community",
+        "ref": "master",
         "repo": "home-manager",
         "type": "github"
       }
@@ -172,6 +177,7 @@
       },
       "original": {
         "owner": "nomisreual",
+        "ref": "main",
         "repo": "mediaplayer",
         "type": "github"
       }
@@ -209,6 +215,7 @@
       },
       "original": {
         "owner": "nix-community",
+        "ref": "main",
         "repo": "NixOS-WSL",
         "type": "github"
       }
@@ -247,16 +254,16 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1767379071,
-        "narHash": "sha256-EgE0pxsrW9jp9YFMkHL9JMXxcqi/OoumPJYwf+Okucw=",
+        "lastModified": 1767546459,
+        "narHash": "sha256-I7zgkW2sXFLAAbFjiJIhwgEzp+WzjBEcpRHspP2w8oQ=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "fb7944c166a3b630f177938e478f0378e64ce108",
+        "rev": "59be811c906e989c64e7bcb4b7e2ca2546fe1440",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-unstable",
+        "ref": "master",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -328,6 +335,7 @@
       },
       "original": {
         "owner": "Mic92",
+        "ref": "master",
         "repo": "sops-nix",
         "type": "github"
       }
@@ -363,6 +371,7 @@
       },
       "original": {
         "owner": "numtide",
+        "ref": "main",
         "repo": "treefmt-nix",
         "type": "github"
       }
@@ -384,6 +393,7 @@
       },
       "original": {
         "owner": "emrldnix",
+        "ref": "master",
         "repo": "wrangler",
         "type": "github"
       }
