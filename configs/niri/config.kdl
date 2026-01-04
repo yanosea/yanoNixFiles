@@ -323,11 +323,11 @@ binds {
     }
     //// reload niri config
     Super+Shift+N {
-        spawn-sh "niri msg action do-screen-transition; niri msg action reload-config; dunstify \"Niri\" \"Configuration reloaded!\""
+        spawn-sh "niri msg action do-screen-transition; niri msg action reload-config; notify-send \"Niri\" \"Configuration reloaded!\""
     }
     //// reload quickshell config
     Super+Shift+B {
-        spawn-sh "pkill quickshell; qs -p ~/.config/quickshell; dunstify \"QuickShell\" \"Configuration reloaded!\""
+        spawn-sh "pkill quickshell; qs -p ~/.config/quickshell; notify-send \"QuickShell\" \"Configuration reloaded!\""
     }
     // system controls
     //// reboot

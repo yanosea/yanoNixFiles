@@ -161,27 +161,6 @@
         "type": "github"
       }
     },
-    "mediaplayer": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1760704373,
-        "narHash": "sha256-dDGAWRJz6hovbsI+psKacg814rY1Jkd8nquhNQTy/bk=",
-        "owner": "nomisreual",
-        "repo": "mediaplayer",
-        "rev": "b0fef094810abc54cbf5a271c8534ffe8d6e1394",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nomisreual",
-        "ref": "main",
-        "repo": "mediaplayer",
-        "type": "github"
-      }
-    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1767185284,
@@ -254,11 +233,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1767546459,
-        "narHash": "sha256-I7zgkW2sXFLAAbFjiJIhwgEzp+WzjBEcpRHspP2w8oQ=",
+        "lastModified": 1767547068,
+        "narHash": "sha256-1GxdT9a5lY6y3Gj0CQfTXiBaDVyH2r309eMjXS4cdII=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "59be811c906e989c64e7bcb4b7e2ca2546fe1440",
+        "rev": "b776ec9537011be419df1759481a9993c22fc4e8",
         "type": "github"
       },
       "original": {
@@ -275,7 +254,6 @@
         "fenix": "fenix",
         "gitlogue": "gitlogue",
         "home-manager": "home-manager",
-        "mediaplayer": "mediaplayer",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_3",

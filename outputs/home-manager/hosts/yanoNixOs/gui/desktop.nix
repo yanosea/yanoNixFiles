@@ -67,7 +67,6 @@
         cliphist
         dconf
         ddcutil
-        dunst
         gpu-screen-recorder
         gvfs
         hyprcursor
@@ -76,6 +75,7 @@
         hyprpaper
         hyprpicker
         hyprshot
+        libnotify
         linux-wallpaperengine
         matugen
         nemo
@@ -101,12 +101,6 @@
       package = pkgs.bibata-cursors;
       name = "Bibata-Original-Classic";
       size = 12;
-    };
-  };
-  # services
-  services = {
-    dunst = {
-      enable = true;
     };
   };
   # wayland

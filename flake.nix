@@ -69,15 +69,6 @@
         };
       };
     };
-    ## mediaplayer
-    mediaplayer = {
-      url = "github:nomisreual/mediaplayer/main";
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
-    };
     ## treefmt-nix
     treefmt-nix = {
       url = "github:numtide/treefmt-nix/main";

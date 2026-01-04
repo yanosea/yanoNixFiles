@@ -12,7 +12,6 @@
       evince
       feh
       imv
-      mediaplayer
       mpv
       spotify
       totem
