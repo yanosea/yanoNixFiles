@@ -105,10 +105,6 @@ inputs: [
       };
     }
   )
-  ## mediaplayer
-  (final: prev: {
-    mediaplayer = inputs.mediaplayer.packages.${prev.stdenv.hostPlatform.system}.default;
-  })
   ## wrangler
   (final: prev: {
     wrangler = inputs.wrangler.packages.${prev.stdenv.hostPlatform.system}.wrangler;

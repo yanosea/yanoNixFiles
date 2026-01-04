@@ -67,15 +67,14 @@
         cliphist
         dconf
         ddcutil
-        dunst
         gpu-screen-recorder
         gvfs
         hyprcursor
         hypridle
-        hyprlock
         hyprpaper
         hyprpicker
         hyprshot
+        libnotify
         linux-wallpaperengine
         matugen
         nemo
@@ -84,14 +83,10 @@
         quickshell
         udisks2
         wayvnc
-        waybar
         wev
         wf-recorder
         wl-clipboard
         wlsunset
-        wofi
-        wofi-emoji
-        yad
       ]
     );
     pointerCursor = {
@@ -103,12 +98,6 @@
       size = 12;
     };
   };
-  # services
-  services = {
-    dunst = {
-      enable = true;
-    };
-  };
   # wayland
   wayland = {
     windowManager = {
@@ -117,6 +106,9 @@
         # dummy
         settings = {
           env = [ ];
+        };
+        systemd = {
+          enable = true;
         };
       };
     };

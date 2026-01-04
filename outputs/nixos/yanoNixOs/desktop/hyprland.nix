@@ -13,9 +13,6 @@
         enable = true;
       };
     };
-    waybar = {
-      enable = true;
-    };
   };
   # xdg
   xdg = {

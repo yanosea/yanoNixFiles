@@ -34,11 +34,11 @@
       enable = true;
       settings = {
         default_session = {
-          # default session is niri-session (required for OBS screen capture)
+          # default session is niri-session
           command = ''
-            ${pkgs.tuigreet}/bin/tuigreet --time --cmd niri-session
+            ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd niri-session
           '';
-          user = username;
+          user = "greeter";
         };
       };
     };
