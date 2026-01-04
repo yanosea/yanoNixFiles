@@ -98,18 +98,6 @@
       size = 12;
     };
   };
-  # systemd
-  systemd = {
-    user = {
-      targets = {
-        graphical-session = {
-          Unit = {
-            Wants = [ "blueman-applet.service" ];
-          };
-        };
-      };
-    };
-  };
   # wayland
   wayland = {
     windowManager = {
