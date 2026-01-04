@@ -107,6 +107,9 @@
         settings = {
           env = [ ];
         };
+        systemd = {
+          enable = true;
+        };
       };
     };
   };

@@ -36,9 +36,9 @@
         default_session = {
           # default session is niri-session
           command = ''
-            ${pkgs.tuigreet}/bin/tuigreet --time --cmd niri-session
+            ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd niri-session
           '';
-          user = username;
+          user = "greeter";
         };
       };
     };
