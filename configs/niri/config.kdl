@@ -116,8 +116,6 @@ spawn-at-startup "sh" "-c" "sleep 2 && systemctl --user restart xdg-desktop-port
 spawn-at-startup "qs"
 //// ime
 spawn-at-startup "fcitx5" "-D"
-//// clipboard history (but niri does not uses, just for saving)
-spawn-at-startup "clipse" "-listen"
 //// vesktop
 spawn-at-startup "sh" "-c" "sleep 5 && vesktop --start-minimized"
 //// steam
@@ -137,11 +135,6 @@ environment {
 //// vim via wezterm for ime
 window-rule {
     match app-id="FloatingVim"
-    open-floating true
-}
-//// clipse via wezterm for clipboard history
-window-rule {
-    match app-id="FloatingClipse"
     open-floating true
 }
 //// mod the spire - force tiling

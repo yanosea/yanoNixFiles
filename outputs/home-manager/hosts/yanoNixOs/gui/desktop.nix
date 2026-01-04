@@ -84,13 +84,10 @@
         quickshell
         udisks2
         wayvnc
-        waybar
         wev
         wf-recorder
         wl-clipboard
         wlsunset
-        wofi
-        wofi-emoji
         yad
       ]
     );
