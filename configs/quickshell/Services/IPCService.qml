@@ -178,6 +178,13 @@ Item {
       sessionMenuPanel.presetAction = "shutdown"
       sessionMenuPanel.toggle()
     }
+
+    function logout() {
+      // Set the preset action BEFORE opening the panel
+      // This will be picked up by onOpened handler
+      sessionMenuPanel.presetAction = "logout"
+      sessionMenuPanel.toggle()
+    }
   }
 
   IpcHandler {
