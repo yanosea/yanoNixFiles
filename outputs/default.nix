@@ -4,21 +4,26 @@ let
   # import lib for constants
   lib = import ../lib inputs;
   inherit (lib) username;
-  # os configurations
-  nixos = import ./nixos (inputs // { inherit username; });
+  # apps configurations
+  apps = import ./apps inputs;
+  # # darwin configurations
   darwin = import ./darwin (inputs // { inherit username; });
-  # home-manager configurations
-  home-manager = import ./home-manager (inputs // { inherit username; });
   # formatter configurations
   formatter = import ./formatter inputs;
+  # home-manager configurations
+  home-manager = import ./home-manager (inputs // { inherit username; });
+  # nixos configurations
+  nixos = import ./nixos (inputs // { inherit username; });
 in
 {
-  # nixos configurations
-  nixos = nixos;
+  # apps configurations
+  apps = apps;
   # darwin configurations
   darwin = darwin;
-  # home-manager configurations
-  home-manager = home-manager;
   # formatter configurations
   formatter = formatter;
+  # home-manager configurations
+  home-manager = home-manager;
+  # nixos configurations
+  nixos = nixos;
 }

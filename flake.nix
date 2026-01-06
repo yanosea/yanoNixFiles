@@ -89,13 +89,15 @@
     };
   };
   outputs = inputs: {
-    # nixos
-    nixosConfigurations = (import ./outputs inputs).nixos;
+    # apps
+    apps = (import ./outputs inputs).apps;
     # darwin
     darwinConfigurations = (import ./outputs inputs).darwin;
-    # home-manager
-    homeConfigurations = (import ./outputs inputs).home-manager;
     # formatter
     formatter = (import ./outputs inputs).formatter;
+    # home-manager
+    homeConfigurations = (import ./outputs inputs).home-manager;
+    # nixos
+    nixosConfigurations = (import ./outputs inputs).nixos;
   };
 }

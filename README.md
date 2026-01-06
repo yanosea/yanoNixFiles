@@ -110,6 +110,10 @@ dotfile is mine.
   cd ghq/github.com/yanosea/yanoNixFiles
   # execute update task
   make update
+  # or using nix run (auto-detect hostname)
+  nix run .#update
+  # or using nix run (explicit hostname)
+  nix run .#yanoNixOs-update
   ```
 
 ### 🔄 Migration
@@ -125,6 +129,10 @@ dotfile is mine.
   cp /etc/nixos/hardware-configuration.nix ~/ghq/github.com/yanosea/yanoNixFiles/outputs/nixos/yanoNixOs/hardware-configuration.nix
   # rebuild
   make update
+  # or using nix run (auto-detect hostname)
+  nix run .#update
+  # or using nix run (explicit hostname)
+  nix run .#yanoNixOs-update
   ```
 
 - **3.** Migrate user data from old disk.
@@ -253,6 +261,10 @@ dotfile is mine.
   cd ghq/github.com/yanosea/yanoNixFiles
   # execute update task
   make update
+  # or using nix run (auto-detect hostname)
+  nix run .#update
+  # or using nix run (explicit hostname)
+  nix run .#yanoNixOsWsl-update
   ```
 
 ## 🍎 Darwin
@@ -316,8 +328,12 @@ dotfile is mine.
   cd ghq/github.com/yanosea/yanoNixFiles
   # execute update task
   make update
-  # or
-  make update
+  # or using nix run (auto-detect hostname)
+  nix run .#update
+  # or using nix run (explicit hostname, for Mac)
+  nix run .#yanoMac-update
+  # or using nix run (explicit hostname, for MacBook)
+  nix run .#yanoMacBook-update
   ```
 
 ## 📚 Refferences
