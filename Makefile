@@ -191,7 +191,7 @@ else
 	@echo "$(COLOR_ERROR)unsupported platform...$(COLOR_RESET)"
 endif
 
-# experimental update (git, go, and sheldon updates are disabled)
+# experimental update (time-consuming sync operations are disabled)
 experiment:
 ifeq ($(IS_NIXOS),1)
 	@echo "$(COLOR_TITLE)update nixos experimentally...$(COLOR_RESET)"
@@ -641,7 +641,7 @@ ifeq ($(IS_WINDOWS),0)
 	@echo ""
 	@echo "    $(COLOR_HEADER)[main operations]$(COLOR_RESET)"
 	@echo "      $(COLOR_CMD)update$(COLOR_RESET)     - update whole system (settings, packages)"
-	@echo "      $(COLOR_CMD)experiment$(COLOR_RESET) - experimental update (git, go, and sheldon updates are disabled)"
+	@echo "      $(COLOR_CMD)experiment$(COLOR_RESET) - experimental update (time-consuming sync operations are disabled)"
 	@echo "      $(COLOR_CMD)system$(COLOR_RESET)     - apply system configuration"
 	@echo "      $(COLOR_CMD)home$(COLOR_RESET)       - apply home configuration"
 	@echo "      $(COLOR_CMD)format$(COLOR_RESET)     - format files"
