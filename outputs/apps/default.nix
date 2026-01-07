@@ -4,9 +4,25 @@ let
   lib = import ../../lib inputs;
   inherit (lib) supportedSystems;
   pkgs = system: import inputs.nixpkgs { inherit system; };
-
+  # color codes
+  colors = {
+    reset = "\\033[0m";
+    title = "\\033[35m"; # magenta
+    header = "\\033[33m"; # yellow
+    done = "\\033[32m"; # green
+    error = "\\033[31m"; # red
+  };
+  # echo helpers
+  echo = {
+    title = msg: ''echo -e "${colors.title}${msg}${colors.reset}"'';
+    header = msg: ''echo -e "${colors.header}${msg}${colors.reset}"'';
+    done = msg: ''echo -e "${colors.done}${msg}${colors.reset}"'';
+    error = msg: ''echo -e "${colors.error}${msg}${colors.reset}"'';
+    blank = ''echo ""'';
+  };
   # host configurations
   hosts = {
+    # nixos
     yanoNixOs = {
       system = "x86_64-linux";
       osType = "nixos";
@@ -17,6 +33,7 @@ let
         rm -fr "$HOME/.config/fcitx5/config"
       '';
     };
+    # nixos (wsl)
     yanoNixOsWsl = {
       system = "x86_64-linux";
       osType = "nixos";
@@ -26,6 +43,7 @@ let
         rm -fr "$HOME/.config/claude/CLAUDE.md"
       '';
     };
+    # mac
     yanoMac = {
       system = "aarch64-darwin";
       osType = "darwin";
@@ -38,6 +56,7 @@ let
         rm -fr "$HOME/.config/karabiner/karabiner.json"
       '';
     };
+    # mac book
     yanoMacBook = {
       system = "aarch64-darwin";
       osType = "darwin";
@@ -51,16 +70,6 @@ let
       '';
     };
   };
-
-  # color codes
-  colors = {
-    reset = "\\033[0m";
-    title = "\\033[35m"; # magenta
-    header = "\\033[33m"; # yellow
-    done = "\\033[32m"; # green
-    error = "\\033[31m"; # red
-  };
-
   # helper to create system command
   mkSystemCommand =
     host:
@@ -68,7 +77,6 @@ let
       "sudo nixos-rebuild switch --flake .#${host.systemConfig}"
     else
       "sudo darwin-rebuild switch --flake .#${host.systemConfig}";
-
   # helper to create home command
   mkHomeCommand =
     host: experimental:
@@ -80,128 +88,99 @@ let
       ${host.preHomeCommands}
       ${envPrefix}nix run${impureFlag} .#homeConfigurations."${host.homeConfig}".activationPackage
     '';
-
+  # helper to create test script for a host
+  mkTestScript =
+    host:
+    let
+      configType = if host.osType == "nixos" then "nixosConfigurations" else "darwinConfigurations";
+      buildPath = if host.osType == "nixos" then ".config.system.build.toplevel" else ".system";
+    in
+    ''
+      ${echo.header "validate system configuration syntax and dependencies..."}
+      nix eval .#${configType}.${host.systemConfig}${buildPath}.drvPath --show-trace
+      ${echo.blank}
+      ${echo.header "validate home configuration syntax and dependencies..."}
+      nix eval .#homeConfigurations."${host.homeConfig}".activationPackage.drvPath --show-trace
+      ${echo.blank}
+      ${echo.header "check system build dependencies without actual building..."}
+      nix build .#${configType}.${host.systemConfig}${buildPath} --dry-run --show-trace
+      ${echo.blank}
+      ${echo.header "check home build dependencies without actual building..."}
+      nix build .#homeConfigurations."${host.homeConfig}".activationPackage --dry-run --show-trace
+    '';
+  # helper to create system + home update script
+  mkUpdateScript = host: experimental: hostname: ''
+    ${echo.title "update ${hostname}${if experimental then " experimentally" else ""}..."}
+    ${echo.blank}
+    ${echo.title "apply system configuration..."}
+    ${echo.blank}
+    ${mkSystemCommand host}
+    ${echo.blank}
+    ${echo.done "apply system configuration done!"}
+    ${echo.blank}
+    ${echo.title "apply home configuration${if experimental then " experimentally" else ""}..."}
+    ${echo.blank}
+    ${mkHomeCommand host experimental}
+    ${echo.done "apply home configuration${if experimental then " experimentally" else ""} done!"}
+    ${echo.blank}
+    ${echo.done "${if experimental then "experimental " else ""}update done!"}
+  '';
+  # host command generators
+  hostCommands = hostname: host: {
+    system = ''
+      ${echo.title "apply system configuration..."}
+      ${echo.blank}
+      ${mkSystemCommand host}
+      ${echo.blank}
+      ${echo.done "apply system configuration done!"}
+    '';
+    home = ''
+      ${echo.title "apply home configuration..."}
+      ${echo.blank}
+      ${mkHomeCommand host false}
+      ${echo.done "apply home configuration done!"}
+    '';
+    update = mkUpdateScript host false hostname;
+    experiment = mkUpdateScript host true hostname;
+    test = ''
+      ${echo.title "test ${hostname} configuration..."}
+      ${echo.blank}
+      ${echo.header "check flake configuration..."}
+      nix flake check
+      ${echo.blank}
+      ${mkTestScript host}
+      ${echo.blank}
+      ${echo.done "test done!"}
+    '';
+  };
   # create host-specific app
   mkHostApp =
     p: hostname: target:
     let
       host = hosts.${hostname};
       repoRoot = ''$(${p.git}/bin/git rev-parse --show-toplevel)'';
+      commands = hostCommands hostname host;
       script = p.writeShellScript "${hostname}-${target}" ''
         set -euo pipefail
         cd "${repoRoot}"
-
         # verify hostname matches
         CURRENT_HOST="$(hostname)"
         if [[ "$CURRENT_HOST" != "${hostname}" ]]; then
-          echo -e "${colors.error}error: hostname mismatch${colors.reset}"
+          ${echo.error "error: hostname mismatch"}
           echo -e "  expected: ${hostname}"
           echo -e "  actual:   $CURRENT_HOST"
-          echo ""
+          ${echo.blank}
           echo -e "use ${colors.header}nix run .#$CURRENT_HOST-${target}${colors.reset} or ${colors.header}nix run .#${target}${colors.reset} instead"
           exit 1
         fi
-
-        ${
-          if target == "system" then
-            ''
-              echo -e "${colors.title}apply system configuration...${colors.reset}"
-              echo ""
-              ${mkSystemCommand host}
-              echo ""
-              echo -e "${colors.done}apply system configuration done!${colors.reset}"
-            ''
-          else if target == "home" then
-            ''
-              echo -e "${colors.title}apply home configuration...${colors.reset}"
-              echo ""
-              ${mkHomeCommand host false}
-              echo -e "${colors.done}apply home configuration done!${colors.reset}"
-            ''
-          else if target == "update" then
-            ''
-              echo -e "${colors.title}update ${hostname}...${colors.reset}"
-              echo ""
-              echo -e "${colors.title}apply system configuration...${colors.reset}"
-              echo ""
-              ${mkSystemCommand host}
-              echo ""
-              echo -e "${colors.done}apply system configuration done!${colors.reset}"
-              echo ""
-              echo -e "${colors.title}apply home configuration...${colors.reset}"
-              echo ""
-              ${mkHomeCommand host false}
-              echo -e "${colors.done}apply home configuration done!${colors.reset}"
-              echo ""
-              echo -e "${colors.done}update done!${colors.reset}"
-            ''
-          else if target == "experiment" then
-            ''
-              echo -e "${colors.title}update ${hostname} experimentally...${colors.reset}"
-              echo ""
-              echo -e "${colors.title}apply system configuration...${colors.reset}"
-              echo ""
-              ${mkSystemCommand host}
-              echo ""
-              echo -e "${colors.done}apply system configuration done!${colors.reset}"
-              echo ""
-              echo -e "${colors.title}apply home configuration experimentally...${colors.reset}"
-              echo ""
-              ${mkHomeCommand host true}
-              echo -e "${colors.done}apply home configuration experimentally done!${colors.reset}"
-              echo ""
-              echo -e "${colors.done}experimental update done!${colors.reset}"
-            ''
-          else if target == "test" then
-            ''
-              echo -e "${colors.title}test ${hostname} configuration...${colors.reset}"
-              echo ""
-              echo -e "${colors.header}check flake configuration...${colors.reset}"
-              nix flake check
-              echo ""
-              ${
-                if host.osType == "nixos" then
-                  ''
-                    echo -e "${colors.header}validate system configuration syntax and dependencies...${colors.reset}"
-                    nix eval .#nixosConfigurations.${host.systemConfig}.config.system.build.toplevel.drvPath --show-trace
-                    echo ""
-                    echo -e "${colors.header}validate home configuration syntax and dependencies...${colors.reset}"
-                    nix eval .#homeConfigurations."${host.homeConfig}".activationPackage.drvPath --show-trace
-                    echo ""
-                    echo -e "${colors.header}check system build dependencies without actual building...${colors.reset}"
-                    nix build .#nixosConfigurations.${host.systemConfig}.config.system.build.toplevel --dry-run --show-trace
-                    echo ""
-                    echo -e "${colors.header}check home build dependencies without actual building...${colors.reset}"
-                    nix build .#homeConfigurations."${host.homeConfig}".activationPackage --dry-run --show-trace
-                  ''
-                else
-                  ''
-                    echo -e "${colors.header}validate system configuration syntax and dependencies...${colors.reset}"
-                    nix eval .#darwinConfigurations.${host.systemConfig}.system.drvPath --show-trace
-                    echo ""
-                    echo -e "${colors.header}validate home configuration syntax and dependencies...${colors.reset}"
-                    nix eval .#homeConfigurations."${host.homeConfig}".activationPackage.drvPath --show-trace
-                    echo ""
-                    echo -e "${colors.header}check system build dependencies without actual building...${colors.reset}"
-                    nix build .#darwinConfigurations.${host.systemConfig}.system --dry-run --show-trace
-                    echo ""
-                    echo -e "${colors.header}check home build dependencies without actual building...${colors.reset}"
-                    nix build .#homeConfigurations."${host.homeConfig}".activationPackage --dry-run --show-trace
-                  ''
-              }
-              echo ""
-              echo -e "${colors.done}test done!${colors.reset}"
-            ''
-          else
-            ''echo -e "${colors.error}unsupported target: ${target}${colors.reset}"''
-        }
+        # execute target action
+        ${commands.${target} or ''${echo.error "unsupported target: ${target}"}''}
       '';
     in
     {
       type = "app";
       program = "${script}";
     };
-
   # create auto-detect app (detects hostname at runtime)
   mkAutoDetectApp =
     p: target:
@@ -220,7 +199,7 @@ let
                   ;;'') hostNames
           )}
           *)
-            echo -e "${colors.error}unsupported hostname: $HOSTNAME${colors.reset}"
+            ${echo.error "unsupported hostname: $HOSTNAME"}
             exit 1
             ;;
         esac
@@ -230,7 +209,85 @@ let
       type = "app";
       program = "${script}";
     };
-
+  # gc script for system & user
+  gcSystemScript = ''
+    ${echo.title "garbage collection (system & user)..."}
+    ${echo.blank}
+    ${echo.header "cleaning up system-wide packages..."}
+    sudo nix-collect-garbage --delete-old
+    sudo -i nix profile wipe-history
+    sudo -i nix store gc
+    ${echo.blank}
+    ${echo.header "cleaning up user packages..."}
+    nix-collect-garbage --delete-old
+    nix profile wipe-history
+    nix store gc
+    ${echo.blank}
+    ${echo.done "garbage collection (system & user) done!"}
+  '';
+  # utility command generators
+  utilityCommands = {
+    format = ''
+      ${echo.title "format files..."}
+      ${echo.blank}
+      nix fmt
+      ${echo.blank}
+      ${echo.done "format done!"}
+    '';
+    gc = gcSystemScript;
+    "gc.system" = gcSystemScript;
+    "gc.user" = ''
+      ${echo.title "garbage collection (user)..."}
+      ${echo.blank}
+      nix profile wipe-history
+      nix store gc
+      ${echo.blank}
+      ${echo.done "garbage collection (user) done!"}
+    '';
+    clean = ''
+      ${echo.title "clean result directory..."}
+      ${echo.blank}
+      rm -fr result
+      ${echo.done "clean done!"}
+    '';
+    help = ''
+      CURRENT_HOST="$(hostname)"
+      # calculate max width based on longest command (hostname-experiment)
+      MAX_CMD="nix run .#$CURRENT_HOST-experiment"
+      WIDTH=''${#MAX_CMD}
+      # helper to print command with description
+      print_cmd() {
+        local cmd="$1"
+        local desc="$2"
+        printf "      ${colors.done}%-''${WIDTH}s${colors.reset} - %s\n" "$cmd" "$desc"
+      }
+      ${echo.header "detected hostname: $CURRENT_HOST"}
+      ${echo.blank}
+      echo -e "  ${colors.title}available commands:${colors.reset}"
+      ${echo.blank}
+      echo -e "    ${colors.header}[host-specific operations (auto-detect)]${colors.reset}"
+      print_cmd "nix run .#update" "update whole system"
+      print_cmd "nix run .#system" "apply system configuration"
+      print_cmd "nix run .#home" "apply home configuration"
+      print_cmd "nix run .#experiment" "experimental update (time-consuming sync operations are disabled)"
+      print_cmd "nix run .#test" "test configuration (dry-run)"
+      ${echo.blank}
+      echo -e "    ${colors.header}[host-specific operations (explicit)]${colors.reset}"
+      print_cmd "nix run .#$CURRENT_HOST-update" "update whole system"
+      print_cmd "nix run .#$CURRENT_HOST-system" "apply system configuration"
+      print_cmd "nix run .#$CURRENT_HOST-home" "apply home configuration"
+      print_cmd "nix run .#$CURRENT_HOST-experiment" "experimental update (time-consuming sync operations are disabled)"
+      print_cmd "nix run .#$CURRENT_HOST-test" "test configuration (dry-run)"
+      ${echo.blank}
+      echo -e "    ${colors.header}[utility operations]${colors.reset}"
+      print_cmd "nix run .#format" "format files"
+      print_cmd "nix run .#gc" "garbage collection (system & user)"
+      print_cmd "nix run .#gc.system" "garbage collection (system & user)"
+      print_cmd "nix run .#gc.user" "garbage collection (user only)"
+      print_cmd "nix run .#clean" "remove result directory"
+      print_cmd "nix run .#help" "show this help message"
+    '';
+  };
   # create common utility app (format, gc, clean)
   mkUtilityApp =
     p: target:
@@ -239,96 +296,13 @@ let
       script = p.writeShellScript "util-${target}" ''
         set -euo pipefail
         cd "${repoRoot}"
-        ${
-          if target == "format" then
-            ''
-              echo -e "${colors.title}format files...${colors.reset}"
-              echo ""
-              nix fmt
-              echo ""
-              echo -e "${colors.done}format done!${colors.reset}"
-            ''
-          else if target == "gc" || target == "gc.system" then
-            ''
-              echo -e "${colors.title}garbage collection (system & user)...${colors.reset}"
-              echo ""
-              echo -e "${colors.header}cleaning up system-wide packages...${colors.reset}"
-              sudo nix-collect-garbage --delete-old
-              sudo -i nix profile wipe-history
-              sudo -i nix store gc
-              echo ""
-              echo -e "${colors.header}cleaning up user packages...${colors.reset}"
-              nix-collect-garbage --delete-old
-              nix profile wipe-history
-              nix store gc
-              echo ""
-              echo -e "${colors.done}garbage collection (system & user) done!${colors.reset}"
-            ''
-          else if target == "gc.user" then
-            ''
-              echo -e "${colors.title}garbage collection (user)...${colors.reset}"
-              echo ""
-              nix profile wipe-history
-              nix store gc
-              echo ""
-              echo -e "${colors.done}garbage collection (user) done!${colors.reset}"
-            ''
-          else if target == "clean" then
-            ''
-              echo -e "${colors.title}clean result directory...${colors.reset}"
-              echo ""
-              rm -fr result
-              echo -e "${colors.done}clean done!${colors.reset}"
-            ''
-          else if target == "help" then
-            ''
-              CURRENT_HOST="$(hostname)"
-              # calculate max width based on longest command (hostname-experiment)
-              MAX_CMD="nix run .#$CURRENT_HOST-experiment"
-              WIDTH=''${#MAX_CMD}
-
-              print_cmd() {
-                local cmd="$1"
-                local desc="$2"
-                printf "      ${colors.done}%-''${WIDTH}s${colors.reset} - %s\n" "$cmd" "$desc"
-              }
-
-              echo -e "${colors.header}detected hostname: $CURRENT_HOST${colors.reset}"
-              echo ""
-              echo -e "  ${colors.title}available commands:${colors.reset}"
-              echo ""
-              echo -e "    ${colors.header}[host-specific operations (auto-detect)]${colors.reset}"
-              print_cmd "nix run .#update" "update whole system"
-              print_cmd "nix run .#system" "apply system configuration"
-              print_cmd "nix run .#home" "apply home configuration"
-              print_cmd "nix run .#experiment" "experimental update (time-consuming sync operations are disabled)"
-              print_cmd "nix run .#test" "test configuration (dry-run)"
-              echo ""
-              echo -e "    ${colors.header}[host-specific operations (explicit)]${colors.reset}"
-              print_cmd "nix run .#$CURRENT_HOST-update" "update whole system"
-              print_cmd "nix run .#$CURRENT_HOST-system" "apply system configuration"
-              print_cmd "nix run .#$CURRENT_HOST-home" "apply home configuration"
-              print_cmd "nix run .#$CURRENT_HOST-experiment" "experimental update (time-consuming sync operations are disabled)"
-              print_cmd "nix run .#$CURRENT_HOST-test" "test configuration (dry-run)"
-              echo ""
-              echo -e "    ${colors.header}[utility operations]${colors.reset}"
-              print_cmd "nix run .#format" "format files"
-              print_cmd "nix run .#gc" "garbage collection (system & user)"
-              print_cmd "nix run .#gc.system" "garbage collection (system & user)"
-              print_cmd "nix run .#gc.user" "garbage collection (user only)"
-              print_cmd "nix run .#clean" "remove result directory"
-              print_cmd "nix run .#help" "show this help message"
-            ''
-          else
-            ''echo -e "${colors.error}unsupported target: ${target}${colors.reset}"''
-        }
+        ${utilityCommands.${target} or ''${echo.error "unsupported target: ${target}"}''}
       '';
     in
     {
       type = "app";
       program = "${script}";
     };
-
   # host-specific targets
   hostTargets = [
     "update"
@@ -337,24 +311,21 @@ let
     "experiment"
     "test"
   ];
-
   # utility targets (no host-specific behavior)
   utilityTargets = [
+    "clean"
     "format"
     "gc"
     "gc.system"
     "gc.user"
-    "clean"
     "help"
   ];
-
   # create all apps for a system
   mkAppsForSystem =
     system:
     let
       p = pkgs system;
       hostsForSystem = builtins.filter (h: hosts.${h}.system == system) (builtins.attrNames hosts);
-
       # host-specific apps: <hostname>-<target>
       hostApps = builtins.listToAttrs (
         builtins.concatMap (
@@ -365,7 +336,6 @@ let
           }) hostTargets
         ) hostsForSystem
       );
-
       # auto-detect apps: <target> (detects hostname)
       autoApps = builtins.listToAttrs (
         map (target: {
@@ -373,7 +343,6 @@ let
           value = mkAutoDetectApp p target;
         }) hostTargets
       );
-
       # utility apps: <target> (no host-specific behavior)
       utilApps = builtins.listToAttrs (
         map (target: {
