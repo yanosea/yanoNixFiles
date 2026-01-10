@@ -3,6 +3,6 @@
 {
   # home
   home = {
-    packages = with pkgs; [ nixfmt-rfc-style ];
+    packages = with pkgs; [ nixfmt ];
   };
 }
