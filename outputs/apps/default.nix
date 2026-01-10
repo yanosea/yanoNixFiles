@@ -158,7 +158,7 @@ let
     p: hostname: target:
     let
       host = hosts.${hostname};
-      repoRoot = ''$(${p.git}/bin/git rev-parse --show-toplevel)'';
+      repoRoot = "$(${p.git}/bin/git rev-parse --show-toplevel)";
       commands = hostCommands hostname host;
       script = p.writeShellScript "${hostname}-${target}" ''
         set -euo pipefail
@@ -174,7 +174,7 @@ let
           exit 1
         fi
         # execute target action
-        ${commands.${target} or ''${echo.error "unsupported target: ${target}"}''}
+        ${commands.${target} or "${echo.error "unsupported target: ${target}"}"}
       '';
     in
     {
@@ -186,7 +186,7 @@ let
     p: target:
     let
       hostNames = builtins.attrNames hosts;
-      repoRoot = ''$(${p.git}/bin/git rev-parse --show-toplevel)'';
+      repoRoot = "$(${p.git}/bin/git rev-parse --show-toplevel)";
       script = p.writeShellScript "auto-${target}" ''
         set -euo pipefail
         cd "${repoRoot}"
@@ -292,11 +292,11 @@ let
   mkUtilityApp =
     p: target:
     let
-      repoRoot = ''$(${p.git}/bin/git rev-parse --show-toplevel)'';
+      repoRoot = "$(${p.git}/bin/git rev-parse --show-toplevel)";
       script = p.writeShellScript "util-${target}" ''
         set -euo pipefail
         cd "${repoRoot}"
-        ${utilityCommands.${target} or ''${echo.error "unsupported target: ${target}"}''}
+        ${utilityCommands.${target} or "${echo.error "unsupported target: ${target}"}"}
       '';
     in
     {
