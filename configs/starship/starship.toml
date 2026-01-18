@@ -3,22 +3,21 @@ format = """
 $os\
 [](bg:#a7c080 fg:#83c092)\
 $directory\
-[](fg:#a7c080 bg:#2d353b)\
-$git_branch\
-$git_status\
-[](fg:#2d353b bg:#343f44)\
+[](fg:#a7c080 bg:#2E383C)\
+${custom.jj}\
+[](fg:#2E383C bg:#374145)\
 $nodejs\
 $rust\
 $golang\
 $php\
-[](fg:#343f44 bg:#2d353b)\
+[](fg:#374145 bg:#2E383C)\
 $time\
-[ ](fg:#2d353b)\
+[ ](fg:#2E383C)\
 \n$character"""
 
 [os]
 format = "[ $symbol ]($style)"
-style = "bg:#83c092 fg:#090c0c"
+style = "bg:#83c092 fg:#272E33"
 disabled = false
 
 [os.symbols]
@@ -28,7 +27,7 @@ Macos = ""
 NixOS = ""
 
 [directory]
-style = "fg:#55544a bg:#a7c080"
+style = "fg:#7A8478 bg:#a7c080"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
@@ -40,36 +39,39 @@ truncation_symbol = "…/"
 "Pictures" = " "
 
 [git_branch]
-symbol = ""
-style = "bg:#2d353b"
-format = '[[ $symbol $branch ](fg:#a7c080 bg:#2d353b)]($style)'
+disabled = true
 
 [git_status]
-style = "bg:#2d353b"
-format = '[[($all_status$ahead_behind )](fg:#a7c080 bg:#2d353b)]($style)'
+disabled = true
 
 [nodejs]
 symbol = ""
-style = "bg:#343f44"
-format = '[[ $symbol ($version) ](fg:#a7c080 bg:#343f44)]($style)'
+style = "bg:#374145"
+format = '[[ $symbol ($version) ](fg:#a7c080 bg:#374145)]($style)'
 
 [rust]
 symbol = ""
-style = "bg:#343f44"
-format = '[[ $symbol ($version) ](fg:#a7c080 bg:#343f44)]($style)'
+style = "bg:#374145"
+format = '[[ $symbol ($version) ](fg:#a7c080 bg:#374145)]($style)'
 
 [golang]
 symbol = ""
-style = "bg:#343f44"
-format = '[[ $symbol ($version) ](fg:#a7c080 bg:#343f44)]($style)'
+style = "bg:#374145"
+format = '[[ $symbol ($version) ](fg:#a7c080 bg:#374145)]($style)'
 
 [php]
 symbol = ""
-style = "bg:#343f44"
-format = '[[ $symbol ($version) ](fg:#a7c080 bg:#343f44)]($style)'
+style = "bg:#374145"
+format = '[[ $symbol ($version) ](fg:#a7c080 bg:#374145)]($style)'
 
 [time]
 disabled = false
 time_format = "%H:%M:%S"
-style = "bg:#2d353b"
-format = '[[   $time ](fg:#d3c6aa bg:#2d353b)]($style)'
+style = "bg:#2E383C"
+format = '[[   $time ](fg:#d3c6aa bg:#2E383C)]($style)'
+
+[custom.jj]
+when = "jj-starship detect"
+shell = ["jj-starship"]
+style = "bg:#2E383C"
+format = '[[ $output ](fg:#a7c080 bg:#2E383C)]($style)'
