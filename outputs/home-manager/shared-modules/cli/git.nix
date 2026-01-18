@@ -37,7 +37,10 @@ in
           git-lfs
           github-cli
           gitlogue
+          jj-starship
+          jujutsu
           lazygit
+          lazyjj
         ];
       };
     }

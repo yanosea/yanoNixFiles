@@ -43,6 +43,9 @@ abbrev-alias grf='cd $(ghq list -p | fzf)'
 abbrev-alias ggl="git log --graph --all --oneline --decorate"
 ## lazy git
 abbrev-alias lg="lazygit"
+### lazy jj
+abbrev-alias lj="lazyjj"
+
 ## editor
 abbrev-alias nvimdiff="nvim -d"
 
