@@ -123,6 +123,27 @@ let
     ${mkHomeCommand host experimental}
     ${echo.done "apply home configuration${if experimental then " experimentally" else ""} done!"}
     ${echo.blank}
+    ${
+      if experimental then
+        ""
+      else
+        ''
+          ${echo.title "garbage collection (system & user)..."}
+          ${echo.blank}
+          ${echo.header "cleaning up system-wide packages..."}
+          sudo nix-collect-garbage --delete-old
+          sudo -i nix profile wipe-history
+          sudo -i nix store gc
+          ${echo.blank}
+          ${echo.header "cleaning up user packages..."}
+          nix-collect-garbage --delete-old
+          nix profile wipe-history
+          nix store gc
+          ${echo.blank}
+          ${echo.done "garbage collection (system & user) done!"}
+          ${echo.blank}
+        ''
+    }
     ${echo.done "${if experimental then "experimental " else ""}update done!"}
   '';
   # host command generators
