@@ -14,6 +14,6 @@ color = "auto"
 colocate = true
 
 [signing]
+behavior = "own"
 backend = "gpg"
 key = "B8C069E2833A7A32"
-sign-all = true

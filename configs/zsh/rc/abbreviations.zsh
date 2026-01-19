@@ -41,9 +41,13 @@ abbrev-alias gbf='git switch $(git branch -l | fzf | tr -d "* ")'
 abbrev-alias grf='cd $(ghq list -p | fzf)'
 ### git graph log
 abbrev-alias ggl="git log --graph --all --oneline --decorate"
-## lazy git
+### jj bookmark fzf
+abbrev-alias jbf='jj new $(jj bookmark list | fzf | awk "{print \$1}")'
+### jjui
+abbrev-alias ju="jjui"
+### lazygit
 abbrev-alias lg="lazygit"
-### lazy jj
+### lazyjj
 abbrev-alias lj="lazyjj"
 
 ## editor
@@ -70,6 +74,10 @@ abbrev-alias ccusage="bunx ccusage@latest"
 abbrev-alias rtty='rtty run zellij --font "PlemolJP Console NF"'
 ## trello
 abbrev-alias trello="trello-tui -board yanoBoard"
+
+# shell
+## reload zsh
+abbrev-alias reload="exec zsh"
 
 # utilities
 ## nix-latest

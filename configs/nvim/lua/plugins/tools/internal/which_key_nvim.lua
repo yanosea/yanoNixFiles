@@ -130,6 +130,26 @@ return {
 					{ "<LEADER>gU", "<CMD>OpenGitHubUrlUnderCursor<CR>", desc = "git: open github url" },
 					-- grug far
 					{ "<LEADER>G", "<CMD>GrugFar<CR>", desc = "grug far: search and replace text" },
+					-- jj (jujutsu)
+					{ "<LEADER>j", group = "jj" },
+					{ "<LEADER>ja", "<CMD>lua require('jj.annotate').file()<CR>", desc = "jj: annotate file" },
+					{ "<LEADER>jA", "<CMD>lua require('jj.annotate').line()<CR>", desc = "jj: annotate line" },
+					{
+						"<LEADER>jc",
+						"<CMD>lua require('telescope').extensions.jj.conflicts()<CR>",
+						desc = "jj: conflict files",
+					},
+					{ "<LEADER>jd", "<CMD>J describe<CR>", desc = "jj: describe" },
+					{ "<LEADER>jD", "<CMD>lua require('telescope').extensions.jj.diff()<CR>", desc = "jj: diff files" },
+					{ "<LEADER>jf", "<CMD>lua require('telescope').extensions.jj.files()<CR>", desc = "jj: files" },
+					{ "<LEADER>je", "<CMD>J edit<CR>", desc = "jj: edit" },
+					{ "<LEADER>jF", "<CMD>J fetch<CR>", desc = "jj: fetch" },
+					{ "<LEADER>jj", "<CMD>lua ToggleJjui()<CR>", desc = "jj: jjui" },
+					{ "<LEADER>jl", "<CMD>J log<CR>", desc = "jj: log" },
+					{ "<LEADER>jn", "<CMD>J new<CR>", desc = "jj: new" },
+					{ "<LEADER>jo", "<CMD>J open_pr<CR>", desc = "jj: open pr" },
+					{ "<LEADER>jp", "<CMD>J push<CR>", desc = "jj: push" },
+					{ "<LEADER>js", "<CMD>J status<CR>", desc = "jj: status" },
 					-- hardtime
 					{ "<LEADER>H", "<CMD>Hardtime toggle<CR>", desc = "hardtime: toggle" },
 					-- lsp

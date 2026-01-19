@@ -163,12 +163,16 @@ ifeq ($(IS_NIXOS),1)
 	rm -fr $$HOME/.config/fcitx5/config
 	nix run .#homeConfigurations."yanosea@yanoNixOs".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_NIXOS_WSL),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
 	rm -fr $$HOME/.config/claude/CLAUDE.md
 	nix run .#homeConfigurations."yanosea@yanoNixOsWsl".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
@@ -178,6 +182,8 @@ else ifeq ($(IS_MAC),1)
 	rm -fr $$HOME/.config/karabiner/karabiner.json
 	nix run .#homeConfigurations."yanosea@yanoMac".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)apply home configuration...$(COLOR_RESET)"
 	@echo ""
@@ -187,6 +193,8 @@ else ifeq ($(IS_MACBOOK),1)
 	rm -fr $$HOME/.config/karabiner/karabiner.json
 	nix run .#homeConfigurations."yanosea@yanoMacBook".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else
 	@echo "$(COLOR_ERROR)unsupported platform...$(COLOR_RESET)"
 endif
@@ -207,6 +215,8 @@ ifeq ($(IS_NIXOS),1)
 	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
 	@echo ""
 	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_NIXOS_WSL),1)
 	@echo "$(COLOR_TITLE)update nixos wsl experimentally...$(COLOR_RESET)"
 	@echo ""
@@ -220,6 +230,8 @@ else ifeq ($(IS_NIXOS_WSL),1)
 	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
 	@echo ""
 	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)update mac experimentally...$(COLOR_RESET)"
 	@echo ""
@@ -236,6 +248,8 @@ else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
 	@echo ""
 	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)update macbook experimentally...$(COLOR_RESET)"
 	@echo ""
@@ -252,6 +266,8 @@ else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
 	@echo ""
 	@echo "$(COLOR_DONE)experimental update done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else
 	@echo "$(COLOR_ERROR)unsupported platform...$(COLOR_RESET)"
 endif

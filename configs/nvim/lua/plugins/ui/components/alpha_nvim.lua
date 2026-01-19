@@ -95,6 +95,7 @@ return {
 					"<CMD>Telescope file_browser cwd=" .. vim.fn.expand("%:p:h") .. "<CR>"
 				),
 				dashboard.button("g", icons.git.Git .. "  lazygit", "<CMD>lua ToggleLazyGit()<CR>"),
+				dashboard.button("j", icons.git.Branch .. "  jjui", "<CMD>lua ToggleJjui()<CR>"),
 				dashboard.button("l", icons.misc.Lazy .. "  lazy", "<CMD>Lazy<CR>"),
 				dashboard.button("m", icons.misc.Mason .. "  mason lsp", "<CMD>Mason<CR>"),
 				dashboard.button("T", icons.ui.Tree .. "  sync tree-sitter parser", "<CMD>TSUpdate<CR>"),

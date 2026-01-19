@@ -1,4 +1,4 @@
-# home git module
+# home vcs module
 {
   config,
   lib,
@@ -8,17 +8,17 @@
 }:
 with lib;
 let
-  cfg = config.home.cli.git;
+  cfg = config.home.cli.vcs;
 in
 {
   options = {
     home = {
       cli = {
-        git = {
-          syncGitRepos = mkOption {
+        vcs = {
+          syncRepos = mkOption {
             type = types.bool;
             default = if builtins.getEnv "EXPERIMENTAL_MODE" == "1" then false else true;
-            description = "sync Git repositories during activation";
+            description = "sync repositories during activation";
           };
         };
       };
@@ -38,17 +38,18 @@ in
           github-cli
           gitlogue
           jj-starship
+          jjui
           jujutsu
           lazygit
           lazyjj
         ];
       };
     }
-    (mkIf cfg.syncGitRepos {
+    (mkIf cfg.syncRepos {
       # home
       home = {
         activation = {
-          syncGitRepos =
+          syncRepos =
             let
               repositories = [
                 "github.com/dimdenGD/OldTweetDeck"
@@ -60,17 +61,30 @@ in
                 "github.com/yanosea/yanoNixFiles"
                 "github.com/yanosea/yanoPortfolio"
               ];
-              script = pkgs.writeShellScript "sync-git-repos" ''
+              script = pkgs.writeShellScript "sync-repos" ''
                 set -euo pipefail
-                export PATH=${pkgs.git}/bin:$PATH
+                export PATH=${pkgs.git}/bin:${pkgs.jujutsu}/bin:$PATH
                 for repo in ${builtins.concatStringsSep " " repositories}; do
                   ${pkgs.ghq}/bin/ghq get --update "$repo"
+                  repoPath="$HOME/ghq/$repo"
+                  if [ ! -d "$repoPath/.jj" ]; then
+                    (cd "$repoPath" && jj git init --colocate)
+                  fi
+                  # track default remote branch (main or master) and fetch
+                  (cd "$repoPath" && {
+                    if jj bookmark list --all 2>/dev/null | grep -q "main@origin"; then
+                      jj bookmark track main --remote origin 2>/dev/null || true
+                    elif jj bookmark list --all 2>/dev/null | grep -q "master@origin"; then
+                      jj bookmark track master --remote origin 2>/dev/null || true
+                    fi
+                    jj git fetch 2>/dev/null || true
+                  })
                 done
               '';
             in
             config.lib.dag.entryAfter [ "writeBoundary" ] ''
               echo ""
-              echo "sync git repos..."
+              echo "sync repos..."
               echo ""
               ${script}
               echo ""
