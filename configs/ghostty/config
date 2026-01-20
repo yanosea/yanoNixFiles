@@ -1,0 +1,79 @@
+# ghostty config
+# Using with zellij for tab/pane management
+
+# Platform-specific config (optional, ignored if not exists)
+config-file = ?platform/linux
+config-file = ?platform/macos
+
+# Theme
+theme = everforest-dark
+
+# Font
+font-family = PlemolJP Console NF
+font-style = Medium
+
+# Window
+window-padding-x = 0
+window-padding-y = 0
+window-decoration = none
+background-opacity = 0.8
+
+# Cursor
+cursor-style = block
+cursor-style-blink = true
+
+# Shell integration
+shell-integration = detect
+
+# Scrollback
+scrollback-limit = 3500
+
+# Clipboard
+clipboard-read = allow
+clipboard-write = allow
+clipboard-paste-protection = false
+
+# Quick terminal (for btop etc.)
+quick-terminal-position = center
+
+# Keybindings
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+
+# Tab
+keybind = ctrl+shift+t=new_tab
+keybind = ctrl+shift+w=close_surface
+keybind = ctrl+shift+k=previous_tab
+keybind = ctrl+shift+j=next_tab
+keybind = ctrl+shift+one=goto_tab:1
+keybind = ctrl+shift+two=goto_tab:2
+keybind = ctrl+shift+three=goto_tab:3
+keybind = ctrl+shift+four=goto_tab:4
+keybind = ctrl+shift+five=goto_tab:5
+keybind = ctrl+shift+six=goto_tab:6
+keybind = ctrl+shift+seven=goto_tab:7
+keybind = ctrl+shift+eight=goto_tab:8
+keybind = ctrl+shift+nine=goto_tab:9
+
+# Split
+keybind = ctrl+shift+enter=new_split:auto
+keybind = ctrl+shift+s=new_split:down
+keybind = ctrl+shift+d=new_split:right
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+l=goto_split:right
+keybind = ctrl+shift+alt+k=goto_split:top
+keybind = ctrl+shift+alt+j=goto_split:bottom
+
+# Resize split
+keybind = ctrl+shift+left=resize_split:left,10
+keybind = ctrl+shift+right=resize_split:right,10
+keybind = ctrl+shift+up=resize_split:up,10
+keybind = ctrl+shift+down=resize_split:down,10
+
+# Font size
+keybind = ctrl+shift+u=increase_font_size:1
+keybind = ctrl+shift+m=decrease_font_size:1
+keybind = ctrl+shift+zero=reset_font_size
+
+# Misc
+confirm-close-surface = false
