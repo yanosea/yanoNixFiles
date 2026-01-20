@@ -14,6 +14,7 @@ return {
 				{ "2kabhishek/nerdy.nvim", dependencies = { "folke/snacks.nvim" } },
 				"nvim-telescope/telescope-ui-select.nvim",
 				"debugloop/telescope-undo.nvim",
+				"zschreur/telescope-jj.nvim",
 			},
 		},
 		lazy = true,
@@ -117,6 +118,7 @@ return {
 			-- load extensions
 			require("telescope").load_extension("file_browser")
 			require("telescope").load_extension("fzf")
+			require("telescope").load_extension("jj")
 			require("telescope").load_extension("nerdy")
 			require("telescope").load_extension("ui-select")
 			require("telescope").load_extension("undo")

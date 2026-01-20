@@ -1,5 +1,55 @@
 -- terminal in neovim
 -- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>t)
+
+-- global toggle functions (defined outside config so they're available before plugin loads)
+function ToggleLazyGit()
+	require("lazy").load({ plugins = { "toggleterm.nvim" } })
+	vim.defer_fn(function()
+		local Terminal = require("toggleterm.terminal").Terminal
+		local lazygit = Terminal:new({
+			cmd = "lazygit",
+			hidden = true,
+			direction = "float",
+			float_opts = {
+				border = "none",
+				width = 100000,
+				height = 100000,
+				zindex = 200,
+			},
+			on_open = function(_)
+				vim.cmd("startinsert!")
+			end,
+			on_close = function(_) end,
+			count = 99,
+		})
+		lazygit:toggle()
+	end, 0)
+end
+
+function ToggleJjui()
+	require("lazy").load({ plugins = { "toggleterm.nvim" } })
+	vim.defer_fn(function()
+		local Terminal = require("toggleterm.terminal").Terminal
+		local jjui = Terminal:new({
+			cmd = "jjui",
+			hidden = true,
+			direction = "float",
+			float_opts = {
+				border = "none",
+				width = 100000,
+				height = 100000,
+				zindex = 200,
+			},
+			on_open = function(_)
+				vim.cmd("startinsert!")
+			end,
+			on_close = function(_) end,
+			count = 98,
+		})
+		jjui:toggle()
+	end, 0)
+end
+
 return {
 	{
 		"akinsho/toggleterm.nvim",
@@ -13,40 +63,10 @@ return {
 			"ToggleTermSendVisualSelection",
 		},
 		keys = {
-			{
-				"<LEADER>gg",
-				function()
-					local Terminal = require("toggleterm.terminal").Terminal
-					local lazygit = Terminal:new({
-						cmd = "lazygit",
-						hidden = true,
-						direction = "float",
-						float_opts = {
-							border = "none",
-							width = 100000,
-							height = 100000,
-							zindex = 200,
-						},
-						on_open = function(_)
-							vim.cmd("startinsert!")
-						end,
-						on_close = function(_) end,
-						count = 99,
-					})
-					lazygit:toggle()
-				end,
-				desc = "git: lazygit",
-			},
-			{
-				"<LEADER>ts",
-				"<CMD>ToggleTerm direction=horizontal<CR>",
-				desc = "terminal: horizontal",
-			},
-			{
-				"<LEADER>tv",
-				"<CMD>ToggleTerm direction=vertical<CR>",
-				desc = "terminal: vertical",
-			},
+			{ "<LEADER>gg", "<CMD>lua ToggleLazyGit()<CR>", desc = "git: lazygit" },
+			{ "<LEADER>jj", "<CMD>lua ToggleJjui()<CR>", desc = "jj: jjui" },
+			{ "<LEADER>ts", "<CMD>ToggleTerm direction=horizontal<CR>", desc = "terminal: horizontal" },
+			{ "<LEADER>tv", "<CMD>ToggleTerm direction=vertical<CR>", desc = "terminal: vertical" },
 		},
 		config = function()
 			-- toggleterm.nvim config

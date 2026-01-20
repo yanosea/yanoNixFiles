@@ -123,6 +123,8 @@ let
     ${mkHomeCommand host experimental}
     ${echo.done "apply home configuration${if experimental then " experimentally" else ""} done!"}
     ${echo.blank}
+    ${echo.header "hint: run 'reload' or 'exec zsh' to apply shell changes"}
+    ${echo.blank}
     ${
       if experimental then
         ""
@@ -160,6 +162,8 @@ let
       ${echo.blank}
       ${mkHomeCommand host false}
       ${echo.done "apply home configuration done!"}
+      ${echo.blank}
+      ${echo.header "hint: run 'reload' or 'exec zsh' to apply shell changes"}
     '';
     update = mkUpdateScript host false hostname;
     experiment = mkUpdateScript host true hostname;
