@@ -132,7 +132,7 @@ environment {
     XDG_SESSION_DESKTOP "niri"
 }
 // window rules
-//// vim via wezterm for ime
+//// vim via ghostty for ime
 window-rule {
     match app-id="FloatingVim"
     open-floating true
@@ -376,7 +376,7 @@ binds {
     }
     // application
     Super+T {
-        spawn "wezterm"
+        spawn "ghostty"
     }
     Super+B {
         spawn "vivaldi"
@@ -394,7 +394,7 @@ binds {
         spawn "qs" "ipc" "call" "launcher" "toggle"
     }
     Ctrl+Shift+Escape {
-        spawn "wezterm" "-e" "btop"
+        spawn "ghostty" "-e" "btop"
     }
     Ctrl+Shift+Q {
         spawn "qs" "ipc" "call" "launcher" "clipboard"

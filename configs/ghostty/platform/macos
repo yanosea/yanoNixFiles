@@ -1,0 +1,7 @@
+# macOS-specific ghostty config
+
+# Font size
+font-size = 14
+
+# macOS options
+macos-option-as-alt = true

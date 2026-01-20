@@ -1,0 +1,4 @@
+# Linux-specific ghostty config
+
+# Font size
+font-size = 10
