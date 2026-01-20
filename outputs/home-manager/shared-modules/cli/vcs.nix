@@ -30,12 +30,12 @@ in
       home = {
         packages = with pkgs; [
           gh
-          gh-copilot
           gh-dash
           ghq
           git-credential-oauth
           git-lfs
           github-cli
+          github-copilot-cli
           gitlogue
           jj-starship
           jjui
