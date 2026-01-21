@@ -190,7 +190,7 @@
       BROWSER = "vivaldi";
       EDITOR = "nvim";
       VISUAL = "nvim";
-      TERMINAL = "ghostty";
+      TERMINAL = "wezterm";
       FILE_MANAGER = "nemo";
       PAGER = "less";
     };
