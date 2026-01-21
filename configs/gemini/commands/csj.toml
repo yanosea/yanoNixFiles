@@ -8,16 +8,20 @@ Please generate a commit message in English for the current working copy changes
      - no body
      - label: `bug` for `fix:` prefix, `enhancement` for others
      - assignee: self (`@me`)
-  2. `jj describe` command with the generated message
-  3. `jj bookmark create` command to create a bookmark for the issue (e.g., `123-feature-name`)
-  4. `nix fmt` command to format files
+  2. `nix fmt` command to format files
+  3. `jj describe` command with the generated message
+  4. `jj bookmark create` command to create a bookmark for the issue (e.g., `123-feature-name`)
   5. `jj git push` command to push the changes to remote with `-b <bookmark> --allow-new`
   6. `gh pr create` command:
-     - body: commit message body + `closes #<issue-number>` (use `--body "$(jj log -r @- --no-graph -T description | tail -n +3)\n\ncloses #<issue-number>"`)
+     - **IMPORTANT: use `--head <bookmark>` flag** (jj does not use git branches, so branch detection fails without this)
+     - body: commit message body + `closes #<issue-number>`
      - label: same as issue
      - assignee: same as issue (`@me`)
-  7. `gh pr merge` command to merge the pull request
-- Do not show the commit message separately; only show it in the commands.
+  7. `gh pr merge` command to merge the pull request:
+     - **IMPORTANT: specify PR number** (e.g., `gh pr merge <pr-number>`)
+  8. cleanup command:
+     - `jj git fetch && jj bookmark delete <bookmark>`
+- Do not show the commit message separately; only show them for the user to run manually.
 - Do not execute any commands, only show them for the user to run manually.
 
 ## Rules
