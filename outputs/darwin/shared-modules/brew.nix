@@ -27,7 +27,6 @@
       "easyfind"
       "font-sf-mono"
       "font-sf-pro"
-      "ghostty"
       "github@beta"
       "google-chrome"
       "google-drive"

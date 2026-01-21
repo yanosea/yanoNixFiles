@@ -7,7 +7,7 @@
     "pinnedExecs": [],
     "position": "center",
     "sortByMostUsed": true,
-    "terminalCommand": "ghostty -e",
+    "terminalCommand": "wezterm start --",
     "useApp2Unit": false
   },
   "audio": {
