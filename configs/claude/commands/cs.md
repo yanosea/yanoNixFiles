@@ -24,7 +24,6 @@
 
 1. The title should be at most 50 characters, and the body should be wrapped at 72 characters.
    For the title, use one of the following prefixes, separated from the title by a space:
-
    - `feat:` - Use for new feature additions
    - `fix:` - Use for bug fixes
    - `docs:` - Use for documentation-only changes

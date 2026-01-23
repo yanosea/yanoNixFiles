@@ -6,12 +6,13 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
   (inputs.treefmt-nix.lib.evalModule inputs.nixpkgs.legacyPackages.${system} {
     projectRootFile = "flake.nix";
     programs = {
-      # css, html
+      # css, html, markdown
       prettier = {
         enable = true;
         includes = [
           "*.css"
           "*.html"
+          "*.md"
         ];
         excludes = [
           "configs/quickshell/Assets/MatugenTemplates/**"
@@ -30,14 +31,6 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
       # lua
       stylua = {
         enable = true;
-      };
-      # markdown
-      mdformat = {
-        enable = true;
-        includes = [ "*.md" ];
-        settings = {
-          number = true;
-        };
       };
       # nix
       nixfmt = {
