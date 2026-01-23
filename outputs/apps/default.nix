@@ -112,6 +112,19 @@ let
   mkUpdateScript = host: experimental: hostname: ''
     ${echo.title "update ${hostname}${if experimental then " experimentally" else ""}..."}
     ${echo.blank}
+    ${
+      if host.osType == "darwin" then
+        ''
+          ${echo.title "upgrade nix..."}
+          ${echo.blank}
+          sudo determinate-nixd upgrade
+          ${echo.blank}
+          ${echo.done "upgrade nix done!"}
+          ${echo.blank}
+        ''
+      else
+        ""
+    }
     ${echo.title "apply system configuration..."}
     ${echo.blank}
     ${mkSystemCommand host}
@@ -122,8 +135,6 @@ let
     ${echo.blank}
     ${mkHomeCommand host experimental}
     ${echo.done "apply home configuration${if experimental then " experimentally" else ""} done!"}
-    ${echo.blank}
-    ${echo.header "hint: run 'reload' or 'exec zsh' to apply shell changes"}
     ${echo.blank}
     ${
       if experimental then
@@ -147,6 +158,8 @@ let
         ''
     }
     ${echo.done "${if experimental then "experimental " else ""}update done!"}
+    ${echo.blank}
+    ${echo.header "hint: run 'reload' or 'exec zsh' to apply shell changes"}
   '';
   # host command generators
   hostCommands = hostname: host: {

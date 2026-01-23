@@ -76,7 +76,11 @@ ifeq ($(IS_NIXOS),1)
 	@echo ""
 	make home
 	@echo ""
+	make gc
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_NIXOS_WSL),1)
 	@echo "$(COLOR_TITLE)update nixos wsl...$(COLOR_RESET)"
 	@echo ""
@@ -84,23 +88,47 @@ else ifeq ($(IS_NIXOS_WSL),1)
 	@echo ""
 	make home
 	@echo ""
+	make gc
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)update mac...$(COLOR_RESET)"
 	@echo ""
+	@echo "$(COLOR_TITLE)upgrade nix...$(COLOR_RESET)"
+	@echo ""
+	sudo determinate-nixd upgrade
+	@echo ""
+	@echo "$(COLOR_DONE)upgrade nix done!$(COLOR_RESET)"
+	@echo ""
 	make system
 	@echo ""
 	make home
 	@echo ""
+	make gc
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)update macbook...$(COLOR_RESET)"
 	@echo ""
+	@echo "$(COLOR_TITLE)upgrade nix...$(COLOR_RESET)"
+	@echo ""
+	sudo determinate-nixd upgrade
+	@echo ""
+	@echo "$(COLOR_DONE)upgrade nix done!$(COLOR_RESET)"
+	@echo ""
 	make system
 	@echo ""
 	make home
 	@echo ""
+	make gc
+	@echo ""
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_WINDOWS),1)
 	@Write-Host "update windows..." $(COLOR_TITLE)
 	@Write-Host ""
@@ -235,6 +263,12 @@ else ifeq ($(IS_NIXOS_WSL),1)
 else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_TITLE)update mac experimentally...$(COLOR_RESET)"
 	@echo ""
+	@echo "$(COLOR_TITLE)upgrade nix...$(COLOR_RESET)"
+	@echo ""
+	sudo determinate-nixd upgrade
+	@echo ""
+	@echo "$(COLOR_DONE)upgrade nix done!$(COLOR_RESET)"
+	@echo ""
 	make system
 	@echo ""
 	@echo "$(COLOR_TITLE)apply home configuration experimentally...$(COLOR_RESET)"
@@ -252,6 +286,12 @@ else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_HEADER)hint: run 'reload' or 'exec zsh' to apply shell changes$(COLOR_RESET)"
 else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_TITLE)update macbook experimentally...$(COLOR_RESET)"
+	@echo ""
+	@echo "$(COLOR_TITLE)upgrade nix...$(COLOR_RESET)"
+	@echo ""
+	sudo determinate-nixd upgrade
+	@echo ""
+	@echo "$(COLOR_DONE)upgrade nix done!$(COLOR_RESET)"
 	@echo ""
 	make system
 	@echo ""
