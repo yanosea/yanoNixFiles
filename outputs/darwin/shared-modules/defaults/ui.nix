@@ -33,13 +33,6 @@
       spaces = {
         spans-displays = false;
       };
-      universalaccess = {
-        closeViewScrollWheelToggle = false;
-        closeViewZoomFollowsFocus = false;
-        mouseDriverCursorSize = 1.0;
-        reduceMotion = false;
-        reduceTransparency = false;
-      };
       WindowManager = {
         AppWindowGroupingBehavior = true;
         AutoHide = false;
