@@ -3,7 +3,6 @@
 - Please generate a commit message in English for the current working copy changes.
 
 - Show the following commands for the user to run manually in order:
-
   1. `gh issue create` command:
      - title format: `(scope) description` (e.g., `(ai) expand workflow`)
      - no body
@@ -31,7 +30,6 @@
 
 1. The title should be at most 50 characters, and the body should be wrapped at 72 characters.
    For the title, use one of the following prefixes, separated from the title by a space:
-
    - `✨feat:` - Use for new feature additions
    - `🐞fix:` - Use for bug fixes
    - `📚docs:` - Use for documentation-only changes
