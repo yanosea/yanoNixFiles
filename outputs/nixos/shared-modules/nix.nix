@@ -1,9 +1,10 @@
 # nixos nix module
-{ username, ... }:
+{ pkgs, username, ... }:
 {
   # nix
   nix = {
     enable = true;
+    package = pkgs.nixVersions.latest;
     gc = {
       automatic = true;
       dates = "weekly";
