@@ -10,17 +10,17 @@
      - assignee: self (`@me`)
   2. `nix fmt` command to format files
   3. `jj describe` command with the generated message
-  4. `jj bookmark create` command to create a bookmark for the issue (e.g., `123-feature-name`)
+  4. `jj bookmark create` command to create a bookmark matching `gh issue develop` default format:
+     - format: `<issue-number>-<issue-title-in-kebab-case>` (e.g., `1154-hypr-migrate-windowrulev2-to-new-windowrule-syntax`)
   5. `jj git push` command to push the changes to remote with `-b <bookmark> --allow-new`
   6. `gh pr create` command:
      - **IMPORTANT: use `--head <bookmark>` flag** (jj does not use git branches, so branch detection fails without this)
      - body: commit message body + `closes #<issue-number>`
      - label: same as issue
      - assignee: same as issue (`@me`)
-  7. `gh pr merge` command to merge the pull request:
-     - **IMPORTANT: specify PR number** (e.g., `gh pr merge <pr-number>`)
-  8. cleanup command:
-     - `jj git fetch && jj bookmark delete <bookmark>`
+  7. `gh pr merge <pr-number>` command to merge the pull request
+  8. cleanup commands:
+     - `jj git fetch && jj rebase -d main && jj bookmark delete <bookmark>`
 
 - Do not show the commit message separately; only show it in the commands.
 
