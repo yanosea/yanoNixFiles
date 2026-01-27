@@ -17,3 +17,13 @@ colocate = true
 behavior = "own"
 backend = "gpg"
 key = "B8C069E2833A7A32"
+
+[aliases]
+sync = [
+  "util",
+  "exec",
+  "--",
+  "sh",
+  "-c",
+  "jj git fetch && jj rebase -s 'roots(main..@)' -d main",
+]
