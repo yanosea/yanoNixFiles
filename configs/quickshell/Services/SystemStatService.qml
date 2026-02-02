@@ -411,10 +411,12 @@ Singleton {
 
   // --------------------------------------------
   // GPU monitoring using nvidia-smi
+  // Use onRunningChanged to restart after process exits to prevent FD leak
   Process {
     id: gpuUsageProcess
     command: ["nvidia-smi", "--query-gpu=utilization.gpu", "--format=csv,noheader,nounits"]
     running: true
+    onRunningChanged: if (!running) running = true
 
     stdout: SplitParser {
       onRead: data => {
@@ -430,6 +432,7 @@ Singleton {
     id: gpuTempProcess
     command: ["nvidia-smi", "--query-gpu=temperature.gpu", "--format=csv,noheader,nounits"]
     running: true
+    onRunningChanged: if (!running) running = true
 
     stdout: SplitParser {
       onRead: data => {
@@ -438,18 +441,6 @@ Singleton {
           root.gpuTemp = temp
         }
       }
-    }
-  }
-
-  Timer {
-    interval: root.sleepDuration
-    running: true
-    repeat: true
-    onTriggered: {
-      gpuUsageProcess.running = false
-      gpuTempProcess.running = false
-      gpuUsageProcess.running = true
-      gpuTempProcess.running = true
     }
   }
 }
