@@ -87,9 +87,9 @@ inputs: [
             python311Packages.pip
             python311Packages.virtualenv
             stdenv.cc.cc.lib
-            xorg.libX11
-            xorg.libXext
-            xorg.libXrender
+            libx11
+            libxext
+            libxrender
             zlib
           ]);
         profile = ''
