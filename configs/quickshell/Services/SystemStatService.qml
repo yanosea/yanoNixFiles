@@ -67,6 +67,10 @@ Singleton {
       // Run df (disk free) one time
       dfProcess.running = true
 
+      // Run GPU monitoring
+      gpuUsageProcess.running = true
+      gpuTempProcess.running = true
+
       updateCpuTemperature()
     }
   }
@@ -411,12 +415,11 @@ Singleton {
 
   // --------------------------------------------
   // GPU monitoring using nvidia-smi
-  // Use onRunningChanged to restart after process exits to prevent FD leak
+  // Triggered by updateTimer (same interval as CPU/Memory/Network)
   Process {
     id: gpuUsageProcess
     command: ["nvidia-smi", "--query-gpu=utilization.gpu", "--format=csv,noheader,nounits"]
-    running: true
-    onRunningChanged: if (!running) running = true
+    running: false
 
     stdout: SplitParser {
       onRead: data => {
@@ -431,8 +434,7 @@ Singleton {
   Process {
     id: gpuTempProcess
     command: ["nvidia-smi", "--query-gpu=temperature.gpu", "--format=csv,noheader,nounits"]
-    running: true
-    onRunningChanged: if (!running) running = true
+    running: false
 
     stdout: SplitParser {
       onRead: data => {
