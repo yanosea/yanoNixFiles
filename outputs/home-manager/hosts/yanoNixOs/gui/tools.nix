@@ -7,6 +7,7 @@
       baobab
       bitwarden-desktop
       blender
+      kdePackages.kdenlive
       remmina
     ];
   };
