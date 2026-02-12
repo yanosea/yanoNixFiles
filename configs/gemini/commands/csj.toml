@@ -23,6 +23,12 @@ Please generate a commit message in English for the current working copy changes
      - `jj git fetch && jj rebase -d main && jj bookmark delete <bookmark>`
 - Do not show the commit message separately; only show it in the commands.
 - Do not execute any commands, only show them for the user to run manually.
+- Predict the issue number and PR number using `gh`:
+  - Get the latest number: `gh pr list --state all --limit 1 --json number --jq '.[0].number'`
+  - The next issue number = latest + 1, PR number = latest + 2
+  - Use the predicted numbers directly in all commands (no variables or placeholders)
+- Write all commands to `/tmp/commit-<issue-number>` as a plain text file for copy-paste (no shebang, no variables, no script logic)
+- At the end of your reply, show the output file path: `/tmp/commit-<issue-number>`
 
 ## Rules
 
