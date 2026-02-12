@@ -26,6 +26,15 @@
 
 - Do not execute any commands, only show them for the user to run manually.
 
+- Predict the issue number and PR number using `gh`:
+  - Get the latest number: `gh pr list --state all --limit 1 --json number --jq '.[0].number'`
+  - The next issue number = latest + 1, PR number = latest + 2
+  - Use the predicted numbers directly in all commands (no variables or placeholders)
+
+- Write all commands to `/tmp/commit-<issue-number>` as a plain text file for copy-paste (no shebang, no variables, no script logic)
+
+- At the end of your reply, show the output file path: `/tmp/commit-<issue-number>`
+
 ## Rules
 
 1. The title should be at most 50 characters, and the body should be wrapped at 72 characters.
