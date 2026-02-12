@@ -60,15 +60,6 @@
     claude-code = {
       url = "github:sadjow/claude-code-nix/main";
     };
-    ## gitlogue
-    gitlogue = {
-      url = "github:unhappychoice/gitlogue/main";
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
-    };
     ## jj-starship
     jj-starship = {
       url = "github:dmmulroy/jj-starship/main";

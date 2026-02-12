@@ -58,10 +58,6 @@ inputs: [
   (final: prev: {
     claude-code = inputs.claude-code.packages.${prev.stdenv.hostPlatform.system}.default;
   })
-  ## gitlogue
-  (final: prev: {
-    gitlogue = inputs.gitlogue.packages.${prev.stdenv.hostPlatform.system}.default;
-  })
   ## invokeai
   (
     final: prev:
