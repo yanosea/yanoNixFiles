@@ -74,6 +74,12 @@ keybinds clear-defaults=true {
             TogglePaneFrames
             SwitchToMode "normal"
         }
+        bind "[" {
+            PreviousSwapLayout
+        }
+        bind "]" {
+            NextSwapLayout
+        }
     }
     tab {
         bind "left" {
@@ -170,6 +176,12 @@ keybinds clear-defaults=true {
         bind "tab" {
             ToggleTab
         }
+        bind "i" {
+            MoveTab "left"
+        }
+        bind "o" {
+            MoveTab "right"
+        }
     }
     resize {
         bind "left" {
@@ -260,11 +272,11 @@ keybinds clear-defaults=true {
         }
     }
     scroll {
-        bind "e" {
+        bind "v" {
             EditScrollback
             SwitchToMode "normal"
         }
-        bind "s" {
+        bind "/" {
             SwitchToMode "entersearch"
             SearchInput 0
         }
@@ -276,11 +288,11 @@ keybinds clear-defaults=true {
         bind "n" {
             Search "down"
         }
+        bind "N" {
+            Search "up"
+        }
         bind "o" {
             SearchToggleOption "WholeWord"
-        }
-        bind "p" {
-            Search "up"
         }
         bind "w" {
             SearchToggleOption "Wrap"
@@ -320,59 +332,8 @@ keybinds clear-defaults=true {
         }
     }
     shared_except "locked" {
-        bind "Alt left" {
-            MoveFocusOrTab "left"
-        }
-        bind "Alt down" {
-            MoveFocus "down"
-        }
-        bind "Alt up" {
-            MoveFocus "up"
-        }
-        bind "Alt right" {
-            MoveFocusOrTab "right"
-        }
-        bind "Alt +" {
-            Resize "Increase"
-        }
-        bind "Alt -" {
-            Resize "Decrease"
-        }
-        bind "Alt =" {
-            Resize "Increase"
-        }
-        bind "Alt [" {
-            PreviousSwapLayout
-        }
-        bind "Alt ]" {
-            NextSwapLayout
-        }
-        bind "Alt f" {
-            ToggleFloatingPanes
-        }
         bind "Ctrl g" {
             SwitchToMode "locked"
-        }
-        bind "Alt h" {
-            MoveFocusOrTab "left"
-        }
-        bind "Alt i" {
-            MoveTab "left"
-        }
-        bind "Alt j" {
-            MoveFocus "down"
-        }
-        bind "Alt k" {
-            MoveFocus "up"
-        }
-        bind "Alt l" {
-            MoveFocusOrTab "right"
-        }
-        bind "Alt n" {
-            NewPane
-        }
-        bind "Alt o" {
-            MoveTab "right"
         }
         bind "Ctrl q" {
             Quit
@@ -430,61 +391,40 @@ keybinds clear-defaults=true {
         }
     }
     shared_among "scroll" "search" {
-        bind "PageDown" {
-            PageScrollDown
-        }
-        bind "PageUp" {
-            PageScrollUp
-        }
-        bind "left" {
-            PageScrollUp
-        }
-        bind "down" {
+        bind "j" "down" {
             ScrollDown
         }
-        bind "up" {
+        bind "k" "up" {
             ScrollUp
         }
-        bind "right" {
+        bind "d" {
+            HalfPageScrollDown
+        }
+        bind "u" {
+            HalfPageScrollUp
+        }
+        bind "Ctrl f" "PageDown" {
             PageScrollDown
         }
-        bind "Ctrl b" {
+        bind "Ctrl b" "PageUp" {
             PageScrollUp
+        }
+        bind "g" {
+            ScrollToTop
+        }
+        bind "G" {
+            ScrollToBottom
         }
         bind "Ctrl c" {
             ScrollToBottom
             SwitchToMode "normal"
         }
-        bind "d" {
-            HalfPageScrollDown
-        }
-        bind "Ctrl f" {
-            PageScrollDown
-        }
-        bind "h" {
-            PageScrollUp
-        }
-        bind "j" {
-            ScrollDown
-        }
-        bind "k" {
-            ScrollUp
-        }
-        bind "l" {
-            PageScrollDown
-        }
         bind "Ctrl s" {
             SwitchToMode "normal"
         }
-        bind "u" {
-            HalfPageScrollUp
-        }
     }
     entersearch {
-        bind "Ctrl c" {
-            SwitchToMode "scroll"
-        }
-        bind "esc" {
+        bind "Ctrl c" "esc" {
             SwitchToMode "scroll"
         }
         bind "enter" {
