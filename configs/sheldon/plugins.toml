@@ -38,10 +38,6 @@ apply = ["fpath_comp", "defer"]
 github = "jimhester/per-directory-history"
 apply = ["defer"]
 
-[plugins.zsh-you-should-use]
-github = "MichaelAquilina/zsh-you-should-use"
-apply = ["defer"]
-
 [plugins.zoxide]
 inline = "zsh-defer eval \"$(zoxide init zsh)\""
 
