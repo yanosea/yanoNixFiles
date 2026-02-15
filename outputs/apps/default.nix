@@ -20,6 +20,13 @@ let
     error = msg: ''echo -e "${colors.error}${msg}${colors.reset}"'';
     blank = ''echo ""'';
   };
+  # sudo setup: prompt upfront and keep credential alive during long builds
+  sudoSetup = ''
+    sudo -v
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+    SUDO_KEEPALIVE_PID=$!
+    trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null' EXIT
+  '';
   # host configurations
   hosts = {
     # nixos
@@ -112,6 +119,8 @@ let
   mkUpdateScript = host: experimental: hostname: ''
     ${echo.title "update ${hostname}${if experimental then " experimentally" else ""}..."}
     ${echo.blank}
+    ${sudoSetup}
+    ${echo.blank}
     ${
       if host.osType == "darwin" then
         ''
@@ -165,6 +174,8 @@ let
   hostCommands = hostname: host: {
     system = ''
       ${echo.title "apply system configuration..."}
+      ${echo.blank}
+      ${sudoSetup}
       ${echo.blank}
       ${mkSystemCommand host}
       ${echo.blank}
@@ -250,6 +261,8 @@ let
   # gc script for system & user
   gcSystemScript = ''
     ${echo.title "garbage collection (system & user)..."}
+    ${echo.blank}
+    ${sudoSetup}
     ${echo.blank}
     ${echo.header "cleaning up system-wide packages..."}
     sudo nix-collect-garbage --delete-old
