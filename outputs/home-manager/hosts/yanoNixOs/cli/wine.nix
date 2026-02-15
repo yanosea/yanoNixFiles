@@ -4,7 +4,7 @@
   # home
   home = {
     packages = with pkgs; [
-      wineWowPackages.staging
+      wineWow64Packages.staging
       winetricks
     ];
   };
