@@ -1,14 +1,13 @@
-jj-fetch-wait() {
+jj-sync-wait() {
   while true; do
     local output
-    output=$(jj git fetch 2>&1)
+    output=$(jj sync 2>&1)
     if echo "$output" | grep -q "Nothing changed"; then
       echo "[$(date '+%Y-%m-%d %H:%M:%S')] No changes yet..."
       sleep 5
     else
-      echo "[$(date '+%Y-%m-%d %H:%M:%S')] Updated!"
+      echo "[$(date '+%Y-%m-%d %H:%M:%S')] Synced!"
       echo "$output"
-      jj rebase -d main
       break
     fi
   done
@@ -26,7 +25,13 @@ gh-pr-merge-wait() {
     fi
   fi
 
-  while ! gh pr merge "$pr_number" 2>/dev/null; do
+  while true; do
+    gh pr merge "$pr_number"
+    local state
+    state=$(gh pr view "$pr_number" --json state --jq '.state')
+    if [[ "$state" == "MERGED" ]]; then
+      break
+    fi
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] Not mergeable yet..."
     sleep 30
   done
