@@ -236,8 +236,8 @@ return {
 		{ key = "?", mods = "LEADER|SHIFT|" .. ctrl_key, action = act.Search("CurrentSelectionOrEmptyString") },
 		{ key = "d", mods = "LEADER|SHIFT|" .. ctrl_key, action = act.ShowDebugOverlay },
 		-- key binding
-		{ key = "u", mods = "SHIFT|" .. ctrl_key, action = wezterm.action.IncreaseFontSize },
-		{ key = "m", mods = "SHIFT|" .. ctrl_key, action = wezterm.action.DecreaseFontSize },
+		{ key = "y", mods = "SHIFT|" .. ctrl_key, action = wezterm.action.IncreaseFontSize },
+		{ key = "n", mods = "SHIFT|" .. ctrl_key, action = wezterm.action.DecreaseFontSize },
 		{ key = "b", mods = "SHIFT|" .. ctrl_key, action = wezterm.action.EmitEvent("toggle-opacity") },
 	},
 	key_tables = {
