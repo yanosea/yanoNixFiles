@@ -19,6 +19,8 @@ configs/lf/files
 configs/nvim/lazy-lock.json
 CLAUDE.md
 GEMINI.md
+HANDOVER.md
+HANDOVER.md.bak
 result
 .DS_Store
 *.log
