@@ -1,0 +1,49 @@
+# Session handover note generator
+
+prompt = """
+Generate a `HANDOVER.md` at the project root to carry context to the next session.
+
+- If `HANDOVER.md` already exists, overwrite it (previous content is not needed).
+
+## HANDOVER.md structure
+
+Include all of the following sections:
+
+### What was done
+
+- Work performed and progress, in bullet points
+
+### Decisions made
+
+- Confirmed design decisions, policies, rules, etc.
+
+### Rejected alternatives and reasons
+
+- Approaches considered but not adopted, with reasons
+
+### Pitfalls encountered
+
+- Sticking points, errors, unexpected behavior, etc.
+
+### Lessons learned
+
+- Insights and discoveries from this session
+
+### Next steps
+
+- Incomplete tasks and what to start in the next session
+- Include priority order
+
+### Related files
+
+- List of main file paths touched in this session
+
+## Rules
+
+- Keep it concise. No long paragraphs.
+- Use bullet points throughout.
+- Avoid speculation or vague wording. Write facts only.
+- "Rejected alternatives and reasons" is especially important to prevent repeating the same discussion in the next session.
+
+**IMPORTANT: HANDOVER.md must be in English, but your reply must be in Japanese.**
+"""
