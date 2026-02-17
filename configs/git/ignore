@@ -1,7 +1,15 @@
 # IGNORE DIRECTORY
-home/dotfiles/glzr/glzr/zebar/tmp*
+specs/
+.claude/
+.gemini/
+.serena/
+.specify/
 # IGNORE FILE
 desktop.ini
+CLAUDE.md
+GEMINI.md
+HANDOVER.md
+HANDOVER.md.bak
 .DS_Store
 .wakatime-project
 *.log
