@@ -10,6 +10,7 @@ configs/wakatime/
 specs/
 .claude/
 .gemini/
+.serena/
 .specify/
 # IGNORE FILE
 configs/gh/hosts.yml
