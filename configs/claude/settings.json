@@ -9,6 +9,12 @@
             "type": "command",
             "command": "bash \"$HOME/.config/claude/hooks/load-handover.sh\"",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.config/claude/hooks/sync-plugins.sh\"",
+            "async": true,
+            "timeout": 300
           }
         ]
       }
