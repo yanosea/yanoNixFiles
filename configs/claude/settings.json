@@ -43,6 +43,7 @@
       }
     ]
   },
+  "language": "japanese",
   "alwaysThinkingEnabled": true,
   "statusLine": {
     "type": "command",
