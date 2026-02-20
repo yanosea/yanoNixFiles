@@ -1,7 +1,12 @@
-# Commit command for jj (Jujutsu)
+# Ship command for jj (Jujutsu)
 
-- Please generate a commit message in English for the current working copy changes.
-
+prompt = """
+First, analyze the working copy changes below and understand the intent and context of the changes.
+If any of the following apply, stop and ask questions or suggest improvements before proceeding:
+  - The intent of the changes is unclear
+  - The changes do not follow best practices
+  - The changes contain potential issues (bugs, security risks, etc.)
+After understanding the changes, generate a commit message in English.
 - Show the following commands for the user to run manually in order:
   1. `gh issue create` command:
      - title format: `(scope) description` (e.g., `(ai) expand workflow`)
@@ -15,43 +20,44 @@
   5. `jj git push` command to push the changes to remote with `-b <bookmark> --allow-new`
   6. `gh pr create` command:
      - **IMPORTANT: use `--head <bookmark>` flag** (jj does not use git branches, so branch detection fails without this)
-     - body: commit message body + `closes #<issue-number>`
+     - title: use `$(git log <bookmark> -1 --format='%s')` to extract from commit (must specify bookmark name, not `-1` alone, because jj uses detached HEAD)
+     - body: use `$(printf '%s\n\ncloses #<issue-number>' "$(git log <bookmark> -1 --format='%b')")` to extract from commit and append closes
      - label: same as issue
      - assignee: same as issue (`@me`)
   7. `gh pr merge <pr-number>` command to merge the pull request
   8. cleanup commands:
      - `jj git fetch && jj rebase -d main && jj bookmark delete <bookmark>`
-
 - Do not show the commit message separately; only show it in the commands.
-
 - Do not execute any commands, only show them for the user to run manually.
-
 - Predict the issue number and PR number using `gh`:
   - Get the latest number: `gh pr list --state all --limit 1 --json number --jq '.[0].number'`
   - The next issue number = latest + 1, PR number = latest + 2
   - Use the predicted numbers directly in all commands (no variables or placeholders)
-
-- Write all commands to `/tmp/commit-<issue-number>` as a plain text file for copy-paste (no shebang, no variables, no script logic)
-
-- At the end of your reply, show the output file path: `/tmp/commit-<issue-number>`
+- Write all commands to `/tmp/ship-<issue-number>.md` as a markdown file with the following format:
+  - Use `# Ship #<issue-number>` as the document title
+  - Group each step with a `## ` heading (e.g., `## Issue`, `## Format`, `## Commit`, `## Branch`, `## Push`, `## PR`, `## Merge`, `## Cleanup`)
+  - Wrap each command in a ```bash code block
+  - No shebang, no variables, no script logic
+- At the end of your reply, show the output file path: `/tmp/ship-<issue-number>.md`
 
 ## Rules
 
 1. The title should be at most 50 characters, and the body should be wrapped at 72 characters.
    For the title, use one of the following prefixes, separated from the title by a space:
-   - `✨feat:` - Use for new feature additions
-   - `🐞fix:` - Use for bug fixes
-   - `📚docs:` - Use for documentation-only changes
-   - `💄style:` - Use for changes that do not affect program behavior (indentation adjustments, formatting, etc.)
-   - `🔧refactor:` - Use for code modifications other than bug fixes or feature additions
-   - `🚀perf:` - Use for code modifications aimed at performance improvements
-   - `🧪test:` - Use for adding tests or modifying existing tests
-   - `🧹chore:` - Use for changes to build process, auxiliary tools, or libraries
-   - `🔀merge:` - Use for merge commits
 
-2. Add () after prefix and fill it with the changed tool.
-   For example, if GitHub Workflow file was changed: (workflow)
-   If jj config file was changed: (jj)
+   - `✨feat(scope):` - Use for new feature additions
+   - `🐞fix(scope):` - Use for bug fixes
+   - `📚docs(scope):` - Use for documentation-only changes
+   - `💄style(scope):` - Use for changes that do not affect program behavior (indentation adjustments, formatting, etc.)
+   - `🔧refactor(scope):` - Use for code modifications other than bug fixes or feature additions
+   - `🚀perf(scope):` - Use for code modifications aimed at performance improvements
+   - `🧪test(scope):` - Use for adding tests or modifying existing tests
+   - `🧹chore(scope):` - Use for changes to build process, auxiliary tools, or libraries
+   - `🔀merge(scope):` - Use for merge commits
+
+2. Replace `scope` with the changed tool/component name.
+   For example, if GitHub Workflow file was changed: `✨feat(workflow):`
+   If jj config file was changed: `🐞fix(jj):`
 
 3. In the body, list the changes as bullet points, each starting with "- ".
 
@@ -59,11 +65,14 @@
 
 5. All sentences must start with lower case. Use capital letters only for proper nouns.
 
-6. Surround keywords with \`\`.
+6. Surround keywords with ` `.
 
 7. Do not add your signature.
 
 8. If the reason for the changes is not clear from looking at the source,
    please ask questions before creating the commit message and include the answers in your considerations.
 
+!{git diff}
+
 **IMPORTANT: Commit messages must be in English, but your reply must be in Japanese.**
+"""

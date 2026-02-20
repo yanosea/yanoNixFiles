@@ -1,7 +1,12 @@
-# Commit staged command
+# Ship command for git
 
 prompt = """
-Please generate a commit message in English for these staged changes.
+First, analyze the staged changes below and understand the intent and context of the changes.
+If any of the following apply, stop and ask questions or suggest improvements before proceeding:
+  - The intent of the changes is unclear
+  - The changes do not follow best practices
+  - The changes contain potential issues (bugs, security risks, etc.)
+After understanding the changes, generate a commit message in English.
 - Show the following commands for the user to run manually in order:
   1. `gh issue create` command:
      - title format: `(scope) description` (e.g., `(ai) expand workflow`)
@@ -24,27 +29,31 @@ Please generate a commit message in English for these staged changes.
   - Get the latest number: `gh pr list --state all --limit 1 --json number --jq '.[0].number'`
   - The next issue number = latest + 1
   - Use the predicted number directly in all commands (no variables or placeholders)
-- Write all commands to `/tmp/commit-<issue-number>` as a plain text file for copy-paste (no shebang, no variables, no script logic)
-- At the end of your reply, show the output file path: `/tmp/commit-<issue-number>`
+- Write all commands to `/tmp/ship-<issue-number>.md` as a markdown file with the following format:
+  - Use `# Ship #<issue-number>` as the document title
+  - Group each step with a `## ` heading (e.g., `## Issue`, `## Branch`, `## Commit`, `## Push`, `## PR`, `## Merge`)
+  - Wrap each command in a ```bash code block
+  - No shebang, no variables, no script logic
+- At the end of your reply, show the output file path: `/tmp/ship-<issue-number>.md`
 
 ## Rules
 
 1. The title should be at most 50 characters, and the body should be wrapped at 72 characters.
    For the title, use one of the following prefixes, separated from the title by a space:
 
-   - `feat:` - Use for new feature additions
-   - `fix:` - Use for bug fixes
-   - `docs:` - Use for documentation-only changes
-   - `style:` - Use for changes that do not affect program behavior (indentation adjustments, formatting, etc.)
-   - `refactor:` - Use for code modifications other than bug fixes or feature additions
-   - `perf:` - Use for code modifications aimed at performance improvements
-   - `test:` - Use for adding tests or modifying existing tests
-   - `chore:` - Use for changes to build process, auxiliary tools, or libraries
-   - `merge:` - Use for merge commits
+   - `✨feat(scope):` - Use for new feature additions
+   - `🐞fix(scope):` - Use for bug fixes
+   - `📚docs(scope):` - Use for documentation-only changes
+   - `💄style(scope):` - Use for changes that do not affect program behavior (indentation adjustments, formatting, etc.)
+   - `🔧refactor(scope):` - Use for code modifications other than bug fixes or feature additions
+   - `🚀perf(scope):` - Use for code modifications aimed at performance improvements
+   - `🧪test(scope):` - Use for adding tests or modifying existing tests
+   - `🧹chore(scope):` - Use for changes to build process, auxiliary tools, or libraries
+   - `🔀merge(scope):` - Use for merge commits
 
-2. Add () after prefix and full it with the changed tool.
-   For example, if GitHub Workflow file was changed: (workflow)
-   If git config file was changed: (git)
+2. Replace `scope` with the changed tool/component name.
+   For example, if GitHub Workflow file was changed: `✨feat(workflow):`
+   If git config file was changed: `🐞fix(git):`
 
 3. In the body, list the changes as bullet points, each starting with "- ".
 
