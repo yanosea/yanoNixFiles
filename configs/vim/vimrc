@@ -60,15 +60,12 @@ set whichwrap-=l
 " display
 set display=lastline
 " persist undo
-let vim_dir = expand('$HOME/.vim')
-let undo_dir = vim_dir . '/undo'
+let undo_dir = expand('$XDG_STATE_HOME') . '/vim/undo'
 if !isdirectory(undo_dir)
 	call mkdir(undo_dir, 'p')
 endif
 set undofile
 exe 'set undodir=' .. undo_dir
-" viminfo
-set viminfo+=n$HOME/.vim/viminfo
 " standard plugin
 filetype plugin on
 let g:netrw_liststyle=1
