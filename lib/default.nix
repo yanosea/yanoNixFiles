@@ -27,7 +27,8 @@ in
       username,
     }:
     inputs.nixpkgs.lib.nixosSystem {
-      inherit modules system;
+      inherit system;
+      modules = [ inputs.lanzaboote.nixosModules.lanzaboote ] ++ modules;
       specialArgs = {
         inherit
           homePath
