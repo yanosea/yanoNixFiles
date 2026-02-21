@@ -3,6 +3,7 @@
   config,
   homePath,
   inputs,
+  lib,
   pkgs,
   username,
   ...
@@ -29,15 +30,25 @@
     kernelParams = [
       "usbcore.autosuspend=-1"
     ];
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+    };
     loader = {
       systemd-boot = {
-        enable = true;
         configurationLimit = 10;
+        enable = lib.mkForce false;
       };
       efi = {
         canTouchEfiVariables = true;
       };
     };
+  };
+  # environment
+  environment = {
+    systemPackages = [
+      pkgs.sbctl
+    ];
   };
   # hardware
   hardware = {

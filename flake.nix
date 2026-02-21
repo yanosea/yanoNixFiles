@@ -37,6 +37,15 @@
         };
       };
     };
+    ## lanzaboote
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/master";
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
+    };
     ## rust
     fenix = {
       url = "github:nix-community/fenix/main";
