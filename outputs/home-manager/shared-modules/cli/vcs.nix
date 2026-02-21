@@ -36,6 +36,7 @@ in
           git-lfs
           github-cli
           github-copilot-cli
+          jj-fzf
           jj-starship
           jjui
           jujutsu
