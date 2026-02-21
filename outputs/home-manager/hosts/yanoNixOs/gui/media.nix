@@ -10,8 +10,7 @@
   home = {
     packages = with pkgs; [
       evince
-      feh
-      imv
+      qimgv
       mpv
       spotify
       totem

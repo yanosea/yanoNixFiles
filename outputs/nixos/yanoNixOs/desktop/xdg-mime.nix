@@ -97,34 +97,13 @@
         # pdf viewer
         "application/pdf" = [ "evince.desktop" ];
         # image viewer
-        "image/png" = [
-          "imv.desktop"
-          "feh.desktop"
-        ];
-        "image/jpeg" = [
-          "imv.desktop"
-          "feh.desktop"
-        ];
-        "image/gif" = [
-          "imv.desktop"
-          "feh.desktop"
-        ];
-        "image/svg+xml" = [
-          "imv.desktop"
-          "feh.desktop"
-        ];
-        "image/webp" = [
-          "imv.desktop"
-          "feh.desktop"
-        ];
-        "image/bmp" = [
-          "imv.desktop"
-          "feh.desktop"
-        ];
-        "image/tiff" = [
-          "imv.desktop"
-          "feh.desktop"
-        ];
+        "image/png" = [ "qimgv.desktop" ];
+        "image/jpeg" = [ "qimgv.desktop" ];
+        "image/gif" = [ "qimgv.desktop" ];
+        "image/svg+xml" = [ "qimgv.desktop" ];
+        "image/webp" = [ "qimgv.desktop" ];
+        "image/bmp" = [ "qimgv.desktop" ];
+        "image/tiff" = [ "qimgv.desktop" ];
         # video player
         "video/mp4" = [
           "mpv.desktop"
