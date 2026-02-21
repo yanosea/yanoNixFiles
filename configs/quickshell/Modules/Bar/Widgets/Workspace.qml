@@ -49,6 +49,15 @@ Item {
   property bool isDestroying: false
   property bool hovered: false
 
+  // Special workspace state
+  readonly property string specialWorkspaceName: {
+    if (screen && CompositorService.activeSpecialWorkspaces[screen.name]) {
+      return CompositorService.activeSpecialWorkspaces[screen.name]
+    }
+    return ""
+  }
+  readonly property bool isSpecialActive: specialWorkspaceName.length > 0
+
   property ListModel localWorkspaces: ListModel {}
   property real masterProgress: 0.0
   property bool effectsActive: false
@@ -63,8 +72,8 @@ Item {
 
   signal workspaceChanged(int workspaceId, color accentColor)
 
-  implicitWidth: isVertical ? Style.barHeight : computeWidth()
-  implicitHeight: isVertical ? computeHeight() : Style.barHeight
+  implicitWidth: isVertical ? Style.barHeight : (isSpecialActive ? specialIndicator.width : computeWidth())
+  implicitHeight: isVertical ? (isSpecialActive ? specialIndicator.height : computeHeight()) : Style.barHeight
 
   function getWorkspaceWidth(ws) {
     const d = Style.capsuleHeight * root.baseDimensionRatio
@@ -267,7 +276,7 @@ Item {
     spacing: spacingBetweenPills
     anchors.verticalCenter: workspaceBackground.verticalCenter
     x: horizontalPadding
-    visible: !isVertical
+    visible: !isVertical && !isSpecialActive
 
     Repeater {
       id: workspaceRepeaterHorizontal
@@ -412,7 +421,7 @@ Item {
     spacing: spacingBetweenPills
     anchors.horizontalCenter: workspaceBackground.horizontalCenter
     y: horizontalPadding
-    visible: isVertical
+    visible: isVertical && !isSpecialActive
 
     Repeater {
       id: workspaceRepeaterVertical
@@ -546,6 +555,67 @@ Item {
           opacity: root.effectsActive && model.isFocused ? (1.0 - root.masterProgress) * 0.7 : 0
           visible: root.effectsActive && model.isFocused
           z: 1
+        }
+      }
+    }
+  }
+
+  // Special workspace indicator
+  Item {
+    id: specialIndicator
+    visible: isSpecialActive
+    width: isVertical ? Style.capsuleHeight : specialPill.width + horizontalPadding * 2
+    height: isVertical ? specialPill.height + horizontalPadding * 2 : Style.capsuleHeight
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.verticalCenter: parent.verticalCenter
+
+    Rectangle {
+      id: specialPill
+      anchors.centerIn: parent
+      width: {
+        const d = Style.capsuleHeight * root.baseDimensionRatio
+        if (isVertical) return d
+        const displayText = specialWorkspaceName.replace(/^special:/, "")
+        const textWidth = displayText.length * (d * 0.4)
+        const padding = d * 0.6
+        return Math.max(d * 2.2, textWidth + padding)
+      }
+      height: {
+        const d = Style.capsuleHeight * root.baseDimensionRatio
+        return isVertical ? d * 2.2 : d
+      }
+      radius: width * 0.5
+      color: Color.mTertiary
+
+      NText {
+        anchors.centerIn: parent
+        text: specialWorkspaceName.replace(/^special:/, "")
+        family: Settings.data.ui.fontFixed
+        pointSize: parent.height * 0.42
+        applyUiScale: false
+        font.capitalization: Font.AllUppercase
+        font.weight: Style.fontWeightBold
+        color: Color.mOnTertiary
+      }
+
+      Behavior on width {
+        NumberAnimation {
+          duration: Style.animationNormal
+          easing.type: Easing.OutBack
+        }
+      }
+      Behavior on color {
+        ColorAnimation {
+          duration: Style.animationFast
+          easing.type: Easing.InOutCubic
+        }
+      }
+
+      MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+          CompositorService.toggleSpecialWorkspace(specialWorkspaceName.replace(/^special:/, ""))
         }
       }
     }

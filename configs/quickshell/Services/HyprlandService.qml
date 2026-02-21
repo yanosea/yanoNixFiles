@@ -17,6 +17,10 @@ Item {
   signal activeWindowChanged
   signal windowListChanged
   signal displayScalesChanged
+  signal specialWorkspaceChanged
+
+  // Special workspace state per monitor: { "MONNAME": "workspaceName" or "" }
+  property var activeSpecialWorkspaces: ({})
 
   // Hyprland-specific properties
   property bool initialized: false
@@ -357,6 +361,18 @@ Item {
       workspaceChanged()
       updateTimer.restart()
 
+      if (event.name === "activespecial") {
+        const parts = event.data.split(",")
+        const wsName = parts[0] || ""
+        const monName = parts[1] || ""
+        if (monName) {
+          var updated = Object.assign({}, activeSpecialWorkspaces)
+          updated[monName] = wsName
+          activeSpecialWorkspaces = updated
+          specialWorkspaceChanged()
+        }
+      }
+
       const monitorsEvents = ["configreloaded", "monitoradded", "monitorremoved", "monitoraddedv2", "monitorremovedv2"]
       if (monitorsEvents.includes(event.name)) {
         Qt.callLater(queryDisplayScales)
@@ -365,6 +381,14 @@ Item {
   }
 
   // Public functions
+  function toggleSpecialWorkspace(name) {
+    try {
+      Hyprland.dispatch(`togglespecialworkspace ${name}`)
+    } catch (e) {
+      Logger.e("HyprlandService", "Failed to toggle special workspace:", e)
+    }
+  }
+
   function switchToWorkspace(workspace) {
     try {
       Hyprland.dispatch(`workspace ${workspace.idx}`)
