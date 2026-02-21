@@ -23,6 +23,10 @@ Singleton {
   property var displayScales: ({})
   property bool displayScalesLoaded: false
 
+  // Special workspace state per monitor
+  property var activeSpecialWorkspaces: ({})
+  signal specialWorkspaceChanged
+
   // Generic events
   signal workspaceChanged
   signal activeWindowChanged
@@ -161,6 +165,13 @@ Singleton {
                                         windowListChanged()
                                       })
 
+    if (backend.specialWorkspaceChanged) {
+      backend.specialWorkspaceChanged.connect(() => {
+                                                activeSpecialWorkspaces = backend.activeSpecialWorkspaces
+                                                specialWorkspaceChanged()
+                                              })
+    }
+
     // Property bindings
     backend.focusedWindowIndexChanged.connect(() => {
                                                 focusedWindowIndex = backend.focusedWindowIndex
@@ -265,6 +276,13 @@ Singleton {
       }
     }
     return windowsInWs
+  }
+
+  // Toggle special workspace
+  function toggleSpecialWorkspace(name) {
+    if (backend && backend.toggleSpecialWorkspace) {
+      backend.toggleSpecialWorkspace(name)
+    }
   }
 
   // Generic workspace switching
