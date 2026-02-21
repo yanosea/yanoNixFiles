@@ -112,6 +112,7 @@ SUBCOMMANDS:
 
 Run without arguments to start random mode (rotates every 10 minutes).
 Use -i or --interactive for manual wallpaper selection.
+Specify a local path (with project.json) to launch a custom wallpaper.
 
 FILES:
     PID directory: $PID_DIR
@@ -655,6 +656,15 @@ internal-launch)
   if [[ $1 =~ ^[0-9]+$ ]]; then
     launch_random_wallpaper "$1"
     exit $?
+  # check if it's a local path (directory with project.json)
+  elif [ -d "$1" ] && [ -f "$1/project.json" ]; then
+    mkdir -p "$PID_DIR"
+    echo -e "${BLUE}📁 Launching local wallpaper: ${CYAN}$1${NC}"
+    launch_wallpaper_with_id "$1" "false"
+    exit $?
+  elif [ -d "$1" ]; then
+    echo -e "${RED}❌ Error: Directory found but no project.json in: ${CYAN}$1${NC}"
+    exit 1
   else
     echo -e "${RED}Unknown option or subcommand: $1${NC}"
     show_help
