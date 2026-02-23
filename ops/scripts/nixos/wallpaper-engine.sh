@@ -666,7 +666,13 @@ autostart)
   else
     launch_random_wallpaper "${INTERVAL:-$DEFAULT_INTERVAL}"
   fi
-  exit $?
+  result=$?
+  # kill hyprpaper and disable quickshell background only after wallpaper-engine started successfully
+  if [ $result -eq 0 ]; then
+    pkill -x hyprpaper 2>/dev/null || true
+    qs ipc call wallpaper disableBackground 2>/dev/null || true
+  fi
+  exit $result
   ;;
 get-wallpapers)
   # internal command for rotation script
