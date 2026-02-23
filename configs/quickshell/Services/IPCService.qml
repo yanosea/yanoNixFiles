@@ -226,6 +226,9 @@ Item {
     function enableAutomation() {
       Settings.data.wallpaper.randomEnabled = true
     }
+    function disableBackground() {
+      Settings.data.wallpaper.enabled = false
+    }
   }
 
   IpcHandler {

@@ -36,12 +36,7 @@ let
       '';
     };
     "hypr/hypridle.conf".source = ./hypr/hypridle.conf;
-    "hypr/hyprpaper.conf" = {
-      source = ./hypr/hyprpaper.conf;
-      onChange = ''
-        (sleep 5 && $HOME/.local/bin/wallpaper-engine autostart) &>/dev/null &
-      '';
-    };
+    "hypr/hyprpaper.conf".source = ./hypr/hyprpaper.conf;
   };
   # zsh config subdirectories (excluding .zshrc/.zshenv which are managed by programs.zsh)
   zshContents = builtins.readDir ./zsh;
