@@ -108,6 +108,7 @@ SUBCOMMANDS:
     list                    List available wallpapers
     quit                    Quit running wallpaper-engine
     status                  Check wallpaper-engine status
+    autostart               Start from config file (~/.config/wallpaper-engine/config)
     help                    Show this help message
 
 Run without arguments to start random mode (rotates every 10 minutes).
@@ -634,6 +635,37 @@ case "${1:-}" in
   ;;
 -l | --list | list | l)
   list_wallpapers
+  exit $?
+  ;;
+autostart)
+  # start from config file (~/.config/wallpaper-engine/config)
+  CONFIG_FILE="$HOME/.config/wallpaper-engine/config"
+  [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
+  # skip if disabled
+  if [ "${ENABLED:-false}" != "true" ]; then
+    exit 0
+  fi
+  mkdir -p "$PID_DIR"
+  # force kill all existing wallpaper-engine processes
+  if [ -f "$PID_DIR/wallpaper-rotate.pid" ]; then
+    kill -9 "$(cat "$PID_DIR/wallpaper-rotate.pid")" 2>/dev/null || true
+    rm -f "$PID_DIR/wallpaper-rotate.pid"
+  fi
+  for pid_file in "$PID_DIR"/wallpaper-*.pid; do
+    if [ -f "$pid_file" ]; then
+      kill -9 "$(cat "$pid_file")" 2>/dev/null || true
+      rm -f "$pid_file"
+    fi
+  done
+  pkill -f "linux-wallpaperengine" 2>/dev/null || true
+  sleep 1
+  # apply config
+  [ "${ALL_TYPES:-false}" = "true" ] && INCLUDE_ALL_TYPES=true
+  if [ -n "${WALLPAPER_PATH:-}" ]; then
+    launch_wallpaper_with_id "$WALLPAPER_PATH" "false"
+  else
+    launch_random_wallpaper "${INTERVAL:-$DEFAULT_INTERVAL}"
+  fi
   exit $?
   ;;
 get-wallpapers)
