@@ -76,14 +76,14 @@
           "showNetworkStats": true
         },
         {
-          "id": "ScreenRecorder"
-        },
-        {
           "blacklist": [
             "*fcitx*"
           ],
           "colorizeIcons": true,
           "id": "Tray"
+        },
+        {
+          "id": "ScreenRecorder"
         },
         {
           "hideWhenZero": true,
@@ -92,16 +92,7 @@
         },
         {
           "displayMode": "onhover",
-          "id": "Battery",
-          "warningThreshold": 30
-        },
-        {
-          "displayMode": "onhover",
           "id": "Volume"
-        },
-        {
-          "displayMode": "onhover",
-          "id": "Brightness"
         },
         {
           "customFont": "",
