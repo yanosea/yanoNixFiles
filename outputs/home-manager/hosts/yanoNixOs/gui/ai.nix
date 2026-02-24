@@ -306,6 +306,12 @@
             PATCH_EOF
                             echo "CLIP Interrogator node patched successfully!"
                             cd ../..
+                          else
+                            # Ensure dependencies are installed (e.g. after venv recreation)
+                            if ! python -c "import clip_interrogator" 2>/dev/null; then
+                              echo "Reinstalling CLIP Interrogator dependencies..."
+                              pip install clip-interrogator==0.6.0
+                            fi
                           fi
                         fi
                         # Start InvokeAI
