@@ -41,7 +41,7 @@
               fi
               cd comfyui
               echo "Creating virtual environment..."
-              python3.11 -m venv venv
+              python3.12 -m venv venv
               source venv/bin/activate
               echo "Installing dependencies..."
               pip install --upgrade pip
@@ -189,7 +189,7 @@
                         # Initial setup if needed
                         if [ ! -f ".invokeai-installed" ]; then
                           echo "Setting up InvokeAI for the first time..."
-                          python3.11 -m venv venv
+                          python3.12 -m venv venv
                           source venv/bin/activate
                           pip install --upgrade pip
                           pip install "InvokeAI[xformers]" --upgrade
