@@ -34,9 +34,9 @@ inputs: [
             libGLU
             linuxPackages.nvidia_x11
             pkg-config
-            python311
-            python311Packages.pip
-            python311Packages.virtualenv
+            python312
+            python312Packages.pip
+            python312Packages.virtualenv
             stdenv.cc.cc.lib
             wget
             zlib
@@ -79,9 +79,9 @@ inputs: [
             libGLU
             opencv4
             pkg-config
-            python311
-            python311Packages.pip
-            python311Packages.virtualenv
+            python312
+            python312Packages.pip
+            python312Packages.virtualenv
             stdenv.cc.cc.lib
             libx11
             libxext
