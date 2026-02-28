@@ -31,7 +31,7 @@ in
         packages = with pkgs; [
           bun
           deno
-          nodePackages_latest.nodejs
+          nodejs_latest
           nodePackages_latest.pnpm
           posting
           wget
