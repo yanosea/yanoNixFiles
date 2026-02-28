@@ -294,7 +294,7 @@
     "defaultWallpaper": "~/.local/share/wallpapers/wall_8K.png",
     "directory": "~/.local/share/wallpapers",
     "enableMultiMonitorDirectories": false,
-    "enabled": true,
+    "enabled": false,
     "fillColor": "#000000",
     "fillMode": "crop",
     "monitors": [
