@@ -4,8 +4,6 @@ configs/go/
 configs/scoop/
 configs/vim/autoload/
 configs/vim/plugged/
-configs/vim/undo
-configs/vim/viminfo
 configs/wakatime/
 # IGNORE FILE
 configs/gh/hosts.yml
