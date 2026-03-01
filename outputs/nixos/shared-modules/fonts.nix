@@ -8,6 +8,7 @@
       enable = true;
     };
     packages = with pkgs; [
+      migu
       noto-fonts-color-emoji
       plemoljp-nf
     ];
