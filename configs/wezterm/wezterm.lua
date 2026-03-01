@@ -27,6 +27,9 @@ elseif string.find(target, "linux") then
 end
 -- style
 local background_opacity = 0.8
+-- zellij active tab name tracking
+local zellij_tab_name = ""
+local last_zellij_tab_name = ""
 -- tab bar left
 wezterm.on("format-tab-title", function(tab, tabs)
 	local TAB_BAR_BG = "#2d353b"
@@ -75,13 +78,7 @@ wezterm.on("format-tab-title", function(tab, tabs)
 
 	local limit_length = 30
 	local suffix = " ..."
-	local active_pane_title = tab.active_pane.title
-	local start_pos, end_pos = string.find(active_pane_title, "Zellij %b() - ")
-
-	if start_pos then
-		active_pane_title = string.sub(active_pane_title, end_pos + 3)
-	end
-
+	local active_pane_title = (tab.tab_title ~= "" and tab.tab_title) or tab.active_pane.title
 	local title_length = #active_pane_title
 
 	if title_length > limit_length then
@@ -104,7 +101,28 @@ wezterm.on("format-tab-title", function(tab, tabs)
 	}
 end)
 -- tab bar right
-wezterm.on("update-right-status", function(window)
+wezterm.on("update-status", function(window, pane)
+	-- poll zellij for active tab/pane name
+	local session_name = (pane:get_title() or ""):match("^%s*([^|]+%S)") or ""
+	if session_name ~= "" then
+		local success, stdout = wezterm.run_child_process({ "zellij", "-s", session_name, "action", "dump-layout" })
+		if success then
+			local pane_name, tab_name
+			for line in stdout:gmatch("[^\n]+") do
+				pane_name = pane_name or line:match('^%s+pane .*name="([^"]*)".*focus=true')
+				tab_name = tab_name or line:match('^%s*tab .*name="([^"]*)".*focus=true')
+			end
+			local active_name = pane_name or tab_name
+			zellij_tab_name = active_name and (session_name .. " | " .. active_name) or session_name
+		end
+	end
+	if zellij_tab_name ~= last_zellij_tab_name then
+		last_zellij_tab_name = zellij_tab_name
+		local mux_tab = window:active_tab()
+		if mux_tab then
+			mux_tab:set_title(zellij_tab_name)
+		end
+	end
 	window:set_right_status(wezterm.format({
 		{ Foreground = { Color = "#d3c6aa" } },
 		{ Background = { Color = "#2d353b" } },
@@ -251,6 +269,7 @@ return {
 		},
 	},
 	-- preferences
+	status_update_interval = 500,
 	use_ime = true,
 	check_for_updates = false,
 	scrollback_lines = 3500,
