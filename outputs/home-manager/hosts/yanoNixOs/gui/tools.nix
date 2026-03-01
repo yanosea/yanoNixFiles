@@ -8,6 +8,7 @@
       bitwarden-desktop
       blender
       kdePackages.kdenlive
+      libreoffice-fresh
       remmina
       (pkgs.vesktop.overrideAttrs (oldAttrs: {
         postFixup = (oldAttrs.postFixup or "") + ''
