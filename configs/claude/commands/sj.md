@@ -20,8 +20,12 @@
   5. `jj git push` command to push the changes to remote with `-b <bookmark> --allow-new`
   6. `gh pr create` command:
      - **IMPORTANT: use `--head <bookmark>` flag** (jj does not use git branches, so branch detection fails without this)
-     - title: use `$(git log <bookmark> -1 --format='%s')` to extract from commit (must specify bookmark name, not `-1` alone, because jj uses detached HEAD)
-     - body: use `$(printf '%s\n\ncloses #<issue-number>' "$(git log <bookmark> -1 --format='%b')")` to extract from commit and append closes
+     - title:
+       - single commit: use `$(git log <bookmark> -1 --format='%s')` to extract from commit (must specify bookmark name, not `-1` alone, because jj uses detached HEAD)
+       - multiple commits: specify a summary title explicitly covering all changes (use the same emoji prefix convention as commit messages)
+     - body:
+       - single commit: use `$(printf '%s\n\ncloses #<issue-number>' "$(git log <bookmark> -1 --format='%b')")` to extract from commit and append closes
+       - multiple commits: write a `## Summary` section with bullet points for each commit's changes, then append `closes #<issue-number>`
      - label: same as issue
      - assignee: same as issue (`@me`)
   7. `gh pr merge <pr-number>` command to merge the pull request
@@ -83,3 +87,8 @@
    please ask questions before creating the commit message and include the answers in your considerations.
 
 **IMPORTANT: Commit messages must be in English, but your reply must be in Japanese.**
+
+## Arguments
+
+This command accepts optional arguments as additional instructions from the user.
+If arguments are provided (e.g., `/sj split into multiple commits`), follow them as high-priority directives alongside the rules above.
