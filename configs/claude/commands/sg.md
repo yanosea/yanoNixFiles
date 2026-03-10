@@ -17,7 +17,12 @@
   4. `git commit` command with the generated message
   5. `git push` command to push the changes to remote
   6. `gh pr create` command:
-     - no title/body specification (auto-populated from commit/branch)
+     - title:
+       - single commit: no specification (auto-populated from commit/branch)
+       - multiple commits: specify a summary title explicitly covering all changes (use the same emoji prefix convention as commit messages)
+     - body:
+       - single commit: no specification (auto-populated from commit/branch)
+       - multiple commits: write a `## Summary` section with bullet points for each commit's changes, then append `closes #<issue-number>`
      - label: same as issue
      - assignee: same as issue (`@me`)
   7. `gh pr merge` command to merge the pull request
@@ -70,3 +75,8 @@
    please ask questions before creating the commit message and include the answers in your considerations.
 
 **IMPORTANT: Commit messages must be in English, but your reply must be in Japanese.**
+
+## Arguments
+
+This command accepts optional arguments as additional instructions from the user.
+If arguments are provided (e.g., `/sg split into multiple commits`), follow them as high-priority directives alongside the rules above.
