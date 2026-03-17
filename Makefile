@@ -500,7 +500,7 @@ endif
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
 # 	@echo ""
-# 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# 	curl -fLo $$XDG_CONFIG_HOME/vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 # 	@echo ""
 # 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 # 	@echo ""
@@ -545,7 +545,7 @@ endif
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
 # 	@echo ""
-# 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# 	curl -fLo $$XDG_CONFIG_HOME/vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 # 	@echo ""
 # 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 # 	@echo ""
@@ -588,7 +588,7 @@ mac.init:
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
 # 	@echo ""
-# 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# 	curl -fLo $$XDG_CONFIG_HOME/vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 # 	@echo ""
 # 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 # 	@echo ""
@@ -631,7 +631,7 @@ mac.init:
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)install vimplug...$(COLOR_RESET)"
 # 	@echo ""
-# 	curl -fLo $$HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# 	curl -fLo $$XDG_CONFIG_HOME/vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 # 	@echo ""
 # 	@echo "$(COLOR_DONE)initialize done!$(COLOR_RESET)"
 # 	@echo ""
