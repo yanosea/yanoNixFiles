@@ -103,17 +103,35 @@ end)
 -- tab bar right
 wezterm.on("update-status", function(window, pane)
 	-- poll zellij for active tab/pane name
-	local session_name = (pane:get_title() or ""):match("^%s*([^|]+%S)") or ""
-	if session_name ~= "" then
+	local ok, sessions = wezterm.run_child_process({ "zellij", "list-sessions", "--short", "--no-formatting" })
+	local session_name = ok and sessions:match("^(%S+)") or nil
+	if session_name then
 		local success, stdout = wezterm.run_child_process({ "zellij", "-s", session_name, "action", "dump-layout" })
 		if success then
-			local pane_name, tab_name
+			local tab_name, pane_name, pane_cmd
 			for line in stdout:gmatch("[^\n]+") do
-				pane_name = pane_name or line:match('^%s+pane .*name="([^"]*)".*focus=true')
 				tab_name = tab_name or line:match('^%s*tab .*name="([^"]*)".*focus=true')
+				if not pane_name then
+					pane_name = line:match('^%s+pane .*name="([^"]*)".*focus=true')
+				end
+				if not pane_cmd then
+					local cmd = line:match('^%s+pane .*command="([^"]*)".*focus=true')
+					if cmd then
+						pane_cmd = Basename(cmd)
+					end
+				end
 			end
-			local active_name = pane_name or tab_name
-			zellij_tab_name = active_name and (session_name .. " | " .. active_name) or session_name
+			local parts = { session_name }
+			if tab_name then
+				table.insert(parts, tab_name)
+			end
+			if pane_name then
+				table.insert(parts, pane_name)
+			end
+			if pane_cmd then
+				table.insert(parts, pane_cmd)
+			end
+			zellij_tab_name = table.concat(parts, " > ")
 		end
 	end
 	if zellij_tab_name ~= last_zellij_tab_name then
