@@ -189,6 +189,7 @@ ifeq ($(IS_NIXOS),1)
 	@echo ""
 	rm -fr $$HOME/.config/claude/CLAUDE.md
 	rm -fr $$HOME/.config/fcitx5/config
+	rm -fr $$HOME/.config/fcitx5/profile
 	nix run .#homeConfigurations."yanosea@yanoNixOs".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 	@echo ""
@@ -238,6 +239,7 @@ ifeq ($(IS_NIXOS),1)
 	@echo ""
 	rm -fr $$HOME/.config/claude/CLAUDE.md
 	rm -fr $$HOME/.config/fcitx5/config
+	rm -fr $$HOME/.config/fcitx5/profile
 	EXPERIMENTAL_MODE=1 nix run --impure .#homeConfigurations."yanosea@yanoNixOs".activationPackage
 	@echo ""
 	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"

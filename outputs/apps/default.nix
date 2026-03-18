@@ -38,6 +38,7 @@ let
       preHomeCommands = ''
         rm -fr "$HOME/.config/claude/CLAUDE.md"
         rm -fr "$HOME/.config/fcitx5/config"
+        rm -fr "$HOME/.config/fcitx5/profile"
       '';
     };
     # nixos (wsl)
