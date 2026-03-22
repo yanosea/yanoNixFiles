@@ -66,6 +66,8 @@ if !isdirectory(undo_dir)
 endif
 set undofile
 exe 'set undodir=' .. undo_dir
+" viminfo
+set viminfofile=$XDG_STATE_HOME/vim/viminfo
 " standard plugin
 filetype plugin on
 let g:netrw_liststyle=1
