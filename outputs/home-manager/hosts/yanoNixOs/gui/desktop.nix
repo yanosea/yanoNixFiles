@@ -33,6 +33,7 @@
           gtk-application-prefer-dark-theme=1
         '';
       };
+      theme = config.gtk.theme;
     };
   };
   # home
