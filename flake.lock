@@ -64,11 +64,11 @@
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
-        "lastModified": 1774250935,
-        "narHash": "sha256-mWID0WFgTnd9hbEeaPNX+YYWF70JN3r7zBouEqERJOE=",
+        "lastModified": 1774336807,
+        "narHash": "sha256-9Wu6fqKbjHBh//Rlx0p/jFVobZwgvBlBov2W2H1kfAI=",
         "owner": "nix-community",
         "repo": "fenix",
-        "rev": "64d7705e8c37d650cfb1aa99c24a8ce46597f29e",
+        "rev": "2b5c85b86be24ff24e9586a56101e22f90ead9d4",
         "type": "github"
       },
       "original": {
@@ -196,11 +196,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774274572,
-        "narHash": "sha256-YtpNRYSv0CQn+MjhHHqFcIR5L0Urex2tTwS42kP6nuc=",
+        "lastModified": 1774357444,
+        "narHash": "sha256-xISUnO64LVh+DhV6wMAbWJtWjw9eqUQBJE/NX4BcDlw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "90913f831383a599c556cba59eac8cae9b5195a9",
+        "rev": "61463d50fca2f07b39231f88ebeffbf1617d2094",
         "type": "github"
       },
       "original": {
@@ -368,11 +368,11 @@
     "rust-analyzer-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1774221325,
-        "narHash": "sha256-aEIdkqB8gtQZtEbogdUb5iyfcZpKIlD3FkG8ANu73/I=",
+        "lastModified": 1774276450,
+        "narHash": "sha256-B+2C4/9l+ggImtYBwbzEDY3v9DFcDS7hNGDUI+E460o=",
         "owner": "rust-lang",
         "repo": "rust-analyzer",
-        "rev": "b42b63f390a4dab14e6efa34a70e67f5b087cc62",
+        "rev": "da2fe7fed8960a4e351818d52bf444d7c9569da7",
         "type": "github"
       },
       "original": {
@@ -410,11 +410,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774154798,
-        "narHash": "sha256-zsTuloDSdKf+PrI1MsWx5z/cyGEJ8P3eERtAfdP8Bmg=",
+        "lastModified": 1774303811,
+        "narHash": "sha256-fhG4JAcLgjKwt+XHbjs8brpWnyKUfU4LikLm3s0Q/ic=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "3e0d543e6ba6c0c48117a81614e90c6d8c425170",
+        "rev": "614e256310e0a4f8a9ccae3fa80c11844fba7042",
         "type": "github"
       },
       "original": {
@@ -483,11 +483,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774014673,
-        "narHash": "sha256-qaH4dm36fs5NKe7o8Ff0QcaOhgwuJntvIApR6Ka5IVY=",
+        "lastModified": 1774360655,
+        "narHash": "sha256-YBXg4fyEJmJsWgsV5kljoE+34q1fjmg//S5XNbjzTtM=",
         "owner": "emrldnix",
         "repo": "wrangler",
-        "rev": "daf17c1599b0315f465829b9df475975acba957b",
+        "rev": "8be6394076e7c87bb43db39022dd90aa4e8ba4da",
         "type": "github"
       },
       "original": {
