@@ -141,8 +141,8 @@ in
             After = [ "network-online.target" ];
           };
           Timer = {
-            OnBootSec = "30s";
-            OnUnitInactiveSec = "15min";
+            OnStartupSec = "30s";
+            OnUnitActiveSec = "15min";
             Persistent = true;
           };
           Install = {
