@@ -76,14 +76,7 @@ wezterm.on("format-tab-title", function(tab, tabs)
 		divider = ""
 	end
 
-	local limit_length = 30
-	local suffix = " ..."
 	local active_pane_title = (tab.tab_title ~= "" and tab.tab_title) or tab.active_pane.title
-	local title_length = #active_pane_title
-
-	if title_length > limit_length then
-		active_pane_title = string.sub(active_pane_title, 1, limit_length) .. suffix
-	end
 
 	return {
 		{ Background = { Color = leading_bg } },
@@ -199,7 +192,7 @@ return {
 	use_fancy_tab_bar = false,
 	tab_bar_at_bottom = true,
 	show_new_tab_button_in_tab_bar = false,
-	tab_max_width = 52,
+	tab_max_width = 256,
 	window_padding = {
 		left = 0,
 		right = 0,
