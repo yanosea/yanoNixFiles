@@ -18,7 +18,12 @@ After understanding the changes, generate a commit message in English.
   4. `git commit` command with the generated message
   5. `git push` command to push the changes to remote
   6. `gh pr create` command:
-     - no title/body specification (auto-populated from commit/branch)
+     - title:
+       - single commit: no specification (auto-populated from commit/branch)
+       - multiple commits: specify a summary title explicitly covering all changes (use the same emoji prefix convention as commit messages)
+     - body:
+       - single commit: no specification (auto-populated from commit/branch)
+       - multiple commits: write a `## Summary` section with bullet points for each commit's changes, then append `closes #<issue-number>`
      - label: same as issue
      - assignee: same as issue (`@me`)
   7. `gh pr merge` command to merge the pull request
@@ -29,12 +34,13 @@ After understanding the changes, generate a commit message in English.
   - Get the latest number: `gh pr list --state all --limit 1 --json number --jq '.[0].number'`
   - The next issue number = latest + 1
   - Use the predicted number directly in all commands (no variables or placeholders)
-- Write all commands to `/tmp/ship-<issue-number>.md` as a markdown file with the following format:
+- Write all commands to `/tmp/ship-<repo-name>-<issue-number>.md` as a markdown file with the following format:
+  - `<repo-name>` is the current repository name (e.g., `yanoNixFiles`). Detect it from the git remote URL or the current directory name.
   - Use `# Ship #<issue-number>` as the document title
   - Group each step with a `## ` heading (e.g., `## Issue`, `## Branch`, `## Commit`, `## Push`, `## PR`, `## Merge`)
   - Wrap each command in a ```bash code block
   - No shebang, no variables, no script logic
-- At the end of your reply, show the output file path: `/tmp/ship-<issue-number>.md`
+- At the end of your reply, show the output file path: `/tmp/ship-<repo-name>-<issue-number>.md`
 
 ## Rules
 
