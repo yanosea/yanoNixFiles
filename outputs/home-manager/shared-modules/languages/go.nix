@@ -57,6 +57,7 @@ in
                 "github.com/yanosea/jrp/v2/app/presentation/api/jrp-server@latest"
                 "github.com/yanosea/jrp/v2/app/presentation/cli/jrp@latest"
                 "github.com/yanosea/mindnum/v2/app/presentation/cli/mindnum@latest"
+                "github.com/yanosea/spotlike/app/presentation/cli/spotlike@latest"
               ];
               script = pkgs.writeShellScript "sync-go-packages" ''
                 set -euo pipefail
