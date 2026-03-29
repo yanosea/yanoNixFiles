@@ -47,13 +47,14 @@
   - The next issue number = latest + 1, PR number = latest + 2
   - Use the predicted numbers directly in all commands (no variables or placeholders)
 
-- Write all commands to `/tmp/ship-<issue-number>.md` as a markdown file with the following format:
+- Write all commands to `/tmp/ship-<repo-name>-<issue-number>.md` as a markdown file with the following format:
+  - `<repo-name>` is the current repository name (e.g., `yanoNixFiles`). Detect it from the git remote URL or the current directory name.
   - Use `# Ship #<issue-number>` as the document title
   - Group each step with a `##` heading (e.g., `## Issue`, `## Format`, `## Commit`, `## Branch`, `## Push`, `## PR`, `## Merge`, `## Cleanup`)
   - Wrap each command in a ```bash code block
   - No shebang, no variables, no script logic
 
-- At the end of your reply, show the output file path: `/tmp/ship-<issue-number>.md`
+- At the end of your reply, show the output file path: `/tmp/ship-<repo-name>-<issue-number>.md`
 
 ## Rules
 
