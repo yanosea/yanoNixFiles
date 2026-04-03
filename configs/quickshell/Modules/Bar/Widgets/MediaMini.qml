@@ -453,13 +453,39 @@ Item {
         hoverEnabled: true
         cursorShape: hasActivePlayer ? Qt.PointingHandCursor : Qt.ArrowCursor
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+
+        property int leftClickCount: 0
+
+        Timer {
+          id: leftClickTimer
+          interval: 300
+          repeat: false
+          onTriggered: {
+            if (!hasActivePlayer || !MediaService.currentPlayer || !MediaService.canPlay) {
+              mouseArea.leftClickCount = 0
+              return
+            }
+            if (mouseArea.leftClickCount === 1) {
+              MediaService.playPause()
+            } else if (mouseArea.leftClickCount === 2) {
+              MediaService.next()
+              TooltipService.hide()
+            } else if (mouseArea.leftClickCount >= 3) {
+              MediaService.previous()
+              TooltipService.hide()
+            }
+            mouseArea.leftClickCount = 0
+          }
+        }
+
         onClicked: mouse => {
                      if (!hasActivePlayer || !MediaService.currentPlayer || !MediaService.canPlay) {
                        return
                      }
 
                      if (mouse.button === Qt.LeftButton) {
-                       MediaService.playPause()
+                       mouseArea.leftClickCount++
+                       leftClickTimer.restart()
                      } else if (mouse.button == Qt.RightButton) {
                        MediaService.next()
                        TooltipService.hide()
