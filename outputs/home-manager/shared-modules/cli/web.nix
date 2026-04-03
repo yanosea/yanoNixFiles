@@ -32,7 +32,7 @@ in
           bun
           deno
           nodejs_latest
-          nodePackages_latest.pnpm
+          pnpm
           posting
           wget
           wrangler
