@@ -121,7 +121,7 @@ jobs:
         if: steps.update-flake.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
           sign-commits: true
           commit-message: ${{ steps.update-flake.outputs.commit_message }}
           title: ${{ steps.update-flake.outputs.commit_title }}
