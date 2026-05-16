@@ -104,6 +104,7 @@
     windowManager = {
       hyprland = {
         enable = true;
+        configType = "hyprlang";
         # dummy
         settings = {
           env = [ ];
