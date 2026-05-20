@@ -7,6 +7,7 @@
     ./fuse.nix
     ./game.nix
     ./graphics-tools.nix
+    ./greetd.nix
     ./hwclock.nix
     ./hyprland.nix
     ./niri.nix

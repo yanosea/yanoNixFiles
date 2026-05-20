@@ -134,6 +134,10 @@
       },
       {
         "enabled": true,
+        "id": "compositor-card"
+      },
+      {
+        "enabled": true,
         "id": "audio-card"
       },
       {

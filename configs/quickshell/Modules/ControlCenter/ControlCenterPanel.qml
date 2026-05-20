@@ -41,6 +41,9 @@ NPanel {
       case "media-sysmon-card":
         height += mediaSysMonHeight
         break
+      case "compositor-card":
+        height += compositorHeight
+        break
       default:
         break
       }
@@ -62,6 +65,7 @@ NPanel {
   readonly property int audioHeight: Math.round(60 * Style.uiScaleRatio)
   readonly property int weatherHeight: Math.round(190 * Style.uiScaleRatio)
   readonly property int mediaSysMonHeight: Math.round(260 * Style.uiScaleRatio)
+  readonly property int compositorHeight: Math.round(64 * Style.uiScaleRatio)
 
   panelContent: Item {
     id: content
@@ -91,6 +95,8 @@ NPanel {
               return weatherHeight
             case "media-sysmon-card":
               return mediaSysMonHeight
+            case "compositor-card":
+              return compositorHeight
             default:
               return 0
             }
@@ -107,6 +113,8 @@ NPanel {
               return weatherCard
             case "media-sysmon-card":
               return mediaSysMonCard
+            case "compositor-card":
+              return compositorCard
             }
           }
         }
@@ -131,6 +139,11 @@ NPanel {
     Component {
       id: weatherCard
       WeatherCard {}
+    }
+
+    Component {
+      id: compositorCard
+      CompositorCard {}
     }
 
     Component {

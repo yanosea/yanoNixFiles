@@ -86,6 +86,7 @@ ShellRoot {
         IdleInhibitorService.init()
         PowerProfileService.init()
         DistroService.init()
+        CompositorPreferenceService.init()
       }
 
       Background {}
