@@ -381,6 +381,15 @@ binds {
     Super+E {
         spawn "nemo"
     }
+    Super+V {
+        spawn-sh "$HOME/.local/bin/niri-app-toggle vesktop vesktop"
+    }
+    Super+M {
+        spawn-sh "$HOME/.local/bin/niri-app-toggle spotify spotify"
+    }
+    Super+G {
+        spawn-sh "$HOME/.local/bin/niri-app-toggle steam steam"
+    }
     Super+L {
         spawn "qs" "ipc" "call" "lockScreen" "lock"
     }

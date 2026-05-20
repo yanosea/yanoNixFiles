@@ -1,5 +1,5 @@
 # nixos desktop security module
-{ pkgs, username, ... }:
+{ pkgs, ... }:
 {
   # programs
   programs = {
@@ -28,22 +28,6 @@
     gnome = {
       gnome-keyring = {
         enable = true;
-      };
-    };
-    greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          # hyprland
-          command = ''
-            ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd start-hyprland
-          '';
-          # niri
-          # command = ''
-          #   ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd niri-session
-          # '';
-          user = "greeter";
-        };
       };
     };
   };
