@@ -123,9 +123,11 @@ in
             # Prevent timer from killing manual execution
             RefuseManualStart = false;
             RefuseManualStop = false;
+            X-SwitchMethod = "keep-old";
           };
           Service = {
             Type = "oneshot";
+            RemainAfterExit = true;
             ExecStart = "${rcloneBisyncScript}";
             ExecStopPost = "${rcloneCleanupScript}";
             StandardOutput = "journal";
