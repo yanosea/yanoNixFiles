@@ -271,10 +271,12 @@ dotfile is mine.
 
 ### 🌠 Initialize
 
-- **1.** Install nix following [here](https://github.com/DeterminateSystems/nix-installer).
+- **1.** Install nix using the Determinate Nix package for macOS.
 
   ```sh
-  curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+  curl -fsSL "https://install.determinate.systems/determinate-pkg/stable/Universal" \
+    -o /tmp/determinate-nix.pkg \
+    && sudo installer -pkg /tmp/determinate-nix.pkg -target /
   ```
 
 - **2.** Install nix-darwin following [here](https://github.com/LnL7/nix-darwin).
