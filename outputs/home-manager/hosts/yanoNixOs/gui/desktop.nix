@@ -64,6 +64,7 @@
     packages = (
       with pkgs;
       [
+        app2unit
         cava
         cliphist
         dconf
