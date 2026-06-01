@@ -8,7 +8,7 @@
     "position": "center",
     "sortByMostUsed": true,
     "terminalCommand": "wezterm start --",
-    "useApp2Unit": false
+    "useApp2Unit": true
   },
   "audio": {
     "cavaFrameRate": 60,
