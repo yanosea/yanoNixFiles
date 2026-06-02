@@ -5,7 +5,6 @@
   home = {
     packages = with pkgs; [
       baobab
-      bitwarden-desktop
       blender
       kdePackages.kdenlive
       libreoffice-fresh
