@@ -87,15 +87,6 @@
         };
       };
     };
-    ## wrangler
-    wrangler = {
-      url = "github:emrldnix/wrangler/master";
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
-    };
   };
   outputs = inputs: {
     # apps

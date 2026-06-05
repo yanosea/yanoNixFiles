@@ -35,7 +35,6 @@ in
           pnpm
           posting
           wget
-          wrangler
           xh
         ];
       };
@@ -53,6 +52,13 @@ in
                   permissions = "--unstable-worker-options --allow-read --allow-net --allow-env --allow-run --allow-write --allow-import";
                 }
               ];
+              denoNpmPackages = [
+                {
+                  name = "wrangler";
+                  pkg = "wrangler@latest";
+                  permissions = "--allow-env --allow-read --allow-write --allow-net --allow-run --allow-sys";
+                }
+              ];
               syncDenoTools = pkgs.writeShellScript "sync-deno-tools" ''
                 set -euo pipefail
                 export PATH="${pkgs.deno}/bin:$PATH"
@@ -63,6 +69,13 @@ in
                     echo "  Installing/updating ${pkg.name}..."
                     ${pkgs.deno}/bin/deno install --global ${pkg.permissions} --name ${pkg.name} --reload --force ${pkg.url}
                   '') denoPackages
+                )}
+                echo "Syncing npm tools via Deno..."
+                ${builtins.concatStringsSep "\n" (
+                  map (pkg: ''
+                    echo "  Installing/updating ${pkg.name}..."
+                    ${pkgs.deno}/bin/deno install --global ${pkg.permissions} --name ${pkg.name} --force npm:${pkg.pkg}
+                  '') denoNpmPackages
                 )}
               '';
               script = pkgs.writeShellScript "sync-web-tools" ''
