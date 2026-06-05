@@ -210,7 +210,7 @@ keybinding:
     pasteCommits: "V"
     tagCommit: "T"
     checkoutCommit: "<space>"
-    resetCherryPick: "<c-R>"
+    resetCherryPick: "<ctrl+shift+r>"
     copyCommitMessageToClipboard: "<c-y>"
     openLogMenu: "<c-l>"
     viewBisectOptions: "b"
