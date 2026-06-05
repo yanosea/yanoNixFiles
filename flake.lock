@@ -110,27 +110,6 @@
         "type": "github"
       }
     },
-    "flake-parts": {
-      "inputs": {
-        "nixpkgs-lib": [
-          "wrangler",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1778716662,
-        "narHash": "sha256-m1Yf0wZ8j1OHjTc2UwHwyQRSnNeSgLJOd7q5Y45hzi4=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "f7c1a2d347e4c52d5fb8d10cb4d94b5884e546fb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -377,8 +356,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_3",
         "sops-nix": "sops-nix",
-        "treefmt-nix": "treefmt-nix",
-        "wrangler": "wrangler"
+        "treefmt-nix": "treefmt-nix"
       }
     },
     "rust-analyzer-src": {
@@ -488,28 +466,6 @@
         "owner": "numtide",
         "ref": "main",
         "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "wrangler": {
-      "inputs": {
-        "flake-parts": "flake-parts",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1779917523,
-        "narHash": "sha256-shkIJjXfNbAMwWvxEvGGE7WdwXEFOoD7CTHWIFW8Phg=",
-        "owner": "emrldnix",
-        "repo": "wrangler",
-        "rev": "0263422903a15fc51e9a9ed536f844fe1d8a1bdc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "emrldnix",
-        "ref": "master",
-        "repo": "wrangler",
         "type": "github"
       }
     }
