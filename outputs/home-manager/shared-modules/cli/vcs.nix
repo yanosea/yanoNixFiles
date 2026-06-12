@@ -63,7 +63,7 @@ in
               ];
               script = pkgs.writeShellScript "sync-repos" ''
                 set -euo pipefail
-                export PATH=${pkgs.git}/bin:${pkgs.jujutsu}/bin:$PATH
+                export PATH=${pkgs.git}/bin:${pkgs.jujutsu}/bin:${pkgs.gnupg}/bin:$PATH
                 for repo in ${builtins.concatStringsSep " " repositories}; do
                   ${pkgs.ghq}/bin/ghq get --update "$repo"
                   repoPath="$HOME/ghq/$repo"
