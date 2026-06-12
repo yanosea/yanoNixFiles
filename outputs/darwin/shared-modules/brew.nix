@@ -6,6 +6,9 @@
     onActivation = {
       autoUpdate = true;
       upgrade = true;
+      extraEnv = {
+        HOMEBREW_NO_REQUIRE_TAP_TRUST = "1";
+      };
     };
     brews = [
       "goku"
@@ -31,7 +34,6 @@
       "google-chrome"
       "google-drive"
       "hammerspoon"
-      "hiddenbar"
       "homerow"
       "karabiner-elements"
       "libreoffice"
@@ -51,7 +53,6 @@
       "splashtop-personal"
       "splice"
       "spotify"
-      "stats"
       "supercollider"
       "tailscale-app"
       "the-unarchiver"
