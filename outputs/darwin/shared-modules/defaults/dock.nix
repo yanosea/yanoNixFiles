@@ -32,6 +32,9 @@
             app = "/Applications/Vesktop.app";
           }
           {
+            app = "/Applications/Spotify.app";
+          }
+          {
             app = "/Applications/WezTerm.app";
           }
           {
