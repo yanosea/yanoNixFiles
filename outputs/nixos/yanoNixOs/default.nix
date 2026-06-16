@@ -82,14 +82,29 @@
       };
     };
   };
+  # power management
+  powerManagement = {
+    cpuFreqGovernor = "performance";
+  };
   # services
   services = {
+    fstrim = {
+      enable = true;
+      interval = "daily";
+    };
     upower = {
       enable = true;
     };
   };
   # systemd
   systemd = {
+    timers = {
+      fstrim = {
+        timerConfig = {
+          Persistent = true;
+        };
+      };
+    };
     user = {
       settings = {
         Manager = {
