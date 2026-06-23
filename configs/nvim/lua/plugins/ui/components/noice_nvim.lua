@@ -203,7 +203,18 @@ return {
 				},
 				throttle = 1000 / 30, -- how frequently does Noice need to check for ui updates? This has no effect when in blocking mode.
 				views = {}, ---@see section on views
-				routes = {}, --- @see section on routes
+				routes = {
+					{
+						filter = {
+							any = {
+								{ event = "msg_show", kind = "echomsg", find = "deprecated" },
+								{ event = "notify", kind = "info", find = "%[WakaTime%] Debug mode enabled" },
+								{ event = "notify", kind = "info", find = "%[WakaTime%] Initialized" },
+							},
+						},
+						opts = { skip = true },
+					},
+				}, --- @see section on routes
 				status = {}, --- @see section on statusline components
 				format = {}, --- @see section on formatting
 			})

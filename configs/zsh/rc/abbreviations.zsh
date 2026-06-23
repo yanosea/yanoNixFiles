@@ -74,7 +74,7 @@ abbrev-alias trello="trello-tui -board yanoBoard"
 
 # shell
 ## reload zsh
-abbrev-alias reload="exec zsh"
+abbrev-alias reload="unset __HM_SESS_VARS_SOURCED LD_LIBRARY_PATH && exec zsh"
 
 # utilities
 ## nix-latest

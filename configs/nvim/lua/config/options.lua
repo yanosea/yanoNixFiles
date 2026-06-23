@@ -65,3 +65,35 @@ vim.opt.cmdheight = 0 -- hide command line (bottom of the screen) because of usi
 vim.opt.display = "lastline" -- show last line of the screen
 -- persist undo
 vim.opt.undofile = true
+-- suppress noisy LSP log messages
+local lsp_log_suppress = {
+	"chat-lib-tokenizer",
+	"reading on stdin, writing on stdout",
+	"connections closed",
+	"connection is closed",
+	"document not found: term://",
+}
+vim.lsp.log.set_format_func(function(level, ...)
+	if vim.log.levels[level] ~= nil and vim.log.levels[level] < vim.lsp.log.get_level() then
+		return nil
+	end
+	local argc = select("#", ...)
+	for i = 1, argc do
+		local arg = select(i, ...)
+		if type(arg) == "string" then
+			for _, pattern in ipairs(lsp_log_suppress) do
+				if arg:find(pattern, 1, true) then
+					return nil
+				end
+			end
+		end
+	end
+	local info = debug.getinfo(2, "Sl")
+	local header = string.format("[%s][%s] %s:%s", level, os.date("%F %H:%M:%S"), info.short_src, info.currentline)
+	local parts = { header }
+	for i = 1, argc do
+		local arg = select(i, ...)
+		table.insert(parts, arg == nil and "nil" or vim.inspect(arg, { newline = " ", indent = "" }))
+	end
+	return table.concat(parts, "\t") .. "\n"
+end)
