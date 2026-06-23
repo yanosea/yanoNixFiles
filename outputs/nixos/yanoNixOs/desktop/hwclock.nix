@@ -59,11 +59,13 @@
         conflicts = [ "shutdown.target" ];
         unitConfig = {
           DefaultDependencies = false;
+          ConditionPathExists = "/dev/rtc0";
         };
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           ExecStart = "${pkgs.util-linux}/bin/hwclock --hctosys --localtime";
+          SuccessExitStatus = "0 1";
         };
         wantedBy = [ "basic.target" ];
       };
