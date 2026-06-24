@@ -46,6 +46,25 @@ return {
 				suggestion = { enabled = false },
 				-- disable panel
 				panel = { enabled = false },
+				-- jj detached HEAD triggers Copilot node agent warnings; filter at handler level
+				server_opts_overrides = {
+					handlers = {
+						["window/logMessage"] = function(err, result, ctx, config)
+							local filtered = {
+								"Local Diff Tracker",
+								"Policy watcher not available",
+							}
+							if result and result.message then
+								for _, pattern in ipairs(filtered) do
+									if result.message:find(pattern) then
+										return
+									end
+								end
+							end
+							vim.lsp.handlers["window/logMessage"](err, result, ctx, config)
+						end,
+					},
+				},
 			})
 		end,
 	},

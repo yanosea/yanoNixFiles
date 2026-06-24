@@ -271,6 +271,16 @@ return {
 						return require("screenkey").get_keys()
 					end,
 				},
+				-- __wakatime_statusline flag makes vim-wakatime skip auto-inserting into lualine_x
+				wakatime = {
+					function()
+						return require("wakatime").statusline()
+					end,
+					cond = function()
+						return require("wakatime").statusline() ~= ""
+					end,
+					__wakatime_statusline = true,
+				},
 				lsp = {
 					get_lsp_info,
 					color = { gui = "bold" },
@@ -404,6 +414,7 @@ return {
 					},
 					lualine_x = {
 						components.screenkey,
+						components.wakatime,
 						components.diagnostics,
 						components.lsp,
 						components.spaces,
@@ -426,6 +437,7 @@ return {
 					},
 					lualine_x = {
 						components.screenkey,
+						components.wakatime,
 						components.diagnostics,
 						components.lsp,
 						components.spaces,

@@ -2,6 +2,13 @@
 local M = {}
 function M.setup()
 	vim.lsp.config("efm", {
+		root_dir = function(bufnr, on_dir)
+			if vim.api.nvim_buf_get_name(bufnr):match("^term://") then
+				on_dir(nil)
+				return
+			end
+			on_dir(vim.fs.root(bufnr, { ".git" }) or vim.fn.getcwd())
+		end,
 		init_options = {
 			documentFormatting = true,
 			documentRangeFormatting = true,
