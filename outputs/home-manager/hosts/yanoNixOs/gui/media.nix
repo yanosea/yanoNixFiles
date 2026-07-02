@@ -1,10 +1,5 @@
 # home media module
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 {
   # home
   home = {
