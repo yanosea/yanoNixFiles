@@ -83,7 +83,7 @@ in
                 ${syncDenoTools}
               '';
             in
-            config.lib.dag.entryAfter [ "writeBoundary" ] ''
+            lib.hm.dag.entryAfter [ "writeBoundary" ] ''
               echo ""
               echo "update web development tools..."
               echo ""

@@ -65,7 +65,7 @@ in
                 sheldon lock --update
               '';
             in
-            config.lib.dag.entryAfter [ "writeBoundary" ] ''
+            lib.hm.dag.entryAfter [ "writeBoundary" ] ''
               echo ""
               echo "update sheldon plugins..."
               echo ""
