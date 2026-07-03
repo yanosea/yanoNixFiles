@@ -1,5 +1,5 @@
 # nixos desktop game module
-{ pkgs, ... }:
+{ ... }:
 {
   # boot
   boot = {

@@ -1,5 +1,5 @@
 # nixos desktop security module
-{ pkgs, ... }:
+{ ... }:
 {
   # programs
   programs = {
