@@ -9,7 +9,7 @@
       kdePackages.kdenlive
       libreoffice-fresh
       remmina
-      (pkgs.vesktop.overrideAttrs (oldAttrs: {
+      (vesktop.overrideAttrs (oldAttrs: {
         postFixup = (oldAttrs.postFixup or "") + ''
           wrapProgram $out/bin/vesktop \
             --add-flags "--disable-features=WebRtcHideLocalIpsWithMdns" \
