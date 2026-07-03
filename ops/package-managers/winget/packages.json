@@ -125,9 +125,6 @@
           "PackageIdentifier": "Microsoft.PowerToys"
         },
         {
-          "PackageIdentifier": "Microsoft.Teams"
-        },
-        {
           "PackageIdentifier": "Microsoft.UI.Xaml.2.7"
         },
         {

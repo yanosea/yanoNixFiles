@@ -5,6 +5,7 @@
     enable = true;
     onActivation = {
       autoUpdate = true;
+      cleanup = "zap";
       upgrade = true;
       extraEnv = {
         HOMEBREW_NO_REQUIRE_TAP_TRUST = "1";
@@ -40,7 +41,6 @@
       "libreoffice-language-pack"
       "mediosz/tap/swipeaerospace"
       "microsoft-auto-update"
-      "microsoft-teams"
       "nikitabobko/tap/aerospace"
       "obs"
       "omnidisksweeper"

@@ -22,6 +22,7 @@
       mermaid-cli
       ncdu
       onefetch
+      semgrep
       vhs
       wakatime-cli
     ];
