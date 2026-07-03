@@ -1,12 +1,18 @@
 # aerospace configuration
+# config format version (unlocks persistent-workspaces etc.)
+config-version = 2
 # start at login
 start-at-login = true
+# reload config automatically when the config file is saved
+auto-reload-config = true
 # normalization settings
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 # layout settings
 default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
+# padding for accordion layout
+accordion-padding = 30
 # gaps configuration
 gaps.inner.horizontal = 5
 gaps.inner.vertical = 5
@@ -17,6 +23,26 @@ gaps.outer.right = 5
 # mouse behavior
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = ['move-mouse window-lazy-center']
+# focus the window under the mouse cursor
+focus-follows-mouse.enabled = true
+# unhide apps automatically when accidentally hidden via cmd-h
+automatically-unhide-macos-hidden-apps = true
+# keep these workspaces alive even when empty (requires config-version = 2)
+persistent-workspaces = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+# status bar integration (uncomment when SketchyBar is introduced)
+# exec-on-workspace-change = ['/bin/bash', '-c',
+#   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE']
+# on-mode-changed = ['exec-and-forget sketchybar --trigger aerospace_mode_change']
+# float apps that don't tile well
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+run = 'layout floating'
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'layout floating'
+[[on-window-detected]]
+if.app-id = 'com.apple.calculator'
+run = 'layout floating'
 # key bindings
 [mode.main.binding]
 # application shortcuts
@@ -71,6 +97,17 @@ alt-comma = 'layout accordion horizontal vertical'
 alt-period = 'layout tiles horizontal vertical'
 # system controls
 cmd-shift-h = 'reload-config'
+alt-shift-semicolon = 'mode service'
+# service mode for infrequent operations
+[mode.service.binding]
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main']
+f = ['layout floating tiling', 'mode main']
+backspace = ['close-all-windows-but-current', 'mode main']
+alt-shift-h = ['join-with left', 'mode main']
+alt-shift-j = ['join-with down', 'mode main']
+alt-shift-k = ['join-with up', 'mode main']
+alt-shift-l = ['join-with right', 'mode main']
 # workspace assignments
 [workspace-to-monitor-force-assignment]
 1 = 1
