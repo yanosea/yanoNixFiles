@@ -1,6 +1,7 @@
 # nixos (wsl) configuration
 {
   homePath,
+  lib,
   pkgs,
   username,
   ...
@@ -12,6 +13,20 @@
     loader = {
       grub = {
         device = "nodev";
+      };
+    };
+  };
+  # networking
+  networking = {
+    wireless = {
+      enable = lib.mkForce false;
+    };
+  };
+  # systemd
+  systemd = {
+    services = {
+      wpa_supplicant = {
+        enable = lib.mkForce false;
       };
     };
   };
