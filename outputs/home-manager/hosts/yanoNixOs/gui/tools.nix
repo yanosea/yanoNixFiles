@@ -8,7 +8,7 @@
       blender
       kdePackages.kdenlive
       libreoffice-fresh
-      remmina
+      rustdesk-flutter
       (vesktop.overrideAttrs (oldAttrs: {
         postFixup = (oldAttrs.postFixup or "") + ''
           wrapProgram $out/bin/vesktop \

@@ -62,8 +62,6 @@ window_rules:
       - window_process: {equals: "zebar"}
       # ignore capture process started by the shortcut "win + shift + s"
       - window_process: {equals: "ScreenClippingHost"}
-      # ignore splashtop
-      - window_process: {equals: "strwinclt"}
       # ignore terraria
       - window_process: {equals: "Terraria"}
       # ignore HakkoAI

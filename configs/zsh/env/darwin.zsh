@@ -3,8 +3,6 @@
 #
 
 if [[ "$OS" = "Darwin" ]]; then
-	# homebrew
-	export HOMEBREW_NO_INSTALL_FROM_API=1
 	# mac model detection
 	export MAC_MODEL=$(system_profiler SPHardwareDataType | awk -F': ' '/Model Name/{print $2}')
 	# karabiner and goku configuration
