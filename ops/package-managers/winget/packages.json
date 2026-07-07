@@ -188,9 +188,6 @@
           "PackageIdentifier": "Python.Python.3.12"
         },
         {
-          "PackageIdentifier": "RealVNC.VNCViewer"
-        },
-        {
           "PackageIdentifier": "Rufus.Rufus"
         },
         {
@@ -198,9 +195,6 @@
         },
         {
           "PackageIdentifier": "sakura-editor.sakura"
-        },
-        {
-          "PackageIdentifier": "Splashtop.SplashtopPersonal"
         },
         {
           "PackageIdentifier": "Spotify.Spotify"

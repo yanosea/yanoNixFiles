@@ -87,7 +87,6 @@ in
         playerctl
         quickshell
         udisks2
-        wayvnc
         wev
         wf-recorder
         wl-clipboard
