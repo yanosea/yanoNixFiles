@@ -94,6 +94,7 @@ in
       ]
     );
     pointerCursor = {
+      enable = true;
       gtk = {
         enable = true;
       };
