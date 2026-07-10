@@ -3,8 +3,6 @@
 #
 
 if [[ "$OS" = "Darwin" ]]; then
-	# mac model detection
-	export MAC_MODEL=$(system_profiler SPHardwareDataType | awk -F': ' '/Model Name/{print $2}')
 	# karabiner and goku configuration
 	export GOKU_EDN_CONFIG_FILE=$XDG_CONFIG_HOME/karabiner/karabiner.edn
 	# development libraries and includes
