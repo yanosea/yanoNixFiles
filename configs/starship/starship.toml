@@ -75,6 +75,7 @@ when = "jj root 2>/dev/null"
 command = "jj-starship"
 style = "bg:#2d353b"
 format = '[ $output ](fg:#a7c080 bg:#2d353b)'
+ignore_timeout = true
 
 [custom.git]
 when = "! jj root 2>/dev/null && git rev-parse --is-inside-work-tree 2>/dev/null"
