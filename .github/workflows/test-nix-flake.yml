@@ -56,11 +56,10 @@ jobs:
           # validate configuration syntax and dependencies
           nix eval .#nixosConfigurations.${{ matrix.configuration }}.config.system.build.toplevel.drvPath \
             --show-trace
-      - name: build NixOS configuration (dry-run) - ${{ matrix.configuration }}
+      - name: build NixOS configuration - ${{ matrix.configuration }}
         run: |
-          # check build dependencies without actual building
+          # actually build so compile/link failures are caught
           nix build .#nixosConfigurations.${{ matrix.configuration }}.config.system.build.toplevel \
-            --dry-run \
             --show-trace
   test-darwin-builds:
     runs-on: macos-latest
@@ -85,11 +84,10 @@ jobs:
           # validate configuration syntax and dependencies
           nix eval .#darwinConfigurations.${{ matrix.configuration }}.system.drvPath \
             --show-trace
-      - name: build Darwin configuration (dry-run) - ${{ matrix.configuration }}
+      - name: build Darwin configuration - ${{ matrix.configuration }}
         run: |
-          # check build dependencies without actual building
+          # actually build so compile/link failures (e.g. Rust packages) are caught
           nix build .#darwinConfigurations.${{ matrix.configuration }}.system \
-            --dry-run \
             --show-trace
   test-home-manager-builds:
     runs-on: ubuntu-latest
@@ -114,11 +112,10 @@ jobs:
           # validate configuration syntax and dependencies
           nix eval .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage.drvPath \
             --show-trace
-      - name: build Home Manager configuration (dry-run) - ${{ matrix.configuration }}
+      - name: build Home Manager configuration - ${{ matrix.configuration }}
         run: |
-          # check build dependencies without actual building
+          # actually build so compile/link failures are caught
           nix build .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage \
-            --dry-run \
             --show-trace
   test-home-manager-darwin-builds:
     runs-on: macos-latest
@@ -143,11 +140,10 @@ jobs:
           # validate configuration syntax and dependencies
           nix eval .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage.drvPath \
             --show-trace
-      - name: build Home Manager configuration (dry-run) - ${{ matrix.configuration }}
+      - name: build Home Manager configuration - ${{ matrix.configuration }}
         run: |
-          # check build dependencies without actual building
+          # actually build so compile/link failures (e.g. Rust packages) are caught
           nix build .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage \
-            --dry-run \
             --show-trace
   report-status:
     runs-on: ubuntu-latest
