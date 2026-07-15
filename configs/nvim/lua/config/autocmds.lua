@@ -73,7 +73,11 @@ vim.api.nvim_create_autocmd("TermOpen", {
 	end,
 })
 -- auto reload files changed outside of nvim
-vim.api.nvim_create_autocmd({ "WinEnter", "FocusGained", "BufEnter" }, {
+vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 	pattern = "*",
-	command = "checktime",
+	callback = function()
+		if vim.o.buftype ~= "nofile" then
+			vim.cmd("checktime")
+		end
+	end,
 })
