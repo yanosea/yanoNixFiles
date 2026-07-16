@@ -8,6 +8,11 @@
         "com.apple.mouse.scaling" = 17.0;
         "com.apple.sound.beep.sound" = "/System/Library/Sounds/Purr.aiff";
       };
+      CustomUserPreferences = {
+        NSGlobalDomain = {
+          SLSMenuBarUseBlurredAppearance = true;
+        };
+      };
       NSGlobalDomain = {
         AppleEnableMouseSwipeNavigateWithScrolls = true;
         AppleEnableSwipeNavigateWithScrolls = true;
@@ -45,7 +50,7 @@
         NSWindowShouldDragOnGesture = true;
         PMPrintingExpandedStateForPrint = true;
         PMPrintingExpandedStateForPrint2 = true;
-        _HIHideMenuBar = false;
+        _HIHideMenuBar = true;
         "com.apple.keyboard.fnState" = true;
         "com.apple.mouse.tapBehavior" = 1;
         "com.apple.sound.beep.feedback" = 0;

@@ -13,13 +13,17 @@ default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
 # padding for accordion layout
 accordion-padding = 30
-# gaps configuration
-gaps.inner.horizontal = 5
-gaps.inner.vertical = 5
-gaps.outer.left = 5
-gaps.outer.bottom = 5
-gaps.outer.top = 5
-gaps.outer.right = 5
+# gaps configuration. JankyBorders (configs/borders/bordersrc, width=8) draws its
+# border centered on each window's real edge, so it bleeds width/2=4 outward
+# into these gaps: outer = 10 (desired visible margin) + 4; inner = 10 + width
+# (border bleeds from both facing windows)
+gaps.inner.horizontal = 18
+gaps.inner.vertical = 18
+gaps.outer.left = 14
+gaps.outer.bottom = 14
+gaps.outer.right = 14
+# outer.top = 45 (SketchyBar footprint) + 10 (desired visible margin) + 4 (border bleed)
+gaps.outer.top = 59
 # mouse behavior
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = ['move-mouse window-lazy-center']
@@ -29,10 +33,13 @@ focus-follows-mouse.enabled = true
 automatically-unhide-macos-hidden-apps = true
 # keep these workspaces alive even when empty (requires config-version = 2)
 persistent-workspaces = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-# status bar integration (uncomment when SketchyBar is introduced)
-# exec-on-workspace-change = ['/bin/bash', '-c',
-#   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE']
-# on-mode-changed = ['exec-and-forget sketchybar --trigger aerospace_mode_change']
+# status bar integration
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE',
+]
+on-mode-changed = ['exec-and-forget sketchybar --trigger aerospace_mode_change']
 # float apps that don't tile well
 [[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'
