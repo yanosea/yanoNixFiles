@@ -6,6 +6,7 @@
     packages = with pkgs; [
       noto-fonts-color-emoji
       plemoljp-nf
+      sketchybar-app-font
     ];
   };
 }
