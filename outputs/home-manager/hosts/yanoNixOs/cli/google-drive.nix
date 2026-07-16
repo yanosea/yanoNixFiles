@@ -127,7 +127,6 @@ in
           };
           Service = {
             Type = "oneshot";
-            RemainAfterExit = true;
             ExecStart = "${rcloneBisyncScript}";
             ExecStopPost = "${rcloneCleanupScript}";
             StandardOutput = "journal";
@@ -145,7 +144,6 @@ in
           Timer = {
             OnStartupSec = "30s";
             OnUnitActiveSec = "15min";
-            Persistent = true;
           };
           Install = {
             WantedBy = [ "timers.target" ];
