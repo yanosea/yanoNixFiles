@@ -12,7 +12,7 @@
       };
     };
     brews = [
-      "goku"
+      "yqrashawn/goku/goku"
       "pinentry-mac"
     ];
     casks = [
@@ -34,7 +34,6 @@
       "github@beta"
       "google-chrome"
       "google-drive"
-      "hammerspoon"
       "homerow"
       "karabiner-elements"
       "libreoffice"
