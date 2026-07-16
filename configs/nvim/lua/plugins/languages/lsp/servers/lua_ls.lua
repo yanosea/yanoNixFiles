@@ -19,8 +19,6 @@ function M.setup()
 					},
 					-- define global variables
 					globals = {
-						-- hammerspoon
-						"hs",
 						-- vim
 						"vim",
 					},
