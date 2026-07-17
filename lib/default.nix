@@ -14,10 +14,7 @@ in
     linuxSystems
     darwinSystems
     ;
-  inherit (constants)
-    username
-    shells
-    ;
+  inherit (constants) username;
   mkNixOsSystem =
     {
       homePath,
