@@ -7,13 +7,7 @@ let
 in
 {
   # export system and constant configurations
-  inherit (systems)
-    supportedSystems
-    systemConfigs
-    getSystemConfig
-    linuxSystems
-    darwinSystems
-    ;
+  inherit (systems) supportedSystems getSystemConfig;
   inherit (constants) username;
   mkNixOsSystem =
     {
