@@ -88,16 +88,22 @@
       };
     };
   };
-  outputs = inputs: {
-    # apps
-    apps = (import ./outputs inputs).apps;
-    # darwin
-    darwinConfigurations = (import ./outputs inputs).darwin;
-    # formatter
-    formatter = (import ./outputs inputs).formatter;
-    # home-manager
-    homeConfigurations = (import ./outputs inputs).home-manager;
-    # nixos
-    nixosConfigurations = (import ./outputs inputs).nixos;
-  };
+  outputs =
+    inputs:
+    let
+      # import outputs configurations
+      outputs = import ./outputs inputs;
+    in
+    {
+      # apps
+      inherit (outputs) apps;
+      # darwin
+      darwinConfigurations = outputs.darwin;
+      # formatter
+      inherit (outputs) formatter;
+      # home-manager
+      homeConfigurations = outputs.home-manager;
+      # nixos
+      nixosConfigurations = outputs.nixos;
+    };
 }

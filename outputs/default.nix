@@ -6,7 +6,7 @@ let
   inherit (lib) username;
   # apps configurations
   apps = import ./apps inputs;
-  # # darwin configurations
+  # darwin configurations
   darwin = import ./darwin (inputs // { inherit username; });
   # formatter configurations
   formatter = import ./formatter inputs;
@@ -16,14 +16,12 @@ let
   nixos = import ./nixos (inputs // { inherit username; });
 in
 {
-  # apps configurations
-  apps = apps;
-  # darwin configurations
-  darwin = darwin;
-  # formatter configurations
-  formatter = formatter;
-  # home-manager configurations
-  home-manager = home-manager;
-  # nixos configurations
-  nixos = nixos;
+  # export configurations
+  inherit
+    apps
+    darwin
+    formatter
+    home-manager
+    nixos
+    ;
 }
