@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-SUCCESS=0
 FAILURE=1
 MISSING_FILES=2
 UNSUPPORTED=3
@@ -69,7 +68,7 @@ fi
 print_info "All required files found"
 
 print_info "Checking battery paths..."
-BATTERY_PATHS=($(grep -v '^#' "$SCRIPT_DIR/battery-paths.conf" | grep -v '^$'))
+mapfile -t BATTERY_PATHS < <(grep -v '^#' "$SCRIPT_DIR/battery-paths.conf" | grep -v '^$')
 EXISTING_PATHS=()
 
 for path in "${BATTERY_PATHS[@]}"; do
@@ -90,15 +89,15 @@ BATTERY_MANAGER_SCRIPT="/usr/bin/battery-manager-$ACTUAL_USER"
 
 SHEBANG=$(head -n 1 "$SCRIPT_DIR/templates/battery-manager.sh")
 echo "$SHEBANG" >"$BATTERY_MANAGER_SCRIPT"
-echo "" >>"$BATTERY_MANAGER_SCRIPT"
-
-echo "BATTERY_PATHS=(" >>"$BATTERY_MANAGER_SCRIPT"
-for path in "${EXISTING_PATHS[@]}"; do
-  echo "    \"$path\"" >>"$BATTERY_MANAGER_SCRIPT"
-done
-echo ")" >>"$BATTERY_MANAGER_SCRIPT"
-
-echo "" >>"$BATTERY_MANAGER_SCRIPT"
+{
+  echo ""
+  echo "BATTERY_PATHS=("
+  for path in "${EXISTING_PATHS[@]}"; do
+    echo "    \"$path\""
+  done
+  echo ")"
+  echo ""
+} >>"$BATTERY_MANAGER_SCRIPT"
 
 tail -n +2 "$SCRIPT_DIR/templates/battery-manager.sh" >>"$BATTERY_MANAGER_SCRIPT"
 

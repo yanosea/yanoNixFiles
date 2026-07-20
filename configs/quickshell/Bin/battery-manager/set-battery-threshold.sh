@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SUPPRESS_NOTIFICATIONS=false
 
 print_error() {
@@ -64,7 +63,6 @@ fi
 
 BATTERY_MANAGER_PATH="/usr/bin/battery-manager-$CURRENT_USER"
 
-SUCCESS=0
 MISSING_FILES=2
 
 if [ ! -f "$BATTERY_MANAGER_PATH" ]; then

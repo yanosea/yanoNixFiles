@@ -338,7 +338,7 @@ dotfile is mine.
   nix run .#yanoMacBook-update
   ```
 
-## 📚 Refferences
+## 📚 References
 
 I appreciate a lot to all the following articles and repositories🙏
 
