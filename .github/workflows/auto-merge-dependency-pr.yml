@@ -25,13 +25,17 @@ jobs:
         id: find-pr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # pass untrusted input via env to avoid script injection
+          EVENT_PR_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             # Direct PR trigger from dependabot
             echo "PR #${{ github.event.number }} is a dependabot PR"
-            echo "pr_number=${{ github.event.number }}" >> $GITHUB_OUTPUT
-            echo "branch_name=${{ github.event.pull_request.head.ref }}" >> $GITHUB_OUTPUT
-            echo "found=true" >> $GITHUB_OUTPUT
+            {
+              echo "pr_number=${{ github.event.number }}"
+              echo "branch_name=$EVENT_PR_BRANCH"
+              echo "found=true"
+            } >> "$GITHUB_OUTPUT"
           else
             # Search for PR when triggered by workflow_run
             echo "Searching for dependency update PRs..."
@@ -51,12 +55,14 @@ jobs:
               PR_NUMBER=$(echo "$MATCHING_PR" | jq -r '.number')
               HEAD_REF=$(echo "$MATCHING_PR" | jq -r '.headRefName')
               echo "PR #$PR_NUMBER ($HEAD_REF) is a valid dependency update PR"
-              echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
-              echo "branch_name=$HEAD_REF" >> $GITHUB_OUTPUT
-              echo "found=true" >> $GITHUB_OUTPUT
+              {
+                echo "pr_number=$PR_NUMBER"
+                echo "branch_name=$HEAD_REF"
+                echo "found=true"
+              } >> "$GITHUB_OUTPUT"
             else
               echo "No matching PR found"
-              echo "found=false" >> $GITHUB_OUTPUT
+              echo "found=false" >> "$GITHUB_OUTPUT"
             fi
           fi
   auto-approve-and-merge:
