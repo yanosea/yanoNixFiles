@@ -135,7 +135,7 @@ url_style = { foreground = "#7fbbb3" }
 attachment_style = { foreground = "#dbbc7f" }
 
 [theme.mentions_list]
-# Note: width and height are capped to the avaliable space
+# Note: width and height are capped to the available space
 # Minimum width
 # 0 = make the list as wide as possible
 min_width = 20

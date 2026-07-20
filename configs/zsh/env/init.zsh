@@ -5,9 +5,9 @@
 
 # determine config directory
 if [[ -n "$ZDOTDIR" ]]; then
-	ZSHENV_DIR="$ZDOTDIR/env"
+  ZSHENV_DIR="$ZDOTDIR/env"
 else
-	ZSHENV_DIR="$HOME/.config/zsh/env"
+  ZSHENV_DIR="$HOME/.config/zsh/env"
 fi
 
 # system and basic environment

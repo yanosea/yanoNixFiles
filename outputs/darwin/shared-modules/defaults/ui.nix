@@ -1,6 +1,5 @@
 # UI and window management configuration
-{ ... }:
-{
+_: {
   # system
   system = {
     defaults = {

@@ -1,6 +1,5 @@
 # mac home configuration
 {
-  config,
   homePath,
   username,
   ...
@@ -17,6 +16,6 @@
     enableNixpkgsReleaseCheck = true;
     homeDirectory = "${homePath}/${username}";
     stateVersion = "24.05"; # DO NOT CHANGE
-    username = username;
+    inherit username;
   };
 }

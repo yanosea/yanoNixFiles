@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import gi
 
-gi.require_version('EDataServer', '1.2')
-gi.require_version('ECal', '2.0')
+gi.require_version("EDataServer", "1.2")
+gi.require_version("ECal", "2.0")
 import json
 import sys
 import time
@@ -16,6 +16,7 @@ end_time = int(sys.argv[2])
 print(f"Starting with time range: {start_time} to {end_time}", file=sys.stderr)
 
 all_events = []
+
 
 def safe_get_time(ical_time):
     """Safely get time from ICalTime object"""
@@ -43,6 +44,7 @@ def safe_get_time(ical_time):
     except Exception:
         return None
 
+
 print("Getting registry...", file=sys.stderr)
 registry = EDataServer.SourceRegistry.new_sync(None)
 print("Registry obtained", file=sys.stderr)
@@ -52,7 +54,9 @@ print(f"Found {len(sources)} calendar sources", file=sys.stderr)
 
 for source in sources:
     if not source.get_enabled():
-        print(f"Skipping disabled calendar: {source.get_display_name()}", file=sys.stderr)
+        print(
+            f"Skipping disabled calendar: {source.get_display_name()}", file=sys.stderr
+        )
         continue
 
     calendar_name = source.get_display_name()
@@ -61,10 +65,7 @@ for source in sources:
     try:
         print(f"  Connecting to {calendar_name}...", file=sys.stderr)
         client = ECal.Client.connect_sync(
-            source,
-            ECal.ClientSourceType.EVENTS,
-            30,
-            None
+            source, ECal.ClientSourceType.EVENTS, 30, None
         )
         print(f"  Connected to {calendar_name}", file=sys.stderr)
 
@@ -74,21 +75,29 @@ for source in sources:
         start_str = start_dt.strftime("%Y%m%dT%H%M%SZ")
         end_str = end_dt.strftime("%Y%m%dT%H%M%SZ")
 
-        query = f'(occur-in-time-range? (make-time "{start_str}") (make-time "{end_str}"))'
+        query = (
+            f'(occur-in-time-range? (make-time "{start_str}") (make-time "{end_str}"))'
+        )
         print(f"  Query: {query}", file=sys.stderr)
 
         print(f"  Getting object list for {calendar_name}...", file=sys.stderr)
         success, ical_objects = client.get_object_list_sync(query, None)
-        print(f"  Got object list for {calendar_name}: success={success}, count={len(ical_objects) if ical_objects else 0}", file=sys.stderr)
+        print(
+            f"  Got object list for {calendar_name}: success={success}, count={len(ical_objects) if ical_objects else 0}",
+            file=sys.stderr,
+        )
 
         if not success or not ical_objects:
             print(f"  No events found in {calendar_name}", file=sys.stderr)
             continue
 
-        print(f"  Processing {len(ical_objects)} events from {calendar_name}...", file=sys.stderr)
+        print(
+            f"  Processing {len(ical_objects)} events from {calendar_name}...",
+            file=sys.stderr,
+        )
         for idx, ical_obj in enumerate(ical_objects):
             try:
-                if hasattr(ical_obj, 'get_summary'):
+                if hasattr(ical_obj, "get_summary"):
                     comp = ical_obj
                 else:
                     comp = ECal.Component.new_from_string(ical_obj)
@@ -109,27 +118,38 @@ for source in sources:
                 location = comp.get_location() or ""
                 description = comp.get_description() or ""
 
-                all_events.append({
-                    'summary': summary,
-                    'start': start_timestamp,
-                    'end': end_timestamp,
-                    'location': location,
-                    'description': description,
-                    'calendar': calendar_name
-                })
+                all_events.append(
+                    {
+                        "summary": summary,
+                        "start": start_timestamp,
+                        "end": end_timestamp,
+                        "location": location,
+                        "description": description,
+                        "calendar": calendar_name,
+                    }
+                )
 
                 if (idx + 1) % 10 == 0:
-                    print(f"  Processed {idx + 1} events from {calendar_name}...", file=sys.stderr)
+                    print(
+                        f"  Processed {idx + 1} events from {calendar_name}...",
+                        file=sys.stderr,
+                    )
             except Exception as e:
-                print(f"  Error processing event {idx} in {calendar_name}: {e}", file=sys.stderr)
+                print(
+                    f"  Error processing event {idx} in {calendar_name}: {e}",
+                    file=sys.stderr,
+                )
                 continue
 
-        print(f"  Finished processing {calendar_name}, found {len([e for e in all_events if e['calendar'] == calendar_name])} events", file=sys.stderr)
+        print(
+            f"  Finished processing {calendar_name}, found {len([e for e in all_events if e['calendar'] == calendar_name])} events",
+            file=sys.stderr,
+        )
 
     except Exception as e:
         print(f"  Error for {calendar_name}: {e}", file=sys.stderr)
 
 print(f"\nSorting {len(all_events)} total events...", file=sys.stderr)
-all_events.sort(key=lambda x: x['start'])
+all_events.sort(key=lambda x: x["start"])
 print("Done! Outputting JSON...", file=sys.stderr)
 print(json.dumps(all_events))

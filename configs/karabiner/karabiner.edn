@@ -1,78 +1,50 @@
-{
-  ;; bundle identifiers for app conditions
-  :applications {
-    :remote ["^com\\.carriez\\.rustdesk$"]
-    :finder ["^com\\.apple\\.finder$"]
-  }
-  ;; shell command templates
-  :templates {
-    :open "open -a \"%s\""
-  }
-  :layers {
-    :layer-mode {:key :left_command :alone {:key :vk_none}}
-  }
-  :devices {
-    :builtin [{:product_id 641 :vendor_id 1452}]
-  }
-  :main [
-    {
-    :des "layer mode"
-    :rules [:layer-mode
-      ;; vim bind cursor move (## passes any held modifiers through)
-      [:##h :left_arrow]
-      [:##j :down_arrow]
-      [:##k :up_arrow]
-      [:##l :right_arrow]
-      ;; ime
-      [:##spacebar :f13]
-      ;; caps lock
-      [:##tab :caps_lock]
-      ;; home / end
-      [:##p :home]
-      [:##r :end]
-      ;; page up / down
-      [:##b :page_up]
-      [:##f :page_down]
-      ;; delete
-      [:##delete_or_backspace :delete_forward]
-    ]},
-    {
-    :des "word motion (ctrl+arrow -> option+arrow, shift passes through)"
-    :rules [
-      [:!T#Sleft_arrow :!Oleft_arrow :!remote]
-      [:!T#Sright_arrow :!Oright_arrow :!remote]
-    ]},
-    {
-    :des "windows style shortcuts"
-    :rules [
-      ;; alt + f4 -> quit app
-      [:!Of4 :!Cq :!remote]
-      ;; ctrl + shift + esc -> activity monitor
-      [:!TSescape [:open "Activity Monitor"] :!remote]
-      ;; cmd + e -> finder
-      [:!Ce [:open "Finder"] :!remote]
-      ;; cmd + i -> system settings
-      [:!Ci [:open "System Settings"] :!remote]
-    ]},
-    {
-    :des "finder"
-    :rules [
-      ;; ctrl + return -> open
-      [:!Treturn_or_enter :!Co :finder]
-      ;; f2 -> rename
-      [:f2 :return_or_enter :finder]
-      ;; alt + up -> parent folder
-      [:!Oup_arrow :!Cup_arrow :finder]
-    ]},
-    {
-    :des "built-in keyboard change"
-    :rules [:builtin
-      ;; capslock -> left ctrl
-      [:##caps_lock :left_control]
-      ;; left option -> left command
-      [:##left_option :left_command]
-      ;; left control -> left option
-      [:##left_control :left_option]
-    ]},
-  ]
-}
+{;; bundle identifiers for app conditions
+ :applications {:finder ["^com\\.apple\\.finder$"],
+                :remote ["^com\\.carriez\\.rustdesk$"]},
+ ;; shell command templates
+ :templates {:open "open -a \"%s\""},
+ :layers {:layer-mode {:alone {:key :vk_none}, :key :left_command}},
+ :devices {:builtin [{:product_id 641, :vendor_id 1452}]},
+ :main
+   [{:des "layer mode",
+     :rules [:layer-mode
+             ;; vim bind cursor move (## passes any held modifiers through)
+             [:##h :left_arrow] [:##j :down_arrow] [:##k :up_arrow]
+             [:##l :right_arrow]
+             ;; ime
+             [:##spacebar :f13]
+             ;; caps lock
+             [:##tab :caps_lock]
+             ;; home / end
+             [:##p :home] [:##r :end]
+             ;; page up / down
+             [:##b :page_up] [:##f :page_down]
+             ;; delete
+             [:##delete_or_backspace :delete_forward]]}
+    {:des "word motion (ctrl+arrow -> option+arrow, shift passes through)",
+     :rules [[:!T#Sleft_arrow :!Oleft_arrow :!remote]
+             [:!T#Sright_arrow :!Oright_arrow :!remote]]}
+    {:des "windows style shortcuts",
+     :rules [;; alt + f4 -> quit app
+             [:!Of4 :!Cq :!remote]
+             ;; ctrl + shift + esc -> activity monitor
+             [:!TSescape [:open "Activity Monitor"] :!remote]
+             ;; cmd + e -> finder
+             [:!Ce [:open "Finder"] :!remote]
+             ;; cmd + i -> system settings
+             [:!Ci [:open "System Settings"] :!remote]]}
+    {:des "finder",
+     :rules [;; ctrl + return -> open
+             [:!Treturn_or_enter :!Co :finder]
+             ;; f2 -> rename
+             [:f2 :return_or_enter :finder]
+             ;; alt + up -> parent folder
+             [:!Oup_arrow :!Cup_arrow :finder]]}
+    {:des "built-in keyboard change",
+     :rules [:builtin
+             ;; capslock -> left ctrl
+             [:##caps_lock :left_control]
+             ;; left option -> left command
+             [:##left_option :left_command]
+             ;; left control -> left option
+             [:##left_control :left_option]]}]}

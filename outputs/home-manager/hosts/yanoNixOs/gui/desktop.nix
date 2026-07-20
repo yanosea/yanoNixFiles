@@ -64,35 +64,32 @@ in
         };
       };
     };
-    packages = (
-      with pkgs;
-      [
-        app2unit
-        cava
-        cliphist
-        dconf
-        ddcutil
-        gpu-screen-recorder
-        gvfs
-        hyprcursor
-        hypridle
-        hyprpaper
-        hyprpicker
-        hyprshot
-        libnotify
-        linux-wallpaperengine
-        matugen
-        nemo
-        niri
-        playerctl
-        quickshell
-        udisks2
-        wev
-        wf-recorder
-        wl-clipboard
-        wlsunset
-      ]
-    );
+    packages = with pkgs; [
+      app2unit
+      cava
+      cliphist
+      dconf
+      ddcutil
+      gpu-screen-recorder
+      gvfs
+      hyprcursor
+      hypridle
+      hyprpaper
+      hyprpicker
+      hyprshot
+      libnotify
+      linux-wallpaperengine
+      matugen
+      nemo
+      niri
+      playerctl
+      quickshell
+      udisks2
+      wev
+      wf-recorder
+      wl-clipboard
+      wlsunset
+    ];
     pointerCursor = {
       enable = true;
       gtk = {

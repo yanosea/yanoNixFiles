@@ -6,19 +6,19 @@ import qs.Services
 import qs.Widgets
 
 NIconButton {
-  id: root
+    id: root
 
-  property ShellScreen screen
+    property ShellScreen screen
 
-  density: Settings.data.bar.density
-  baseSize: Style.capsuleHeight
-  applyUiScale: false
-  icon: "power"
-  tooltipText: I18n.tr("tooltips.session-menu")
-  tooltipDirection: BarService.getTooltipDirection()
-  colorBg: (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
-  colorFg: Color.mError
-  colorBorder: Color.transparent
-  colorBorderHover: Color.transparent
-  onClicked: PanelService.getPanel("sessionMenuPanel")?.toggle()
+    density: Settings.data.bar.density
+    baseSize: Style.capsuleHeight
+    applyUiScale: false
+    icon: "power"
+    tooltipText: I18n.tr("tooltips.session-menu")
+    tooltipDirection: BarService.getTooltipDirection()
+    colorBg: (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
+    colorFg: Color.mError
+    colorBorder: Color.transparent
+    colorBorderHover: Color.transparent
+    onClicked: PanelService.getPanel("sessionMenuPanel")?.toggle()
 }

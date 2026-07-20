@@ -5,9 +5,9 @@
 # os detection
 export OS=$(uname)
 if [[ "$OS" = "Linux" ]]; then
-	if [[ -f /etc/os-release ]]; then
-		source /etc/os-release
-	fi
+  if [[ -f /etc/os-release ]]; then
+    source /etc/os-release
+  fi
 fi
 # xdg base directory specification
 export XDG_CONFIG_HOME=$HOME/.config

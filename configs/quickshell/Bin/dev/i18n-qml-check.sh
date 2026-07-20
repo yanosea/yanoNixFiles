@@ -12,6 +12,7 @@ find . -name "*.qml" -type f | while read -r file; do
   issues=$(grep -n -E '(label|text|title|description|placeholder|tooltipText|tooltip):\s*"[^"]*[a-zA-Z][^"]*"' "$file" | grep -v 'I18n\.tr')
 
   # Also check for template literals with hardcoded text
+  # shellcheck disable=SC2016 # the backticks are a grep pattern, not an expansion
   template_issues=$(grep -n -E '(label|text|title|description|placeholder|tooltipText|tooltip):\s*`[^`]*[a-zA-Z][^`]*`' "$file" | grep -v 'I18n\.tr')
 
   # Check for property assignments with hardcoded strings

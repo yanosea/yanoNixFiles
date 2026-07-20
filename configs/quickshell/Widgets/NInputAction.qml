@@ -6,50 +6,50 @@ import qs.Services
 
 // Input and button row
 RowLayout {
-  id: root
+    id: root
 
-  // Public properties
-  property string label: ""
-  property string description: ""
-  property string placeholderText: ""
-  property string text: ""
-  property string actionButtonText: I18n.tr("placeholders.test")
-  property string actionButtonIcon: "media-play"
-  property bool actionButtonEnabled: text !== ""
+    // Public properties
+    property string label: ""
+    property string description: ""
+    property string placeholderText: ""
+    property string text: ""
+    property string actionButtonText: I18n.tr("placeholders.test")
+    property string actionButtonIcon: "media-play"
+    property bool actionButtonEnabled: text !== ""
 
-  // Signals
-  signal editingFinished
-  signal actionClicked
+    // Signals
+    signal editingFinished
+    signal actionClicked
 
-  // Internal properties
-  spacing: Style.marginM
+    // Internal properties
+    spacing: Style.marginM
 
-  NTextInput {
-    id: textInput
-    label: root.label
-    description: root.description
-    placeholderText: root.placeholderText
-    text: root.text
-    onEditingFinished: {
-      root.text = text
-      root.editingFinished()
+    NTextInput {
+        id: textInput
+        label: root.label
+        description: root.description
+        placeholderText: root.placeholderText
+        text: root.text
+        onEditingFinished: {
+            root.text = text;
+            root.editingFinished();
+        }
+        Layout.fillWidth: true
     }
-    Layout.fillWidth: true
-  }
 
-  NButton {
-    Layout.fillWidth: false
-    Layout.alignment: Qt.AlignBottom
+    NButton {
+        Layout.fillWidth: false
+        Layout.alignment: Qt.AlignBottom
 
-    text: root.actionButtonText
-    icon: root.actionButtonIcon
-    backgroundColor: Color.mSecondary
-    textColor: Color.mOnSecondary
-    hoverColor: Color.mTertiary
-    enabled: root.actionButtonEnabled
+        text: root.actionButtonText
+        icon: root.actionButtonIcon
+        backgroundColor: Color.mSecondary
+        textColor: Color.mOnSecondary
+        hoverColor: Color.mTertiary
+        enabled: root.actionButtonEnabled
 
-    onClicked: {
-      root.actionClicked()
+        onClicked: {
+            root.actionClicked();
+        }
     }
-  }
 }

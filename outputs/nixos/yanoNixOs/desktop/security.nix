@@ -1,6 +1,5 @@
 # nixos desktop security module
-{ ... }:
-{
+_: {
   # programs
   programs = {
     seahorse = {

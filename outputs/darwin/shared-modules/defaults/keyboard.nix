@@ -1,6 +1,5 @@
 # keyboard configuration
-{ ... }:
-{
+_: {
   # system
   system = {
     keyboard = {

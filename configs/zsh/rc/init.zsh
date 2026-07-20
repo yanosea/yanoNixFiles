@@ -5,9 +5,9 @@
 
 # determine config directory
 if [[ -n "$ZDOTDIR" ]]; then
-	ZSHRC_DIR="$ZDOTDIR/rc"
+  ZSHRC_DIR="$ZDOTDIR/rc"
 else
-	ZSHRC_DIR="$HOME/.config/zsh/rc"
+  ZSHRC_DIR="$HOME/.config/zsh/rc"
 fi
 
 # interactive shell configuration

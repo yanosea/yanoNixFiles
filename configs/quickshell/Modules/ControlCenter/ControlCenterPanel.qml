@@ -8,161 +8,159 @@ import qs.Services
 import qs.Widgets
 
 NPanel {
-  id: root
+    id: root
 
-  panelKeyboardFocus: true
-  preferredWidth: Math.round(460 * Style.uiScaleRatio)
-  preferredHeight: {
-    var height = 0
-    var count = 0
-    for (var i = 0; i < Settings.data.controlCenter.cards.length; i++) {
-      const card = Settings.data.controlCenter.cards[i]
-      if (!card.enabled)
-        continue
-
-      const contributes = (card.id !== "weather-card" || Settings.data.location.weatherEnabled)
-      if (!contributes)
-        continue
-
-      count++
-      switch (card.id) {
-      case "profile-card":
-        height += profileHeight
-        break
-      case "shortcuts-card":
-        height += shortcutsHeight
-        break
-      case "audio-card":
-        height += audioHeight
-        break
-      case "weather-card":
-        height += weatherHeight
-        break
-      case "media-sysmon-card":
-        height += mediaSysMonHeight
-        break
-      case "compositor-card":
-        height += compositorHeight
-        break
-      default:
-        break
-      }
-    }
-    return height + (count + 1) * Style.marginL
-  }
-
-  // Positioning
-  readonly property string controlCenterPosition: Settings.data.controlCenter.position
-  panelAnchorHorizontalCenter: controlCenterPosition !== "close_to_bar_button" && (controlCenterPosition.endsWith("_center") || controlCenterPosition === "center")
-  panelAnchorVerticalCenter: controlCenterPosition === "center"
-  panelAnchorLeft: controlCenterPosition !== "close_to_bar_button" && controlCenterPosition.endsWith("_left")
-  panelAnchorRight: controlCenterPosition !== "close_to_bar_button" && controlCenterPosition.endsWith("_right")
-  panelAnchorBottom: controlCenterPosition !== "close_to_bar_button" && controlCenterPosition.startsWith("bottom_")
-  panelAnchorTop: controlCenterPosition !== "close_to_bar_button" && controlCenterPosition.startsWith("top_")
-
-  readonly property int profileHeight: Math.round(64 * Style.uiScaleRatio)
-  readonly property int shortcutsHeight: Math.round(52 * Style.uiScaleRatio)
-  readonly property int audioHeight: Math.round(60 * Style.uiScaleRatio)
-  readonly property int weatherHeight: Math.round(190 * Style.uiScaleRatio)
-  readonly property int mediaSysMonHeight: Math.round(260 * Style.uiScaleRatio)
-  readonly property int compositorHeight: Math.round(64 * Style.uiScaleRatio)
-
-  panelContent: Item {
-    id: content
-
-    ColumnLayout {
-      id: layout
-      x: Style.marginL
-      y: Style.marginL
-      width: parent.width - (Style.marginL * 2)
-      spacing: Style.marginL
-
-      Repeater {
-        model: Settings.data.controlCenter.cards
-        Loader {
-          active: modelData.enabled && (modelData.id !== "weather-card" || Settings.data.location.weatherEnabled)
-          visible: active
-          Layout.fillWidth: true
-          Layout.preferredHeight: {
-            switch (modelData.id) {
+    panelKeyboardFocus: true
+    preferredWidth: Math.round(460 * Style.uiScaleRatio)
+    preferredHeight: {
+        var height = 0;
+        var count = 0;
+        for (var i = 0; i < Settings.data.controlCenter.cards.length; i++) {
+            const card = Settings.data.controlCenter.cards[i];
+            if (!card.enabled)
+                continue;
+            const contributes = (card.id !== "weather-card" || Settings.data.location.weatherEnabled);
+            if (!contributes)
+                continue;
+            count++;
+            switch (card.id) {
             case "profile-card":
-              return profileHeight
+                height += profileHeight;
+                break;
             case "shortcuts-card":
-              return shortcutsHeight
+                height += shortcutsHeight;
+                break;
             case "audio-card":
-              return audioHeight
+                height += audioHeight;
+                break;
             case "weather-card":
-              return weatherHeight
+                height += weatherHeight;
+                break;
             case "media-sysmon-card":
-              return mediaSysMonHeight
+                height += mediaSysMonHeight;
+                break;
             case "compositor-card":
-              return compositorHeight
+                height += compositorHeight;
+                break;
             default:
-              return 0
+                break;
             }
-          }
-          sourceComponent: {
-            switch (modelData.id) {
-            case "profile-card":
-              return profileCard
-            case "shortcuts-card":
-              return shortcutsCard
-            case "audio-card":
-              return audioCard
-            case "weather-card":
-              return weatherCard
-            case "media-sysmon-card":
-              return mediaSysMonCard
-            case "compositor-card":
-              return compositorCard
+        }
+        return height + (count + 1) * Style.marginL;
+    }
+
+    // Positioning
+    readonly property string controlCenterPosition: Settings.data.controlCenter.position
+    panelAnchorHorizontalCenter: controlCenterPosition !== "close_to_bar_button" && (controlCenterPosition.endsWith("_center") || controlCenterPosition === "center")
+    panelAnchorVerticalCenter: controlCenterPosition === "center"
+    panelAnchorLeft: controlCenterPosition !== "close_to_bar_button" && controlCenterPosition.endsWith("_left")
+    panelAnchorRight: controlCenterPosition !== "close_to_bar_button" && controlCenterPosition.endsWith("_right")
+    panelAnchorBottom: controlCenterPosition !== "close_to_bar_button" && controlCenterPosition.startsWith("bottom_")
+    panelAnchorTop: controlCenterPosition !== "close_to_bar_button" && controlCenterPosition.startsWith("top_")
+
+    readonly property int profileHeight: Math.round(64 * Style.uiScaleRatio)
+    readonly property int shortcutsHeight: Math.round(52 * Style.uiScaleRatio)
+    readonly property int audioHeight: Math.round(60 * Style.uiScaleRatio)
+    readonly property int weatherHeight: Math.round(190 * Style.uiScaleRatio)
+    readonly property int mediaSysMonHeight: Math.round(260 * Style.uiScaleRatio)
+    readonly property int compositorHeight: Math.round(64 * Style.uiScaleRatio)
+
+    panelContent: Item {
+        id: content
+
+        ColumnLayout {
+            id: layout
+            x: Style.marginL
+            y: Style.marginL
+            width: parent.width - (Style.marginL * 2)
+            spacing: Style.marginL
+
+            Repeater {
+                model: Settings.data.controlCenter.cards
+                Loader {
+                    active: modelData.enabled && (modelData.id !== "weather-card" || Settings.data.location.weatherEnabled)
+                    visible: active
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: {
+                        switch (modelData.id) {
+                        case "profile-card":
+                            return profileHeight;
+                        case "shortcuts-card":
+                            return shortcutsHeight;
+                        case "audio-card":
+                            return audioHeight;
+                        case "weather-card":
+                            return weatherHeight;
+                        case "media-sysmon-card":
+                            return mediaSysMonHeight;
+                        case "compositor-card":
+                            return compositorHeight;
+                        default:
+                            return 0;
+                        }
+                    }
+                    sourceComponent: {
+                        switch (modelData.id) {
+                        case "profile-card":
+                            return profileCard;
+                        case "shortcuts-card":
+                            return shortcutsCard;
+                        case "audio-card":
+                            return audioCard;
+                        case "weather-card":
+                            return weatherCard;
+                        case "media-sysmon-card":
+                            return mediaSysMonCard;
+                        case "compositor-card":
+                            return compositorCard;
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
-    }
-
-    Component {
-      id: profileCard
-      ProfileCard {}
-    }
-
-    Component {
-      id: shortcutsCard
-      ShortcutsCard {}
-    }
-
-    Component {
-      id: audioCard
-      AudioCard {}
-    }
-
-    Component {
-      id: weatherCard
-      WeatherCard {}
-    }
-
-    Component {
-      id: compositorCard
-      CompositorCard {}
-    }
-
-    Component {
-      id: mediaSysMonCard
-      RowLayout {
-        spacing: Style.marginL
-
-        // Media card
-        MediaCard {
-          Layout.fillWidth: true
-          Layout.fillHeight: true
         }
 
-        // System monitors combined in one card
-        SystemMonitorCard {
-          Layout.preferredWidth: Math.round(Style.baseWidgetSize * 2.625)
-          Layout.fillHeight: true
+        Component {
+            id: profileCard
+            ProfileCard {}
         }
-      }
+
+        Component {
+            id: shortcutsCard
+            ShortcutsCard {}
+        }
+
+        Component {
+            id: audioCard
+            AudioCard {}
+        }
+
+        Component {
+            id: weatherCard
+            WeatherCard {}
+        }
+
+        Component {
+            id: compositorCard
+            CompositorCard {}
+        }
+
+        Component {
+            id: mediaSysMonCard
+            RowLayout {
+                spacing: Style.marginL
+
+                // Media card
+                MediaCard {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
+
+                // System monitors combined in one card
+                SystemMonitorCard {
+                    Layout.preferredWidth: Math.round(Style.baseWidgetSize * 2.625)
+                    Layout.fillHeight: true
+                }
+            }
+        }
     }
-  }
 }

@@ -2,46 +2,46 @@ import QtQuick
 import qs.Commons
 
 Item {
-  id: root
-  property color fillColor: Color.mPrimary
-  property color strokeColor: Color.mOnSurface
-  property int strokeWidth: 0
-  property var values: []
+    id: root
+    property color fillColor: Color.mPrimary
+    property color strokeColor: Color.mOnSurface
+    property int strokeWidth: 0
+    property var values: []
 
-  // Minimum signal properties
-  property bool showMinimumSignal: false
-  property real minimumSignalValue: 0.05 // Default to 5% of height
+    // Minimum signal properties
+    property bool showMinimumSignal: false
+    property real minimumSignalValue: 0.05 // Default to 5% of height
 
-  // Pre-compute mirroring
-  readonly property int valuesCount: values.length
-  readonly property int totalBars: valuesCount * 2
-  readonly property real barSlotWidth: totalBars > 0 ? width / totalBars : 0
+    // Pre-compute mirroring
+    readonly property int valuesCount: values.length
+    readonly property int totalBars: valuesCount * 2
+    readonly property real barSlotWidth: totalBars > 0 ? width / totalBars : 0
 
-  readonly property real centerY: height / 2
+    readonly property real centerY: height / 2
 
-  Repeater {
-    model: root.totalBars
+    Repeater {
+        model: root.totalBars
 
-    Rectangle {
-      // The first half of bars are a mirror image (reversed values array).
-      // The second half of bars are in normal order.
-      property int valueIndex: index < root.valuesCount ? root.valuesCount - 1 - index // Mirrored half
-                                                        : index - root.valuesCount // Normal half
+        Rectangle {
+            // The first half of bars are a mirror image (reversed values array).
+            // The second half of bars are in normal order.
+            property int valueIndex: index < root.valuesCount ? root.valuesCount - 1 - index // Mirrored half
+            : index - root.valuesCount // Normal half
 
-      property real rawAmp: root.values[valueIndex]
-      property real amp: (root.showMinimumSignal && rawAmp === 0) ? root.minimumSignalValue : rawAmp
+            property real rawAmp: root.values[valueIndex]
+            property real amp: (root.showMinimumSignal && rawAmp === 0) ? root.minimumSignalValue : rawAmp
 
-      property real barHeight: root.height * amp
+            property real barHeight: root.height * amp
 
-      color: root.fillColor
-      border.color: root.strokeColor
-      border.width: root.strokeWidth
-      antialiasing: true
+            color: root.fillColor
+            border.color: root.strokeColor
+            border.width: root.strokeWidth
+            antialiasing: true
 
-      width: root.barSlotWidth * 0.8 // Creates a small gap between bars
-      height: barHeight
-      x: index * root.barSlotWidth + (root.barSlotWidth * 0.25)
-      y: root.centerY - (barHeight / 2)
+            width: root.barSlotWidth * 0.8 // Creates a small gap between bars
+            height: barHeight
+            x: index * root.barSlotWidth + (root.barSlotWidth * 0.25)
+            y: root.centerY - (barHeight / 2)
+        }
     }
-  }
 }

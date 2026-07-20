@@ -1,6 +1,5 @@
 # dock configuration
-{ ... }:
-{
+_: {
   # system
   system = {
     defaults = {

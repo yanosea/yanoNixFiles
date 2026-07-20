@@ -4,5 +4,5 @@
 
 # browser preference
 if [[ "$OS" = "Linux" ]] && [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
-	export BROWSER="vivaldi"
+  export BROWSER="vivaldi"
 fi

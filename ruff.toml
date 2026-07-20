@@ -1,0 +1,5 @@
+# configuration for ruff (run via treefmt)
+[lint.per-file-ignores]
+# pygobject requires gi.require_version() before gi.repository imports (E402),
+# and imports them purely to probe availability (F401)
+"configs/quickshell/Bin/*.py" = ["E402", "F401"]

@@ -1,0 +1,43 @@
+# configuration for typos (spell check run via treefmt)
+[default]
+# renaming files from within a formatter breaks treefmt's file tracking
+check-filename = false
+
+[files]
+extend-exclude = [
+  # sops-encrypted blobs look like typos
+  "ops/sops/*",
+  # skk romaji tables and dictionaries are not prose
+  "configs/CorvusSKK/config.xml",
+  "configs/AquaSKK/*",
+  "configs/jisyo/*",
+  # non-english translation files must not be spell checked against english
+  "configs/quickshell/Assets/Translations/*",
+  # icon glyph map, names and unicode escapes must stay verbatim
+  "configs/quickshell/Commons/TablerIcons.qml",
+  # app name to icon mappings, app names are not words
+  "configs/sketchybar/helpers/app_icons.lua",
+  # nvim keymaps are short letter sequences, not words
+  "configs/nvim/*",
+  # generated color scheme assets and templates full of hex fragments
+  "configs/quickshell/Assets/ColorScheme/*",
+  "configs/quickshell/Assets/MatugenTemplates/*",
+  # vendored library
+  "configs/quickshell/Helpers/FuzzySort.js",
+]
+
+[default.extend-words]
+# file format used by goku, not a typo of "end"
+edn = "edn"
+# gpg fingerprint field name
+fpr = "fpr"
+# stylus file extension in the yazi theme
+styl = "styl"
+# vim command to open a new buffer
+enew = "enew"
+# yazi file state name
+cpy = "cpy"
+# zsh-vi-mode operator pending mode variable
+oppend = "oppend"
+# bosnia country code in keyboard layouts
+ba = "ba"

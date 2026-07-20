@@ -9,7 +9,7 @@ alias ls='ls --color=auto'
 PROMPT='[%n@%m %~]$ '
 # create zsh state directory if it doesn't exist
 if [[ ! -d "$XDG_STATE_HOME/zsh" ]]; then
-	mkdir -p "$XDG_STATE_HOME/zsh"
+  mkdir -p "$XDG_STATE_HOME/zsh"
 fi
 # history configuration
 HISTFILE=$XDG_STATE_HOME/zsh/.zhistory
@@ -56,7 +56,7 @@ zstyle ":completion:*" matcher-list "m:{a-z}={A-Z}"
 autoload -Uz zmv
 # load custom functions
 for file in $XDG_CONFIG_HOME/zsh/functions/*; do
-	if [ -f "$file" ]; then
-		source "$file"
-	fi
+  if [ -f "$file" ]; then
+    source "$file"
+  fi
 done

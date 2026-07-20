@@ -30,12 +30,12 @@ jobs:
 
           # check for updates
           if ! echo "$UPDATE_OUTPUT" | grep -q "Updated input"; then
-            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "changes=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          echo "changes=true" >> $GITHUB_OUTPUT
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "changes=true" >> "$GITHUB_OUTPUT"
+          echo "branch_name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
 
           # try primary method to extract update details
           extract_updates() {
@@ -68,12 +68,14 @@ jobs:
           # try fallback method
           extract_updates_fallback() {
             local commit_body=""
-            local updated_inputs=$(echo "$1" | grep "Updated input" | sed -E "s/.*'([^']+)'.*/\1/")
+            local updated_inputs
+            updated_inputs=$(echo "$1" | grep "Updated input" | sed -E "s/.*'([^']+)'.*/\1/")
 
             for input in $updated_inputs; do
-              local input_block=$(echo "$1" | grep -A 2 "input '$input'")
-              local old_hash=$(echo "$input_block" | grep -o -E "/[0-9a-f]{7,}[0-9a-f]*" | head -1 | sed 's/\///' | cut -c1-8)
-              local new_hash=$(echo "$input_block" | grep -o -E "/[0-9a-f]{7,}[0-9a-f]*" | tail -1 | sed 's/\///' | cut -c1-8)
+              local input_block old_hash new_hash
+              input_block=$(echo "$1" | grep -A 2 "input '$input'")
+              old_hash=$(echo "$input_block" | grep -o -E "/[0-9a-f]{7,}[0-9a-f]*" | head -1 | sed 's/\///' | cut -c1-8)
+              new_hash=$(echo "$input_block" | grep -o -E "/[0-9a-f]{7,}[0-9a-f]*" | tail -1 | sed 's/\///' | cut -c1-8)
 
               if [ -n "$old_hash" ] && [ -n "$new_hash" ]; then
                 if [ -z "$commit_body" ]; then
@@ -115,7 +117,7 @@ jobs:
             echo "commit_message<<EOF"
             echo "$COMMIT_MESSAGE"
             echo "EOF"
-          } >> $GITHUB_OUTPUT
+          } >> "$GITHUB_OUTPUT"
       - name: create pull request
         id: create-pr
         if: steps.update-flake.outputs.changes == 'true'

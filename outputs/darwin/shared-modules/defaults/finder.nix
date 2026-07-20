@@ -1,6 +1,5 @@
 # finder configuration
-{ ... }:
-{
+_: {
   # system
   system = {
     defaults = {
