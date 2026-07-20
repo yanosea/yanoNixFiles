@@ -6,69 +6,69 @@ import qs.Services
 import qs.Widgets
 
 Rectangle {
-  id: root
+    id: root
 
-  property color selectedColor: "#000000"
+    property color selectedColor: "#000000"
 
-  signal colorSelected(color color)
+    signal colorSelected(color color)
 
-  implicitWidth: 150
-  implicitHeight: Math.round(Style.baseWidgetSize * 1.1)
+    implicitWidth: 150
+    implicitHeight: Math.round(Style.baseWidgetSize * 1.1)
 
-  radius: Style.radiusM
-  color: Color.mSurface
-  border.color: Color.mOutline
-  border.width: Style.borderS
+    radius: Style.radiusM
+    color: Color.mSurface
+    border.color: Color.mOutline
+    border.width: Style.borderS
 
-  // Minimized Look
-  MouseArea {
-    anchors.fill: parent
-    cursorShape: Qt.PointingHandCursor
-    onClicked: {
-      var dialog = Qt.createComponent("NColorPickerDialog.qml").createObject(root, {
-                                                                               "selectedColor": selectedColor,
-                                                                               "parent": Overlay.overlay
-                                                                             })
-      // Connect the dialog's signal to the picker's signal
-      dialog.colorSelected.connect(function (color) {
-        root.selectedColor = color
-        root.colorSelected(color)
-      })
+    // Minimized Look
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            var dialog = Qt.createComponent("NColorPickerDialog.qml").createObject(root, {
+                "selectedColor": selectedColor,
+                "parent": Overlay.overlay
+            });
+            // Connect the dialog's signal to the picker's signal
+            dialog.colorSelected.connect(function (color) {
+                root.selectedColor = color;
+                root.colorSelected(color);
+            });
 
-      dialog.open()
+            dialog.open();
+        }
+
+        RowLayout {
+            anchors.fill: parent
+            anchors {
+                leftMargin: Style.marginL
+                rightMargin: Style.marginL
+            }
+            spacing: Style.marginS
+
+            // Color preview circle
+            Rectangle {
+                Layout.preferredWidth: root.height * 0.6
+                Layout.preferredHeight: root.height * 0.6
+                radius: Layout.preferredWidth * 0.5
+                color: root.selectedColor
+                border.color: Color.mOutline
+                border.width: Style.borderS
+            }
+
+            NText {
+                text: root.selectedColor.toString().toUpperCase()
+                family: Settings.data.ui.fontFixed
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            NIcon {
+                icon: "color-picker"
+                color: Color.mOnSurfaceVariant
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+            }
+        }
     }
-
-    RowLayout {
-      anchors.fill: parent
-      anchors {
-        leftMargin: Style.marginL
-        rightMargin: Style.marginL
-      }
-      spacing: Style.marginS
-
-      // Color preview circle
-      Rectangle {
-        Layout.preferredWidth: root.height * 0.6
-        Layout.preferredHeight: root.height * 0.6
-        radius: Layout.preferredWidth * 0.5
-        color: root.selectedColor
-        border.color: Color.mOutline
-        border.width: Style.borderS
-      }
-
-      NText {
-        text: root.selectedColor.toString().toUpperCase()
-        family: Settings.data.ui.fontFixed
-        Layout.fillWidth: true
-        Layout.alignment: Qt.AlignVCenter
-      }
-
-      NIcon {
-        icon: "color-picker"
-        color: Color.mOnSurfaceVariant
-        Layout.fillWidth: true
-        Layout.alignment: Qt.AlignVCenter
-      }
-    }
-  }
 }

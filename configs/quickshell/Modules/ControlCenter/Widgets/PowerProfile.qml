@@ -7,15 +7,15 @@ import qs.Widgets
 
 // Performance
 NIconButtonHot {
-  property ShellScreen screen
+    property ShellScreen screen
 
-  readonly property bool hasPP: PowerProfileService.available
+    readonly property bool hasPP: PowerProfileService.available
 
-  enabled: hasPP
-  icon: PowerProfileService.getIcon()
-  hot: !PowerProfileService.isDefault()
-  tooltipText: I18n.tr("quickSettings.powerProfile.tooltip.action")
-  onClicked: {
-    PowerProfileService.cycleProfile()
-  }
+    enabled: hasPP
+    icon: PowerProfileService.getIcon()
+    hot: !PowerProfileService.isDefault()
+    tooltipText: I18n.tr("quickSettings.powerProfile.tooltip.action")
+    onClicked: {
+        PowerProfileService.cycleProfile();
+    }
 }

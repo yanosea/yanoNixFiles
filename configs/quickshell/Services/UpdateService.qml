@@ -5,26 +5,26 @@ import Quickshell
 import qs.Commons
 
 Singleton {
-  id: root
+    id: root
 
-  // Public properties
-  property string baseVersion: "2.20.0"
-  property bool isDevelopment: true
+    // Public properties
+    property string baseVersion: "2.20.0"
+    property bool isDevelopment: true
 
-  property string currentVersion: `v${!isDevelopment ? baseVersion : baseVersion + "-dev"}`
+    property string currentVersion: `v${!isDevelopment ? baseVersion : baseVersion + "-dev"}`
 
-  // Internal helpers
-  function getVersion() {
-    return root.currentVersion
-  }
+    // Internal helpers
+    function getVersion() {
+        return root.currentVersion;
+    }
 
-  function checkForUpdates() {
-    // TODO: Implement update checking logic
-    Logger.i("UpdateService", "Checking for updates...")
-  }
+    function checkForUpdates() {
+        // TODO: Implement update checking logic
+        Logger.i("UpdateService", "Checking for updates...");
+    }
 
-  function init() {
-    // Ensure the singleton is created
-    Logger.i("UpdateService", "Version:", root.currentVersion)
-  }
+    function init() {
+        // Ensure the singleton is created
+        Logger.i("UpdateService", "Version:", root.currentVersion);
+    }
 }

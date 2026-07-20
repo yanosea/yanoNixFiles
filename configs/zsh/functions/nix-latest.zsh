@@ -7,7 +7,7 @@ nix-latest() {
   fi
   # check subcommand
   case "$1" in
-    # package execution
+      # package execution
     run|shell)
       shift
       local cmd="NIXPKGS_ALLOW_UNFREE=1 nix shell --impure"
@@ -16,12 +16,12 @@ nix-latest() {
       done
       eval "$cmd"
       ;;
-    # search packages
+      # search packages
     search)
       shift
       nix search "github:nixos/nixpkgs/master" "$@"
       ;;
-    # development environment
+      # development environment
     develop|dev)
       shift
       if [ $# -eq 1 ]; then
@@ -31,7 +31,7 @@ nix-latest() {
         return 1
       fi
       ;;
-    # build package
+      # build package
     build)
       shift
       local cmd="nix build"
@@ -40,7 +40,7 @@ nix-latest() {
       done
       eval "$cmd"
       ;;
-    # run once
+      # run once
     run-once)
       shift
       if [ $# -eq 1 ]; then
@@ -50,7 +50,7 @@ nix-latest() {
         return 1
       fi
       ;;
-    # show package info
+      # show package info
     show|info)
       shift
       if [ $# -eq 1 ]; then
@@ -60,17 +60,17 @@ nix-latest() {
         return 1
       fi
       ;;
-    # evaluate expression
+      # evaluate expression
     eval)
       shift
       nix eval "github:nixos/nixpkgs/master#$*"
       ;;
-    # flake operations
+      # flake operations
     flake)
       shift
       nix flake "$@" "github:nixos/nixpkgs/master"
       ;;
-    # show build log
+      # show build log
     log)
       shift
       if [ $# -eq 1 ]; then
@@ -80,7 +80,7 @@ nix-latest() {
         return 1
       fi
       ;;
-    # show help
+      # show help
     help|-h|--help)
       echo "nix-latest - use latest nixpkgs (master branch)"
       echo ""
@@ -96,7 +96,7 @@ nix-latest() {
       echo "  nix-latest flake <cmd>     - flake commands"
       echo "  nix-latest help            - show this help"
       ;;
-    # unknown subcommand error
+      # unknown subcommand error
     *)
       echo -e "[31merror: unknown subcommand '$1'[0m" >&2
       echo "run 'nix-latest help' for usage information" >&2

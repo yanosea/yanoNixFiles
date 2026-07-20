@@ -5,9 +5,9 @@ import qs.Services
 import qs.Widgets
 
 NIconButtonHot {
-  property ShellScreen screen
+    property ShellScreen screen
 
-  icon: BluetoothService.enabled ? "bluetooth" : "bluetooth-off"
-  tooltipText: I18n.tr("quickSettings.bluetooth.tooltip.action")
-  onClicked: PanelService.getPanel("bluetoothPanel")?.toggle(this)
+    icon: BluetoothService.enabled ? "bluetooth" : "bluetooth-off"
+    tooltipText: I18n.tr("quickSettings.bluetooth.tooltip.action")
+    onClicked: PanelService.getPanel("bluetoothPanel")?.toggle(this)
 }

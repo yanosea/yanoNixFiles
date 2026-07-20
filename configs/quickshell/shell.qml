@@ -35,145 +35,145 @@ import qs.Modules.Toast
 import qs.Modules.Wallpaper
 
 ShellRoot {
-  id: shellRoot
+    id: shellRoot
 
-  property bool i18nLoaded: false
-  property bool settingsLoaded: false
+    property bool i18nLoaded: false
+    property bool settingsLoaded: false
 
-  Component.onCompleted: {
-    Logger.i("Shell", "---------------------------")
-    Logger.i("Shell", "QuickShell shell started")
-  }
-
-  Connections {
-    target: Quickshell
-    function onReloadCompleted() {
-      Quickshell.inhibitReloadPopup()
+    Component.onCompleted: {
+        Logger.i("Shell", "---------------------------");
+        Logger.i("Shell", "QuickShell shell started");
     }
-  }
 
-  Connections {
-    target: I18n ? I18n : null
-    function onTranslationsLoaded() {
-      i18nLoaded = true
-    }
-  }
-
-  Connections {
-    target: Settings ? Settings : null
-    function onSettingsLoaded() {
-      settingsLoaded = true
-    }
-  }
-
-  Loader {
-    active: i18nLoaded && settingsLoaded
-
-    sourceComponent: Item {
-      Component.onCompleted: {
-        Logger.i("Shell", "---------------------------")
-        WallpaperService.init()
-        AppThemeService.init()
-        ColorSchemeService.init()
-        BarWidgetRegistry.init()
-        LocationService.init()
-        NightLightService.apply()
-        DarkModeService.init()
-        FontService.init()
-        HooksService.init()
-        BluetoothService.init()
-        BatteryService.init()
-        IdleInhibitorService.init()
-        PowerProfileService.init()
-        DistroService.init()
-        CompositorPreferenceService.init()
-      }
-
-      Background {}
-      Overview {}
-      ScreenCorners {}
-      Bar {}
-      Dock {}
-
-      Notification {
-        id: notification
-      }
-
-      LockScreen {
-        id: lockScreen
-        Component.onCompleted: {
-          // Save a ref. to our lockScreen so we can access it  easily
-          PanelService.lockScreen = lockScreen
+    Connections {
+        target: Quickshell
+        function onReloadCompleted() {
+            Quickshell.inhibitReloadPopup();
         }
-      }
-
-      ToastOverlay {}
-      OSD {}
-
-      // IPCService is treated as a service
-      // but it's actually an Item that needs to exists in the shell.
-      IPCService {}
-
-      // ------------------------------
-      // All the NPanels
-      Launcher {
-        id: launcherPanel
-        objectName: "launcherPanel"
-      }
-
-      ControlCenterPanel {
-        id: controlCenterPanel
-        objectName: "controlCenterPanel"
-      }
-
-      CalendarPanel {
-        id: calendarPanel
-        objectName: "calendarPanel"
-      }
-
-      SettingsPanel {
-        id: settingsPanel
-        objectName: "settingsPanel"
-      }
-
-      DirectWidgetSettingsPanel {
-        id: directWidgetSettingsPanel
-        objectName: "directWidgetSettingsPanel"
-      }
-
-      NotificationHistoryPanel {
-        id: notificationHistoryPanel
-        objectName: "notificationHistoryPanel"
-      }
-
-      SessionMenu {
-        id: sessionMenuPanel
-        objectName: "sessionMenuPanel"
-      }
-
-      WiFiPanel {
-        id: wifiPanel
-        objectName: "wifiPanel"
-      }
-
-      BluetoothPanel {
-        id: bluetoothPanel
-        objectName: "bluetoothPanel"
-      }
-
-      AudioPanel {
-        id: audioPanel
-        objectName: "audioPanel"
-      }
-
-      WallpaperPanel {
-        id: wallpaperPanel
-        objectName: "wallpaperPanel"
-      }
-      BatteryPanel {
-        id: batteryPanel
-        objectName: "batteryPanel"
-      }
     }
-  }
+
+    Connections {
+        target: I18n ? I18n : null
+        function onTranslationsLoaded() {
+            i18nLoaded = true;
+        }
+    }
+
+    Connections {
+        target: Settings ? Settings : null
+        function onSettingsLoaded() {
+            settingsLoaded = true;
+        }
+    }
+
+    Loader {
+        active: i18nLoaded && settingsLoaded
+
+        sourceComponent: Item {
+            Component.onCompleted: {
+                Logger.i("Shell", "---------------------------");
+                WallpaperService.init();
+                AppThemeService.init();
+                ColorSchemeService.init();
+                BarWidgetRegistry.init();
+                LocationService.init();
+                NightLightService.apply();
+                DarkModeService.init();
+                FontService.init();
+                HooksService.init();
+                BluetoothService.init();
+                BatteryService.init();
+                IdleInhibitorService.init();
+                PowerProfileService.init();
+                DistroService.init();
+                CompositorPreferenceService.init();
+            }
+
+            Background {}
+            Overview {}
+            ScreenCorners {}
+            Bar {}
+            Dock {}
+
+            Notification {
+                id: notification
+            }
+
+            LockScreen {
+                id: lockScreen
+                Component.onCompleted: {
+                    // Save a ref. to our lockScreen so we can access it  easily
+                    PanelService.lockScreen = lockScreen;
+                }
+            }
+
+            ToastOverlay {}
+            OSD {}
+
+            // IPCService is treated as a service
+            // but it's actually an Item that needs to exists in the shell.
+            IPCService {}
+
+            // ------------------------------
+            // All the NPanels
+            Launcher {
+                id: launcherPanel
+                objectName: "launcherPanel"
+            }
+
+            ControlCenterPanel {
+                id: controlCenterPanel
+                objectName: "controlCenterPanel"
+            }
+
+            CalendarPanel {
+                id: calendarPanel
+                objectName: "calendarPanel"
+            }
+
+            SettingsPanel {
+                id: settingsPanel
+                objectName: "settingsPanel"
+            }
+
+            DirectWidgetSettingsPanel {
+                id: directWidgetSettingsPanel
+                objectName: "directWidgetSettingsPanel"
+            }
+
+            NotificationHistoryPanel {
+                id: notificationHistoryPanel
+                objectName: "notificationHistoryPanel"
+            }
+
+            SessionMenu {
+                id: sessionMenuPanel
+                objectName: "sessionMenuPanel"
+            }
+
+            WiFiPanel {
+                id: wifiPanel
+                objectName: "wifiPanel"
+            }
+
+            BluetoothPanel {
+                id: bluetoothPanel
+                objectName: "bluetoothPanel"
+            }
+
+            AudioPanel {
+                id: audioPanel
+                objectName: "audioPanel"
+            }
+
+            WallpaperPanel {
+                id: wallpaperPanel
+                objectName: "wallpaperPanel"
+            }
+            BatteryPanel {
+                id: batteryPanel
+                objectName: "batteryPanel"
+            }
+        }
+    }
 }

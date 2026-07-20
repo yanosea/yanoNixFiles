@@ -72,15 +72,15 @@ function evaluate(expression) {
     processed = processed
       .replace(
         /\bsind\s*\(/g,
-        "(function(x) { return Math.sin(" + (Math.PI / 180) + " * x); })(",
+        "(function(x) { return Math.sin(" + Math.PI / 180 + " * x); })(",
       )
       .replace(
         /\bcosd\s*\(/g,
-        "(function(x) { return Math.cos(" + (Math.PI / 180) + " * x); })(",
+        "(function(x) { return Math.cos(" + Math.PI / 180 + " * x); })(",
       )
       .replace(
         /\btand\s*\(/g,
-        "(function(x) { return Math.tan(" + (Math.PI / 180) + " * x); })(",
+        "(function(x) { return Math.tan(" + Math.PI / 180 + " * x); })(",
       );
 
     // Sanitize expression (only allow safe characters)

@@ -5,11 +5,11 @@ import qs.Services
 import qs.Widgets
 
 NIconButtonHot {
-  property ShellScreen screen
+    property ShellScreen screen
 
-  enabled: Settings.data.wallpaper.enabled
-  icon: "wallpaper-selector"
-  tooltipText: I18n.tr("quickSettings.wallpaperSelector.tooltip.action")
-  onClicked: PanelService.getPanel("wallpaperPanel")?.toggle()
-  onRightClicked: WallpaperService.setRandomWallpaper()
+    enabled: Settings.data.wallpaper.enabled
+    icon: "wallpaper-selector"
+    tooltipText: I18n.tr("quickSettings.wallpaperSelector.tooltip.action")
+    onClicked: PanelService.getPanel("wallpaperPanel")?.toggle()
+    onRightClicked: WallpaperService.setRandomWallpaper()
 }

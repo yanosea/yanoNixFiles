@@ -6,74 +6,74 @@ import qs.Commons
 import qs.Modules.ControlCenter.Widgets
 
 Singleton {
-  id: root
+    id: root
 
-  // Widget registry object mapping widget names to components
-  property var widgets: ({
-                           "Bluetooth": bluetoothComponent,
-                           "DarkMode": darkModeComponent,
-                           "Notifications": notificationsComponent,
-                           "KeepAwake": keepAwakeComponent,
-                           "NightLight": nightLightComponent,
-                           "PowerProfile": powerProfileComponent,
-                           "ScreenRecorder": screenRecorderComponent,
-                           "WiFi": wiFiComponent,
-                           "WallpaperSelector": wallpaperSelectorComponent
-                         })
+    // Widget registry object mapping widget names to components
+    property var widgets: ({
+            "Bluetooth": bluetoothComponent,
+            "DarkMode": darkModeComponent,
+            "Notifications": notificationsComponent,
+            "KeepAwake": keepAwakeComponent,
+            "NightLight": nightLightComponent,
+            "PowerProfile": powerProfileComponent,
+            "ScreenRecorder": screenRecorderComponent,
+            "WiFi": wiFiComponent,
+            "WallpaperSelector": wallpaperSelectorComponent
+        })
 
-  property var widgetMetadata: ({})
+    property var widgetMetadata: ({})
 
-  // Component definitions - these are loaded once at startup
-  property Component bluetoothComponent: Component {
-    Bluetooth {}
-  }
-  property Component darkModeComponent: Component {
-    DarkMode {}
-  }
-  property Component notificationsComponent: Component {
-    Notifications {}
-  }
-  property Component keepAwakeComponent: Component {
-    KeepAwake {}
-  }
-  property Component nightLightComponent: Component {
-    NightLight {}
-  }
-  property Component powerProfileComponent: Component {
-    PowerProfile {}
-  }
-  property Component screenRecorderComponent: Component {
-    ScreenRecorder {}
-  }
-  property Component wiFiComponent: Component {
-    WiFi {}
-  }
-  property Component wallpaperSelectorComponent: Component {
-    WallpaperSelector {}
-  }
+    // Component definitions - these are loaded once at startup
+    property Component bluetoothComponent: Component {
+        Bluetooth {}
+    }
+    property Component darkModeComponent: Component {
+        DarkMode {}
+    }
+    property Component notificationsComponent: Component {
+        Notifications {}
+    }
+    property Component keepAwakeComponent: Component {
+        KeepAwake {}
+    }
+    property Component nightLightComponent: Component {
+        NightLight {}
+    }
+    property Component powerProfileComponent: Component {
+        PowerProfile {}
+    }
+    property Component screenRecorderComponent: Component {
+        ScreenRecorder {}
+    }
+    property Component wiFiComponent: Component {
+        WiFi {}
+    }
+    property Component wallpaperSelectorComponent: Component {
+        WallpaperSelector {}
+    }
 
-  function init() {
-    Logger.i("ControlCenterWidgetRegistry", "Service started")
-  }
+    function init() {
+        Logger.i("ControlCenterWidgetRegistry", "Service started");
+    }
 
-  // ------------------------------
-  // Helper function to get widget component by name
-  function getWidget(id) {
-    return widgets[id] || null
-  }
+    // ------------------------------
+    // Helper function to get widget component by name
+    function getWidget(id) {
+        return widgets[id] || null;
+    }
 
-  // Helper function to check if widget exists
-  function hasWidget(id) {
-    return id in widgets
-  }
+    // Helper function to check if widget exists
+    function hasWidget(id) {
+        return id in widgets;
+    }
 
-  // Get list of available widget id
-  function getAvailableWidgets() {
-    return Object.keys(widgets)
-  }
+    // Get list of available widget id
+    function getAvailableWidgets() {
+        return Object.keys(widgets);
+    }
 
-  // Helper function to check if widget has user settings
-  function widgetHasUserSettings(id) {
-    return (widgetMetadata[id] !== undefined) && (widgetMetadata[id].allowUserSettings === true)
-  }
+    // Helper function to check if widget has user settings
+    function widgetHasUserSettings(id) {
+        return (widgetMetadata[id] !== undefined) && (widgetMetadata[id].allowUserSettings === true);
+    }
 }

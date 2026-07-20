@@ -4,7 +4,7 @@
 
 # homebrew (macOS)
 if [[ "$OS" = "Darwin" ]]; then
-	eval $(/opt/homebrew/bin/brew shellenv)
+  eval $(/opt/homebrew/bin/brew shellenv)
 fi
 # direnv
 eval "$(direnv hook zsh)"

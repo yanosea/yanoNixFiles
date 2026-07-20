@@ -9,76 +9,76 @@ import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Cards
 
 RowLayout {
-  Layout.fillWidth: true
-  spacing: Style.marginL
-
-  NBox {
     Layout.fillWidth: true
-    Layout.preferredHeight: root.shortcutsHeight
+    spacing: Style.marginL
 
-    RowLayout {
-      id: leftContent
-      anchors.fill: parent
-      spacing: Style.marginS
-
-      Item {
+    NBox {
         Layout.fillWidth: true
-      }
+        Layout.preferredHeight: root.shortcutsHeight
 
-      Repeater {
-        model: Settings.data.controlCenter.shortcuts.left
-        delegate: ControlCenterWidgetLoader {
-          Layout.fillWidth: false
-          widgetId: (modelData.id !== undefined ? modelData.id : "")
-          widgetProps: {
-            "screen": root.buttonItem ? root.buttonItem.screen : null,
-            "widgetId": modelData.id,
-            "section": "quickSettings",
-            "sectionWidgetIndex": index,
-            "sectionWidgetsCount": Settings.data.controlCenter.shortcuts.left.length
-          }
-          Layout.alignment: Qt.AlignVCenter
+        RowLayout {
+            id: leftContent
+            anchors.fill: parent
+            spacing: Style.marginS
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            Repeater {
+                model: Settings.data.controlCenter.shortcuts.left
+                delegate: ControlCenterWidgetLoader {
+                    Layout.fillWidth: false
+                    widgetId: (modelData.id !== undefined ? modelData.id : "")
+                    widgetProps: {
+                        "screen": root.buttonItem ? root.buttonItem.screen : null,
+                        "widgetId": modelData.id,
+                        "section": "quickSettings",
+                        "sectionWidgetIndex": index,
+                        "sectionWidgetsCount": Settings.data.controlCenter.shortcuts.left.length
+                    }
+                    Layout.alignment: Qt.AlignVCenter
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
         }
-      }
-
-      Item {
-        Layout.fillWidth: true
-      }
     }
-  }
 
-  NBox {
-    Layout.fillWidth: true
-    Layout.preferredHeight: root.shortcutsHeight
-
-    RowLayout {
-      id: rightContent
-      anchors.fill: parent
-      spacing: Style.marginS
-
-      Item {
+    NBox {
         Layout.fillWidth: true
-      }
+        Layout.preferredHeight: root.shortcutsHeight
 
-      Repeater {
-        model: Settings.data.controlCenter.shortcuts.right
-        delegate: ControlCenterWidgetLoader {
-          Layout.fillWidth: false
-          widgetId: (modelData.id !== undefined ? modelData.id : "")
-          widgetProps: {
-            "screen": root.buttonItem ? root.buttonItem.screen : null,
-            "widgetId": modelData.id,
-            "section": "quickSettings",
-            "sectionWidgetIndex": index,
-            "sectionWidgetsCount": Settings.data.controlCenter.shortcuts.right.length
-          }
-          Layout.alignment: Qt.AlignVCenter
+        RowLayout {
+            id: rightContent
+            anchors.fill: parent
+            spacing: Style.marginS
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            Repeater {
+                model: Settings.data.controlCenter.shortcuts.right
+                delegate: ControlCenterWidgetLoader {
+                    Layout.fillWidth: false
+                    widgetId: (modelData.id !== undefined ? modelData.id : "")
+                    widgetProps: {
+                        "screen": root.buttonItem ? root.buttonItem.screen : null,
+                        "widgetId": modelData.id,
+                        "section": "quickSettings",
+                        "sectionWidgetIndex": index,
+                        "sectionWidgetsCount": Settings.data.controlCenter.shortcuts.right.length
+                    }
+                    Layout.alignment: Qt.AlignVCenter
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
         }
-      }
-
-      Item {
-        Layout.fillWidth: true
-      }
     }
-  }
 }
