@@ -27,15 +27,15 @@ print_color() {
 # Function to check if jq is installed
 check_dependencies() {
   if ! command -v jq &>/dev/null; then
-    print_color $RED "Error: 'jq' is required but not installed. Please install jq first." >&2
-    print_color $YELLOW "On Ubuntu/Debian: sudo apt-get install jq" >&2
-    print_color $YELLOW "On CentOS/RHEL: sudo yum install jq" >&2
-    print_color $YELLOW "On macOS: brew install jq" >&2
+    print_color "$RED" "Error: 'jq' is required but not installed. Please install jq first." >&2
+    print_color "$YELLOW" "On Ubuntu/Debian: sudo apt-get install jq" >&2
+    print_color "$YELLOW" "On CentOS/RHEL: sudo yum install jq" >&2
+    print_color "$YELLOW" "On macOS: brew install jq" >&2
     exit 1
   fi
 
   if $TRANSLATE_MODE && ! command -v curl &>/dev/null; then
-    print_color $RED "Error: 'curl' is required for translation mode but not installed." >&2
+    print_color "$RED" "Error: 'curl' is required for translation mode but not installed." >&2
     exit 1
   fi
 }
@@ -43,8 +43,8 @@ check_dependencies() {
 # Function to get Gemini API key
 get_gemini_api_key() {
   if [[ -z ${GEMINI_API_KEY:-} ]]; then
-    print_color $RED "Error: GEMINI_API_KEY environment variable is not set" >&2
-    print_color $YELLOW "Please set it with: export GEMINI_API_KEY='your-api-key'" >&2
+    print_color "$RED" "Error: GEMINI_API_KEY environment variable is not set" >&2
+    print_color "$YELLOW" "Please set it with: export GEMINI_API_KEY='your-api-key'" >&2
     exit 1
   fi
   echo "$GEMINI_API_KEY"
@@ -56,8 +56,8 @@ get_json_value() {
   local key_path=$2
 
   # Convert dot-separated path to jq path
-  local jq_path=$(echo "$key_path" | sed 's/\./\.\["/g' | sed 's/$/"]/' | sed 's/^\.//')
-  local jq_query=".${jq_path}"
+  local jq_path
+  jq_path=$(echo "$key_path" | sed 's/\./\.\["/g' | sed 's/$/"]/' | sed 's/^\.//')
 
   # Use a more robust approach: split by dots and build path
   local -a path_parts
@@ -73,18 +73,20 @@ get_json_value() {
 
 # Function to list available Gemini models
 list_gemini_models() {
-  local api_key=$(get_gemini_api_key)
+  local api_key
+  api_key=$(get_gemini_api_key)
 
-  print_color $BLUE "Fetching available Gemini models..." >&2
+  print_color "$BLUE" "Fetching available Gemini models..." >&2
   echo "" >&2
 
-  local response=$(curl -s -X GET \
+  local response
+  response=$(curl -s -X GET \
     "https://generativelanguage.googleapis.com/v1/models?key=${api_key}" \
     -H "Content-Type: application/json" 2>/dev/null)
 
   # Parse and display models
   echo "$response" | jq -r '.models[] | "- \(.name) (\(.displayName))"' 2>/dev/null || {
-    print_color $RED "Failed to parse models list" >&2
+    print_color "$RED" "Failed to parse models list" >&2
     echo "$response" >&2
     exit 1
   }
@@ -98,14 +100,13 @@ translate_text() {
   local target_language=$2
   local api_key=$3
 
-  # Escape text for JSON
-  local escaped_text=$(echo "$text" | jq -Rs .)
-
   # Prepare the API request
   local prompt="Translate the following English text to ${target_language}. Return ONLY the translation, no explanations or additional text:\n\n${text}"
-  local escaped_prompt=$(echo "$prompt" | jq -Rs .)
+  local escaped_prompt
+  escaped_prompt=$(echo "$prompt" | jq -Rs .)
 
-  local request_body=$(
+  local request_body
+  request_body=$(
     cat <<EOF
 {
   "contents": [{
@@ -126,23 +127,25 @@ EOF
 
   # print_color $BLUE "    API URL: $api_url" >&2
 
-  local response=$(curl -s -X POST "$api_url" \
+  local response
+  response=$(curl -s -X POST "$api_url" \
     -H "Content-Type: application/json" \
     -d "$request_body" 2>/dev/null)
 
   # print_color $BLUE "    API Response: $response" >&2
 
   # Extract the translation from response - try multiple parsing approaches
-  local translation=$(echo "$response" | jq -r '.candidates[0].content.parts[0].text // .text // empty' 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+  local translation
+  translation=$(echo "$response" | jq -r '.candidates[0].content.parts[0].text // .text // empty' 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
   if [[ -z $translation ]]; then
-    print_color $RED "    Failed to parse translation. Full response:" >&2
+    print_color "$RED" "    Failed to parse translation. Full response:" >&2
     echo "$response" | jq . >&2 2>/dev/null || echo "$response" >&2
     echo ""
     return 1
   fi
 
-  print_color $GREEN "    Parsed translation: $translation" >&2
+  print_color "$GREEN" "    Parsed translation: $translation" >&2
 
   echo "$translation"
 }
@@ -168,12 +171,11 @@ inject_translation() {
   jq_path+="]"
 
   # Create a temporary file
-  local temp_file=$(mktemp)
+  local temp_file
+  temp_file=$(mktemp)
 
   # Use jq to set the value at the path
-  jq --argjson path "$jq_path" --arg value "$value" 'setpath($path; $value)' "$json_file" >"$temp_file"
-
-  if [[ $? -eq 0 ]]; then
+  if jq --argjson path "$jq_path" --arg value "$value" 'setpath($path; $value)' "$json_file" >"$temp_file"; then
     mv "$temp_file" "$json_file"
     return 0
   else
@@ -202,12 +204,11 @@ remove_json_key() {
   jq_path+="]"
 
   # Create a temporary file
-  local temp_file=$(mktemp)
+  local temp_file
+  temp_file=$(mktemp)
 
   # Use jq to delete the path
-  jq --argjson path "$jq_path" 'delpaths([$path])' "$json_file" >"$temp_file"
-
-  if [[ $? -eq 0 ]]; then
+  if jq --argjson path "$jq_path" 'delpaths([$path])' "$json_file" >"$temp_file"; then
     mv "$temp_file" "$json_file"
     return 0
   else
@@ -275,11 +276,12 @@ remove_empty_objects() {
   local json_file=$1
 
   # Create a temporary file
-  local temp_file=$(mktemp)
+  local temp_file
+  temp_file=$(mktemp)
 
   # Use jq to recursively remove empty objects
   # This function walks the entire JSON tree and removes any object that contains no leaf values
-  jq '
+  if jq '
         def remove_empty:
             if type == "object" then
                 to_entries |
@@ -303,9 +305,7 @@ remove_empty_objects() {
                 .
             end;
         remove_empty
-    ' "$json_file" >"$temp_file" 2>/dev/null
-
-  if [[ $? -eq 0 ]]; then
+    ' "$json_file" >"$temp_file" 2>/dev/null; then
     mv "$temp_file" "$json_file"
     return 0
   else
@@ -321,7 +321,8 @@ get_language_files() {
 
 # Function to generate report header
 generate_header() {
-  local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+  local timestamp
+  timestamp=$(date '+%Y-%m-%d %H:%M:%S')
 
   echo "================================================================================"
   echo "                     LANGUAGE FILE COMPARISON REPORT"
@@ -360,7 +361,8 @@ find_key_line_number() {
 
   # Search for the key in the file with line numbers
   # Look for the pattern "key": (with quotes and colon)
-  local line_num=$(grep -n "\"$key_name\":" "$json_file" 2>/dev/null | head -1 | cut -d: -f1 || echo "")
+  local line_num
+  line_num=$(grep -n "\"$key_name\":" "$json_file" 2>/dev/null | head -1 | cut -d: -f1 || echo "")
 
   if [[ -n $line_num ]]; then
     echo "$line_num"
@@ -393,7 +395,8 @@ compare_language() {
   local ref_file_path="$FOLDER_PATH/$REFERENCE_FILE"
 
   # Create temporary file for language keys
-  local lang_keys_file=$(mktemp)
+  local lang_keys_file
+  lang_keys_file=$(mktemp)
   extract_keys "$lang_file" >"$lang_keys_file" || {
     echo "Error: Failed to extract keys from $lang_file" >&2
     rm -f "$lang_keys_file"
@@ -408,10 +411,14 @@ compare_language() {
   extra_keys=$(comm -13 "$ref_keys_file" "$lang_keys_file" 2>/dev/null || echo "")
 
   # Count lines safely
-  local missing_count=$(count_non_empty_lines "$missing_keys")
-  local extra_count=$(count_non_empty_lines "$extra_keys")
-  local total_ref_keys=$(wc -l <"$ref_keys_file" 2>/dev/null || echo "0")
-  local total_lang_keys=$(wc -l <"$lang_keys_file" 2>/dev/null || echo "0")
+  local missing_count
+  missing_count=$(count_non_empty_lines "$missing_keys")
+  local extra_count
+  extra_count=$(count_non_empty_lines "$extra_keys")
+  local total_ref_keys
+  total_ref_keys=$(wc -l <"$ref_keys_file" 2>/dev/null || echo "0")
+  local total_lang_keys
+  total_lang_keys=$(wc -l <"$lang_keys_file" 2>/dev/null || echo "0")
 
   # Calculate completion percentage safely
   local completion_percentage=0
@@ -419,9 +426,9 @@ compare_language() {
     completion_percentage=$(((total_ref_keys - missing_count) * 100 / total_ref_keys))
   fi
 
-  print_color $YELLOW "================================================================================"
-  print_color $YELLOW "LANGUAGE: $lang_name"
-  print_color $YELLOW "================================================================================"
+  print_color "$YELLOW" "================================================================================"
+  print_color "$YELLOW" "LANGUAGE: $lang_name"
+  print_color "$YELLOW" "================================================================================"
   echo "File: $lang_file"
   echo "Total keys in reference (en): $total_ref_keys"
   echo "Total keys in $lang_name: $total_lang_keys"
@@ -444,10 +451,12 @@ compare_language() {
     echo "MISSING KEYS IN $lang_name:"
 
     # Collect keys with line numbers and sort by line number (descending)
-    local temp_missing=$(mktemp)
+    local temp_missing
+    temp_missing=$(mktemp)
     while IFS= read -r key; do
       if [[ -n $key ]]; then
-        local ref_line=$(find_key_line_number "$ref_file_path" "$key")
+        local ref_line
+        ref_line=$(find_key_line_number "$ref_file_path" "$key")
         # Use numeric sort padding for proper sorting
         if [[ $ref_line =~ ^[0-9]+$ ]]; then
           printf "%06d|%s|en.json:%s\n" "$ref_line" "$key" "$ref_line" >>"$temp_missing"
@@ -459,7 +468,7 @@ compare_language() {
 
     # Sort by line number (descending) and display
     local counter=1
-    sort -t'|' -k1,1nr "$temp_missing" | while IFS='|' read -r sort_key key location; do
+    sort -t'|' -k1,1nr "$temp_missing" | while IFS='|' read -r _ key location; do
       printf "  %3d. %s (%s)\n" "$counter" "$key" "$location"
       counter=$((counter + 1))
     done
@@ -468,33 +477,36 @@ compare_language() {
 
     # Translate missing keys if in translate mode
     if $TRANSLATE_MODE; then
-      print_color $BLUE "Translating missing keys for $lang_name..." >&2
-      local api_key=$(get_gemini_api_key)
+      print_color "$BLUE" "Translating missing keys for $lang_name..." >&2
+      local api_key
+      api_key=$(get_gemini_api_key)
       local translated_count=0
       local failed_count=0
 
       while IFS= read -r key; do
         if [[ -n $key ]]; then
           # Get English value
-          local en_value=$(get_json_value "$ref_file_path" "$key")
+          local en_value
+          en_value=$(get_json_value "$ref_file_path" "$key")
 
           if [[ -n $en_value ]]; then
-            print_color $YELLOW "  Translating: $key" >&2
+            print_color "$YELLOW" "  Translating: $key" >&2
 
             # Translate the value
-            local translated_value=$(translate_text "$en_value" "$lang_name" "$api_key")
+            local translated_value
+            translated_value=$(translate_text "$en_value" "$lang_name" "$api_key")
 
             if [[ -n $translated_value ]]; then
               # Inject translation into the file
               if inject_translation "$lang_file" "$key" "$translated_value"; then
-                print_color $GREEN "    ✓ Translated: $key" >&2
+                print_color "$GREEN" "    ✓ Translated: $key" >&2
                 translated_count=$((translated_count + 1))
               else
-                print_color $RED "    ✗ Failed to inject: $key" >&2
+                print_color "$RED" "    ✗ Failed to inject: $key" >&2
                 failed_count=$((failed_count + 1))
               fi
             else
-              print_color $RED "    ✗ Translation failed: $key" >&2
+              print_color "$RED" "    ✗ Translation failed: $key" >&2
               failed_count=$((failed_count + 1))
             fi
 
@@ -505,7 +517,7 @@ compare_language() {
       done <<<"$missing_keys"
 
       echo ""
-      print_color $GREEN "Translation complete: $translated_count succeeded, $failed_count failed" >&2
+      print_color "$GREEN" "Translation complete: $translated_count succeeded, $failed_count failed" >&2
       echo ""
     fi
   else
@@ -518,10 +530,12 @@ compare_language() {
     echo "EXTRA KEYS IN $lang_name (not in English):"
 
     # Collect keys with line numbers and sort by line number (descending)
-    local temp_extra=$(mktemp)
+    local temp_extra
+    temp_extra=$(mktemp)
     while IFS= read -r key; do
       if [[ -n $key ]]; then
-        local lang_line=$(find_key_line_number "$lang_file" "$key")
+        local lang_line
+        lang_line=$(find_key_line_number "$lang_file" "$key")
         # Use numeric sort padding for proper sorting
         if [[ $lang_line =~ ^[0-9]+$ ]]; then
           printf "%06d|%s|%s:%s\n" "$lang_line" "$key" "$(basename "$lang_file")" "$lang_line" >>"$temp_extra"
@@ -533,7 +547,7 @@ compare_language() {
 
     # Sort by line number (descending) and display
     local counter=1
-    sort -t'|' -k1,1nr "$temp_extra" | while IFS='|' read -r sort_key key location; do
+    sort -t'|' -k1,1nr "$temp_extra" | while IFS='|' read -r _ key location; do
       printf "  %3d. %s (%s)\n" "$counter" "$key" "$location"
       counter=$((counter + 1))
     done
@@ -542,26 +556,26 @@ compare_language() {
 
     # Remove extra keys if in translate mode
     if $TRANSLATE_MODE; then
-      print_color $BLUE "Removing extra keys from $lang_name..." >&2
+      print_color "$BLUE" "Removing extra keys from $lang_name..." >&2
       local removed_count=0
       local failed_removal_count=0
 
       while IFS= read -r key; do
         if [[ -n $key ]]; then
-          print_color $YELLOW "  Removing: $key" >&2
+          print_color "$YELLOW" "  Removing: $key" >&2
 
           if remove_json_key "$lang_file" "$key"; then
-            print_color $GREEN "    ✓ Removed: $key" >&2
+            print_color "$GREEN" "    ✓ Removed: $key" >&2
             removed_count=$((removed_count + 1))
           else
-            print_color $RED "    ✗ Failed to remove: $key" >&2
+            print_color "$RED" "    ✗ Failed to remove: $key" >&2
             failed_removal_count=$((failed_removal_count + 1))
           fi
         fi
       done <<<"$extra_keys"
 
       echo ""
-      print_color $GREEN "Removal complete: $removed_count removed, $failed_removal_count failed" >&2
+      print_color "$GREEN" "Removal complete: $removed_count removed, $failed_removal_count failed" >&2
       echo ""
     fi
   else
@@ -571,8 +585,10 @@ compare_language() {
 
   # Handle empty keys in translate mode
   if $TRANSLATE_MODE; then
-    local empty_keys=$(extract_empty_keys "$lang_file")
-    local empty_count=$(count_non_empty_lines "$empty_keys")
+    local empty_keys
+    empty_keys=$(extract_empty_keys "$lang_file")
+    local empty_count
+    empty_count=$(count_non_empty_lines "$empty_keys")
 
     if [[ $empty_count -gt 0 && -n $empty_keys ]]; then
       echo "EMPTY KEYS IN $lang_name:"
@@ -581,33 +597,34 @@ compare_language() {
       local counter=1
       while IFS= read -r key; do
         if [[ -n $key ]]; then
-          local lang_line=$(find_key_line_number "$lang_file" "$key")
+          local lang_line
+          lang_line=$(find_key_line_number "$lang_file" "$key")
           printf "  %3d. %s (%s:%s)\n" "$counter" "$key" "$(basename "$lang_file")" "$lang_line"
           counter=$((counter + 1))
         fi
       done <<<"$empty_keys"
       echo ""
 
-      print_color $BLUE "Removing empty keys from $lang_name..." >&2
+      print_color "$BLUE" "Removing empty keys from $lang_name..." >&2
       local removed_empty_count=0
       local failed_empty_removal_count=0
 
       while IFS= read -r key; do
         if [[ -n $key ]]; then
-          print_color $YELLOW "  Removing empty key: $key" >&2
+          print_color "$YELLOW" "  Removing empty key: $key" >&2
 
           if remove_json_key "$lang_file" "$key"; then
-            print_color $GREEN "    ✓ Removed: $key" >&2
+            print_color "$GREEN" "    ✓ Removed: $key" >&2
             removed_empty_count=$((removed_empty_count + 1))
           else
-            print_color $RED "    ✗ Failed to remove: $key" >&2
+            print_color "$RED" "    ✗ Failed to remove: $key" >&2
             failed_empty_removal_count=$((failed_empty_removal_count + 1))
           fi
         fi
       done <<<"$empty_keys"
 
       echo ""
-      print_color $GREEN "Empty key removal complete: $removed_empty_count removed, $failed_empty_removal_count failed" >&2
+      print_color "$GREEN" "Empty key removal complete: $removed_empty_count removed, $failed_empty_removal_count failed" >&2
       echo ""
     else
       echo "✅ No empty keys in $lang_name"
@@ -615,12 +632,12 @@ compare_language() {
     fi
 
     # Remove empty objects (nested objects with no actual values)
-    print_color $BLUE "Cleaning up empty objects in $lang_name..." >&2
+    print_color "$BLUE" "Cleaning up empty objects in $lang_name..." >&2
     if remove_empty_objects "$lang_file"; then
-      print_color $GREEN "✓ Successfully removed all empty objects" >&2
+      print_color "$GREEN" "✓ Successfully removed all empty objects" >&2
       echo ""
     else
-      print_color $RED "✗ Failed to clean up empty objects" >&2
+      print_color "$RED" "✗ Failed to clean up empty objects" >&2
       echo ""
     fi
   fi
@@ -633,37 +650,39 @@ compare_language() {
 main() {
   local target_language="$1"
 
-  print_color $BLUE "Starting language file comparison..." >&2
+  print_color "$BLUE" "Starting language file comparison..." >&2
 
   # Check dependencies
   check_dependencies
 
   # Validate folder path
   if [[ ! -d $FOLDER_PATH ]]; then
-    print_color $RED "Error: Folder '$FOLDER_PATH' does not exist" >&2
+    print_color "$RED" "Error: Folder '$FOLDER_PATH' does not exist" >&2
     exit 1
   fi
 
   # Check if reference file exists
   local ref_file_path="$FOLDER_PATH/$REFERENCE_FILE"
   if [[ ! -f $ref_file_path ]]; then
-    print_color $RED "Error: Reference file '$ref_file_path' does not exist" >&2
+    print_color "$RED" "Error: Reference file '$ref_file_path' does not exist" >&2
     exit 1
   fi
 
-  print_color $GREEN "Reference file found: $ref_file_path" >&2
+  print_color "$GREEN" "Reference file found: $ref_file_path" >&2
 
   # Extract keys from reference file
-  local ref_keys_file=$(mktemp)
+  local ref_keys_file
+  ref_keys_file=$(mktemp)
   if ! extract_keys "$ref_file_path" >"$ref_keys_file"; then
-    print_color $RED "Error: Failed to extract keys from reference file" >&2
+    print_color "$RED" "Error: Failed to extract keys from reference file" >&2
     rm -f "$ref_keys_file"
     exit 1
   fi
 
-  local total_ref_keys=$(wc -l <"$ref_keys_file" 2>/dev/null || echo "0")
+  local total_ref_keys
+  total_ref_keys=$(wc -l <"$ref_keys_file" 2>/dev/null || echo "0")
 
-  print_color $BLUE "Extracted $total_ref_keys keys from reference file" >&2
+  print_color "$BLUE" "Extracted $total_ref_keys keys from reference file" >&2
 
   # Get all language files or just the target language
   local -a language_files
@@ -671,17 +690,17 @@ main() {
     # Single language mode
     local target_file="$FOLDER_PATH/${target_language}.json"
     if [[ ! -f $target_file ]]; then
-      print_color $RED "Error: Language file '$target_file' does not exist" >&2
+      print_color "$RED" "Error: Language file '$target_file' does not exist" >&2
       rm -f "$ref_keys_file"
       exit 1
     fi
     if [[ $target_language == "${REFERENCE_FILE%.json}" ]]; then
-      print_color $RED "Error: Cannot compare reference file against itself" >&2
+      print_color "$RED" "Error: Cannot compare reference file against itself" >&2
       rm -f "$ref_keys_file"
       exit 1
     fi
     language_files=("$target_file")
-    print_color $BLUE "Checking single language: $target_language" >&2
+    print_color "$BLUE" "Checking single language: $target_language" >&2
   else
     # All languages mode
     while IFS= read -r -d '' file; do
@@ -689,11 +708,11 @@ main() {
     done < <(find "$FOLDER_PATH" -maxdepth 1 -name "*.json" -type f -print0 | sort -z)
 
     if [[ ${#language_files[@]} -eq 0 ]]; then
-      print_color $RED "Error: No JSON files found in $FOLDER_PATH" >&2
+      print_color "$RED" "Error: No JSON files found in $FOLDER_PATH" >&2
       rm -f "$ref_keys_file"
       exit 1
     fi
-    print_color $BLUE "Found ${#language_files[@]} JSON files to process" >&2
+    print_color "$BLUE" "Found ${#language_files[@]} JSON files to process" >&2
   fi
 
   echo "" >&2
@@ -703,7 +722,8 @@ main() {
 
   local processed=0
   for lang_file in "${language_files[@]}"; do
-    local filename=$(basename "$lang_file")
+    local filename
+    filename=$(basename "$lang_file")
     local lang_name="${filename%.json}"
 
     # Skip the reference file in all-languages mode
@@ -711,11 +731,11 @@ main() {
       continue
     fi
 
-    print_color $YELLOW "Processing: $filename" >&2
+    print_color "$YELLOW" "Processing: $filename" >&2
 
     # Validate JSON syntax
     if ! jq empty "$lang_file" 2>/dev/null; then
-      print_color $RED "Warning: $lang_file contains invalid JSON syntax. Skipping..." >&2
+      print_color "$RED" "Warning: $lang_file contains invalid JSON syntax. Skipping..." >&2
       echo "ERROR: $lang_file contains invalid JSON syntax and was skipped."
       echo ""
       continue
@@ -724,7 +744,7 @@ main() {
     if compare_language "$lang_file" "$lang_name" "$ref_keys_file"; then
       processed=$((processed + 1))
     else
-      print_color $RED "Error processing $lang_file" >&2
+      print_color "$RED" "Error processing $lang_file" >&2
     fi
   done
 
@@ -748,9 +768,9 @@ main() {
   rm -f "$ref_keys_file"
 
   if [[ -n $target_language ]]; then
-    print_color $GREEN "Comparison completed for language: $target_language" >&2
+    print_color "$GREEN" "Comparison completed for language: $target_language" >&2
   else
-    print_color $GREEN "Comparison completed: Processed $processed language files against English reference" >&2
+    print_color "$GREEN" "Comparison completed: Processed $processed language files against English reference" >&2
   fi
 }
 

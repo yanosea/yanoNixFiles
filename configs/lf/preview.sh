@@ -4,8 +4,6 @@
 file="$1"
 width="$2"
 height="$3"
-x="$4"
-y="$5"
 
 # Get MIME type
 mime_type=$(file --mime-type -Lb "$file")

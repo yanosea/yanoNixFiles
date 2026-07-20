@@ -33,9 +33,11 @@ get_wallpaper_type() {
     echo "[GIF]"
   else
     # check for video files
-    local video_file=$(find "$WALLPAPER_DIR/$wallpaper_id" -maxdepth 1 -type f \( -iname "*.mp4" -o -iname "*.webm" -o -iname "*.avi" -o -iname "*.mov" -o -iname "*.mkv" \) | head -1 2>/dev/null)
+    local video_file
+    video_file=$(find "$WALLPAPER_DIR/$wallpaper_id" -maxdepth 1 -type f \( -iname "*.mp4" -o -iname "*.webm" -o -iname "*.avi" -o -iname "*.mov" -o -iname "*.mkv" \) | head -1 2>/dev/null)
     if [ -n "$video_file" ]; then
-      local ext=$(echo "$video_file" | sed 's/.*\.//' | tr '[:lower:]' '[:upper:]')
+      local ext
+      ext=$(echo "$video_file" | sed 's/.*\.//' | tr '[:lower:]' '[:upper:]')
       echo "[Video-$ext]"
     else
       echo "[Unknown]"
@@ -49,7 +51,8 @@ get_wallpaper_type() {
 #
 is_video_wallpaper() {
   local wallpaper_id="$1"
-  local video_file=$(find "$WALLPAPER_DIR/$wallpaper_id" -maxdepth 1 -type f \( -iname "*.mp4" -o -iname "*.webm" -o -iname "*.avi" -o -iname "*.mov" -o -iname "*.mkv" \) | head -1 2>/dev/null)
+  local video_file
+  video_file=$(find "$WALLPAPER_DIR/$wallpaper_id" -maxdepth 1 -type f \( -iname "*.mp4" -o -iname "*.webm" -o -iname "*.avi" -o -iname "*.mov" -o -iname "*.mkv" \) | head -1 2>/dev/null)
   [ -n "$video_file" ]
 }
 
@@ -63,7 +66,7 @@ get_filtered_wallpapers() {
     return 1
   fi
   # get list of available wallpapers (numeric ids only)
-  all_wallpapers=($(ls -1 "$WALLPAPER_DIR" | grep -E '^[0-9]+$' | sort -n))
+  mapfile -t all_wallpapers < <(find "$WALLPAPER_DIR" -mindepth 1 -maxdepth 1 -printf '%f\n' | grep -E '^[0-9]+$' | sort -n)
   # filter wallpapers based on type preference
   wallpapers=()
   for wallpaper_id in "${all_wallpapers[@]}"; do
@@ -133,8 +136,10 @@ check_status() {
   for pid_file in "$PID_DIR"/wallpaper-*.pid; do
     if [ -f "$pid_file" ]; then
       # extract monitor name from pid filename
-      local monitor=$(basename "$pid_file" .pid | sed 's/wallpaper-//')
-      local pid=$(cat "$pid_file")
+      local monitor
+      monitor=$(basename "$pid_file" .pid | sed 's/wallpaper-//')
+      local pid
+      pid=$(cat "$pid_file")
       # verify process is actually running
       if kill -0 "$pid" 2>/dev/null; then
         echo -e "${GREEN}✅ wallpaper-engine is running on ${CYAN}$monitor${NC} ${GRAY}(PID: $pid)${NC}"
@@ -166,7 +171,8 @@ list_wallpapers() {
   fi
   echo -e "${BLUE}📁 Available wallpapers:${NC}"
   # get directory list (numbers only)
-  local wallpapers=($(ls -1 "$WALLPAPER_DIR" | grep -E '^[0-9]+$' | sort -n))
+  local wallpapers
+  mapfile -t wallpapers < <(find "$WALLPAPER_DIR" -mindepth 1 -maxdepth 1 -printf '%f\n' | grep -E '^[0-9]+$' | sort -n)
   if [ ${#wallpapers[@]} -eq 0 ]; then
     echo -e "  ${GRAY}None${NC}"
     return 1
@@ -208,7 +214,8 @@ quit_wallpaper() {
   # stop rotation script if running
   local rotate_pid_file="$PID_DIR/wallpaper-rotate.pid"
   if [ -f "$rotate_pid_file" ]; then
-    local rotate_pid=$(cat "$rotate_pid_file")
+    local rotate_pid
+    rotate_pid=$(cat "$rotate_pid_file")
     if kill -0 "$rotate_pid" 2>/dev/null; then
       echo -e "${BLUE}🔄 Stopping wallpaper rotation...${NC}"
       kill -9 "$rotate_pid" 2>/dev/null || true
@@ -221,12 +228,14 @@ quit_wallpaper() {
   local running_pids=()
   for pid_file in "$PID_DIR"/wallpaper-*.pid; do
     if [ -f "$pid_file" ]; then
-      local monitor=$(basename "$pid_file" .pid | sed 's/wallpaper-//')
-      local pid=$(cat "$pid_file")
+      local monitor
+      monitor=$(basename "$pid_file" .pid | sed 's/wallpaper-//')
+      local pid
+      pid=$(cat "$pid_file")
       # verify process is still running
       if kill -0 "$pid" 2>/dev/null; then
         running_monitors+=("$monitor")
-        if [[ ! " ${running_pids[*]} " =~ " $pid " ]]; then
+        if [[ " ${running_pids[*]} " != *" $pid "* ]]; then
           running_pids+=("$pid")
         fi
       else
@@ -239,10 +248,11 @@ quit_wallpaper() {
   if [ ${#running_monitors[@]} -eq 0 ]; then
     echo -e "${YELLOW}⚡ No wallpaper-engine processes are running${NC}"
     # search for untracked processes by name
-    local pids=$(pgrep -f "linux-wallpaperengine" 2>/dev/null || true)
+    local pids
+    pids=$(pgrep -f "linux-wallpaperengine" 2>/dev/null || true)
     if [ -n "$pids" ]; then
       echo -e "${BLUE}🔍 Found untracked linux-wallpaperengine processes:${NC}"
-      ps -p $pids -o pid,cmd --no-headers | while read pid cmd; do
+      ps -p "$pids" -o pid,cmd --no-headers | while read -r pid _; do
         echo -e "  ${GRAY}PID: $pid${NC}"
       done
       if gum confirm "Quit these processes?"; then
@@ -258,7 +268,8 @@ quit_wallpaper() {
   echo -e "${BLUE}🖥️  Terminating wallpapers on all monitors:${NC}"
   for monitor in "${running_monitors[@]}"; do
     local pid_file="$PID_DIR/wallpaper-$monitor.pid"
-    local pid=$(cat "$pid_file")
+    local pid
+    pid=$(cat "$pid_file")
     echo -e "  ${CYAN}$monitor${NC} ${GRAY}(PID: $pid)${NC}"
   done
   echo ""
@@ -284,28 +295,25 @@ launch_wallpaper_with_id() {
   local is_random_mode="${2:-false}"
   # get available monitors based on current compositor
   # auto-detect compositor environment variables from wezterm if not set
-  local wezterm_pid=$(pgrep -x wezterm-gui | head -1)
+  local wezterm_pid
+  wezterm_pid=$(pgrep -x wezterm-gui | head -1)
   if [ -n "$wezterm_pid" ]; then
     if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-      export HYPRLAND_INSTANCE_SIGNATURE=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
+      HYPRLAND_INSTANCE_SIGNATURE=$(cat /proc/"$wezterm_pid"/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
+      export HYPRLAND_INSTANCE_SIGNATURE
     fi
     if [ -z "$NIRI_SOCKET" ]; then
-      export NIRI_SOCKET=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
+      NIRI_SOCKET=$(cat /proc/"$wezterm_pid"/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
+      export NIRI_SOCKET
     fi
   fi
   # try hyprctl first, fallback to niri
-  if monitors=($(hyprctl monitors 2>/dev/null | grep -E '^Monitor ' | awk '{print $2}' | sort)) && [ ${#monitors[@]} -gt 0 ]; then
-    # hyprland compositor
-    :
-  elif monitors=($(niri msg outputs 2>/dev/null | grep '^Output' | grep -oP '\([^)]+\)$' | tr -d '()' | sort)) && [ ${#monitors[@]} -gt 0 ]; then
-    # niri compositor
-    :
-  else
-    echo -e "${RED}❌ Error: Could not detect compositor or no monitors found${NC}"
-    return 1
+  mapfile -t monitors < <(hyprctl monitors 2>/dev/null | grep -E '^Monitor ' | awk '{print $2}' | sort)
+  if [ ${#monitors[@]} -eq 0 ]; then
+    mapfile -t monitors < <(niri msg outputs 2>/dev/null | grep '^Output' | grep -oP '\([^)]+\)$' | tr -d '()' | sort)
   fi
   if [ ${#monitors[@]} -eq 0 ]; then
-    echo -e "${RED}❌ Error: No monitors found${NC}"
+    echo -e "${RED}❌ Error: Could not detect compositor or no monitors found${NC}"
     return 1
   fi
   # terminate existing wallpapers
@@ -313,7 +321,8 @@ launch_wallpaper_with_id() {
   for monitor in "${monitors[@]}"; do
     local pid_file="$PID_DIR/wallpaper-$monitor.pid"
     if [ -f "$pid_file" ]; then
-      local existing_pid=$(cat "$pid_file")
+      local existing_pid
+      existing_pid=$(cat "$pid_file")
       if kill -0 "$existing_pid" 2>/dev/null; then
         existing_pids+=("$existing_pid")
       fi
@@ -384,9 +393,13 @@ launch_wallpaper() {
   # create pid directory if it doesn't exist
   mkdir -p "$PID_DIR"
   # get filtered wallpapers
-  wallpapers=($(get_filtered_wallpapers))
-  if [ $? -ne 0 ]; then
+  local filtered_output
+  if ! filtered_output=$(get_filtered_wallpapers); then
     return 1
+  fi
+  wallpapers=()
+  if [ -n "$filtered_output" ]; then
+    mapfile -t wallpapers <<<"$filtered_output"
   fi
   # prepare wallpaper options with type indicators
   wallpaper_options=()
@@ -412,28 +425,25 @@ launch_wallpaper() {
   echo
   # get available monitors based on current compositor
   # auto-detect compositor environment variables from wezterm if not set
-  local wezterm_pid=$(pgrep -x wezterm-gui | head -1)
+  local wezterm_pid
+  wezterm_pid=$(pgrep -x wezterm-gui | head -1)
   if [ -n "$wezterm_pid" ]; then
     if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-      export HYPRLAND_INSTANCE_SIGNATURE=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
+      HYPRLAND_INSTANCE_SIGNATURE=$(cat /proc/"$wezterm_pid"/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
+      export HYPRLAND_INSTANCE_SIGNATURE
     fi
     if [ -z "$NIRI_SOCKET" ]; then
-      export NIRI_SOCKET=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
+      NIRI_SOCKET=$(cat /proc/"$wezterm_pid"/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
+      export NIRI_SOCKET
     fi
   fi
   # try hyprctl first, fallback to niri
-  if monitors=($(hyprctl monitors 2>/dev/null | grep -E '^Monitor ' | awk '{print $2}' | sort)) && [ ${#monitors[@]} -gt 0 ]; then
-    # hyprland compositor
-    :
-  elif monitors=($(niri msg outputs 2>/dev/null | grep '^Output' | grep -oP '\([^)]+\)$' | tr -d '()' | sort)) && [ ${#monitors[@]} -gt 0 ]; then
-    # niri compositor
-    :
-  else
-    echo -e "${RED}❌ Error: Could not detect compositor or no monitors found${NC}"
-    return 1
+  mapfile -t monitors < <(hyprctl monitors 2>/dev/null | grep -E '^Monitor ' | awk '{print $2}' | sort)
+  if [ ${#monitors[@]} -eq 0 ]; then
+    mapfile -t monitors < <(niri msg outputs 2>/dev/null | grep '^Output' | grep -oP '\([^)]+\)$' | tr -d '()' | sort)
   fi
   if [ ${#monitors[@]} -eq 0 ]; then
-    echo -e "${RED}❌ Error: No monitors found${NC}"
+    echo -e "${RED}❌ Error: Could not detect compositor or no monitors found${NC}"
     return 1
   fi
   echo -e "${BLUE}🖥️  Applying to all monitors: ${CYAN}${monitors[*]}${NC}"
@@ -443,7 +453,8 @@ launch_wallpaper() {
   for monitor in "${monitors[@]}"; do
     local pid_file="$PID_DIR/wallpaper-$monitor.pid"
     if [ -f "$pid_file" ]; then
-      local existing_pid=$(cat "$pid_file")
+      local existing_pid
+      existing_pid=$(cat "$pid_file")
       if kill -0 "$existing_pid" 2>/dev/null; then
         existing_processes+=("$monitor:$existing_pid")
       else
@@ -456,15 +467,19 @@ launch_wallpaper() {
   if [ ${#existing_processes[@]} -gt 0 ]; then
     echo -e "${YELLOW}⚡ Wallpaper-engine is already running on some monitors:${NC}"
     for process in "${existing_processes[@]}"; do
-      local monitor=$(echo "$process" | cut -d':' -f1)
-      local pid=$(echo "$process" | cut -d':' -f2)
+      local monitor
+      monitor=$(echo "$process" | cut -d':' -f1)
+      local pid
+      pid=$(echo "$process" | cut -d':' -f2)
       echo -e "  ${CYAN}$monitor${NC} ${GRAY}(PID: $pid)${NC}"
     done
     if gum confirm "Replace existing wallpapers?"; then
       echo -e "${BLUE}🔄 Terminating existing wallpapers...${NC}"
       for process in "${existing_processes[@]}"; do
-        local monitor=$(echo "$process" | cut -d':' -f1)
-        local pid=$(echo "$process" | cut -d':' -f2)
+        local monitor
+        monitor=$(echo "$process" | cut -d':' -f1)
+        local pid
+        pid=$(echo "$process" | cut -d':' -f2)
         local pid_file="$PID_DIR/wallpaper-$monitor.pid"
         kill -9 "$pid" 2>/dev/null || true
         rm -f "$pid_file"
@@ -502,9 +517,13 @@ launch_random_wallpaper() {
   # create pid directory if it doesn't exist
   mkdir -p "$PID_DIR"
   # get filtered wallpapers
-  wallpapers=($(get_filtered_wallpapers))
-  if [ $? -ne 0 ]; then
+  local filtered_output
+  if ! filtered_output=$(get_filtered_wallpapers); then
     return 1
+  fi
+  wallpapers=()
+  if [ -n "$filtered_output" ]; then
+    mapfile -t wallpapers <<<"$filtered_output"
   fi
   echo -e "${BLUE}🎲 Starting random wallpaper mode...${NC}"
   if [ "$INCLUDE_ALL_TYPES" = "false" ]; then
@@ -517,19 +536,21 @@ launch_random_wallpaper() {
   # stop existing rotation script if running
   local rotate_pid_file="$PID_DIR/wallpaper-rotate.pid"
   if [ -f "$rotate_pid_file" ]; then
-    local old_pid=$(cat "$rotate_pid_file")
+    local old_pid
+    old_pid=$(cat "$rotate_pid_file")
     if kill -0 "$old_pid" 2>/dev/null; then
       kill -9 "$old_pid" 2>/dev/null || true
     fi
     rm -f "$rotate_pid_file"
   fi
   # detect compositor environment variables from wezterm
-  local wezterm_pid=$(pgrep -x wezterm-gui | head -1)
+  local wezterm_pid
+  wezterm_pid=$(pgrep -x wezterm-gui | head -1)
   local detected_hyprland_sig=""
   local detected_niri_socket=""
   if [ -n "$wezterm_pid" ]; then
-    detected_hyprland_sig=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
-    detected_niri_socket=$(cat /proc/$wezterm_pid/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
+    detected_hyprland_sig=$(cat /proc/"$wezterm_pid"/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
+    detected_niri_socket=$(cat /proc/"$wezterm_pid"/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
   fi
   # create rotation script
   cat >"$PID_DIR/rotate.sh" <<'ROTATE_SCRIPT'
@@ -640,6 +661,7 @@ case "${1:-}" in
 autostart)
   # start from config file (~/.config/wallpaper-engine/config)
   CONFIG_FILE="$HOME/.config/wallpaper-engine/config"
+  # shellcheck source=/dev/null
   [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
   # skip if disabled
   if [ "${ENABLED:-false}" != "true" ]; then

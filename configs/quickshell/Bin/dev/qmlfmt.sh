@@ -41,9 +41,10 @@ done
 }
 
 echo "Formatting ${#safe_files[@]} files..."
-printf '%s\0' "${safe_files[@]}" |
-  xargs -0 -P "${QMLFMT_JOBS:-$(nproc)}" -I {} bash -c 'format_file "$@"' _ {} &&
-  echo "Done" || {
+if printf '%s\0' "${safe_files[@]}" |
+  xargs -0 -P "${QMLFMT_JOBS:-$(nproc)}" -I {} bash -c 'format_file "$@"' _ {}; then
+  echo "Done"
+else
   echo "Errors occurred" >&2
   exit 1
-}
+fi
