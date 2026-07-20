@@ -3,17 +3,23 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 15 * * *" # 15:00 UTC (0:00 JST)
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 jobs:
   update-flake:
     runs-on: ubuntu-latest
+    permissions:
+      # push the update branch
+      contents: write
+      # open the update PR
+      pull-requests: write
     steps:
       - name: checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # create-pull-request configures its own auth from `token`
+          persist-credentials: false
       - name: install Nix
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -121,7 +127,7 @@ jobs:
       - name: create pull request
         id: create-pr
         if: steps.update-flake.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           sign-commits: true
@@ -140,6 +146,13 @@ jobs:
         if: steps.create-pr.outputs.pull-request-number
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH_NAME: ${{ steps.update-flake.outputs.branch_name }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
         run: |
-          echo '{"event_type": "test-flake", "client_payload": {"branch": "${{ steps.update-flake.outputs.branch_name }}", "pr_number": "${{ steps.create-pr.outputs.pull-request-number }}"}}' | \
-            gh api repos/${{ github.repository }}/dispatches --method POST --input -
+          # build the payload with jq so the values cannot break out of the JSON
+          jq -n \
+            --arg branch "$BRANCH_NAME" \
+            --arg pr_number "$PR_NUMBER" \
+            '{event_type: "test-flake", client_payload: {branch: $branch, pr_number: $pr_number}}' | \
+            gh api "repos/$REPOSITORY/dispatches" --method POST --input -
