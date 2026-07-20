@@ -10,7 +10,7 @@ let
     name: _: name != "default.nix" && name != "gemini" && name != "zsh"
   ) contents;
   mkEntry = name: type: {
-    name = name;
+    inherit name;
     value = {
       source = ./. + "/${name}";
       recursive = type == "directory";
@@ -19,7 +19,7 @@ let
   configFiles = lib.mapAttrs' mkEntry filteredContents;
   # quickshell: force = true because QS writes settings.json back at runtime
   quickshellOverride = {
-    "quickshell" = (configFiles."quickshell") // {
+    "quickshell" = configFiles."quickshell" // {
       force = true;
     };
   };

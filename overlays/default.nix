@@ -12,7 +12,7 @@ inputs: [
   # packages
   ## comfyui
   (
-    final: prev:
+    _final: prev:
     let
       buildFHSUserEnv = prev.buildFHSUserEnv or prev.buildFHSEnv;
     in
@@ -55,12 +55,12 @@ inputs: [
     }
   )
   ## claude-code
-  (final: prev: {
+  (_final: prev: {
     claude-code = inputs.claude-code.packages.${prev.stdenv.hostPlatform.system}.default;
   })
   ## invokeai
   (
-    final: prev:
+    _final: prev:
     let
       buildFHSUserEnv = prev.buildFHSUserEnv or prev.buildFHSEnv;
     in
@@ -102,7 +102,7 @@ inputs: [
     }
   )
   ## jj-starship
-  (final: prev: {
+  (_final: prev: {
     jj-starship = inputs.jj-starship.packages.${prev.stdenv.hostPlatform.system}.default;
   })
 ]

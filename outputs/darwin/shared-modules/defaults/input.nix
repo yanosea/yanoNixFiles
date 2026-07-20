@@ -1,6 +1,5 @@
 # input configuration
-{ ... }:
-{
+_: {
   # system
   system = {
     defaults = {

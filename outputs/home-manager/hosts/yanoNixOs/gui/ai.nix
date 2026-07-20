@@ -1,7 +1,6 @@
 # home ai module
 {
   config,
-  lib,
   pkgs,
   ...
 }:

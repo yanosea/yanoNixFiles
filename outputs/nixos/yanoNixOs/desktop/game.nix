@@ -1,6 +1,5 @@
 # nixos desktop game module
-{ ... }:
-{
+_: {
   # boot
   boot = {
     kernelModules = [

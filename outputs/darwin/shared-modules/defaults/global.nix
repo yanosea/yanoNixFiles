@@ -1,6 +1,5 @@
 # global configuration
-{ ... }:
-{
+_: {
   # system
   system = {
     defaults = {
