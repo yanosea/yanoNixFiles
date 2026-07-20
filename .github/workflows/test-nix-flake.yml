@@ -7,19 +7,20 @@ on:
     types: [test-flake]
   workflow_dispatch:
 permissions:
+  # checkout only; jobs that need more declare it themselves
   contents: read
-  statuses: write
-  pull-requests: read
 jobs:
   lint-and-format:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.client_payload.branch || github.ref }}
+          # nothing here pushes, so do not leave the token in .git/config
+          persist-credentials: false
       - name: install Nix
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +44,7 @@ jobs:
           - yanoNixOsWsl
     steps:
       - name: free disk space
-        uses: jlumbroso/free-disk-space@v1.3.1
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
         with:
           tool-cache: true
           android: true
@@ -52,11 +53,13 @@ jobs:
           large-packages: true
           swap-storage: true
       - name: checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.client_payload.branch || github.ref }}
+          # nothing here pushes, so do not leave the token in .git/config
+          persist-credentials: false
       - name: install Nix
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -80,11 +83,13 @@ jobs:
           - yanoMacBook
     steps:
       - name: checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.client_payload.branch || github.ref }}
+          # nothing here pushes, so do not leave the token in .git/config
+          persist-credentials: false
       - name: install Nix
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -108,7 +113,7 @@ jobs:
           - "yanosea@yanoNixOsWsl"
     steps:
       - name: free disk space
-        uses: jlumbroso/free-disk-space@v1.3.1
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
         with:
           tool-cache: true
           android: true
@@ -117,11 +122,13 @@ jobs:
           large-packages: true
           swap-storage: true
       - name: checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.client_payload.branch || github.ref }}
+          # nothing here pushes, so do not leave the token in .git/config
+          persist-credentials: false
       - name: install Nix
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -145,11 +152,13 @@ jobs:
           - "yanosea@yanoMacBook"
     steps:
       - name: checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.client_payload.branch || github.ref }}
+          # nothing here pushes, so do not leave the token in .git/config
+          persist-credentials: false
       - name: install Nix
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -172,6 +181,11 @@ jobs:
       - test-home-manager-builds
       - test-home-manager-darwin-builds
     if: always() && (github.event_name == 'repository_dispatch' || github.event_name == 'pull_request')
+    permissions:
+      # post the rollup commit status
+      statuses: write
+      # look up the head sha of the dispatched PR
+      pull-requests: read
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -190,20 +204,37 @@ jobs:
           fi
       - name: get commit SHA
         id: sha
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REPOSITORY: ${{ github.repository }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          # pass untrusted dispatch input via env to avoid script injection
+          DISPATCH_PR_NUMBER: ${{ github.event.client_payload.pr_number }}
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "sha=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_OUTPUT"
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            echo "sha=$PR_HEAD_SHA" >> "$GITHUB_OUTPUT"
           else
-            SHA=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.client_payload.pr_number }} --jq '.head.sha')
+            # the dispatch payload is untrusted, so reject anything but a number
+            if [[ ! "$DISPATCH_PR_NUMBER" =~ ^[0-9]+$ ]]; then
+              echo "::error::client_payload.pr_number is not a number"
+              exit 1
+            fi
+            SHA=$(gh api "/repos/$REPOSITORY/pulls/$DISPATCH_PR_NUMBER" --jq '.head.sha')
             echo "sha=$SHA" >> "$GITHUB_OUTPUT"
           fi
       - name: report commit status
+        env:
+          REPOSITORY: ${{ github.repository }}
+          COMMIT_SHA: ${{ steps.sha.outputs.sha }}
+          STATE: ${{ steps.status.outputs.state }}
+          DESCRIPTION: ${{ steps.status.outputs.description }}
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/statuses/${{ steps.sha.outputs.sha }} \
-            -f state='${{ steps.status.outputs.state }}' \
-            -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}' \
-            -f description='${{ steps.status.outputs.description }}' \
+            "/repos/$REPOSITORY/statuses/$COMMIT_SHA" \
+            -f state="$STATE" \
+            -f target_url="$TARGET_URL" \
+            -f description="$DESCRIPTION" \
             -f context='Test Nix Flake'
