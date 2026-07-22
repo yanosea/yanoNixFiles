@@ -17,6 +17,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.client_payload.branch || github.ref }}
+          # gitleaks scans the whole history below, so fetch all of it
+          fetch-depth: 0
           # nothing here pushes, so do not leave the token in .git/config
           persist-credentials: false
       - name: install Nix
@@ -34,6 +36,11 @@ jobs:
             echo "Files are not properly formatted. Please run 'nix fmt' locally and commit the changes."
             exit 1
           fi
+      - name: scan for secrets
+        run: |
+          # scan the full git history so a secret committed in the past
+          # is caught even after it is removed from the working tree
+          nix run nixpkgs#gitleaks -- git . --no-banner --redact
   test-nixos-builds:
     runs-on: ubuntu-latest
     strategy:
