@@ -119,5 +119,27 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
         enable = true;
       };
     };
+    settings = {
+      formatter = {
+        gitleaks =
+          let
+            pkgs = inputs.nixpkgs.legacyPackages.${system};
+            gitleaks-treefmt = pkgs.writeShellApplication {
+              name = "gitleaks-treefmt";
+              runtimeInputs = [ pkgs.gitleaks ];
+              # `gitleaks dir` takes a single path, so scan each file treefmt passes
+              text = ''
+                for file in "$@"; do
+                  gitleaks dir "$file" --no-banner --redact --exit-code 1
+                done
+              '';
+            };
+          in
+          {
+            command = "${gitleaks-treefmt}/bin/gitleaks-treefmt";
+            includes = [ "*" ];
+          };
+      };
+    };
   }).config.build.wrapper
 )
