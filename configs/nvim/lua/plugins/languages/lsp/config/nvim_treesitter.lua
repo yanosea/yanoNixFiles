@@ -24,6 +24,8 @@ return {
 				"go",
 				"gomod",
 				"gosum",
+				-- java
+				"java",
 				-- lua
 				"lua",
 				-- make
@@ -52,6 +54,8 @@ return {
 				"html",
 				"json",
 				"scss",
+				-- xml (maven pom.xml)
+				"xml",
 				-- yaml
 				"yaml",
 			}
