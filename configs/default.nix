@@ -56,26 +56,28 @@ let
 in
 {
   # home directory files
-  home.file = {
-    ".gemini" = {
-      source = ./gemini;
-      recursive = true;
-    };
-    ".local/bin/niri-app-toggle" = {
-      executable = true;
-      text = ''
-        #!/usr/bin/env bash
-        APP_ID="$1"
-        shift
-        WINDOWS=$(niri msg -j windows 2>/dev/null)
-        UNFOCUSED_ID=$(printf '%s' "$WINDOWS" | jq -r --arg a "$APP_ID" \
-          'first(.[] | select(.app_id == $a and .is_focused == false) | .id) // empty')
-        if [ -n "$UNFOCUSED_ID" ]; then
-          niri msg action focus-window --id "$UNFOCUSED_ID"
-        elif ! printf '%s' "$WINDOWS" | jq -e --arg a "$APP_ID" 'any(.[]; .app_id == $a)' >/dev/null 2>&1; then
-          exec "$@"
-        fi
-      '';
+  home = {
+    file = {
+      ".gemini" = {
+        source = ./gemini;
+        recursive = true;
+      };
+      ".local/bin/niri-app-toggle" = {
+        executable = true;
+        text = ''
+          #!/usr/bin/env bash
+          APP_ID="$1"
+          shift
+          WINDOWS=$(niri msg -j windows 2>/dev/null)
+          UNFOCUSED_ID=$(printf '%s' "$WINDOWS" | jq -r --arg a "$APP_ID" \
+            'first(.[] | select(.app_id == $a and .is_focused == false) | .id) // empty')
+          if [ -n "$UNFOCUSED_ID" ]; then
+            niri msg action focus-window --id "$UNFOCUSED_ID"
+          elif ! printf '%s' "$WINDOWS" | jq -e --arg a "$APP_ID" 'any(.[]; .app_id == $a)' >/dev/null 2>&1; then
+            exec "$@"
+          fi
+        '';
+      };
     };
   };
   # xdg
