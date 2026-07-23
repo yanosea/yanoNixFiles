@@ -15,3 +15,6 @@ export HISTORY_BASE=$XDG_STATE_HOME/zsh/per-directory-history
 export PER_DIRECTORY_HISTORY_TOGGLE="^h"
 # claude ai
 export CLAUDE_CONFIG_DIR=$XDG_CONFIG_HOME/claude
+# google antigravity / gemini
+export ANTIGRAVITY_APP_DATA_DIR=$HOME/.gemini/antigravity-cli
+export ANTIGRAVITY_CONFIG_DIR=$HOME/.gemini/config
