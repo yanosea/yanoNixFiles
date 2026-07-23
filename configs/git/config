@@ -34,3 +34,5 @@
     gpgsign = true
 [gpg]
     program = gpg
+[include]
+    path = ~/.config/git/config.local
