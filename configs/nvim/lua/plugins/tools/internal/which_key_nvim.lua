@@ -26,14 +26,14 @@ return {
 						desc = "ai claude: resume",
 					},
 					{ "<LEADER>act", "<CMD>ClaudeCode<CR>", desc = "ai claude: toggle" },
-					-- ai: gemini
-					{ "<LEADER>ag", group = "gemini" },
+					-- ai: antigravity
+					{ "<LEADER>ag", group = "antigravity" },
 					{
 						"<LEADER>agr",
-						"<CMD>lua require('config.gemini').resume_session()<CR>",
-						desc = "ai gemini: resume",
+						"<CMD>lua require('config.antigravity').resume_session()<CR>",
+						desc = "ai antigravity: resume",
 					},
-					{ "<LEADER>agt", "<CMD>Gemini<CR>", desc = "ai gemini: toggle" },
+					{ "<LEADER>agt", "<CMD>Antigravity<CR>", desc = "ai antigravity: toggle" },
 					-- discordo
 					{ "<LEADER>D", "<CMD>Discordo<CR>", desc = "discordo" },
 					-- buffers

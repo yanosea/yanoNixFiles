@@ -1,13 +1,13 @@
 # IGNORE DIRECTORY
 specs/
+.antigravitycli/
 .claude/
-.gemini/
 .serena/
 .specify/
 # IGNORE FILE
 desktop.ini
+AGENTS.md
 CLAUDE.md
-GEMINI.md
 HANDOVER.md
 HANDOVER.md.bak
 .DS_Store

@@ -1,6 +1,9 @@
-# Session handover note generator
+---
+name: handover
+description: Generate a session handover note (HANDOVER.md) at the project root to carry context to the next session.
+disable-model-invocation: true
+---
 
-prompt = """
 Generate a `HANDOVER.md` at the project root to carry context to the next session.
 
 - If `HANDOVER.md` already exists, overwrite it (previous content is not needed).
@@ -46,4 +49,3 @@ Include all of the following sections:
 - "Rejected alternatives and reasons" is especially important to prevent repeating the same discussion in the next session.
 
 **IMPORTANT: HANDOVER.md must be in English, but your reply must be in Japanese.**
-"""

@@ -1,53 +1,47 @@
-# Ship command for jj (Jujutsu)
+---
+name: sg
+description: Ship command for git — analyze staged changes and prepare issue/branch/commit/PR commands for manual execution.
+disable-model-invocation: true
+---
 
-prompt = """
-First, analyze the working copy changes below and understand the intent and context of the changes.
+First, run `git diff --staged` yourself using your shell tool to see the staged changes, then analyze them and understand the intent and context of the changes.
 If any of the following apply, stop and ask questions or suggest improvements before proceeding:
-  - The intent of the changes is unclear
-  - The changes do not follow best practices
-  - The changes contain potential issues (bugs, security risks, etc.)
-After understanding the changes, generate a commit message in English.
+
+- The intent of the changes is unclear
+- The changes do not follow best practices
+- The changes contain potential issues (bugs, security risks, etc.)
+  After understanding the changes, generate a commit message in English.
 - Show the following commands for the user to run manually in order:
   1. `gh issue create` command:
      - title format: `(scope) description` (e.g., `(ai) expand workflow`)
      - no body
      - label: `bug` for `fix:` prefix, `enhancement` for others
      - assignee: self (`@me`)
-  2. `nix fmt` command to format files
-  3. `jj describe` command with the generated message
-  4. `jj bookmark create` command to create a bookmark matching `gh issue develop` default format:
-     - format: `<issue-number>-<issue-title-in-kebab-case>` (e.g., `1154-hypr-migrate-windowrulev2-to-new-windowrule-syntax`)
-  5. Two commands to push the bookmark:
-     - `jj bookmark track <bookmark>@origin` to track the bookmark on remote
-     - `jj git push -b <bookmark>` to push the changes to remote
+  2. `gh issue develop` command to create a branch for the issue
+  3. `git checkout` command to checkout the created branch
+  4. `git commit` command with the generated message
+  5. `git push` command to push the changes to remote
   6. `gh pr create` command:
-     - **IMPORTANT: use `--head <bookmark>` flag** (jj does not use git branches, so branch detection fails without this)
      - title:
-       - single commit: use `$(git log <bookmark> -1 --format='%s')` to extract from commit (must specify bookmark name, not `-1` alone, because jj uses detached HEAD)
+       - single commit: no specification (auto-populated from commit/branch)
        - multiple commits: specify a summary title explicitly covering all changes (use the same emoji prefix convention as commit messages)
      - body:
-       - single commit: use `$(printf '%s\n\ncloses #<issue-number>' "$(git log <bookmark> -1 --format='%b')")` to extract from commit and append closes
+       - single commit: no specification (auto-populated from commit/branch)
        - multiple commits: write a `## Summary` section with bullet points for each commit's changes, then append `closes #<issue-number>`
      - label: same as issue
      - assignee: same as issue (`@me`)
-  7. `gh pr merge <pr-number>` command to merge the pull request
-  8. cleanup commands:
-     - `jj git fetch && jj rebase -o main && jj bookmark delete <bookmark>`
+  7. `gh pr merge` command to merge the pull request
 - Do not show the commit message separately; only show it in the commands.
 - Do not execute any commands, only show them for the user to run manually.
-- When you need to check diffs, status, or logs, use `git` commands instead of `jj` commands.
-  jj operations may require GPG signing which is not available in this environment.
-  - Use `git diff` instead of `jj diff`
-  - Use `git status` instead of `jj status`
-  - Use `git log` instead of `jj log`
-- Predict the issue number and PR number using `gh`:
+- Do not stage any files or lines.
+- Predict the issue number using `gh`:
   - Get the latest number: `gh pr list --state all --limit 1 --json number --jq '.[0].number'`
-  - The next issue number = latest + 1, PR number = latest + 2
-  - Use the predicted numbers directly in all commands (no variables or placeholders)
+  - The next issue number = latest + 1
+  - Use the predicted number directly in all commands (no variables or placeholders)
 - Write all commands to `/tmp/ship-<repo-name>-<issue-number>.md` as a markdown file with the following format:
   - `<repo-name>` is the current repository name (e.g., `yanoNixFiles`). Detect it from the git remote URL or the current directory name.
   - Use `# Ship #<issue-number>` as the document title
-  - Group each step with a `## ` heading (e.g., `## Issue`, `## Format`, `## Commit`, `## Branch`, `## Push`, `## PR`, `## Merge`, `## Cleanup`)
+  - Group each step with a `## ` heading (e.g., `## Issue`, `## Branch`, `## Commit`, `## Push`, `## PR`, `## Merge`)
   - Wrap each command in a ```bash code block
   - No shebang, no variables, no script logic
 - At the end of your reply, show the output file path: `/tmp/ship-<repo-name>-<issue-number>.md`
@@ -56,7 +50,6 @@ After understanding the changes, generate a commit message in English.
 
 1. The title should be at most 50 characters, and the body should be wrapped at 72 characters.
    For the title, use one of the following prefixes, separated from the title by a space:
-
    - `✨feat(scope):` - Use for new feature additions
    - `🐞fix(scope):` - Use for bug fixes
    - `📚docs(scope):` - Use for documentation-only changes
@@ -69,7 +62,7 @@ After understanding the changes, generate a commit message in English.
 
 2. Replace `scope` with the changed tool/component name.
    For example, if GitHub Workflow file was changed: `✨feat(workflow):`
-   If jj config file was changed: `🐞fix(jj):`
+   If git config file was changed: `🐞fix(git):`
 
 3. In the body, list the changes as bullet points, each starting with "- ".
 
@@ -84,7 +77,4 @@ After understanding the changes, generate a commit message in English.
 8. If the reason for the changes is not clear from looking at the source,
    please ask questions before creating the commit message and include the answers in your considerations.
 
-!{git diff}
-
 **IMPORTANT: Commit messages must be in English, but your reply must be in Japanese.**
-"""
