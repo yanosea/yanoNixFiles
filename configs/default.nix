@@ -4,10 +4,10 @@
   ...
 }:
 let
-  # regular config files (excluding default.nix, zsh, and gemini directories)
+  # regular config files (excluding default.nix, zsh, and antigravity directories)
   contents = builtins.readDir ./.;
   filteredContents = lib.filterAttrs (
-    name: _: name != "default.nix" && name != "gemini" && name != "zsh"
+    name: _: name != "default.nix" && name != "antigravity" && name != "zsh"
   ) contents;
   mkEntry = name: type: {
     inherit name;
@@ -17,7 +17,6 @@ let
     };
   };
   configFiles = lib.mapAttrs' mkEntry filteredContents;
-  # quickshell: force = true because QS writes settings.json back at runtime
   quickshellOverride = {
     "quickshell" = configFiles."quickshell" // {
       force = true;
@@ -58,9 +57,10 @@ in
   # home directory files
   home = {
     file = {
-      ".gemini" = {
-        source = ./gemini;
+      ".gemini/antigravity-cli" = {
+        source = ./antigravity;
         recursive = true;
+        force = true;
       };
       ".local/bin/niri-app-toggle" = {
         executable = true;

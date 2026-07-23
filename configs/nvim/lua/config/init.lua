@@ -8,8 +8,8 @@ if vim.env.WSL_DISTRO_NAME ~= nil then
 end
 -- claude code integration if available
 require("config.claude_code")
--- gemini integration if available
-require("config.gemini")
+-- antigravity integration if available
+require("config.antigravity")
 -- discordo integration if available
 require("config.discordo")
 -- zellij integration only if available

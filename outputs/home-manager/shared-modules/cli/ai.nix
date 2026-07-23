@@ -4,8 +4,8 @@
   # home
   home = {
     packages = with pkgs; [
+      antigravity-cli
       claude-code
-      gemini-cli-bin
       spec-kit
     ];
   };
