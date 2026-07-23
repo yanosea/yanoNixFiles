@@ -124,7 +124,7 @@
           "audio"
           "video"
         ];
-        home = "/${homePath}/${username}";
+        home = "${homePath}/${username}";
         isNormalUser = true;
         shell = pkgs.zsh;
       };
