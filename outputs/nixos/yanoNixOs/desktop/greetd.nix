@@ -12,16 +12,24 @@ let
   '';
 in
 {
-  systemd.tmpfiles.rules = [
-    "d /var/lib/greetd 0770 ${username} greeter -"
-    "f /var/lib/greetd/preferred-compositor 0660 ${username} greeter - start-hyprland"
-  ];
+  systemd = {
+    tmpfiles = {
+      rules = [
+        "d /var/lib/greetd 0770 ${username} greeter -"
+        "f /var/lib/greetd/preferred-compositor 0660 ${username} greeter - start-hyprland"
+      ];
+    };
+  };
 
-  services.greetd = {
-    enable = true;
-    settings.default_session = {
-      command = "${sessionLauncher}";
-      user = "greeter";
+  services = {
+    greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${sessionLauncher}";
+          user = "greeter";
+        };
+      };
     };
   };
 }

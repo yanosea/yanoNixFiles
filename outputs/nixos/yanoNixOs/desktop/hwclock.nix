@@ -9,7 +9,9 @@
       serverOption = "iburst";
       enableRTCTrimming = true;
       autotrimThreshold = 20;
-      initstepslew.enabled = true;
+      initstepslew = {
+        enabled = true;
+      };
     };
   };
   # systemd
