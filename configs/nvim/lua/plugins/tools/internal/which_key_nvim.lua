@@ -34,6 +34,14 @@ return {
 						desc = "ai antigravity: resume",
 					},
 					{ "<LEADER>agt", "<CMD>Antigravity<CR>", desc = "ai antigravity: toggle" },
+					-- ai: kiro
+					{ "<LEADER>ak", group = "kiro" },
+					{
+						"<LEADER>akr",
+						"<CMD>lua require('config.kiro').resume_session()<CR>",
+						desc = "ai kiro: resume",
+					},
+					{ "<LEADER>akt", "<CMD>Kiro<CR>", desc = "ai kiro: toggle" },
 					-- discordo
 					{ "<LEADER>D", "<CMD>Discordo<CR>", desc = "discordo" },
 					-- buffers

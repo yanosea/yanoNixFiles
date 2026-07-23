@@ -6,6 +6,7 @@
     packages = with pkgs; [
       antigravity-cli
       claude-code
+      kiro-cli
       spec-kit
     ];
   };

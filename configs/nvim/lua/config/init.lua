@@ -10,6 +10,8 @@ end
 require("config.claude_code")
 -- antigravity integration if available
 require("config.antigravity")
+-- kiro integration if available
+require("config.kiro")
 -- discordo integration if available
 require("config.discordo")
 -- zellij integration only if available
