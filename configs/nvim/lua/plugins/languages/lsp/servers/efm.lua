@@ -22,6 +22,14 @@ function M.setup()
 				"go.sum",
 				".golangci.yml",
 				".golangci.yaml",
+				-- java
+				"pom.xml",
+				"build.gradle",
+				"build.gradle.kts",
+				"settings.gradle",
+				"settings.gradle.kts",
+				"mvnw",
+				"gradlew",
 				-- lua
 				".luacheckrc",
 				".luarc.json",
@@ -54,6 +62,10 @@ function M.setup()
 				-- go
 				go = {
 					require("efmls-configs.formatters.goimports"),
+				},
+				-- java
+				java = {
+					require("efmls-configs.formatters.google_java_format"),
 				},
 				-- lua
 				lua = {

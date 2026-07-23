@@ -50,6 +50,11 @@ M.tools = {
 	"delve",
 	"goimports",
 	"golangci-lint",
+	-- java
+	"google-java-format",
+	"java-debug-adapter",
+	"java-test",
+	"jdtls",
 	-- kdl
 	"kdlfmt",
 	-- lua
