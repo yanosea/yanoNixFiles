@@ -23,6 +23,7 @@ jobs:
         id: find-pr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
         run: |
           echo "Searching for dependency update PRs..."
 
@@ -69,6 +70,7 @@ jobs:
       - name: wait for required checks to complete
         env:
           GH_TOKEN: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
+          GH_REPO: ${{ github.repository }}
         run: |
           echo "Waiting for Test Nix Flake status check to complete..."
 
@@ -113,6 +115,7 @@ jobs:
       - name: enable auto-merge and wait for completion
         env:
           GH_TOKEN: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
+          GH_REPO: ${{ github.repository }}
         run: "echo \"Enabling auto-merge for PR #$PR_NUMBER\"\ngh pr merge --auto --merge \"$PR_NUMBER\"\n\necho \"Waiting for auto-merge to complete...\"\nMAX_MERGE_WAIT=300  # 5 minutes\nelapsed=0\n\nwhile [ $elapsed -lt $MAX_MERGE_WAIT ]; do\n  PR_STATE=$(gh pr view \"$PR_NUMBER\" --json state --jq .state)\n  echo \"Current PR state: $PR_STATE\"\n  \n  if [ \"$PR_STATE\" == \"MERGED\" ]; then\n    echo \"PR successfully merged!\"\n    break\n  elif [ \"$PR_STATE\" == \"CLOSED\" ]; then\n    echo \"PR was closed without merging\"\n    exit 1\n  fi\n  \n  sleep 10\n  elapsed=$((elapsed + 10))\ndone\n\nif [ $elapsed -ge $MAX_MERGE_WAIT ]; then\n  echo \"Timeout waiting for merge to complete\"\n  exit 1\nfi\n"
       - name: delete source branch if it exists
         if: success()
