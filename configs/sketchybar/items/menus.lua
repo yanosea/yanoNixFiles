@@ -45,7 +45,7 @@ local function update_menus(_)
 	Sbar.exec("$CONFIG_DIR/helpers/menus/bin/menus -l", function(menus)
 		Sbar.set("/menu\\..*/", { drawing = false })
 		menu_padding:set({ drawing = true })
-		Id = 1
+		local Id = 1
 		for menu in string.gmatch(menus, "[^\r\n]+") do
 			if Id < max_items then
 				menu_items[Id]:set({ label = menu, drawing = true })

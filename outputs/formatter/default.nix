@@ -139,6 +139,42 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
             command = "${gitleaks-treefmt}/bin/gitleaks-treefmt";
             includes = [ "*" ];
           };
+        # lua
+        selene =
+          let
+            pkgs = inputs.nixpkgs.legacyPackages.${system};
+            selene-treefmt = pkgs.writeShellApplication {
+              name = "selene-treefmt";
+              runtimeInputs = [ pkgs.selene ];
+              # selene only reads selene.toml from its own CWD, never searching
+              # upward, so walk up from each file to its nearest selene.toml
+              # ourselves (falling back to selene's own default std if none).
+              text = ''
+                declare -A groups
+                for file in "$@"; do
+                  dir=$(dirname "$file")
+                  while [ ! -f "$dir/selene.toml" ] && [ "$dir" != "." ]; do
+                    dir=$(dirname "$dir")
+                  done
+                  cfg="-"
+                  [ -f "$dir/selene.toml" ] && cfg="$dir/selene.toml"
+                  groups["$cfg"]+="$file"$'\n'
+                done
+                for cfg in "''${!groups[@]}"; do
+                  mapfile -t files <<< "''${groups[$cfg]%$'\n'}"
+                  if [ "$cfg" = "-" ]; then
+                    selene "''${files[@]}"
+                  else
+                    selene --config "$cfg" "''${files[@]}"
+                  fi
+                done
+              '';
+            };
+          in
+          {
+            command = "${selene-treefmt}/bin/selene-treefmt";
+            includes = [ "*.lua" ];
+          };
       };
     };
   }).config.build.wrapper

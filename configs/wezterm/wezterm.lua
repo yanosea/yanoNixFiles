@@ -94,7 +94,7 @@ wezterm.on("format-tab-title", function(tab, tabs)
 	}
 end)
 -- tab bar right
-wezterm.on("update-status", function(window, pane)
+wezterm.on("update-status", function(window, _pane)
 	-- poll zellij for active tab/pane name
 	local ok, sessions = wezterm.run_child_process({ "zellij", "list-sessions", "--short", "--no-formatting" })
 	local session_name = ok and sessions:match("^(%S+)") or nil
