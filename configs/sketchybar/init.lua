@@ -1,4 +1,5 @@
 -- Require the sketchybar module
+-- selene: allow(unscoped_variables, incorrect_standard_library_use) -- Sbar must be a real global: every other file in this config reads it without `require`
 Sbar = require("sketchybar")
 
 -- Set the bar name, if you are using another bar instance than sketchybar

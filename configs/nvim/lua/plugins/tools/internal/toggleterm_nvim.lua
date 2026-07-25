@@ -2,6 +2,7 @@
 -- keymaps are set in lua/plugins/tools/internal/which_key_nvim.lua (<LEADER>t)
 
 -- global toggle functions (defined outside config so they're available before plugin loads)
+-- selene: allow(unused_variable) -- called via `<CMD>lua ToggleLazyGit()<CR>` in the keymap below
 function ToggleLazyGit()
 	require("lazy").load({ plugins = { "toggleterm.nvim" } })
 	vim.defer_fn(function()
@@ -26,6 +27,7 @@ function ToggleLazyGit()
 	end, 0)
 end
 
+-- selene: allow(unused_variable) -- called via `<CMD>lua ToggleJjui()<CR>` in the keymap below
 function ToggleJjui()
 	require("lazy").load({ plugins = { "toggleterm.nvim" } })
 	vim.defer_fn(function()

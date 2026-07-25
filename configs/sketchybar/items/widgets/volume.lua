@@ -113,7 +113,7 @@ local function volume_toggle_details(env)
 		Sbar.exec("SwitchAudioSource -t output -c", function(result)
 			current_audio_device = result:sub(1, -2)
 			Sbar.exec("SwitchAudioSource -a -t output", function(available)
-				Current = current_audio_device
+				local Current = current_audio_device
 				local counter = 0
 
 				for device in string.gmatch(available, "[^\r\n]+") do

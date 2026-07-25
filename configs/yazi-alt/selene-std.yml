@@ -1,0 +1,19 @@
+base: lua52
+name: selene-std
+globals:
+  cx:
+    struct: AnyTable
+  Header:
+    struct: AnyTable
+  ps:
+    struct: AnyTable
+  Status:
+    struct: AnyTable
+  ui:
+    struct: AnyTable
+  ya:
+    struct: AnyTable
+structs:
+  AnyTable:
+    "*":
+      any: true
