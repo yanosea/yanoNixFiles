@@ -161,6 +161,24 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
             command = "${gitleaks-treefmt}/bin/gitleaks-treefmt";
             includes = [ "*" ];
           };
+        # markdown link checker
+        lychee =
+          let
+            pkgs = inputs.nixpkgs.legacyPackages.${system};
+          in
+          {
+            command = "${pkgs.lychee}/bin/lychee";
+            options = [
+              "--no-progress"
+              "--max-retries"
+              "3"
+              "--retry-wait-time"
+              "5"
+              "--timeout"
+              "20"
+            ];
+            includes = [ "*.md" ];
+          };
         # lua
         selene =
           let
