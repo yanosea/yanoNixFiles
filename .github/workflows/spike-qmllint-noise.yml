@@ -40,6 +40,10 @@ jobs:
 
           total_warnings=$(grep -c '^Warning:' /tmp/qmllint-out.txt || true)
           total_errors=$(grep -c '^Error:' /tmp/qmllint-out.txt || true)
+          echo "total Warning lines: $total_warnings"
+          echo "total Error lines: $total_errors"
+          echo "category breakdown:"
+          grep -oE '\[[a-z-]+\]$' /tmp/qmllint-out.txt | sort | uniq -c | sort -rn
           {
             echo "## qmllint noise spike"
             echo ""
