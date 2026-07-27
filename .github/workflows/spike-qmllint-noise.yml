@@ -1,6 +1,11 @@
 name: Spike qmllint Noise
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/spike-qmllint-noise.yml
 permissions:
   contents: read
 jobs:
