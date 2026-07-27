@@ -1,6 +1,16 @@
+<div align="right">
+
+[![Test Lint](https://github.com/yanosea/yanoNixFiles/actions/workflows/test-lint.yml/badge.svg)](https://github.com/yanosea/yanoNixFiles/actions/workflows/test-lint.yml)
+[![Test NixOS](https://github.com/yanosea/yanoNixFiles/actions/workflows/test-nixos.yml/badge.svg)](https://github.com/yanosea/yanoNixFiles/actions/workflows/test-nixos.yml)
+[![Test Darwin](https://github.com/yanosea/yanoNixFiles/actions/workflows/test-darwin.yml/badge.svg)](https://github.com/yanosea/yanoNixFiles/actions/workflows/test-darwin.yml)
+
+</div>
+
 <div align="center">
 
 # ❄️ yanoNixFiles
+
+![License:MIT](https://img.shields.io/static/v1?label=License&message=MIT&color=blue&style=flat-square)
 
 dotfile is mine.
 
