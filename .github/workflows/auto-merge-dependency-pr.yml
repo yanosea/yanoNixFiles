@@ -72,11 +72,14 @@ jobs:
           GH_TOKEN: ${{ secrets.YANONIXFILES_AUTO_MERGE_PAT }}
           GH_REPO: ${{ github.repository }}
         run: |
-          echo "Waiting for Test Nix Flake status check to complete..."
+          echo "Waiting for required status checks to complete..."
 
           MAX_WAIT_TIME=1800  # 30 minutes
           WAIT_INTERVAL=30    # 30 seconds
           elapsed_time=0
+          # the split-per-OS workflows (test-lint.yml/test-nixos.yml/test-darwin.yml)
+          # each post their own commit status with one of these contexts
+          REQUIRED_CONTEXTS=("Test Lint" "Test NixOS" "Test Darwin")
 
           while [ $elapsed_time -lt $MAX_WAIT_TIME ]; do
             PR_DATA=$(gh pr view "$PR_NUMBER" --json mergeable,mergeStateStatus,statusCheckRollup)
@@ -86,21 +89,31 @@ jobs:
 
             echo "Current state - Mergeable: $MERGEABLE, Merge State: $MERGE_STATE"
 
-            # Check the required commit status directly, ignoring action_required check runs
-            TEST_STATUS=$(echo "$PR_DATA" | jq -r '
-              .statusCheckRollup[]
-              | select(.__typename == "StatusContext" and .context == "Test Nix Flake")
-              | .state
-            ' 2>/dev/null || echo "")
+            all_success=true
+            any_failed=false
+            for context in "${REQUIRED_CONTEXTS[@]}"; do
+              # Check the required commit status directly, ignoring action_required check runs
+              STATE=$(echo "$PR_DATA" | jq -r --arg ctx "$context" '
+                .statusCheckRollup[]
+                | select(.__typename == "StatusContext" and .context == $ctx)
+                | .state
+              ' 2>/dev/null || echo "")
 
-            echo "Test Nix Flake status: ${TEST_STATUS:-not yet reported}"
+              echo "$context status: ${STATE:-not yet reported}"
 
-            if [ "$TEST_STATUS" = "SUCCESS" ]; then
-              echo "Required check passed. Ready to merge."
-              break
-            elif [ "$TEST_STATUS" = "FAILURE" ] || [ "$TEST_STATUS" = "ERROR" ]; then
-              echo "Required check Test Nix Flake has failed. Auto-merge cancelled."
+              if [ "$STATE" = "FAILURE" ] || [ "$STATE" = "ERROR" ]; then
+                any_failed=true
+              elif [ "$STATE" != "SUCCESS" ]; then
+                all_success=false
+              fi
+            done
+
+            if [ "$any_failed" = true ]; then
+              echo "A required check has failed. Auto-merge cancelled."
               exit 1
+            elif [ "$all_success" = true ]; then
+              echo "All required checks passed. Ready to merge."
+              break
             fi
 
             echo "Waiting ${WAIT_INTERVAL} seconds before next check... (${elapsed_time}/${MAX_WAIT_TIME}s elapsed)"
@@ -109,7 +122,7 @@ jobs:
           done
 
           if [ $elapsed_time -ge $MAX_WAIT_TIME ]; then
-            echo "Timeout waiting for Test Nix Flake check to complete"
+            echo "Timeout waiting for required checks to complete"
             exit 1
           fi
       - name: enable auto-merge and wait for completion
