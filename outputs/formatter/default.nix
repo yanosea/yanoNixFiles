@@ -53,6 +53,12 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
         includes = [ "*.kdl" ];
       };
       # nix
+      nixf-diagnose = {
+        enable = true;
+        excludes = [
+          "outputs/nixos/yanoNixOs/hardware-configuration.nix"
+        ];
+      };
       nixfmt = {
         enable = true;
       };
