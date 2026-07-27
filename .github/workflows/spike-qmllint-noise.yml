@@ -1,0 +1,54 @@
+name: Spike qmllint Noise
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: install Nix
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: run qmllint across all qml files
+        run: |
+          QMLLINT_BIN="$(nix build --no-link --print-out-paths 'nixpkgs#qt6.qtdeclarative')/bin/qmllint"
+          QT_QML_DIR="$(nix build --no-link --print-out-paths 'nixpkgs#qt6.qtdeclarative')/lib/qt-6/qml"
+          QUICKSHELL_QML_DIR="$(nix build --no-link --print-out-paths 'nixpkgs#quickshell')/lib/qt-6/qml"
+          echo "qmllint: $QMLLINT_BIN"
+          echo "Qt qml dir: $QT_QML_DIR"
+          echo "Quickshell qml dir: $QUICKSHELL_QML_DIR"
+
+          mapfile -t files < <(find configs/quickshell -name '*.qml')
+          echo "total qml files: ${#files[@]}"
+
+          set +e
+          "$QMLLINT_BIN" -I "$QT_QML_DIR" -I "$QUICKSHELL_QML_DIR" "${files[@]}" > /tmp/qmllint-out.txt 2>&1
+          echo "exit code: $?"
+          set -e
+
+          total_warnings=$(grep -c '^Warning:' /tmp/qmllint-out.txt || true)
+          total_errors=$(grep -c '^Error:' /tmp/qmllint-out.txt || true)
+          {
+            echo "## qmllint noise spike"
+            echo ""
+            echo "- qml files scanned: ${#files[@]}"
+            echo "- total Warning lines: $total_warnings"
+            echo "- total Error lines: $total_errors"
+            echo ""
+            echo "### warning category breakdown"
+            echo '```'
+            grep -oE '\[[a-z-]+\]$' /tmp/qmllint-out.txt | sort | uniq -c | sort -rn
+            echo '```'
+            echo ""
+            echo "### sample output (first 200 lines)"
+            echo '```'
+            head -200 /tmp/qmllint-out.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
