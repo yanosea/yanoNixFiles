@@ -18,6 +18,22 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
       # c
       clang-format = {
         enable = true;
+        # upstream includes are missing the leading `*` on 5 extensions
+        includes = [
+          "*.c"
+          "*.cc"
+          "*.comp"
+          "*.cpp"
+          "*.frag"
+          "*.geom"
+          "*.glsl"
+          "*.h"
+          "*.hh"
+          "*.hpp"
+          "*.tesc"
+          "*.tese"
+          "*.vert"
+        ];
       };
       # nix
       deadnix = {
