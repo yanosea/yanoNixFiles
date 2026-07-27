@@ -41,3 +41,5 @@ cpy = "cpy"
 oppend = "oppend"
 # bosnia country code in keyboard layouts
 ba = "ba"
+# tessellation evaluation shader file extension
+tese = "tese"
