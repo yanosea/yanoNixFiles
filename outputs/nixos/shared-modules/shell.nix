@@ -12,9 +12,7 @@
   system = {
     activationScripts = {
       binbash = lib.stringAfter [ "usrbinenv" ] ''
-        if [ ! -e /bin/bash ]; then
-          ln -s "${pkgs.bash}/bin/bash" /bin/bash
-        fi
+        ln -sfn "${pkgs.bash}/bin/bash" /bin/bash
       '';
     };
   };
