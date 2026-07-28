@@ -558,7 +558,7 @@ endif
 # endif
 
 # initialize mac (these are notes for the initial environment construction)
-mac.init:
+# mac.init:
 # ifeq ($(IS_MAC),1)
 # 	@echo ""
 # 	@echo "$(COLOR_TITLE)initialize mac...$(COLOR_RESET)"
