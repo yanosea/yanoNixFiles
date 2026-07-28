@@ -180,7 +180,7 @@ end
 -- start kiro terminal
 -- @param terminal_buf: number - terminal buffer number
 -- @param terminal_win: number - terminal window number
--- @param command: string|nil - optional command to run (e.g., "-r")
+-- @param command: string|nil - optional command to run (e.g., "--resume-picker")
 -- @return boolean - success status
 function M._start_kiro_terminal(terminal_buf, terminal_win, command)
 	vim.api.nvim_set_current_win(terminal_win)
@@ -313,15 +313,15 @@ function M.toggle_layout()
 	end
 end
 
--- resume kiro session with -r (resume) flag
+-- resume kiro session with --resume-picker (interactive session picker) flag
 function M.resume_session()
 	-- close existing layout
 	if M._is_open then
 		M.close_layout()
 	end
 	local layout = M._create_split_layout()
-	-- start with -r flag
-	if not M._start_kiro_terminal(layout.terminal_buf, layout.terminal_win, "-r") then
+	-- start with --resume-picker flag
+	if not M._start_kiro_terminal(layout.terminal_buf, layout.terminal_win, "--resume-picker") then
 		M.close_layout()
 		return
 	end
