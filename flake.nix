@@ -9,6 +9,11 @@
     ## nixos hardware
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
     };
     ## nixos wsl
     nixos-wsl = {
@@ -68,6 +73,11 @@
     ## claude-code
     claude-code = {
       url = "github:sadjow/claude-code-nix/main";
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
     };
     ## jj-starship
     jj-starship = {
