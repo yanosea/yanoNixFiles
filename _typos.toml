@@ -27,19 +27,21 @@ extend-exclude = [
 ]
 
 [default.extend-words]
-# file format used by goku, not a typo of "end"
-edn = "edn"
-# gpg fingerprint field name
-fpr = "fpr"
-# stylus file extension in the yazi theme
-styl = "styl"
-# vim command to open a new buffer
-enew = "enew"
-# yazi file state name
-cpy = "cpy"
-# zsh-vi-mode operator pending mode variable
-oppend = "oppend"
 # bosnia country code in keyboard layouts
 ba = "ba"
+# canva plugin name in configs/claude/plugins.conf, not a typo of "canvas"
+canva = "canva"
+# yazi file state name
+cpy = "cpy"
+# file format used by goku, not a typo of "end"
+edn = "edn"
+# vim command to open a new buffer
+enew = "enew"
+# gpg fingerprint field name
+fpr = "fpr"
+# zsh-vi-mode operator pending mode variable
+oppend = "oppend"
+# stylus file extension in the yazi theme
+styl = "styl"
 # tessellation evaluation shader file extension
 tese = "tese"
