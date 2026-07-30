@@ -1,22 +1,30 @@
 #!/usr/bin/env bash
-# sync-plugins.sh - Auto-install all official + superpowers Claude plugins
-# Runs as an async SessionStart hook (non-blocking background execution)
+# sync-plugins.sh - Reconcile installed Claude Code plugins to match the
+# declarative list in configs/claude/plugins.conf (SessionStart, async).
 #
 # Uses --scope local to write to .claude/settings.local.json (writable)
 # instead of --scope user which targets the Nix-managed read-only symlink.
-# Since the hook runs on every session start, plugins are installed
-# per-project and effectively become globally available.
+# Since the hook runs on every session start, plugins converge to the
+# declared state per-project over time.
+#
+# plugins.conf is the single source of truth: anything not declared `[x]`
+# there is uninstalled, whether it's explicitly excluded, newly appeared
+# in the marketplace and not yet triaged, or a stale/renamed leftover.
 
 set -uo pipefail
 
-# plugins to skip (NixOS incompatible or managed via mcpServers, etc.)
-SKIP_PLUGINS="ralph-loop lua-lsp serena"
+input=$(cat)
+cwd=$(echo "$input" | jq -r '.cwd // empty' 2>/dev/null)
+[ -z "$cwd" ] && cwd="${CLAUDE_PROJECT_DIR:-$PWD}"
 
+PLUGINS_CONF="${HOME}/.config/claude/plugins.conf"
 CACHE_DIR="${HOME}/.cache/claude-plugin-sync"
 MARKETPLACE_CACHE="${CACHE_DIR}/claude-plugins-official.json"
 CACHE_TTL=86400 # 24 hours
 
 mkdir -p "$CACHE_DIR"
+
+[ ! -f "$PLUGINS_CONF" ] && exit 0
 
 # refresh marketplace cache if stale
 FETCH_NEEDED=true
@@ -39,45 +47,64 @@ if [ "$FETCH_NEEDED" = true ]; then
   claude plugin marketplace update superpowers-marketplace 2>/dev/null || true
 fi
 
-[ ! -s "$MARKETPLACE_CACHE" ] && exit 0
+# plugin names sourced from the superpowers-marketplace rather than the
+# official one (upstream, not a possibly-stale mirror)
+SUPERPOWERS_PLUGINS=" superpowers superpowers-chrome "
 
-# extract plugin names
-PLUGINS=$(python3 -c "
+in_list() {
+  case "$1" in *" $2 "*) return 0 ;; *) return 1 ;; esac
+}
+
+# parse declared install-wanted plugin names: lines like "[x] name  # ..."
+DECLARED_X=" $(grep -E '^\[x\] ' "$PLUGINS_CONF" | sed -E 's/^\[x\] +([^ ]+).*/\1/' | tr '\n' ' ') "
+
+[ "$DECLARED_X" = "  " ] && exit 0
+
+# ensure superpowers marketplace is registered if any of its plugins are wanted
+if in_list "$SUPERPOWERS_PLUGINS" "superpowers" || in_list "$SUPERPOWERS_PLUGINS" "superpowers-chrome"; then
+  if in_list "$DECLARED_X" "superpowers" || in_list "$DECLARED_X" "superpowers-chrome"; then
+    claude plugin marketplace add obra/superpowers-marketplace 2>/dev/null || true
+  fi
+fi
+
+marketplace_for() {
+  if in_list "$SUPERPOWERS_PLUGINS" "$1"; then
+    echo "superpowers-marketplace"
+  else
+    echo "claude-plugins-official"
+  fi
+}
+
+# install everything declared [x]
+for plugin in $DECLARED_X; do
+  mp=$(marketplace_for "$plugin")
+  claude plugin install "${plugin}@${mp}" --scope local 2>/dev/null || true
+done
+
+# uninstall anything installed for this project that isn't declared [x]
+# (covers explicitly-excluded, undecided-new, and stale/renamed entries alike)
+claude plugin list --json 2>/dev/null |
+  python3 -c "
 import json, sys
 try:
-    with open(sys.argv[1]) as f:
-        data = json.load(f)
-    for p in data.get('plugins', []):
-        print(p['name'])
+    data = json.load(sys.stdin)
 except Exception:
-    pass
-" "$MARKETPLACE_CACHE" 2>/dev/null)
-
-[ -z "$PLUGINS" ] && exit 0
-
-# install all official plugins (idempotent - skips if already installed)
-for plugin in $PLUGINS; do
-  # skip incompatible plugins
-  if echo "$SKIP_PLUGINS" | grep -qw "$plugin"; then
-    continue
-  fi
-  claude plugin install "${plugin}@claude-plugins-official" --scope local 2>/dev/null || true
-done
-
-# ensure superpowers marketplace is registered
-claude plugin marketplace add obra/superpowers-marketplace 2>/dev/null || true
-
-# install superpowers plugins
-claude plugin install "superpowers@superpowers-marketplace" --scope local 2>/dev/null || true
-claude plugin install "superpowers-chrome@superpowers-marketplace" --scope local 2>/dev/null || true
-
-# explicitly disable skipped plugins (in case they were previously installed)
-for plugin in $SKIP_PLUGINS; do
-  claude plugin disable "${plugin}@claude-plugins-official" --scope local 2>/dev/null || true
-done
-
-# register serena as user-level MCP server (writes to ~/.claude.json, not Nix-managed)
-# --upgrade ensures uvx checks for latest version on every MCP server startup
-claude mcp add serena --scope user -- uvx --upgrade --from "git+https://github.com/oraios/serena" serena start-mcp-server --open-web-dashboard=false 2>/dev/null || true
+    sys.exit(0)
+cwd = '$cwd'
+seen = set()
+for p in data:
+    if p.get('projectPath') != cwd or not p.get('enabled'):
+        continue
+    name = p['id'].split('@', 1)[0]
+    if name not in seen:
+        seen.add(name)
+        print(name)
+" |
+  while IFS= read -r installed_name; do
+    if ! in_list "$DECLARED_X" "$installed_name"; then
+      mp=$(marketplace_for "$installed_name")
+      claude plugin uninstall "${installed_name}@${mp}" --scope local 2>/dev/null || true
+    fi
+  done
 
 exit 0

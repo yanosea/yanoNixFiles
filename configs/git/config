@@ -28,6 +28,7 @@
     colorMoved = default
 [init]
     defaultBranch = main
+    templateDir = ~/.config/git/templates
 [fetch]
     prune = true
 [commit]

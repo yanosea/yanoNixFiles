@@ -10,7 +10,6 @@
     ./media.nix
     ./shell.nix
     ./secrets.nix
-    ./symlinks.nix
     ./tools.nix
     ./vcs.nix
     ./web.nix

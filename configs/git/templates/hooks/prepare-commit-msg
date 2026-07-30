@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+# get commit message
+commit_msg=$(cat "$COMMIT_MSG_FILE")
+
+# prefix and emoji mapping
+declare -A emoji_map
+emoji_map["chore"]="🧹"
+emoji_map["feat"]="✨"
+emoji_map["fix"]="🐞"
+emoji_map["docs"]="📚"
+emoji_map["merge"]="🔀"
+emoji_map["perf"]="🚀"
+emoji_map["refactor"]="🔧"
+emoji_map["style"]="💄"
+emoji_map["test"]="🧪"
+
+# detect prefix and add emoji
+for prefix in "${!emoji_map[@]}"; do
+  if [[ "$commit_msg" =~ ^($prefix)(\(.*\))?(:|[[:space:]]) ]]; then
+    emoji="${emoji_map[$prefix]}"
+    # find matched prefix in original message and add emoji
+    new_msg="$emoji$commit_msg"
+    echo "$new_msg" >"$COMMIT_MSG_FILE"
+    break
+  fi
+done
