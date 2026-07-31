@@ -160,6 +160,12 @@ return {
 					{ "<LEADER>js", "<CMD>J status<CR>", desc = "jj: status" },
 					-- hardtime
 					{ "<LEADER>H", "<CMD>Hardtime toggle<CR>", desc = "hardtime: toggle" },
+					-- image
+					{
+						"<LEADER>I",
+						"<CMD>lua require('image').is_enabled() and require('image').disable() or require('image').enable()<CR>",
+						desc = "image: toggle",
+					},
 					-- lsp
 					{ "<LEADER>l", group = "lsp" },
 					{ "<LEADER>la", "<CMD>lua vim.lsp.buf.code_action()<CR>", desc = "lsp: code action" },
