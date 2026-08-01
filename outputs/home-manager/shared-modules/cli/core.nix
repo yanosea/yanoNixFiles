@@ -13,6 +13,7 @@
       ffmpeg
       file
       fzf
+      imagemagick
       lf
       lsd
       ripgrep

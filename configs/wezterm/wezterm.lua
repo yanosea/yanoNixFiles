@@ -287,6 +287,8 @@ return {
 	term = "xterm-256color",
 	enable_wayland = false,
 	warn_about_missing_glyphs = false,
+	-- enable kitty graphics protocol for image display (e.g. snacks.nvim image module)
+	enable_kitty_graphics = true,
 	-- ime
 	window_close_confirmation = "NeverPrompt",
 }

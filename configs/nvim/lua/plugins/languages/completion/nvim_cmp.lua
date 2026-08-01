@@ -89,7 +89,7 @@ return {
 					format = function(entry, vim_item)
 						local colors = require("utils.colors").colors
 						if #vim_item.abbr > 50 then
-							vim_item.abbr = string.sub(vim_item.abbr, 1, 49) .. "…"
+							vim_item.abbr = vim.fn.strcharpart(vim_item.abbr, 0, 49) .. "…"
 						end
 						if icons then
 							vim_item.kind = icons.kind[vim_item.kind] or vim_item.kind

@@ -210,6 +210,10 @@ return {
 								{ event = "msg_show", kind = "echomsg", find = "deprecated" },
 								{ event = "notify", kind = "info", find = "%[WakaTime%] Debug mode enabled" },
 								{ event = "notify", kind = "info", find = "%[WakaTime%] Initialized" },
+								-- known windsurf.nvim (Codeium) bug: vim.fn.json_encode() called without
+								-- UTF-8 validation, see https://github.com/Exafunction/windsurf.nvim/issues/38
+								{ event = "msg_show", find = "E474" },
+								{ event = "notify", find = "Codeium completion request failed" },
 							},
 						},
 						opts = { skip = true },
