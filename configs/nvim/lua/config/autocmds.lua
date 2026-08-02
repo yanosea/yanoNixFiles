@@ -67,9 +67,19 @@ vim.api.nvim_create_autocmd("TermOpen", {
 	pattern = "*",
 	callback = function()
 		vim.wo.winbar = "  TERMINAL"
-		vim.wo.number = false
-		vim.wo.relativenumber = false
 		vim.wo.winhighlight = "Normal:TerminalNormal,NormalNC:TerminalNormal"
+		vim.wo.number = true
+		vim.wo.relativenumber = true
+	end,
+})
+-- send enter to the terminal from normal mode without entering insert mode
+vim.api.nvim_create_autocmd("TermOpen", {
+	desc = "terminal buffer normal-mode enter",
+	pattern = "*",
+	callback = function(opts)
+		vim.keymap.set("n", "<CR>", function()
+			vim.fn.chansend(vim.b[opts.buf].terminal_job_id, "\r")
+		end, { buffer = opts.buf, silent = true, desc = "send enter to terminal" })
 	end,
 })
 -- auto reload files changed outside of nvim

@@ -23,6 +23,8 @@ return {
 						max = -1,
 						padding = 1,
 					},
+					number = true,
+					relativenumber = true,
 				},
 				update_focused_file = {
 					enable = true,
