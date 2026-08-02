@@ -8,7 +8,7 @@ import sys
 import time
 from datetime import datetime, timezone
 
-from gi.repository import ECal, EDataServer
+from gi.repository import ECal, EDataServer, GLib
 
 start_time = int(sys.argv[1])
 end_time = int(sys.argv[2])
@@ -41,7 +41,7 @@ def safe_get_time(ical_time):
 
         dt = datetime(year, month, day, hour, minute, second, tzinfo=timezone.utc)
         return int(dt.timestamp())
-    except Exception:
+    except (ValueError, OverflowError, TypeError, GLib.Error):
         return None
 
 
@@ -134,7 +134,7 @@ for source in sources:
                         f"  Processed {idx + 1} events from {calendar_name}...",
                         file=sys.stderr,
                     )
-            except Exception as e:
+            except (ValueError, TypeError, AttributeError, GLib.Error) as e:
                 print(
                     f"  Error processing event {idx} in {calendar_name}: {e}",
                     file=sys.stderr,
@@ -146,7 +146,7 @@ for source in sources:
             file=sys.stderr,
         )
 
-    except Exception as e:
+    except (GLib.Error, ValueError, TypeError) as e:
         print(f"  Error for {calendar_name}: {e}", file=sys.stderr)
 
 print(f"\nSorting {len(all_events)} total events...", file=sys.stderr)
