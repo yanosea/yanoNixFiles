@@ -208,7 +208,6 @@ else ifeq ($(IS_MAC),1)
 	rm $$HOME/.config/AquaSKK/DictionarySet.plist
 	rm $$HOME/.config/AquaSKK/BlacklistApps.plist
 	rm -fr $$HOME/.config/claude/CLAUDE.md
-	rm -fr $$HOME/.config/karabiner/karabiner.json
 	nix run .#homeConfigurations."yanosea@yanoMac".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 	@echo ""
@@ -219,7 +218,6 @@ else ifeq ($(IS_MACBOOK),1)
 	rm $$HOME/.config/AquaSKK/DictionarySet.plist
 	rm $$HOME/.config/AquaSKK/BlacklistApps.plist
 	rm -fr $$HOME/.config/claude/CLAUDE.md
-	rm -fr $$HOME/.config/karabiner/karabiner.json
 	nix run .#homeConfigurations."yanosea@yanoMacBook".activationPackage
 	@echo "$(COLOR_DONE)apply home configuration done!$(COLOR_RESET)"
 	@echo ""
@@ -278,7 +276,6 @@ else ifeq ($(IS_MAC),1)
 	rm $$HOME/.config/AquaSKK/DictionarySet.plist
 	rm $$HOME/.config/AquaSKK/BlacklistApps.plist
 	rm -fr $$HOME/.config/claude/CLAUDE.md
-	rm -fr $$HOME/.config/karabiner/karabiner.json
 	EXPERIMENTAL_MODE=1 nix run --impure .#homeConfigurations."yanosea@yanoMac".activationPackage
 	@echo ""
 	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
@@ -302,7 +299,6 @@ else ifeq ($(IS_MACBOOK),1)
 	rm $$HOME/.config/AquaSKK/DictionarySet.plist
 	rm $$HOME/.config/AquaSKK/BlacklistApps.plist
 	rm -fr $$HOME/.config/claude/CLAUDE.md
-	rm -fr $$HOME/.config/karabiner/karabiner.json
 	EXPERIMENTAL_MODE=1 nix run --impure .#homeConfigurations."yanosea@yanoMacBook".activationPackage
 	@echo ""
 	@echo "$(COLOR_DONE)apply home configuration experimentally done!$(COLOR_RESET)"
