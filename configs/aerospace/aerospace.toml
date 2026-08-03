@@ -55,7 +55,6 @@ run = 'layout floating'
 # application shortcuts
 cmd-t = 'exec-and-forget open -n /Applications/WezTerm.app'
 cmd-b = 'exec-and-forget open -n /Applications/Vivaldi.app'
-cmd-q = 'close-all-windows-but-current'
 # move focus
 alt-h = 'focus left'
 alt-j = 'focus down'
@@ -110,7 +109,6 @@ alt-shift-semicolon = 'mode service'
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main']
 f = ['layout floating tiling', 'mode main']
-backspace = ['close-all-windows-but-current', 'mode main']
 alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']

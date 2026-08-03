@@ -9,6 +9,22 @@ _: {
       };
       CustomUserPreferences = {
         NSGlobalDomain = {
+          NSUserKeyEquivalents = {
+            Find = "^f";
+            New = "^n";
+            Redo = "^y";
+            Save = "^s";
+            Undo = "^z";
+            "やり直す" = "^y";
+            "スリープ" = "@$l";
+            "ロック画面" = "@l";
+            "保存" = "^s";
+            "元に戻す" = "^z";
+            "取り消す" = "^z";
+            "新規" = "^n";
+            "新規Finderウインドウ" = "^n";
+            "検索" = "^f";
+          };
           SLSMenuBarUseBlurredAppearance = true;
         };
       };

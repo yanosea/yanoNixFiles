@@ -1,8 +1,10 @@
 {;; bundle identifiers for app conditions
  :applications {:finder ["^com\\.apple\\.finder$"],
-                :remote ["^com\\.carriez\\.rustdesk$"]},
+                :remote ["^com\\.carriez\\.rustdesk$"],
+                :vivaldi ["^com\\.vivaldi\\.Vivaldi$"],
+                :wezterm ["^com\\.github\\.wez\\.wezterm$"]},
  ;; shell command templates
- :templates {:open "open -a \"%s\""},
+ :templates {:open "open -a \"%s\"", :osascript "osascript -e '%s'"},
  :layers {:layer-mode {:alone {:key :vk_none}, :key :left_command}},
  :devices {:builtin [{:product_id 641, :vendor_id 1452}]},
  :main
@@ -15,8 +17,9 @@
              [:##spacebar :f13]
              ;; caps lock
              [:##tab :caps_lock]
-             ;; home / end
-             [:##p :home] [:##r :end]
+             ;; home / end (cmd+arrow moves by line, not the whole
+             ;; document)
+             [:#Sp [:!Cleft_arrow]] [:#Sr [:!Cright_arrow]]
              ;; page up / down
              [:##b :page_up] [:##f :page_down]
              ;; delete
@@ -25,14 +28,22 @@
      :rules [[:!T#Sleft_arrow :!Oleft_arrow :!remote]
              [:!T#Sright_arrow :!Oright_arrow :!remote]]}
     {:des "windows style shortcuts",
-     :rules [;; alt + f4 -> quit app
-             [:!Of4 :!Cq :!remote]
-             ;; ctrl + shift + esc -> activity monitor
-             [:!TSescape [:open "Activity Monitor"] :!remote]
-             ;; cmd + e -> finder
-             [:!Ce [:open "Finder"] :!remote]
-             ;; cmd + i -> system settings
-             [:!Ci [:open "System Settings"] :!remote]]}
+     :rules
+       [;; alt + f4 -> quit app
+        [:!Of4 :!Cq [:!remote :!vivaldi :!wezterm]]
+        ;; ctrl + shift + esc -> activity monitor
+        [:!TSescape [:open "Activity Monitor"] [:!remote :!vivaldi :!wezterm]]
+        ;; cmd + e -> finder
+        [:!Ce [:open "Finder"] [:!remote :!vivaldi :!wezterm]]
+        ;; cmd + i -> system settings
+        [:!Ci [:open "System Settings"] [:!remote :!vivaldi :!wezterm]]
+        ;; cmd + d -> show desktop
+        [:!Cd [:osascript "tell application \"System Events\" to key code 103"]
+         [:!remote :!vivaldi :!wezterm]]
+        ;; ctrl + return -> cmd + return
+        [:!Treturn_or_enter :!Creturn_or_enter [:!finder :!remote :!wezterm]]
+        ;; ctrl + w -> cmd + w (close window/tab)
+        [:!Tw :!Cw [:!remote :!vivaldi :!wezterm]]]}
     {:des "finder",
      :rules [;; ctrl + return -> open
              [:!Treturn_or_enter :!Co :finder]

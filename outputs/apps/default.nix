@@ -61,7 +61,6 @@ let
         rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
         rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
         rm -fr "$HOME/.config/claude/CLAUDE.md"
-        rm -fr "$HOME/.config/karabiner/karabiner.json"
       '';
     };
     # mac book
@@ -74,7 +73,6 @@ let
         rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
         rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
         rm -fr "$HOME/.config/claude/CLAUDE.md"
-        rm -fr "$HOME/.config/karabiner/karabiner.json"
       '';
     };
   };
