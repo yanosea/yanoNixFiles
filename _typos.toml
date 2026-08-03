@@ -39,6 +39,8 @@ edn = "edn"
 enew = "enew"
 # gpg fingerprint field name
 fpr = "fpr"
+# literal UserDefaults key in SwipeAeroSpace, not a typo of "natural"
+natrual = "natrual"
 # zsh-vi-mode operator pending mode variable
 oppend = "oppend"
 # stylus file extension in the yazi theme
