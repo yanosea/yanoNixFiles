@@ -10,6 +10,17 @@
  :main
    [{:des "layer mode",
      :rules [:layer-mode
+             ;; ctrl+h/l (word motion via ctrl+option+arrow, bound to
+             ;; moveWordBackward:/moveWordForward: in
+             ;; DefaultKeyBinding.dict; plain option+arrow is taken by
+             ;; aerospace's resize binding, so word motion can't reuse it;
+             ;; must precede the plain h/l entries; rustdesk needs raw
+             ;; ctrl+arrow since the remote os interprets word motion
+             ;; itself; wezterm doesn't need word
+             ;; motion here)
+             [:!T##h :!TOleft_arrow [:!remote :!wezterm]]
+             [:!T##l :!TOright_arrow [:!remote :!wezterm]]
+             [:!T##h :!Tleft_arrow :remote] [:!T##l :!Tright_arrow :remote]
              ;; vim bind cursor move (## passes any held modifiers through)
              [:##h :left_arrow] [:##j :down_arrow] [:##k :up_arrow]
              [:##l :right_arrow]
@@ -18,8 +29,11 @@
              ;; caps lock
              [:##tab :caps_lock]
              ;; home / end (cmd+arrow moves by line, not the whole
-             ;; document)
-             [:#Sp [:!Cleft_arrow]] [:#Sr [:!Cright_arrow]]
+             ;; document; wezterm/rustdesk don't interpret cmd+arrow this
+             ;; way, so send raw home/end there instead)
+             [:#Sp [:!Cleft_arrow] [:!remote :!wezterm]]
+             [:#Sr [:!Cright_arrow] [:!remote :!wezterm]] [:#Sp :home :remote]
+             [:#Sr :end :remote] [:#Sp :home :wezterm] [:#Sr :end :wezterm]
              ;; page up / down
              [:##b :page_up] [:##f :page_down]
              ;; delete
