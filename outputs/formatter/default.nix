@@ -13,7 +13,11 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
       # zsh
       beautysh = {
         enable = true;
-        includes = [ "*.zsh" ];
+        includes = [
+          "*.zsh"
+          # extensionless shebang script
+          "configs/zsh/functions_win/*"
+        ];
       };
       # c
       clang-format = {
@@ -96,10 +100,28 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
       # shell
       shellcheck = {
         enable = true;
+        # upstream defaults only match by extension; add extensionless shebang scripts
+        includes = [
+          "*.sh"
+          "*.bash"
+          "*.envrc"
+          "*.envrc.*"
+          "configs/borders/*"
+          "configs/quickshell/Bin/battery-manager/templates/uninstall-template"
+        ];
       };
       # shell
       shfmt = {
         enable = true;
+        # upstream defaults only match by extension; add extensionless shebang scripts
+        includes = [
+          "*.sh"
+          "*.bash"
+          "*.envrc"
+          "*.envrc.*"
+          "configs/borders/*"
+          "configs/quickshell/Bin/battery-manager/templates/uninstall-template"
+        ];
       };
       # nix
       statix = {
@@ -111,6 +133,11 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
       # lua
       stylua = {
         enable = true;
+        # upstream default is `*.lua` only; add extensionless shebang script
+        includes = [
+          "*.lua"
+          "configs/sketchybar/sketchybarrc"
+        ];
       };
       # toml
       taplo = {
@@ -213,7 +240,11 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
           in
           {
             command = "${selene-treefmt}/bin/selene-treefmt";
-            includes = [ "*.lua" ];
+            includes = [
+              "*.lua"
+              # extensionless shebang script
+              "configs/sketchybar/sketchybarrc"
+            ];
           };
       };
     };
