@@ -120,10 +120,11 @@ spawn-at-startup "sh" "-c" "sleep 1 && fcitx5 -D"
 spawn-at-startup "sh" "-c" "sleep 5 && vesktop --start-minimized"
 //// steam
 spawn-at-startup "steam" "-silent"
+//// insync
+spawn-at-startup "sh" "-c" "sleep 5 && insync start"
 // env
 environment {
     //// for graphic
-    WLR_DRM_NO_ATOMIC "1"
     XDG_CURRENT_DESKTOP "niri"
     XDG_SESSION_TYPE "wayland"
     XDG_SESSION_DESKTOP "niri"
