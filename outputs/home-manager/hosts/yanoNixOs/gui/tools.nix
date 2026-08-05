@@ -6,6 +6,7 @@
     packages = with pkgs; [
       baobab
       blender
+      insync
       kdePackages.kdenlive
       libreoffice-fresh
       rustdesk-flutter

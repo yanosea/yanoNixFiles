@@ -1,5 +1,5 @@
 # home symlinks module
-{ lib, ... }:
+{ config, lib, ... }:
 {
   home = {
     activation = {
@@ -12,6 +12,16 @@
         $DRY_RUN_CMD ln -sf $HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/nixos/ModTheSpire.sh $HOME/.local/bin/ModTheSpire
         $DRY_RUN_CMD ln -sf $HOME/ghq/github.com/yanosea/yanoNixFiles/ops/scripts/nixos/wallpaper-engine.sh $HOME/.local/bin/wallpaper-engine
       '';
+    };
+  };
+  # systemd
+  systemd = {
+    user = {
+      tmpfiles = {
+        rules = [
+          "d ${config.home.homeDirectory}/google_drive 0755 - - -"
+        ];
+      };
     };
   };
 }
