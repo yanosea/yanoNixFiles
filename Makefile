@@ -488,9 +488,10 @@ endif
 # 	mkdir -p $$XDG_CONFIG_HOME/github-copilot
 # 	mkdir -p $$XDG_CONFIG_HOME/wakatime
 # 	@echo ""
-# 	@echo "$(COLOR_HEADER)initialize rclone...$(COLOR_RESET)"
+# 	@echo "$(COLOR_HEADER)set up google drive sync...$(COLOR_RESET)"
 # 	@echo ""
-# 	rclone config
+# 	@echo "launch insync, log in with google account, set base folder to \$$HOME/google_drive"
+# 	insync
 # 	@echo ""
 # 	@echo "$(COLOR_HEADER)install skk dictionaries...$(COLOR_RESET)"
 # 	@echo ""
