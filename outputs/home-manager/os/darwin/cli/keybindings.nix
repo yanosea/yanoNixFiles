@@ -12,6 +12,8 @@ _: {
             "^c" = "copy:";
             "^v" = "paste:";
             "^x" = "cut:";
+            "^~\UF702" = "moveWordBackward:";
+            "^~\UF703" = "moveWordForward:";
           }
         '';
       };
