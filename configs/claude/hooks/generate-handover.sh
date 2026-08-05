@@ -13,6 +13,12 @@ fi
 output_file="$cwd/HANDOVER.md"
 timestamp=$(date '+%Y-%m-%d %H:%M')
 
+# don't clobber a real handover (written by /handover or by hand) with the
+# generic placeholder; only the placeholder itself is safe to overwrite
+if [ -f "$output_file" ] && ! head -n 1 "$output_file" | grep -q '^# Auto-generated note$'; then
+  exit 0
+fi
+
 if [ -f "$output_file" ]; then
   cp "$output_file" "$output_file.bak"
 fi
