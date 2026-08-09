@@ -45,13 +45,22 @@ ctx = (
     f"{len(new)} new Claude Code plugin(s) appeared in the official marketplace "
     "since the last plugins.conf review:\n"
     + "\n".join(lines)
-    + "\n\nAsk the user (in Japanese) whether to add each as installed. For a "
-    "small number use AskUserQuestion; for many, list them and ask in chat. "
+    + "\n\nAsk the user (in Japanese) whether to add each as installed. Every "
+    "user-facing part of that exchange -- the chat text and any "
+    "AskUserQuestion labels/descriptions -- must be in Japanese. For a small "
+    "number use AskUserQuestion; for many, list them and ask in chat. "
     "Then update configs/claude/plugins.conf: add a `[x] name` line for ones "
-    "they want, `[ ] name` for ones they don't (this is a declarative list — "
+    "they want, `[ ] name` for ones they don't (this is a declarative list -- "
     "undecided/unanswered ones must default to `[ ]`, never silently "
-    "installed). The change takes effect on the next session's "
-    "sync-plugins.sh run."
+    "installed). plugins.conf is English-only regardless of the conversation "
+    "language: write the trailing `# category` comment in English, reusing a "
+    "label already present in the file (development, productivity, database, "
+    "observability, security, uncategorized, deployment, design, automation, "
+    "learning, geospatial, testing, migration, math) -- never write Japanese "
+    "into that file. Keep the entries in ASCII alphabetical order, pad the "
+    "name so `#` lands on column 46 like the surrounding lines, and refresh "
+    "the `# total: / enabled: / excluded:` counts in the header. The change "
+    "takes effect on the next session's sync-plugins.sh run."
 )
 print(json.dumps({
     "hookSpecificOutput": {
