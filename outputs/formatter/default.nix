@@ -107,6 +107,7 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
           "*.envrc"
           "*.envrc.*"
           "configs/borders/*"
+          "configs/git/templates/hooks/*"
           "configs/quickshell/Bin/battery-manager/templates/uninstall-template"
         ];
       };
@@ -120,6 +121,7 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
           "*.envrc"
           "*.envrc.*"
           "configs/borders/*"
+          "configs/git/templates/hooks/*"
           "configs/quickshell/Bin/battery-manager/templates/uninstall-template"
         ];
       };
