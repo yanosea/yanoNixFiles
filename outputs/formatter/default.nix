@@ -172,6 +172,27 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
     };
     settings = {
       formatter = {
+        # makefile
+        checkmake =
+          let
+            pkgs = inputs.nixpkgs.legacyPackages.${system};
+          in
+          {
+            command = "${pkgs.checkmake}/bin/checkmake";
+            options = [
+              "--config"
+              "checkmake.ini"
+            ];
+            # extensionless; treefmt-nix has no standard module for checkmake
+            includes = [
+              "Makefile"
+              "configs/sketchybar/helpers/makefile"
+              "configs/sketchybar/helpers/menus/makefile"
+              "configs/sketchybar/helpers/event_providers/makefile"
+              "configs/sketchybar/helpers/event_providers/cpu_load/makefile"
+              "configs/sketchybar/helpers/event_providers/network_load/makefile"
+            ];
+          };
         gitleaks =
           let
             pkgs = inputs.nixpkgs.legacyPackages.${system};
