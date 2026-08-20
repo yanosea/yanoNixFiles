@@ -12,6 +12,7 @@
     ./hyprland.nix
     ./niri.nix
     ./media.nix
+    ./rustdesk.nix
     ./security.nix
     ./sound.nix
     ./xdg-mime.nix
