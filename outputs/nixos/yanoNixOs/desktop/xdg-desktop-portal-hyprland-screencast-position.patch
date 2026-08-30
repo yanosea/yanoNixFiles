@@ -1,0 +1,41 @@
+Report the real desktop position of a ScreenCast stream
+
+The position is hardcoded to (0, 0) for every selection, so a client that
+trusts it maps injected input onto whichever output sits at the desktop
+origin -- with more than one monitor, sharing any other one shows the right
+picture while clicks land on the origin monitor. xdg-desktop-portal-wlr
+already reports the true origin here.
+
+Region selections are emitted relative to their output's origin
+(hyprland-share-picker), so add that offset back. Window shares keep (0, 0):
+a toplevel has no stable desktop origin.
+
+--- a/src/portals/Screencopy.cpp
++++ b/src/portals/Screencopy.cpp
+@@ -291,8 +291,25 @@
+ 
+     std::vector<sdbus::Struct<uint32_t, std::unordered_map<std::string, sdbus::Variant>>> streams;
+ 
++    int32_t                                                                               posX = 0, posY = 0;
++    if (PSESSION->selection.type == TYPE_OUTPUT || PSESSION->selection.type == TYPE_GEOMETRY) {
++        if (const auto POUTPUT = g_pPortalManager->getOutputFromName(PSESSION->selection.output); POUTPUT) {
++            if (POUTPUT->logicalPositionValid) {
++                posX = POUTPUT->logicalX;
++                posY = POUTPUT->logicalY;
++            } else {
++                posX = POUTPUT->x;
++                posY = POUTPUT->y;
++            }
++        }
++        if (PSESSION->selection.type == TYPE_GEOMETRY) {
++            posX += PSESSION->selection.x;
++            posY += PSESSION->selection.y;
++        }
++    }
++
+     std::unordered_map<std::string, sdbus::Variant>                                       streamData;
+-    streamData["position"]    = sdbus::Variant{sdbus::Struct<int32_t, int32_t>{0, 0}};
++    streamData["position"]    = sdbus::Variant{sdbus::Struct<int32_t, int32_t>{posX, posY}};
+     streamData["size"]        = sdbus::Variant{sdbus::Struct<int32_t, int32_t>{PSESSION->sharingData.frameInfoSHM.w, PSESSION->sharingData.frameInfoSHM.h}};
+     streamData["source_type"] = sdbus::Variant{uint32_t{type}};
+ 

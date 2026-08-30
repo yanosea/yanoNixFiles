@@ -20,6 +20,12 @@
             "command": "bash \"$HOME/.config/claude/hooks/sync-plugins.sh\"",
             "async": true,
             "timeout": 300
+          },
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.config/claude/hooks/sync-mcp-servers.sh\"",
+            "async": true,
+            "timeout": 60
           }
         ]
       }
