@@ -37,7 +37,6 @@ in
           github-cli
           github-copilot-cli
           jj-fzf
-          jj-starship
           jjui
           jujutsu
           lazygit
