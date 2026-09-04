@@ -61,7 +61,7 @@
   "alwaysThinkingEnabled": true,
   "statusLine": {
     "type": "command",
-    "command": "bunx -y ccstatusline@latest",
+    "command": "claude-powerline",
     "padding": 0
   }
 }

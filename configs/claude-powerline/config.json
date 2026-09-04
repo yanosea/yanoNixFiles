@@ -1,0 +1,185 @@
+{
+  "theme": "custom",
+  "colors": {
+    "custom": {
+      "directory": {
+        "bg": "#a7c080",
+        "fg": "#2d353b",
+        "bold": true
+      },
+      "git": {
+        "bg": "#3d484d",
+        "fg": "#d3c6aa"
+      },
+      "session": {
+        "bg": "#7fbbb3",
+        "fg": "#2d353b",
+        "bold": true
+      },
+      "block": {
+        "bg": "#dbbc7f",
+        "fg": "#2d353b",
+        "bold": true
+      },
+      "context": {
+        "bg": "#3d484d",
+        "fg": "#7fbbb3"
+      },
+      "contextWarning": {
+        "bg": "#e69875",
+        "fg": "#2d353b"
+      },
+      "contextCritical": {
+        "bg": "#e67e80",
+        "fg": "#2d353b"
+      },
+      "cacheTimer": {
+        "bg": "#343f44",
+        "fg": "#a7c080"
+      },
+      "today": {
+        "bg": "#475258",
+        "fg": "#dbbc7f"
+      },
+      "weekly": {
+        "bg": "#475258",
+        "fg": "#d3c6aa"
+      },
+      "model": {
+        "bg": "#83c092",
+        "fg": "#2d353b",
+        "bold": true
+      },
+      "agent": {
+        "bg": "#4f585e",
+        "fg": "#d699b6"
+      },
+      "outputStyle": {
+        "bg": "#475258",
+        "fg": "#d3c6aa"
+      },
+      "thinking": {
+        "bg": "#3d484d",
+        "fg": "#d699b6"
+      },
+      "metrics": {
+        "bg": "#343f44",
+        "fg": "#859289"
+      },
+      "version": {
+        "bg": "#2d353b",
+        "fg": "#859289"
+      },
+      "sessionId": {
+        "bg": "#343f44",
+        "fg": "#859289"
+      },
+      "env": {
+        "bg": "#343f44",
+        "fg": "#d699b6"
+      },
+      "tmux": {
+        "bg": "#343f44",
+        "fg": "#a7c080"
+      }
+    }
+  },
+  "budget": {
+    "today": {
+      "amount": 0
+    }
+  },
+  "display": {
+    "style": "powerline",
+    "charset": "unicode",
+    "autoWrap": false,
+    "showIcons": true,
+    "lines": [
+      {
+        "segments": {
+          "directory": {
+            "enabled": true,
+            "style": "full"
+          },
+          "git": {
+            "enabled": true,
+            "showWorkingTree": true,
+            "showAheadBehind": true
+          }
+        }
+      },
+      {
+        "segments": {
+          "session": {
+            "enabled": true,
+            "type": "both",
+            "costSource": "calculated",
+            "showUnits": false
+          },
+          "today": {
+            "enabled": true,
+            "type": "both",
+            "showUnits": false
+          },
+          "context": {
+            "enabled": true,
+            "showPercentageOnly": true,
+            "displayStyle": "blocks",
+            "autocompactBuffer": 33000,
+            "percentageMode": "used"
+          },
+          "cacheTimer": {
+            "enabled": true,
+            "displayMode": "elapsed"
+          }
+        }
+      },
+      {
+        "segments": {
+          "block": {
+            "enabled": true,
+            "type": "tokens",
+            "burnType": "both",
+            "displayStyle": "blocks"
+          },
+          "weekly": {
+            "enabled": true,
+            "displayStyle": "blocks"
+          }
+        }
+      },
+      {
+        "segments": {
+          "model": {
+            "enabled": true
+          },
+          "agent": {
+            "enabled": true,
+            "showLabel": false
+          },
+          "outputStyle": {
+            "enabled": true,
+            "showLabel": false
+          },
+          "thinking": {
+            "enabled": true,
+            "showEnabled": true,
+            "showEffort": true
+          },
+          "metrics": {
+            "enabled": true,
+            "showResponseTime": true,
+            "showLastResponseTime": true,
+            "showDuration": true,
+            "showMessageCount": true,
+            "showLinesAdded": true,
+            "showLinesRemoved": true
+          },
+          "version": {
+            "enabled": true
+          }
+        }
+      }
+    ]
+  }
+}
