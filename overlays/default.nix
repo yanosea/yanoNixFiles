@@ -101,8 +101,4 @@ inputs: [
       };
     }
   )
-  ## jj-starship
-  (_final: prev: {
-    jj-starship = inputs.jj-starship.packages.${prev.stdenv.hostPlatform.system}.default;
-  })
 ]

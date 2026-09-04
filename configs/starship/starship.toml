@@ -10,8 +10,8 @@ $golang\
 $php\
 ${custom.nix}\
 [](fg:#343f44 bg:#2d353b)\
-${custom.jj}\
-${custom.git}\
+$git_branch\
+$git_status\
 $time\
 \n$character"""
 
@@ -39,10 +39,13 @@ truncation_symbol = "…/"
 "Pictures" = " "
 
 [git_branch]
-disabled = true
+symbol = " "
+style = "bg:#2d353b"
+format = '[[ $symbol $branch ](fg:#a7c080 bg:#2d353b)]($style)'
 
 [git_status]
-disabled = true
+style = "bg:#2d353b"
+format = '[[($all_status$ahead_behind )](fg:#a7c080 bg:#2d353b)]($style)'
 
 [nodejs]
 symbol = ""
@@ -64,27 +67,14 @@ symbol = ""
 style = "bg:#343f44"
 format = '[[ $symbol ($version) ](fg:#a7c080 bg:#343f44)]($style)'
 
-[time]
-disabled = false
-time_format = "%H:%M:%S"
-style = "bg:#2d353b"
-format = '[[   $time ](fg:#d3c6aa bg:#2d353b)]($style)'
-
-[custom.jj]
-when = "jj root 2>/dev/null"
-command = "jj-starship"
-style = "bg:#2d353b"
-format = '[ $output ](fg:#a7c080 bg:#2d353b)'
-ignore_timeout = true
-
-[custom.git]
-when = "! jj root 2>/dev/null && git rev-parse --is-inside-work-tree 2>/dev/null"
-command = "echo \" $(git branch --show-current)$(git diff --quiet || echo ' !')$(git diff --cached --quiet || echo ' +')\" "
-style = "bg:#2d353b"
-format = '[[$output](fg:#a7c080 bg:#2d353b)]($style)'
-
 [custom.nix]
 when = "test -f flake.nix"
 command = "echo \"  $(jq -r '.nodes.nixpkgs.locked.rev' flake.lock 2>/dev/null | head -c 7)\""
 style = "bg:#343f44"
 format = '[[ $output ](fg:#a7c080 bg:#343f44)]($style)'
+
+[time]
+disabled = false
+time_format = "%H:%M:%S"
+style = "bg:#2d353b"
+format = '[[   $time ](fg:#d3c6aa bg:#2d353b)]($style)'

@@ -79,15 +79,6 @@
         };
       };
     };
-    ## jj-starship
-    jj-starship = {
-      url = "github:dmmulroy/jj-starship/main";
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
-    };
     ## treefmt-nix
     treefmt-nix = {
       url = "github:numtide/treefmt-nix/main";
