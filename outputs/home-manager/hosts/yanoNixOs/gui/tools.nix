@@ -8,7 +8,7 @@
       blender
       insync
       kdePackages.kdenlive
-      libreoffice-fresh
+      libreoffice-stable
       rustdesk-flutter
       (vesktop.overrideAttrs (oldAttrs: {
         postFixup = (oldAttrs.postFixup or "") + ''
