@@ -75,36 +75,52 @@ marketplace_for() {
   fi
 }
 
-# install everything declared [x]
-for plugin in $DECLARED_X; do
-  mp=$(marketplace_for "$plugin")
-  claude plugin install "${plugin}@${mp}" --scope local 2>/dev/null || true
-done
+# Snapshot once: `claude plugin install` costs ~2.5s even when already installed,
+# so looping it over every declared name outran this hook's 300s timeout.
+PLUGIN_LIST=$(claude plugin list --json 2>/dev/null || echo '[]')
 
-# uninstall anything installed for this project that isn't declared [x]
-# (covers explicitly-excluded, undecided-new, and stale/renamed entries alike)
-claude plugin list --json 2>/dev/null |
-  python3 -c "
+plugin_names() {
+  # $1: "any" = installed for this project, "enabled" = that subset, enabled.
+  echo "$PLUGIN_LIST" | python3 -c "
 import json, sys
 try:
     data = json.load(sys.stdin)
 except Exception:
     sys.exit(0)
 cwd = '$cwd'
+want_enabled = '$1' == 'enabled'
 seen = set()
 for p in data:
-    if p.get('projectPath') != cwd or not p.get('enabled'):
+    if p.get('projectPath') != cwd:
+        continue
+    if want_enabled and not p.get('enabled'):
         continue
     name = p['id'].split('@', 1)[0]
     if name not in seen:
         seen.add(name)
         print(name)
-" |
-  while IFS= read -r installed_name; do
-    if ! in_list "$DECLARED_X" "$installed_name"; then
-      mp=$(marketplace_for "$installed_name")
-      claude plugin uninstall "${installed_name}@${mp}" --scope local 2>/dev/null || true
-    fi
-  done
+"
+}
+
+PRESENT=" $(plugin_names any | tr '\n' ' ') "
+ENABLED_NOW=" $(plugin_names enabled | tr '\n' ' ') "
+
+# uninstall first: it is the pass that must not be starved by a timeout
+for installed_name in $ENABLED_NOW; do
+  if ! in_list "$DECLARED_X" "$installed_name"; then
+    mp=$(marketplace_for "$installed_name")
+    claude plugin uninstall "${installed_name}@${mp}" --scope local 2>/dev/null || true
+  fi
+done
+
+# install what is declared but absent, enable what is present but off
+for plugin in $DECLARED_X; do
+  mp=$(marketplace_for "$plugin")
+  if ! in_list "$PRESENT" "$plugin"; then
+    claude plugin install "${plugin}@${mp}" --scope local 2>/dev/null || true
+  elif ! in_list "$ENABLED_NOW" "$plugin"; then
+    claude plugin enable "${plugin}@${mp}" --scope local 2>/dev/null || true
+  fi
+done
 
 exit 0
