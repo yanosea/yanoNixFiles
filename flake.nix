@@ -79,6 +79,15 @@
         };
       };
     };
+    ## terminal-browser (release tarballs; hashes live in flake.lock only)
+    terminal-browser-darwin = {
+      url = "https://github.com/zenbu-labs/terminal-browser/releases/latest/download/terminal-browser-darwin-arm64.tar.gz";
+      flake = false;
+    };
+    terminal-browser-linux = {
+      url = "https://github.com/zenbu-labs/terminal-browser/releases/latest/download/terminal-browser-linux-x64.tar.gz";
+      flake = false;
+    };
     ## treefmt-nix
     treefmt-nix = {
       url = "github:numtide/treefmt-nix/main";

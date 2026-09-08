@@ -249,6 +249,8 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
         "sops-nix": "sops-nix",
+        "terminal-browser-darwin": "terminal-browser-darwin",
+        "terminal-browser-linux": "terminal-browser-linux",
         "treefmt-nix": "treefmt-nix"
       }
     },
@@ -324,6 +326,32 @@
         "owner": "nix-systems",
         "repo": "default",
         "type": "github"
+      }
+    },
+    "terminal-browser-darwin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788410170,
+        "narHash": "sha256-sff4arUM6f0VttM4tCD5SMoZXlA2O3F6leRfQC1eXXM=",
+        "type": "tarball",
+        "url": "https://github.com/zenbu-labs/terminal-browser/releases/latest/download/terminal-browser-darwin-arm64.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/zenbu-labs/terminal-browser/releases/latest/download/terminal-browser-darwin-arm64.tar.gz"
+      }
+    },
+    "terminal-browser-linux": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788410430,
+        "narHash": "sha256-k53Kk6F+cRW/u2GAZC10oktj6nrUTAeBbhoW5NVQ6yg=",
+        "type": "tarball",
+        "url": "https://github.com/zenbu-labs/terminal-browser/releases/latest/download/terminal-browser-linux-x64.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/zenbu-labs/terminal-browser/releases/latest/download/terminal-browser-linux-x64.tar.gz"
       }
     },
     "treefmt-nix": {
