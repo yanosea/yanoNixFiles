@@ -1,0 +1,127 @@
+# codex cli configuration (counterpart of configs/claude/settings.json)
+#
+# Deployed by a copy in configs/default.nix, not a store symlink: codex appends
+# its own state here ([hooks.state] hook-trust hashes, [projects.*] trust_level)
+# and those writes fail against a read-only store path. A `nix run .#home`
+# restores this file, so anything codex or the TUI wrote since is dropped and
+# hook trust has to be granted once more.
+#
+# Settings that should not be published live in `config.local.toml` next to the
+# deployed copy; activation prepends that file, so its top-level keys land ahead
+# of the first table here and stay out of this repository.
+
+# claude code's alwaysThinkingEnabled has no on/off switch here; effort is the knob
+model_reasoning_effort = "high"
+# read this repo's CLAUDE.md where no AGENTS.md exists, instead of duplicating it
+project_doc_fallback_filenames = ["CLAUDE.md"]
+
+[features]
+# on by default in 0.153.4, pinned explicitly so a default flip cannot kill the hooks
+hooks = true
+# counterpart of CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+multi_agent = true
+# no claude code equivalent to port; off by default, turned on deliberately
+memories = true
+
+[skills]
+# 10000 is the documented ceiling; the default is 2% of the context window, which
+# the installed plugins blow past and that drops every skill description
+max_context_tokens = 10000
+
+[tui]
+# everforest dark medium, the palette the rest of this repo uses
+theme = "everforest-dark"
+# trimmed from the full 29: codex has no wrap option, so the line is clipped
+# at terminal width and everything past it is simply lost
+status_line = [
+  "current-dir",
+  "git-branch",
+  "context-used",
+  "used-tokens",
+  "five-hour-limit",
+  "weekly-limit",
+  "model-with-reasoning",
+  "run-state",
+  "task-progress",
+  "codex-version",
+  "pull-request-number",
+  "branch-changes",
+  "permissions",
+  "approval-mode",
+  "thread-credits",
+  "fast-mode",
+]
+# render the items with the active /theme colours
+status_line_use_colors = true
+
+# mcp servers: same set as configs/claude/mcp-servers.conf, declared natively
+# (codex reads them straight from config.toml, so no sync hook is needed)
+
+# Provided by the cloudflare plugin too, but `codex mcp login` only sees servers
+# declared here, so without this duplicate its OAuth flow cannot be started.
+[mcp_servers.cloudflare-api]
+url = "https://mcp.cloudflare.com/mcp"
+
+# ComfyUI control plane: talks to the already-running ComfyUI instance
+# (started via `start-comfyui`, listens on 127.0.0.1:8188).
+[mcp_servers.comfyui]
+command = "npx"
+args = ["-y", "comfyui-mcp"]
+env = { COMFYUI_URL = "http://127.0.0.1:8188" }
+
+# InvokeAI control plane: talks to the already-running InvokeAI instance
+# (started via `start-invokeai`, listens on 127.0.0.1:9090, hardcoded in the
+# package). Both `python -m` and the `mcp<2` pin are required.
+[mcp_servers.invokeai]
+command = "uvx"
+args = [
+  "--from",
+  "invokeai-mcp-server",
+  "--with",
+  "mcp<2",
+  "python",
+  "-m",
+  "invokeai_mcp_server",
+]
+
+[[hooks.SessionStart]]
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "bash ~/.config/codex/hooks/load-handover.sh"
+statusMessage = "Loading handover note"
+timeout = 10
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "bash ~/.config/codex/hooks/check-new-plugins.sh"
+timeout = 10
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "bash ~/.config/codex/hooks/sync-plugins.sh"
+async = true
+timeout = 300
+
+[[hooks.UserPromptSubmit]]
+
+[[hooks.UserPromptSubmit.hooks]]
+type = "command"
+command = "bash ~/.config/codex/hooks/remind-websearch.sh"
+timeout = 10
+
+[[hooks.PreCompact]]
+
+[[hooks.PreCompact.hooks]]
+type = "command"
+command = "bash ~/.config/codex/hooks/generate-handover.sh"
+statusMessage = "Writing handover note"
+timeout = 30
+
+[[hooks.SessionEnd]]
+
+[[hooks.SessionEnd.hooks]]
+type = "command"
+command = "bash ~/.config/codex/hooks/save-config.sh"
+# SessionEnd is capped at 3s; anything larger is clamped with a warning
+timeout = 3

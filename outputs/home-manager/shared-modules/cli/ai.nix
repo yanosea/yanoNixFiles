@@ -7,6 +7,7 @@
       antigravity-cli
       claude-code
       claude-powerline
+      codex
       kiro-cli
       spec-kit
     ];

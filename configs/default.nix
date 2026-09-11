@@ -4,10 +4,15 @@
   ...
 }:
 let
-  # regular config files (excluding default.nix, zsh, and antigravity directories)
+  # regular config files (excluding default.nix, agents, antigravity, codex, and zsh directories)
   contents = builtins.readDir ./.;
   filteredContents = lib.filterAttrs (
-    name: _: name != "default.nix" && name != "antigravity" && name != "zsh"
+    name: _:
+    name != "default.nix"
+    && name != "agents"
+    && name != "antigravity"
+    && name != "codex"
+    && name != "zsh"
   ) contents;
   mkEntry = name: type: {
     inherit name;
@@ -43,6 +48,19 @@ let
     "hypr/hypridle.conf".source = ./hypr/hypridle.conf;
     "hypr/hyprpaper.conf".source = ./hypr/hyprpaper.conf;
   };
+  # codex config files (config.toml is deployed by an activation copy instead,
+  # since codex writes hook-trust and project-trust state back into it)
+  codexConfigEntries = {
+    "codex/plugins.conf".source = ./codex/plugins.conf;
+    "codex/hooks" = {
+      source = ./codex/hooks;
+      recursive = true;
+    };
+    "codex/themes" = {
+      source = ./codex/themes;
+      recursive = true;
+    };
+  };
   # zsh config subdirectories (excluding .zshrc/.zshenv which are managed by programs.zsh)
   zshContents = builtins.readDir ./zsh;
   zshConfigEntries = lib.mapAttrs' (name: type: {
@@ -56,7 +74,28 @@ in
 {
   # home directory files
   home = {
+    activation = {
+      # copied rather than symlinked: codex appends [hooks.state] and
+      # [projects.*] to config.toml and cannot write to a store path.
+      # config.local.toml goes first so its top-level keys precede every table,
+      # which keeps unpublishable settings out of this repository
+      copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        codexDir="''${XDG_CONFIG_HOME:-$HOME/.config}/codex"
+        $DRY_RUN_CMD mkdir -p "$codexDir"
+        if [ -f "$codexDir/config.local.toml" ]; then
+          $DRY_RUN_CMD cat "$codexDir/config.local.toml" ${./codex/config.toml} >"$codexDir/config.toml"
+        else
+          $DRY_RUN_CMD cat ${./codex/config.toml} >"$codexDir/config.toml"
+        fi
+        $DRY_RUN_CMD chmod 644 "$codexDir/config.toml"
+      '';
+    };
     file = {
+      # codex skills live outside XDG, in the cross-tool ~/.agents/skills
+      ".agents" = {
+        source = ./agents;
+        recursive = true;
+      };
       ".gemini/antigravity-cli" = {
         source = ./antigravity;
         recursive = true;
@@ -82,6 +121,7 @@ in
   };
   # xdg
   xdg = {
-    configFile = configFiles // quickshellOverride // hyprConfigEntries // zshConfigEntries;
+    configFile =
+      configFiles // quickshellOverride // codexConfigEntries // hyprConfigEntries // zshConfigEntries;
   };
 }
