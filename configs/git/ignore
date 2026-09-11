@@ -1,12 +1,15 @@
 # IGNORE DIRECTORY
 specs/
+.agents/
 .antigravitycli/
 .claude/
+.codex/
 .serena/
 .specify/
 # IGNORE FILE
 desktop.ini
 AGENTS.md
+AGENTS.override.md
 CLAUDE.md
 HANDOVER.md
 HANDOVER.md.bak
