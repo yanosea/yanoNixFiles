@@ -42,6 +42,14 @@ return {
 						desc = "ai kiro: resume",
 					},
 					{ "<LEADER>akt", "<CMD>Kiro<CR>", desc = "ai kiro: toggle" },
+					-- ai: codex
+					{ "<LEADER>ao", group = "codex" },
+					{
+						"<LEADER>aor",
+						"<CMD>lua require('config.codex').resume_session()<CR>",
+						desc = "ai codex: resume",
+					},
+					{ "<LEADER>aot", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
 					-- discordo
 					{ "<LEADER>D", "<CMD>Discordo<CR>", desc = "discordo" },
 					-- buffers

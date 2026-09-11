@@ -8,6 +8,8 @@ if vim.env.WSL_DISTRO_NAME ~= nil then
 end
 -- claude code integration if available
 require("config.claude_code")
+-- codex integration if available
+require("config.codex")
 -- antigravity integration if available
 require("config.antigravity")
 -- kiro integration if available
