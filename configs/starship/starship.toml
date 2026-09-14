@@ -1,34 +1,77 @@
 format = """
-[░▒▓](#83c092)\
+[░▒▓](aqua)\
 $os\
-[](bg:#a7c080 fg:#83c092)\
+[](bg:green fg:aqua)\
 $directory\
-[](fg:#a7c080 bg:#343f44)\
-$nodejs\
-$rust\
-$golang\
-$php\
+[](fg:green bg:bg1)\
+$bun\
+$c\
+$cpp\
 ${custom.nix}\
-[](fg:#343f44 bg:#2d353b)\
+$dart\
+$deno\
+$dotnet\
+$elixir\
+$erlang\
+$golang\
+$haskell\
+$java\
+$julia\
+$kotlin\
+$lua\
+$nix_shell\
+$nodejs\
+$ocaml\
+$perl\
+$php\
+$python\
+$ruby\
+$rust\
+$scala\
+$swift\
+$zig\
+[](fg:bg1 bg:bg0)\
 $git_branch\
 $git_status\
 $time\
 \n$character"""
+palette = "everforest"
 
-[os]
-format = "[ $symbol ]($style)"
-style = "bg:#83c092 fg:#2d353b"
+[bun]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[c]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[cpp]
 disabled = false
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
 
-[os.symbols]
-Windows = ""
-Arch = ""
-Macos = ""
-NixOS = ""
+[custom.nix]
+detect_files = ["default.nix", "flake.nix", "shell.nix"]
+format = '[[ $symbol ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[dart]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[deno]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
 
 [directory]
-style = "fg:#2d353b bg:#a7c080"
 format = "[ $path ]($style)"
+style = "fg:bg0 bg:green"
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -38,43 +81,134 @@ truncation_symbol = "…/"
 "Music" = " "
 "Pictures" = " "
 
+[dotnet]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[elixir]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[erlang]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
 [git_branch]
+format = '[[ $symbol $branch ](fg:green bg:bg0)]($style)'
+style = "bg:bg0"
 symbol = " "
-style = "bg:#2d353b"
-format = '[[ $symbol $branch ](fg:#a7c080 bg:#2d353b)]($style)'
 
 [git_status]
-style = "bg:#2d353b"
-format = '[[($all_status$ahead_behind )](fg:#a7c080 bg:#2d353b)]($style)'
-
-[nodejs]
-symbol = ""
-style = "bg:#343f44"
-format = '[[ $symbol ($version) ](fg:#a7c080 bg:#343f44)]($style)'
-
-[rust]
-symbol = ""
-style = "bg:#343f44"
-format = '[[ $symbol ($version) ](fg:#a7c080 bg:#343f44)]($style)'
+format = '[[($all_status$ahead_behind )](fg:green bg:bg0)]($style)'
+style = "bg:bg0"
 
 [golang]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
 symbol = ""
-style = "bg:#343f44"
-format = '[[ $symbol ($version) ](fg:#a7c080 bg:#343f44)]($style)'
+
+[haskell]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[java]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[julia]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[kotlin]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[lua]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[nix_shell]
+format = '[[ $state ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+
+[nodejs]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[ocaml]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[os]
+disabled = false
+format = "[ $symbol ]($style)"
+style = "bg:aqua fg:bg0"
+
+[os.symbols]
+Arch = ""
+Macos = ""
+NixOS = ""
+Windows = ""
+
+[palettes.everforest]
+aqua = "#83c092"
+bg0 = "#2d353b"
+bg1 = "#343f44"
+green = "#a7c080"
+text = "#d3c6aa"
+
+[perl]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
 
 [php]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
 symbol = ""
-style = "bg:#343f44"
-format = '[[ $symbol ($version) ](fg:#a7c080 bg:#343f44)]($style)'
 
-[custom.nix]
-when = "test -f flake.nix"
-command = "echo \"  $(jq -r '.nodes.nixpkgs.locked.rev' flake.lock 2>/dev/null | head -c 7)\""
-style = "bg:#343f44"
-format = '[[ $output ](fg:#a7c080 bg:#343f44)]($style)'
+[python]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[ruby]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[rust]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[scala]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
+
+[swift]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
 
 [time]
 disabled = false
+format = '[[   $time ](fg:text bg:bg0)]($style)'
+style = "bg:bg0"
 time_format = "%H:%M:%S"
-style = "bg:#2d353b"
-format = '[[   $time ](fg:#d3c6aa bg:#2d353b)]($style)'
+
+[zig]
+format = '[[ $symbol ($version) ](fg:green bg:bg1)]($style)'
+style = "bg:bg1"
+symbol = ""
