@@ -3,41 +3,20 @@
 //
 keybinds clear-defaults=true {
     locked {
-        bind "Ctrl g" {
+        bind "Ctrl F1" {
             SwitchToMode "normal"
         }
     }
     pane {
-        bind "left" {
-            MoveFocus "left"
-        }
-        bind "down" {
-            MoveFocus "down"
-        }
-        bind "up" {
-            MoveFocus "up"
-        }
-        bind "right" {
-            MoveFocus "right"
-        }
-        bind "c" {
-            SwitchToMode "renamepane"
-            PaneNameInput 0
-        }
-        bind "d" {
-            NewPane "down"
-            SwitchToMode "normal"
-        }
-        bind "e" {
-            TogglePaneEmbedOrFloating
-            SwitchToMode "normal"
-        }
         bind "f" {
-            ToggleFocusFullscreen
+            TogglePaneFrames
             SwitchToMode "normal"
         }
         bind "h" {
             MoveFocus "left"
+        }
+        bind "H" {
+            MovePane "left"
         }
         bind "i" {
             TogglePanePinned
@@ -46,11 +25,20 @@ keybinds clear-defaults=true {
         bind "j" {
             MoveFocus "down"
         }
+        bind "J" {
+            MovePane "down"
+        }
         bind "k" {
             MoveFocus "up"
         }
+        bind "K" {
+            MovePane "up"
+        }
         bind "l" {
             MoveFocus "right"
+        }
+        bind "L" {
+            MovePane "right"
         }
         bind "n" {
             NewPane
@@ -63,15 +51,35 @@ keybinds clear-defaults=true {
             SwitchToMode "normal"
         }
         bind "r" {
+            SwitchToMode "renamepane"
+            PaneNameInput 0
+        }
+        bind "s" {
+            NewPane "down"
+            SwitchToMode "normal"
+        }
+        bind "space" {
+            TogglePaneEmbedOrFloating
+            SwitchToMode "normal"
+        }
+        bind "v" {
             NewPane "right"
             SwitchToMode "normal"
         }
         bind "w" {
-            ToggleFloatingPanes
+            CloseFocus
             SwitchToMode "normal"
         }
-        bind "z" {
-            TogglePaneFrames
+        bind "x" {
+            ToggleFocusFullscreen
+            SwitchToMode "normal"
+        }
+        bind "X" {
+            ToggleFocusNoUiFullscreen
+            SwitchToMode "normal"
+        }
+        bind "/" {
+            ToggleFloatingPanes
             SwitchToMode "normal"
         }
         bind "[" {
@@ -82,18 +90,6 @@ keybinds clear-defaults=true {
         }
     }
     tab {
-        bind "left" {
-            GoToPreviousTab
-        }
-        bind "down" {
-            GoToNextTab
-        }
-        bind "up" {
-            GoToPreviousTab
-        }
-        bind "right" {
-            GoToNextTab
-        }
         bind "1" {
             GoToTab 1
             SwitchToMode "normal"
@@ -138,24 +134,24 @@ keybinds clear-defaults=true {
             BreakPaneRight
             SwitchToMode "normal"
         }
-        bind "b" {
-            BreakPane
-            SwitchToMode "normal"
-        }
         bind "h" {
             GoToPreviousTab
         }
-        bind "j" {
-            GoToNextTab
-        }
-        bind "k" {
-            GoToPreviousTab
+        bind "H" {
+            MoveTab "left"
         }
         bind "l" {
             GoToNextTab
         }
+        bind "L" {
+            MoveTab "right"
+        }
         bind "n" {
             NewTab
+            SwitchToMode "normal"
+        }
+        bind "w" {
+            CloseTab
             SwitchToMode "normal"
         }
         bind "r" {
@@ -169,18 +165,12 @@ keybinds clear-defaults=true {
         bind "Ctrl t" {
             SwitchToMode "normal"
         }
-        bind "x" {
-            CloseTab
+        bind "T" {
+            BreakPane
             SwitchToMode "normal"
         }
         bind "tab" {
             ToggleTab
-        }
-        bind "i" {
-            MoveTab "left"
-        }
-        bind "o" {
-            MoveTab "right"
         }
     }
     resize {
@@ -205,70 +195,25 @@ keybinds clear-defaults=true {
         bind "=" {
             Resize "Increase"
         }
-        bind "H" {
-            Resize "Decrease left"
-        }
-        bind "J" {
-            Resize "Decrease down"
-        }
-        bind "K" {
-            Resize "Decrease up"
-        }
-        bind "L" {
-            Resize "Decrease right"
-        }
-        bind "h" {
-            Resize "Increase left"
-        }
-        bind "j" {
-            Resize "Increase down"
-        }
-        bind "k" {
-            Resize "Increase up"
-        }
-        bind "l" {
-            Resize "Increase right"
-        }
         bind "Ctrl n" {
             SwitchToMode "normal"
         }
     }
     move {
-        bind "left" {
+        bind "H" {
             MovePane "left"
         }
-        bind "down" {
+        bind "J" {
             MovePane "down"
         }
-        bind "up" {
+        bind "K" {
             MovePane "up"
         }
-        bind "right" {
+        bind "L" {
             MovePane "right"
-        }
-        bind "h" {
-            MovePane "left"
         }
         bind "Ctrl h" {
             SwitchToMode "normal"
-        }
-        bind "j" {
-            MovePane "down"
-        }
-        bind "k" {
-            MovePane "up"
-        }
-        bind "l" {
-            MovePane "right"
-        }
-        bind "n" {
-            MovePane
-        }
-        bind "p" {
-            MovePaneBackwards
-        }
-        bind "tab" {
-            MovePane
         }
     }
     scroll {
@@ -332,7 +277,7 @@ keybinds clear-defaults=true {
         }
     }
     shared_except "locked" {
-        bind "Ctrl g" {
+        bind "Ctrl F1" {
             SwitchToMode "locked"
         }
         bind "Ctrl q" {
@@ -381,12 +326,6 @@ keybinds clear-defaults=true {
     }
     shared_except "normal" "locked" "entersearch" "renametab" "renamepane" {
         bind "esc" {
-            SwitchToMode "normal"
-        }
-    }
-    shared_among "pane" "tmux" {
-        bind "x" {
-            CloseFocus
             SwitchToMode "normal"
         }
     }
@@ -454,6 +393,10 @@ keybinds clear-defaults=true {
         }
     }
     tmux {
+        bind "x" {
+            CloseFocus
+            SwitchToMode "normal"
+        }
         bind "left" {
             MoveFocus "left"
             SwitchToMode "normal"
@@ -472,6 +415,11 @@ keybinds clear-defaults=true {
         }
         bind "space" {
             NextSwapLayout
+            SwitchToMode "normal"
+        }
+        bind "!" {
+            BreakPane
+            SwitchToMode "normal"
         }
         bind "\"" {
             NewPane "down"
@@ -481,11 +429,71 @@ keybinds clear-defaults=true {
             NewPane "right"
             SwitchToMode "normal"
         }
+        bind "&" {
+            CloseTab
+            SwitchToMode "normal"
+        }
         bind "," {
             SwitchToMode "renametab"
         }
+        bind "1" {
+            GoToTab 1
+            SwitchToMode "normal"
+        }
+        bind "2" {
+            GoToTab 2
+            SwitchToMode "normal"
+        }
+        bind "3" {
+            GoToTab 3
+            SwitchToMode "normal"
+        }
+        bind "4" {
+            GoToTab 4
+            SwitchToMode "normal"
+        }
+        bind "5" {
+            GoToTab 5
+            SwitchToMode "normal"
+        }
+        bind "6" {
+            GoToTab 6
+            SwitchToMode "normal"
+        }
+        bind "7" {
+            GoToTab 7
+            SwitchToMode "normal"
+        }
+        bind "8" {
+            GoToTab 8
+            SwitchToMode "normal"
+        }
+        bind "9" {
+            GoToTab 9
+            SwitchToMode "normal"
+        }
+        bind ";" {
+            FocusLastPane
+            SwitchToMode "normal"
+        }
+        bind "<" {
+            MoveTab "left"
+            SwitchToMode "normal"
+        }
+        bind ">" {
+            MoveTab "right"
+            SwitchToMode "normal"
+        }
         bind "[" {
             SwitchToMode "scroll"
+        }
+        bind "{" {
+            MovePaneBackwards
+            SwitchToMode "normal"
+        }
+        bind "}" {
+            MovePane
+            SwitchToMode "normal"
         }
         bind "Ctrl b" {
             Write 2
@@ -495,20 +503,8 @@ keybinds clear-defaults=true {
             NewTab
             SwitchToMode "normal"
         }
-        bind "h" {
-            MoveFocus "left"
-            SwitchToMode "normal"
-        }
-        bind "j" {
-            MoveFocus "down"
-            SwitchToMode "normal"
-        }
-        bind "k" {
-            MoveFocus "up"
-            SwitchToMode "normal"
-        }
         bind "l" {
-            MoveFocus "right"
+            ToggleTab
             SwitchToMode "normal"
         }
         bind "n" {
@@ -517,9 +513,24 @@ keybinds clear-defaults=true {
         }
         bind "o" {
             FocusNextPane
+            SwitchToMode "normal"
         }
         bind "p" {
             GoToPreviousTab
+            SwitchToMode "normal"
+        }
+        bind "s" {
+            LaunchOrFocusPlugin "session-manager" {
+                floating true
+                move_to_focused_tab true
+            }
+            SwitchToMode "normal"
+        }
+        bind "w" {
+            LaunchOrFocusPlugin "session-manager" {
+                floating true
+                move_to_focused_tab true
+            }
             SwitchToMode "normal"
         }
         bind "z" {
