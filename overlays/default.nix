@@ -137,19 +137,19 @@ inputs: [
             libGL
             libdrm
             libgbm
+            libx11
+            libxcb
+            libxcomposite
+            libxdamage
+            libxext
+            libxfixes
             libxkbcommon
+            libxrandr
             nspr
             nss
             pango
             stdenv.cc.cc.lib
             systemd
-            xorg.libX11
-            xorg.libXcomposite
-            xorg.libXdamage
-            xorg.libXext
-            xorg.libXfixes
-            xorg.libXrandr
-            xorg.libxcb
           ]
         );
         dontConfigure = true;
