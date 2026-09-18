@@ -10,8 +10,14 @@
 # plugins.conf is the single source of truth: anything not declared `[x]`
 # there is uninstalled, whether it's explicitly excluded, newly appeared
 # in the marketplace and not yet triaged, or a stale/renamed leftover.
+#
+# Declared plugins are also updated to their latest version. One update costs
+# ~4.5s, so a full pass over the declared set outruns this hook's timeout;
+# instead each run spends UPDATE_BUDGET seconds from where the last one stopped.
 
 set -uo pipefail
+
+START_TS=$(date +%s)
 
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.cwd // empty' 2>/dev/null)
@@ -21,20 +27,27 @@ PLUGINS_CONF="${HOME}/.config/claude/plugins.conf"
 CACHE_DIR="${HOME}/.cache/claude-plugin-sync"
 MARKETPLACE_CACHE="${CACHE_DIR}/claude-plugins-official.json"
 CACHE_TTL=86400 # 24 hours
+UPDATE_STAMP="${CACHE_DIR}/update.stamp"
+UPDATE_CURSOR="${CACHE_DIR}/update.cursor"
+UPDATE_TTL=86400  # 24 hours between full update cycles
+UPDATE_BUDGET=200 # seconds from script start the update pass may consume
 
 mkdir -p "$CACHE_DIR"
 
 [ ! -f "$PLUGINS_CONF" ] && exit 0
 
+stamp_age() {
+  if [[ $OSTYPE == "darwin"* ]]; then
+    echo $(($(date +%s) - $(stat -f %m "$1")))
+  else
+    echo $(($(date +%s) - $(stat -c %Y "$1")))
+  fi
+}
+
 # refresh marketplace cache if stale
 FETCH_NEEDED=true
 if [ -f "$MARKETPLACE_CACHE" ]; then
-  if [[ $OSTYPE == "darwin"* ]]; then
-    age=$(($(date +%s) - $(stat -f %m "$MARKETPLACE_CACHE")))
-  else
-    age=$(($(date +%s) - $(stat -c %Y "$MARKETPLACE_CACHE")))
-  fi
-  [ "$age" -lt "$CACHE_TTL" ] && FETCH_NEEDED=false
+  [ "$(stamp_age "$MARKETPLACE_CACHE")" -lt "$CACHE_TTL" ] && FETCH_NEEDED=false
 fi
 
 if [ "$FETCH_NEEDED" = true ]; then
@@ -59,6 +72,9 @@ in_list() {
 DECLARED_X=" $(grep -E '^\[x\] ' "$PLUGINS_CONF" | sed -E 's/^\[x\] +([^ ]+).*/\1/' | tr '\n' ' ') "
 
 [ "$DECLARED_X" = "  " ] && exit 0
+
+# same names, indexable: the update pass resumes at a saved position
+read -ra DECLARED_ARR <<<"$DECLARED_X"
 
 # ensure superpowers marketplace is registered if any of its plugins are wanted
 if in_list "$SUPERPOWERS_PLUGINS" "superpowers" || in_list "$SUPERPOWERS_PLUGINS" "superpowers-chrome"; then
@@ -105,8 +121,11 @@ for p in data:
 PRESENT=" $(plugin_names any | tr '\n' ' ') "
 ENABLED_NOW=" $(plugin_names enabled | tr '\n' ' ') "
 
-# uninstall first: it is the pass that must not be starved by a timeout
-for installed_name in $ENABLED_NOW; do
+# uninstall first: it is the pass that must not be starved by a timeout.
+# Iterates PRESENT, not ENABLED_NOW: a disabled plugin is still installed, so
+# scanning only the enabled ones left every undeclared-but-disabled plugin on
+# disk forever, and the cache GC keeps whatever the manifest still pins.
+for installed_name in $PRESENT; do
   if ! in_list "$DECLARED_X" "$installed_name"; then
     mp=$(marketplace_for "$installed_name")
     claude plugin uninstall "${installed_name}@${mp}" --scope local 2>/dev/null || true
@@ -123,6 +142,35 @@ for plugin in $DECLARED_X; do
   fi
 done
 
+# update the declared set, resuming where the last run ran out of budget. The
+# stamp is only touched once the cursor wraps, so a cut-off cycle continues
+# next session instead of waiting out the TTL half-finished.
+UPDATE_DUE=true
+if [ -f "$UPDATE_STAMP" ]; then
+  [ "$(stamp_age "$UPDATE_STAMP")" -lt "$UPDATE_TTL" ] && UPDATE_DUE=false
+fi
+
+if [ "$UPDATE_DUE" = true ]; then
+  cursor=$(cat "$UPDATE_CURSOR" 2>/dev/null || echo 0)
+  case "$cursor" in '' | *[!0-9]*) cursor=0 ;; esac
+  total=${#DECLARED_ARR[@]}
+  [ "$cursor" -ge "$total" ] && cursor=0
+
+  while [ "$cursor" -lt "$total" ]; do
+    [ "$(($(date +%s) - START_TS))" -ge "$UPDATE_BUDGET" ] && break
+    plugin="${DECLARED_ARR[$cursor]}"
+    mp=$(marketplace_for "$plugin")
+    claude plugin update "${plugin}@${mp}" --scope local 2>/dev/null || true
+    cursor=$((cursor + 1))
+  done
+
+  if [ "$cursor" -ge "$total" ]; then
+    touch "$UPDATE_STAMP"
+    cursor=0
+  fi
+  echo "$cursor" >"$UPDATE_CURSOR"
+fi
+
 # Uninstalling leaves the plugin's files behind, and every version ever
 # installed is kept, so prune the cache after the uninstall pass.
 GC_STAMP="${CACHE_DIR}/cache-gc.stamp"
@@ -130,12 +178,7 @@ GC_TTL=86400
 
 GC_NEEDED=true
 if [ -f "$GC_STAMP" ]; then
-  if [[ $OSTYPE == "darwin"* ]]; then
-    age=$(($(date +%s) - $(stat -f %m "$GC_STAMP")))
-  else
-    age=$(($(date +%s) - $(stat -c %Y "$GC_STAMP")))
-  fi
-  [ "$age" -lt "$GC_TTL" ] && GC_NEEDED=false
+  [ "$(stamp_age "$GC_STAMP")" -lt "$GC_TTL" ] && GC_NEEDED=false
 fi
 
 if [ "$GC_NEEDED" = true ]; then
