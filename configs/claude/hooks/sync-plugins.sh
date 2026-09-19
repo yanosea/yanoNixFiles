@@ -77,11 +77,12 @@ DECLARED_X=" $(grep -E '^\[x\] ' "$PLUGINS_CONF" | sed -E 's/^\[x\] +([^ ]+).*/\
 read -ra DECLARED_ARR <<<"$DECLARED_X"
 
 # ensure superpowers marketplace is registered if any of its plugins are wanted
-if in_list "$SUPERPOWERS_PLUGINS" "superpowers" || in_list "$SUPERPOWERS_PLUGINS" "superpowers-chrome"; then
-  if in_list "$DECLARED_X" "superpowers" || in_list "$DECLARED_X" "superpowers-chrome"; then
+for plugin in $SUPERPOWERS_PLUGINS; do
+  if in_list "$DECLARED_X" "$plugin"; then
     claude plugin marketplace add obra/superpowers-marketplace 2>/dev/null || true
+    break
   fi
-fi
+done
 
 marketplace_for() {
   if in_list "$SUPERPOWERS_PLUGINS" "$1"; then
