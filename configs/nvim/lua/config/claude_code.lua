@@ -189,6 +189,8 @@ function M._start_claude_terminal(terminal_buf, terminal_win, command)
 	-- start terminal
 	local job_id = vim.fn.termopen(claude_cmd, {
 		buffer = terminal_buf,
+		-- classic renderer: fullscreen keeps the conversation out of the terminal buffer's scrollback
+		env = { CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN = "1" },
 		on_exit = function()
 			vim.notify("Claude terminal closed", vim.log.levels.INFO)
 			vim.defer_fn(function()

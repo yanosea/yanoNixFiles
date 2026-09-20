@@ -12,6 +12,8 @@ require("config.claude_code")
 require("config.codex")
 -- antigravity integration if available
 require("config.antigravity")
+-- grok integration if available
+require("config.grok")
 -- kiro integration if available
 require("config.kiro")
 -- discordo integration if available

@@ -185,7 +185,8 @@ end
 function M._start_codex_terminal(terminal_buf, terminal_win, command)
 	vim.api.nvim_set_current_win(terminal_win)
 	-- construct codex command
-	local codex_cmd = command and string.format("codex %s", command) or "codex"
+	-- inline mode keeps the output in the terminal buffer's scrollback
+	local codex_cmd = command and string.format("codex --no-alt-screen %s", command) or "codex --no-alt-screen"
 	-- start terminal
 	local job_id = vim.fn.termopen(codex_cmd, {
 		buffer = terminal_buf,

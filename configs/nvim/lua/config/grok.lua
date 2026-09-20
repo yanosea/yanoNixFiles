@@ -1,7 +1,7 @@
--- antigravity integration config
--- check if antigravity command is available
-local function is_antigravity_available()
-	local handle = io.popen("command -v agy 2>/dev/null")
+-- grok build integration config
+-- check if grok command is available
+local function is_grok_available()
+	local handle = io.popen("command -v grok 2>/dev/null")
 	if handle then
 		local result = handle:read("*a")
 		handle:close()
@@ -9,8 +9,8 @@ local function is_antigravity_available()
 	end
 	return false
 end
--- early return if antigravity is not available
-if not is_antigravity_available() then
+-- early return if grok is not available
+if not is_grok_available() then
 	return
 end
 -- define module
@@ -29,7 +29,7 @@ M._windows = {
 	prompt_win = nil,
 	terminal_buf = nil,
 	prompt_buf = nil,
-	antigravity_job_id = nil,
+	grok_job_id = nil,
 }
 M._is_open = false
 
@@ -85,7 +85,7 @@ function M._recreate_split_layout()
 	M._windows.terminal_win = right_win
 	vim.api.nvim_win_set_buf(right_win, M._windows.terminal_buf)
 	-- set winbar for terminal
-	vim.api.nvim_win_set_option(right_win, "winbar", "  ANTIGRAVITY")
+	vim.api.nvim_win_set_option(right_win, "winbar", "  GROK")
 	-- create horizontal split for prompt
 	vim.cmd("split")
 	local prompt_win = vim.api.nvim_get_current_win()
@@ -121,8 +121,8 @@ end
 -- @param terminal_buf: number - terminal buffer number
 -- @param terminal_win: number - terminal window number
 function M._setup_terminal_keymaps(terminal_buf, terminal_win)
-	-- set winbar for antigravity terminal
-	vim.api.nvim_win_set_option(terminal_win, "winbar", "  ANTIGRAVITY")
+	-- set winbar for grok terminal
+	vim.api.nvim_win_set_option(terminal_win, "winbar", "  GROK")
 	-- hide layout with double Esc in normal mode
 	vim.api.nvim_buf_set_keymap(terminal_buf, "n", "<Esc><Esc>", "", {
 		callback = M.hide_layout,
@@ -177,20 +177,21 @@ function M._setup_prompt_buffer(prompt_buf, prompt_win)
 	})
 end
 
--- start antigravity terminal
+-- start grok terminal
 -- @param terminal_buf: number - terminal buffer number
 -- @param terminal_win: number - terminal window number
--- @param command: string|nil - optional command to run (e.g., "-i /resume")
+-- @param command: string|nil - optional command to run (e.g., "/resume")
 -- @return boolean - success status
-function M._start_antigravity_terminal(terminal_buf, terminal_win, command)
+function M._start_grok_terminal(terminal_buf, terminal_win, command)
 	vim.api.nvim_set_current_win(terminal_win)
-	-- construct antigravity command
-	local antigravity_cmd = command and string.format("agy %s", command) or "agy"
+	-- construct grok command
+	-- inline mode keeps the output in the terminal buffer's scrollback
+	local grok_cmd = command and string.format("grok --no-alt-screen %s", command) or "grok --no-alt-screen"
 	-- start terminal
-	local job_id = vim.fn.termopen(antigravity_cmd, {
+	local job_id = vim.fn.termopen(grok_cmd, {
 		buffer = terminal_buf,
 		on_exit = function()
-			vim.notify("Antigravity terminal closed", vim.log.levels.INFO)
+			vim.notify("Grok terminal closed", vim.log.levels.INFO)
 			vim.defer_fn(function()
 				M.close_layout()
 			end, 100)
@@ -198,16 +199,16 @@ function M._start_antigravity_terminal(terminal_buf, terminal_win, command)
 	})
 
 	if job_id == 0 then
-		vim.notify("Failed to start antigravity", vim.log.levels.ERROR)
+		vim.notify("Failed to start grok", vim.log.levels.ERROR)
 		return false
 	end
 
-	M._windows.antigravity_job_id = job_id
+	M._windows.grok_job_id = job_id
 	M._setup_terminal_keymaps(terminal_buf, terminal_win)
 	return true
 end
 
--- send prompt from buffer to antigravity terminal
+-- send prompt from buffer to grok terminal
 -- @param prompt_buf: number - prompt buffer number
 function M._send_prompt_from_buffer(prompt_buf)
 	local lines = vim.api.nvim_buf_get_lines(prompt_buf, 0, -1, false)
@@ -222,18 +223,18 @@ function M._send_prompt_from_buffer(prompt_buf)
 		vim.notify("Empty prompt", vim.log.levels.WARN)
 		return
 	end
-	M._send_to_antigravity_terminal(table.concat(prompt_lines, "\n"))
+	M._send_to_grok_terminal(table.concat(prompt_lines, "\n"))
 end
 
--- send prompt to antigravity terminal
+-- send prompt to grok terminal
 -- @param prompt: string - prompt text
-function M._send_to_antigravity_terminal(prompt)
-	if not M._windows.antigravity_job_id then
-		vim.notify("Antigravity terminal not started", vim.log.levels.ERROR)
+function M._send_to_grok_terminal(prompt)
+	if not M._windows.grok_job_id then
+		vim.notify("Grok terminal not started", vim.log.levels.ERROR)
 		return
 	end
 	-- send prompt to terminal
-	vim.fn.chansend(M._windows.antigravity_job_id, prompt)
+	vim.fn.chansend(M._windows.grok_job_id, prompt)
 	-- switch to terminal and press enter to submit
 	vim.api.nvim_set_current_win(M._windows.terminal_win)
 	vim.defer_fn(function()
@@ -250,7 +251,7 @@ function M._send_to_antigravity_terminal(prompt)
 	vim.api.nvim_win_set_cursor(M._windows.prompt_win, { 1, 0 })
 end
 
--- hide the layout but keep antigravity process running
+-- hide the layout but keep grok process running
 function M.hide_layout()
 	M._close_windows()
 	-- clear window references but keep buffers and process
@@ -260,19 +261,19 @@ function M.hide_layout()
 	M._is_open = false
 end
 
--- show the layout with existing antigravity process
+-- show the layout with existing grok process
 function M.show_layout()
 	M._recreate_split_layout()
 	vim.api.nvim_set_current_win(M._windows.prompt_win)
 	M._is_open = true
 end
 
--- completely close the layout and terminate antigravity process
+-- completely close the layout and terminate grok process
 function M.close_layout()
-	-- terminate antigravity process
-	if M._windows.antigravity_job_id then
-		vim.fn.jobstop(M._windows.antigravity_job_id)
-		vim.notify("Antigravity process terminated", vim.log.levels.INFO)
+	-- terminate grok process
+	if M._windows.grok_job_id then
+		vim.fn.jobstop(M._windows.grok_job_id)
+		vim.notify("Grok process terminated", vim.log.levels.INFO)
 	end
 	M._close_windows()
 	-- reset all references
@@ -282,15 +283,15 @@ function M.close_layout()
 		prompt_win = nil,
 		terminal_buf = nil,
 		prompt_buf = nil,
-		antigravity_job_id = nil,
+		grok_job_id = nil,
 	}
 	M._is_open = false
 end
 
--- open new antigravity layout
+-- open new grok layout
 function M.open_layout()
 	local layout = M._create_split_layout()
-	if not M._start_antigravity_terminal(layout.terminal_buf, layout.terminal_win) then
+	if not M._start_grok_terminal(layout.terminal_buf, layout.terminal_win) then
 		M.close_layout()
 		return
 	end
@@ -313,7 +314,7 @@ function M.toggle_layout()
 	end
 end
 
--- resume antigravity session with the conversation picker
+-- resume grok session with the session picker
 function M.resume_session()
 	-- close existing layout
 	if M._is_open then
@@ -321,7 +322,7 @@ function M.resume_session()
 	end
 	local layout = M._create_split_layout()
 	-- open the /resume picker as the initial prompt
-	if not M._start_antigravity_terminal(layout.terminal_buf, layout.terminal_win, "-i /resume") then
+	if not M._start_grok_terminal(layout.terminal_buf, layout.terminal_win, "/resume") then
 		M.close_layout()
 		return
 	end
@@ -337,8 +338,8 @@ end
 
 -- setup commands
 function M.setup()
-	vim.api.nvim_create_user_command("Antigravity", M.toggle_layout, {
-		desc = "Toggle Antigravity terminal and prompt layout",
+	vim.api.nvim_create_user_command("Grok", M.toggle_layout, {
+		desc = "Toggle Grok terminal and prompt layout",
 	})
 end
 
