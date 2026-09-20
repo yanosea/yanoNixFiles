@@ -75,7 +75,10 @@ if new:
     "learning, geospatial, testing, migration, math) -- never write Japanese "
     "into that file. Keep the entries in ASCII alphabetical order, pad the "
     "name so `#` lands on column 46 like the surrounding lines, and refresh "
-    "the `# total: / enabled: / excluded:` counts in the header. The change "
+    "the `# total: / enabled: / excluded:` counts in the header. "
+    "configs/antigravity/plugins.conf declares the same claude plugins for "
+    "antigravity (imported from the claude cache): add the same line, with the "
+    "same decision, there too. The change "
     "takes effect on the next session's sync-plugins.sh run."
     )
 
@@ -84,7 +87,8 @@ if gone:
     f"{len(gone)} plugin(s) declared in plugins.conf no longer exist in any "
     "registered marketplace (removed or renamed upstream):\n"
     + "\n".join(gone)
-    + "\n\nDelete those lines from configs/claude/plugins.conf and refresh the "
+    + "\n\nDelete those lines from configs/claude/plugins.conf (and from "
+    "configs/antigravity/plugins.conf, which mirrors it) and refresh the "
     "`# total: / enabled: / excluded:` counts in the header. No need to ask "
     "the user first -- the plugin is gone, so the entry cannot be acted on "
     "either way -- but report in Japanese which entries were dropped. Any of "
