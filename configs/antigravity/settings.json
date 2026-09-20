@@ -1,4 +1,5 @@
 {
+  "agentMode": "accept-edits",
   "colorScheme": "tokyo night",
   "statusLine": {
     "type": "command",

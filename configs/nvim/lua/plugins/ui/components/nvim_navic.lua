@@ -134,7 +134,7 @@ return {
 					"dapui_console",
 					"dapui_hover",
 					"lab",
-					"notify",
+					"snacks_notif",
 					"noice",
 					"neotest-summary",
 					"",

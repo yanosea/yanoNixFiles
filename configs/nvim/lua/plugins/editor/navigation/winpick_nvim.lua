@@ -50,8 +50,7 @@ return {
 					local filetype = vim.bo[bufnr].filetype
 					local excluded_filetypes = {
 						"noice",
-						"notify",
-						"smear-cursor",
+						"snacks_notif",
 					}
 					if vim.tbl_contains(excluded_filetypes, filetype) then
 						is_excluded = true

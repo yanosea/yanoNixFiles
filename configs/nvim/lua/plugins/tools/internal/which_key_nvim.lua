@@ -267,8 +267,6 @@ return {
 					{ "<LEADER>sR", "<CMD>Telescope registers<CR>", desc = "search: registers" },
 					{ "<LEADER>st", "<CMD>Telescope live_grep<CR>", desc = "search: text" },
 					{ "<LEADER>su", "<CMD>Telescope undo<CR>", desc = "search: undo" },
-					-- smear cursor
-					{ "<LEADER>S", "<CMD>SmearCursorToggle<CR>", desc = "smearcursor: toggle" },
 					-- terminal
 					{ "<LEADER>t", group = "terminal" },
 					{
