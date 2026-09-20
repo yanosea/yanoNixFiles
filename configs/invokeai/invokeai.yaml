@@ -1,4 +1,9 @@
-schema_version: 4.0.2
+# 🔴 Keep this at the version the installed InvokeAI expects. A stale one makes
+# it migrate the file at startup, and migrating means rewriting it - which is
+# how a read-only copy of this file killed 6.14.1 with PermissionError before it
+# ever listened (hence the chmod in the launcher). 4.0.2 -> 4.0.3 changed
+# nothing but this string.
+schema_version: 4.0.3
 host: 127.0.0.1
 port: 9090
 allow_origins: []
@@ -30,9 +35,28 @@ profile_graphs: false
 profiles_dir: profiles
 log_memory_usage: false
 device_working_mem_gb: 3.0
+# Leave max_cache_vram_gb at 3.0. Raising it to 8.0 - inside the documented
+# ceiling of total VRAM minus device_working_mem_gb - made a 1024x1536 render
+# with --hires 1.5 --adetailer face die with "CUDA out of memory. Tried to
+# allocate 1.69 GiB" in the l2i node, because the cache was holding 9.4GB of
+# the 11.6GB card when the hires VAE decode asked for its buffer.
 max_cache_vram_gb: 3.0
+# Pinned: InvokeAI turned partial loading on by default in 6.13.5, and it buys
+# VRAM headroom "at the cost of slower speed". An SDXL checkpoint fits whole on
+# this card, so there is nothing to buy.
 enable_partial_loading: false
-keep_ram_copy_of_weights: false
+# One SDXL checkpoint, not several. An SDXL UNet alone is 4.9GB and the
+# automatic limit came out at 4.0GB, so every render evicted the model: 12GB
+# holds one whole checkpoint (pinned runs 49.9/46.4/47.7s, same as at 24GB).
+# More is worse: most of this cache is the checkpoint file mmapped (RssFile
+# 18.9GB of 26.3GB at 24GB), so it competes with the page cache for the next
+# draw's file, and the gacha almost never draws the same checkpoint twice.
+# At 24GB the next checkpoint, read ahead by aistudio, was reclaimed and
+# loaded cold (114-127s images); at 12GB six draws averaged 64s.
+max_cache_ram_gb: 12
+# "speeds up model switching and LoRA patching" - and the gacha switches
+# checkpoint on every single image.
+keep_ram_copy_of_weights: true
 lazy_offload: false
 device: cuda
 precision: float16

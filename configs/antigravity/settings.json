@@ -1,1 +1,8 @@
-{}
+{
+  "colorScheme": "tokyo night",
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.config/claude-powerline/statusline.sh",
+    "enabled": true
+  }
+}

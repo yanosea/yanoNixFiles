@@ -26,6 +26,12 @@
             "command": "bash \"$HOME/.config/claude/hooks/sync-mcp-servers.sh\"",
             "async": true,
             "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": "[ -f \"$HOME/.gemini/config/scripts/save-settings.sh\" ] && bash \"$HOME/.gemini/config/scripts/save-settings.sh\" || true",
+            "async": true,
+            "timeout": 10
           }
         ]
       }
@@ -59,6 +65,7 @@
   },
   "language": "japanese",
   "alwaysThinkingEnabled": true,
+  "remoteControlAtStartup": true,
   "statusLine": {
     "type": "command",
     "command": "claude-powerline",

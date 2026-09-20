@@ -8,6 +8,7 @@
       claude-code
       claude-powerline
       codex
+      grok-build
       kiro-cli
       spec-kit
     ];

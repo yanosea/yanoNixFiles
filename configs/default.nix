@@ -1,10 +1,11 @@
 # configs (dotfiles)
 {
   lib,
+  pkgs,
   ...
 }:
 let
-  # regular config files (excluding default.nix, agents, antigravity, codex, and zsh directories)
+  # regular config files (excluding default.nix, agents, antigravity, codex, grok, and zsh directories)
   contents = builtins.readDir ./.;
   filteredContents = lib.filterAttrs (
     name: _:
@@ -12,6 +13,7 @@ let
     && name != "agents"
     && name != "antigravity"
     && name != "codex"
+    && name != "grok"
     && name != "zsh"
   ) contents;
   mkEntry = name: type: {
@@ -51,6 +53,7 @@ let
   # codex config files (config.toml is deployed by an activation copy instead,
   # since codex writes hook-trust and project-trust state back into it)
   codexConfigEntries = {
+    "codex/AGENTS.md".source = ./agents/global-rules.md;
     "codex/plugins.conf".source = ./codex/plugins.conf;
     "codex/hooks" = {
       source = ./codex/hooks;
@@ -61,6 +64,27 @@ let
       recursive = true;
     };
   };
+  # grok config files (config.toml is deployed by an activation copy instead)
+  grokConfigEntries = {
+    "grok/AGENTS.md".source = ./agents/global-rules.md;
+    "grok/plugins.conf".source = ./grok/plugins.conf;
+    "grok/hooks" = {
+      source = ./grok/hooks;
+      recursive = true;
+    };
+  };
+  # config.local.toml goes first so its top-level keys precede every table,
+  # which keeps unpublishable settings out of this repository
+  copyWritableConfig = dir: src: ''
+    configDir="''${XDG_CONFIG_HOME:-$HOME/.config}/${dir}"
+    $DRY_RUN_CMD mkdir -p "$configDir"
+    if [ -f "$configDir/config.local.toml" ]; then
+      $DRY_RUN_CMD cat "$configDir/config.local.toml" ${src} >"$configDir/config.toml"
+    else
+      $DRY_RUN_CMD cat ${src} >"$configDir/config.toml"
+    fi
+    $DRY_RUN_CMD chmod 644 "$configDir/config.toml"
+  '';
   # zsh config subdirectories (excluding .zshrc/.zshenv which are managed by programs.zsh)
   zshContents = builtins.readDir ./zsh;
   zshConfigEntries = lib.mapAttrs' (name: type: {
@@ -76,19 +100,28 @@ in
   home = {
     activation = {
       # copied rather than symlinked: codex appends [hooks.state] and
-      # [projects.*] to config.toml and cannot write to a store path.
-      # config.local.toml goes first so its top-level keys precede every table,
-      # which keeps unpublishable settings out of this repository
-      copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-        codexDir="''${XDG_CONFIG_HOME:-$HOME/.config}/codex"
-        $DRY_RUN_CMD mkdir -p "$codexDir"
-        if [ -f "$codexDir/config.local.toml" ]; then
-          $DRY_RUN_CMD cat "$codexDir/config.local.toml" ${./codex/config.toml} >"$codexDir/config.toml"
+      # [projects.*] to config.toml and cannot write to a store path
+      copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+        copyWritableConfig "codex" ./codex/config.toml
+      );
+      # copied rather than symlinked: grok writes back to config.toml
+      # merged rather than replaced: agy keeps trustedWorkspaces in the same file
+      mergeAntigravitySettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        settings="$HOME/.gemini/antigravity-cli/settings.json"
+        $DRY_RUN_CMD mkdir -p "$(dirname "$settings")"
+        if [ -f "$settings" ]; then
+          $DRY_RUN_CMD ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$settings" ${./antigravity/settings.json} >"$settings.tmp"
+          $DRY_RUN_CMD mv "$settings.tmp" "$settings"
         else
-          $DRY_RUN_CMD cat ${./codex/config.toml} >"$codexDir/config.toml"
+          $DRY_RUN_CMD cat ${./antigravity/settings.json} >"$settings"
         fi
-        $DRY_RUN_CMD chmod 644 "$codexDir/config.toml"
       '';
+      copyGrokConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+        copyWritableConfig "grok" ./grok/config.toml
+        + ''
+          $DRY_RUN_CMD cat ${./grok/pager.toml} >"$configDir/pager.toml"
+        ''
+      );
     };
     file = {
       # codex skills live outside XDG, in the cross-tool ~/.agents/skills
@@ -96,11 +129,17 @@ in
         source = ./agents;
         recursive = true;
       };
-      ".gemini/antigravity-cli" = {
-        source = ./antigravity;
+      # antigravity ignores XDG (settings.json and mcp_config.json are agy-managed)
+      ".gemini/config/AGENTS.md".source = ./agents/global-rules.md;
+      ".gemini/config/skills" = {
+        source = ./agents/skills;
         recursive = true;
-        force = true;
       };
+      ".gemini/config/scripts" = {
+        source = ./antigravity/scripts;
+        recursive = true;
+      };
+      ".gemini/config/plugins.conf".source = ./antigravity/plugins.conf;
       ".local/bin/niri-app-toggle" = {
         executable = true;
         text = ''
@@ -122,6 +161,11 @@ in
   # xdg
   xdg = {
     configFile =
-      configFiles // quickshellOverride // codexConfigEntries // hyprConfigEntries // zshConfigEntries;
+      configFiles
+      // quickshellOverride
+      // codexConfigEntries
+      // grokConfigEntries
+      // hyprConfigEntries
+      // zshConfigEntries;
   };
 }

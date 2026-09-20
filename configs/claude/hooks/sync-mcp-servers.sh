@@ -34,6 +34,10 @@ while IFS= read -r line; do
   claude mcp add "$name" --scope user $rest 2>/dev/null || true
 done <"$MCP_SERVERS_CONF"
 
+# antigravity shares this declaration
+AGY_SYNC="${HOME}/.gemini/config/scripts/sync-mcp-servers.sh"
+[ -f "$AGY_SYNC" ] && bash "$AGY_SYNC"
+
 # --- remove: registered in user scope but not declared ----------------------
 # .claude.json rather than `claude mcp list`, which mixes in plugin/project
 # servers and health-checks every one.

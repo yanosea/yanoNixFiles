@@ -50,6 +50,14 @@ return {
 						desc = "ai codex: resume",
 					},
 					{ "<LEADER>aot", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
+					-- ai: grok
+					{ "<LEADER>ax", group = "grok" },
+					{
+						"<LEADER>axr",
+						"<CMD>lua require('config.grok').resume_session()<CR>",
+						desc = "ai grok: resume",
+					},
+					{ "<LEADER>axt", "<CMD>Grok<CR>", desc = "ai grok: toggle" },
 					-- discordo
 					{ "<LEADER>D", "<CMD>Discordo<CR>", desc = "discordo" },
 					-- buffers

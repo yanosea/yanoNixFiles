@@ -7,6 +7,8 @@
 # is uninstalled, whether it's explicitly excluded, newly appeared in a
 # marketplace and not yet triaged, or a stale/renamed leftover.
 #
+# Outdated plugins are re-added: codex has no update subcommand.
+#
 # `codex plugin add`/`remove` record the result in config.toml itself, so this
 # only works while that file is writable. Once it becomes a Nix-managed store
 # symlink the `[plugins."<id>"]` tables have to be generated instead.
@@ -40,16 +42,8 @@ if [ "$FETCH_NEEDED" = true ]; then
 fi
 
 DECLARED=" $(sed -nE 's/^\[x\] +([^ ]+).*/\1/p' "$PLUGINS_CONF" | tr '\n' ' ') "
-INSTALLED=" $(codex plugin list --json 2>/dev/null |
-  python3 -c "
-import json, sys
-try:
-    data = json.load(sys.stdin)
-except Exception:
-    sys.exit(0)
-for p in data.get('installed', []):
-    print(p['pluginId'])
-" | tr '\n' ' ') "
+INSTALLED_JSON=$(codex plugin list --json 2>/dev/null || echo '{}')
+INSTALLED=" $(echo "$INSTALLED_JSON" | jq -r '.installed[]?.pluginId' 2>/dev/null | tr '\n' ' ') "
 
 in_list() {
   case "$1" in *" $2 "*) return 0 ;; *) return 1 ;; esac
@@ -62,6 +56,14 @@ done
 
 for id in $DECLARED; do
   in_list "$INSTALLED" "$id" || codex plugin add "$id" >/dev/null 2>&1 || true
+done
+
+OUTDATED=$(jq -r --argjson inst "$INSTALLED_JSON" '
+  ($inst.installed // [] | map({(.pluginId): .version}) | add // {}) as $have
+  | .available[]? | select($have[.pluginId] != null and .version != null
+    and $have[.pluginId] != .version) | .pluginId' "$MARKETPLACE_CACHE" 2>/dev/null)
+for id in $OUTDATED; do
+  in_list "$DECLARED" "$id" && codex plugin add "$id" >/dev/null 2>&1 || true
 done
 
 exit 0

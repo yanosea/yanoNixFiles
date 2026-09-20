@@ -1,0 +1,89 @@
+[cli]
+auto_update = false
+
+[models]
+default = "grok-4.6"
+default_reasoning_effort = "xhigh"
+
+[memory_v2]
+enabled = true
+
+[ui]
+max_thoughts_width = 100
+fork_secondary_model = "grok-4.6"
+yolo = false
+compact_mode = false
+show_timeline = true
+simple_mode = false
+theme = "auto"
+auto_dark_theme = "tokyonight"
+auto_light_theme = "grokday"
+collapsed_edit_blocks = true
+hunk_tracker_mode = "all_dirty"
+permission_mode = "always-approve"
+voice_stt_language = "ja"
+combine_queued_prompts = true
+invert_scroll = false
+scroll_mode = "auto"
+
+[ui.status_line]
+type = "command"
+command = "bash ~/.config/claude-powerline/statusline.sh"
+
+[marketplace]
+default_skills_installs_purged = true
+official_marketplace_auto_installed = true
+
+[[marketplace.sources]]
+name = "xAI Official"
+git = "https://github.com/xai-org/plugin-marketplace.git"
+
+[mcp_servers.comfyui]
+command = "npx"
+args = [
+    "-y",
+    "comfyui-mcp",
+]
+
+[mcp_servers.comfyui.env]
+COMFYUI_URL = "http://127.0.0.1:8188"
+
+[mcp_servers.invokeai]
+command = "uvx"
+args = [
+    "--from",
+    "invokeai-mcp-server",
+    "--with",
+    "mcp<2",
+    "python",
+    "-m",
+    "invokeai_mcp_server",
+]
+
+[[hooks.SessionStart]]
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "bash ~/.config/grok/hooks/sync-plugins.sh"
+timeout = 10
+
+[[hooks.PostToolUse]]
+
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = "bash ~/.config/grok/hooks/inject-context.sh"
+timeout = 10
+
+[[hooks.PreCompact]]
+
+[[hooks.PreCompact.hooks]]
+type = "command"
+command = "bash ~/.config/grok/hooks/generate-handover.sh"
+timeout = 30
+
+[[hooks.SessionEnd]]
+
+[[hooks.SessionEnd.hooks]]
+type = "command"
+command = "bash ~/.config/grok/hooks/save-config.sh"
+timeout = 10

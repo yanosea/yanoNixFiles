@@ -17,6 +17,8 @@ export PER_DIRECTORY_HISTORY_TOGGLE="^h"
 export CLAUDE_CONFIG_DIR=$XDG_CONFIG_HOME/claude
 # openai codex
 export CODEX_HOME=$XDG_CONFIG_HOME/codex
+# xai grok build
+export GROK_HOME=$XDG_CONFIG_HOME/grok
 # google antigravity / gemini
 export ANTIGRAVITY_APP_DATA_DIR=$HOME/.gemini/antigravity-cli
 export ANTIGRAVITY_CONFIG_DIR=$HOME/.gemini/config

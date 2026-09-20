@@ -138,8 +138,14 @@
           #!/usr/bin/env bash
           set -e
           # Setup config
-          rm -f ${config.home.homeDirectory}/.local/share/invokeai/invokeai.yaml
+          rm -f ${config.home.homeDirectory}/.local/share/invokeai/invokeai.yaml \
+                ${config.home.homeDirectory}/.local/share/invokeai/invokeai.yaml.bak
           cp ${config.xdg.configHome}/invokeai/invokeai.yaml ${config.home.homeDirectory}/.local/share/invokeai/invokeai.yaml
+          # The source lives in the Nix store, so the copy inherits its read-only
+          # mode. InvokeAI migrates this file in place when its schema moves on
+          # (6.14.1 does), and a read-only copy makes it die at startup with
+          # PermissionError before it ever listens.
+          chmod u+w ${config.home.homeDirectory}/.local/share/invokeai/invokeai.yaml
           # Setup models directory and symlinks
           mkdir -p ${config.home.homeDirectory}/.local/share/invokeai/models
           echo "Creating symlinks for AI resources from Google Drive..."
@@ -198,6 +204,14 @@
                             echo "Installation failed!"
                             exit 1
                           fi
+                        else
+                          # Keep it current on every launch. A failure here must not stop
+                          # the server: it starts on the version already installed, which
+                          # is what was running a moment ago.
+                          source venv/bin/activate
+                          echo "Checking for an InvokeAI upgrade..."
+                          pip install "InvokeAI[xformers]" --upgrade \
+                            || echo "Upgrade skipped (pip failed); starting the installed version."
                         fi
                         # Install and patch CLIP Interrogator node if not present
                         if [ -f "venv/bin/activate" ]; then

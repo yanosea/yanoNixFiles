@@ -172,6 +172,10 @@ if [ "$UPDATE_DUE" = true ]; then
   echo "$cursor" >"$UPDATE_CURSOR"
 fi
 
+# antigravity imports its plugins from this cache
+AGY_SYNC="${HOME}/.gemini/config/scripts/sync-plugins.sh"
+[ -f "$AGY_SYNC" ] && bash "$AGY_SYNC"
+
 # Uninstalling leaves the plugin's files behind, and every version ever
 # installed is kept, so prune the cache after the uninstall pass.
 GC_STAMP="${CACHE_DIR}/cache-gc.stamp"

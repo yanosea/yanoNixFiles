@@ -144,6 +144,11 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
       # toml
       taplo = {
         enable = true;
+        # rewritten by grok itself
+        excludes = [
+          "configs/grok/config.toml"
+          "configs/grok/pager.toml"
+        ];
       };
       # all files
       typos = {
