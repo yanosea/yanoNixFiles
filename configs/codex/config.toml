@@ -32,20 +32,21 @@ max_context_tokens = 10000
 # everforest dark medium, the palette the rest of this repo uses
 theme = "everforest-dark"
 # trimmed from the full 29: codex has no wrap option, so the line is clipped
-# at terminal width and everything past it is simply lost
+# at terminal width and everything past it is simply lost. Ordered like the
+# claude-powerline lines: directory, git, cost, context, limits, model, version
 status_line = [
   "current-dir",
   "git-branch",
-  "context-used",
+  "branch-changes",
   "used-tokens",
+  "context-used",
   "five-hour-limit",
   "weekly-limit",
   "model-with-reasoning",
   "run-state",
-  "task-progress",
   "codex-version",
+  "task-progress",
   "pull-request-number",
-  "branch-changes",
   "permissions",
   "approval-mode",
   "thread-credits",
