@@ -10,10 +10,16 @@
 # deployed copy; activation prepends that file, so its top-level keys land ahead
 # of the first table here and stay out of this repository.
 
+# counterpart of claude's permissions.defaultMode = "auto": codex has no mode by that
+# name, so pin the trio `--approve-for-me` sets (approvals go to an automatic reviewer
+# instead of a prompt). sandbox_mode below is the third key of the same preset
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
 # claude code's alwaysThinkingEnabled has no on/off switch here; effort is the knob
 model_reasoning_effort = "high"
 # read this repo's CLAUDE.md where no AGENTS.md exists, instead of duplicating it
 project_doc_fallback_filenames = ["CLAUDE.md"]
+sandbox_mode = "workspace-write"
 
 [features]
 # on by default in 0.153.4, pinned explicitly so a default flip cannot kill the hooks
