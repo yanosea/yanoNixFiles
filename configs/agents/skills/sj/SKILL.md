@@ -10,18 +10,27 @@ description: Prepare the full jj (Jujutsu) ship sequence - issue, format, descri
   - The intent of the changes is unclear
   - The changes do not follow best practices
   - The changes contain potential issues (bugs, security risks, etc.)
-- After understanding the changes, generate a commit message in English.
+- After understanding the changes, split them into logical units by intent (not by file) and
+  generate a commit message in English for each unit.
+- When the changes cover more than one logical unit, ship them as **multiple issues, multiple
+  commits, one PR**: one issue and one commit per unit, all on a single branch, closed by a
+  single PR that carries a `closes #<issue-number>` line for every issue.
 
 - Show the following commands for the user to run manually in order:
   1. `gh issue create` command:
+     - one command per logical unit, in the order the commits will be made
      - title format: `(scope) description` (e.g., `(ai) expand workflow`)
      - no body
      - label: `bug` for `fix:` prefix, `enhancement` for others
      - assignee: self (`@me`)
   2. `nix fmt` command to format files
   3. `jj describe` command with the generated message
+     - multiple units: a `jj split <paths> -m "<message>"` per unit in commit order (the
+       selected paths become the earlier commit), then `jj describe` for the last unit, which
+       is what stays in `@`
   4. `jj bookmark create` command to create a bookmark matching `gh issue develop` default format:
      - format: `<issue-number>-<issue-title-in-kebab-case>` (e.g., `1154-hypr-migrate-windowrulev2-to-new-windowrule-syntax`)
+     - use the first issue when there are several; every unit shares one bookmark
   5. Two commands to push the bookmark:
      - `jj bookmark track <bookmark>@origin` to track the bookmark on remote
      - `jj git push -b <bookmark>` to push the changes to remote
@@ -32,7 +41,7 @@ description: Prepare the full jj (Jujutsu) ship sequence - issue, format, descri
        - multiple commits: specify a summary title explicitly covering all changes (use the same emoji prefix convention as commit messages)
      - body:
        - single commit: use `$(printf '%s\n\ncloses #<issue-number>' "$(git log <bookmark> -1 --format='%b')")` to extract from commit and append closes
-       - multiple commits: write a `## Summary` section with bullet points for each commit's changes, then append `closes #<issue-number>`
+       - multiple commits: write a `## Summary` section with bullet points for each commit's changes, then append one `closes #<issue-number>` line per issue
      - label: same as issue
      - assignee: same as issue (`@me`)
   7. `gh pr merge <pr-number>` command to merge the pull request
@@ -51,11 +60,12 @@ description: Prepare the full jj (Jujutsu) ship sequence - issue, format, descri
 
 - Predict the issue number and PR number using `gh`:
   - Get the latest number: `gh pr list --state all --limit 1 --json number --jq '.[0].number'`
-  - The next issue number = latest + 1, PR number = latest + 2
+  - The next issue number = latest + 1, PR number = latest + 2; with N logical units the issues are latest + 1 .. latest + N and the PR number is latest + N + 1
   - Use the predicted numbers directly in all commands (no variables or placeholders)
 
 - Write all commands to `/tmp/ship-<repo-name>-<issue-number>.md` as a markdown file with the following format:
   - `<repo-name>` is the current repository name (e.g., `yanoNixFiles`). Detect it from the git remote URL or the current directory name.
+  - `<issue-number>` is the first issue number when there are several
   - Use `# Ship #<issue-number>` as the document title
   - Group each step with a `##` heading (e.g., `## Issue`, `## Format`, `## Commit`, `## Branch`, `## Push`, `## PR`, `## Merge`, `## Cleanup`)
   - Wrap each command in a ```bash code block

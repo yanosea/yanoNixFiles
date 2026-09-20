@@ -10,16 +10,23 @@ description: Prepare the full git ship sequence - issue, branch, commit, push, P
   - The intent of the changes is unclear
   - The changes do not follow best practices
   - The changes contain potential issues (bugs, security risks, etc.)
-- After understanding the changes, generate a commit message in English.
+- After understanding the changes, split them into logical units by intent (not by file) and
+  generate a commit message in English for each unit.
+- When the changes cover more than one logical unit, ship them as **multiple issues, multiple
+  commits, one PR**: one issue and one commit per unit, all on a single branch, closed by a
+  single PR that carries a `closes #<issue-number>` line for every issue.
 - Show the following commands for the user to run manually in order:
   1. `gh issue create` command:
+     - one command per logical unit, in the order the commits will be made
      - title format: `(scope) description` (e.g., `(ai) expand workflow`)
      - no body
      - label: `bug` for `fix:` prefix, `enhancement` for others
      - assignee: self (`@me`)
-  2. `gh issue develop` command to create a branch for the issue
+  2. `gh issue develop` command to create a branch for the first issue (every unit shares one branch)
   3. `git checkout` command to checkout the created branch
   4. `git commit` command with the generated message
+     - multiple units: `git reset` once, then a `git add <paths>` + `git commit` pair per unit,
+       staging only that unit's paths
   5. `git push` command to push the changes to remote
   6. `gh pr create` command:
      - title:
@@ -27,7 +34,7 @@ description: Prepare the full git ship sequence - issue, branch, commit, push, P
        - multiple commits: specify a summary title explicitly covering all changes (use the same emoji prefix convention as commit messages)
      - body:
        - single commit: no specification (auto-populated from commit/branch)
-       - multiple commits: write a `## Summary` section with bullet points for each commit's changes, then append `closes #<issue-number>`
+       - multiple commits: write a `## Summary` section with bullet points for each commit's changes, then append one `closes #<issue-number>` line per issue
      - label: same as issue
      - assignee: same as issue (`@me`)
   7. `gh pr merge` command to merge the pull request
@@ -37,11 +44,12 @@ description: Prepare the full git ship sequence - issue, branch, commit, push, P
 
 - Predict the issue number using `gh`:
   - Get the latest number: `gh pr list --state all --limit 1 --json number --jq '.[0].number'`
-  - The next issue number = latest + 1
+  - The next issue number = latest + 1; with N logical units the issues are latest + 1 .. latest + N, in commit order
   - Use the predicted number directly in all commands (no variables or placeholders)
 
 - Write all commands to `/tmp/ship-<repo-name>-<issue-number>.md` as a markdown file with the following format:
   - `<repo-name>` is the current repository name (e.g., `yanoNixFiles`). Detect it from the git remote URL or the current directory name.
+  - `<issue-number>` is the first issue number when there are several
   - Use `# Ship #<issue-number>` as the document title
   - Group each step with a `##` heading (e.g., `## Issue`, `## Branch`, `## Commit`, `## Push`, `## PR`, `## Merge`)
   - Wrap each command in a ```bash code block
