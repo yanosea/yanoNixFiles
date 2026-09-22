@@ -63,6 +63,8 @@ description: Prepare the full git ship sequence - issue, branch, commit, push, P
     markdown version used as headings
   - an `ERR` trap that prints the phase, the line, the exit code and the log path, then exits:
     the run stops at the first failure and every id captured so far is already in the log
+  - `trap - ERR` around a command that is expected to fail and retry, such as the merge wait:
+    in zsh the trap fires even under `set +e`, so leaving it armed aborts the retry loop
   - echo each captured id (`ISSUE_...=`, `BRANCH=`, `PR=`) so the log carries the state
   - one command per line in the order above, with no logic beyond the helpers and the captures
 - On failure, follow the recovery procedure below; the log carries everything it needs.
