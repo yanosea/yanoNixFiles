@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  messages,
   pkgs,
   ...
 }:
@@ -75,11 +76,12 @@ in
               '';
             in
             lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              echo ""
-              echo "update go packages..."
-              echo ""
-              ${script}
-              echo ""
+              ${messages.blank}
+              ${messages.step {
+                start = "update go packages...";
+                done = "update go packages done!";
+                body = "${script}";
+              }}
             '';
         };
       };

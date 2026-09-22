@@ -18,6 +18,29 @@ return {
 					mode = "n",
 					-- ai
 					{ "<LEADER>a", group = "ai" },
+					-- ai: agentic
+					{ "<LEADER>aa", group = "agentic" },
+					{
+						"<LEADER>aaa",
+						"<CMD>lua require('agentic').add_selection_or_file_to_context()<CR>",
+						desc = "ai agentic: add to context",
+					},
+					{
+						"<LEADER>aan",
+						"<CMD>lua require('agentic').new_session()<CR>",
+						desc = "ai agentic: new session",
+					},
+					{
+						"<LEADER>aar",
+						"<CMD>lua require('agentic').restore_session()<CR>",
+						desc = "ai agentic: restore session",
+					},
+					{
+						"<LEADER>aas",
+						"<CMD>lua require('agentic').switch_provider()<CR>",
+						desc = "ai agentic: switch provider",
+					},
+					{ "<LEADER>aat", "<CMD>lua require('agentic').toggle()<CR>", desc = "ai agentic: toggle" },
 					-- ai: claude
 					{ "<LEADER>ac", group = "claude" },
 					{
@@ -50,6 +73,9 @@ return {
 						desc = "ai codex: resume",
 					},
 					{ "<LEADER>aot", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
+					-- ai: toad
+					{ "<LEADER>at", group = "toad" },
+					{ "<LEADER>att", "<CMD>Toad<CR>", desc = "ai toad: toggle" },
 					-- ai: grok
 					{ "<LEADER>ax", group = "grok" },
 					{

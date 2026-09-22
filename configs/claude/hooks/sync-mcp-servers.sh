@@ -10,6 +10,9 @@
 
 set -uo pipefail
 
+# keep any claude call on the subscription login; the sops api key would bill per token
+unset ANTHROPIC_API_KEY
+
 MCP_SERVERS_CONF="${HOME}/.config/claude/mcp-servers.conf"
 CLAUDE_JSON="${CLAUDE_CONFIG_DIR:-$HOME}/.claude.json"
 

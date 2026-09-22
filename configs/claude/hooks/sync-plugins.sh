@@ -17,6 +17,9 @@
 
 set -uo pipefail
 
+# keep any claude call on the subscription login; the sops api key would bill per token
+unset ANTHROPIC_API_KEY
+
 START_TS=$(date +%s)
 
 input=$(cat)

@@ -1,5 +1,31 @@
 {
   "nodes": {
+    "agy-acp-server-darwin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788377601,
+        "narHash": "sha256-O58vkTmihL+4eSiaEOJSaTXUFjmwAri9wqoTdGdmfqg=",
+        "type": "tarball",
+        "url": "https://dl.google.com/agy-extensions/releases/macos/agy-acp-server-agy_acp_server_1.1.1-darwin-arm64.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://dl.google.com/agy-extensions/releases/macos/agy-acp-server-agy_acp_server_1.1.1-darwin-arm64.zip"
+      }
+    },
+    "agy-acp-server-linux": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788376912,
+        "narHash": "sha256-wi+tqr0h2g6/9YXNazf0VUPDy/VtGR3FU5bo8eQYCNc=",
+        "type": "tarball",
+        "url": "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-agy_acp_server_1.1.1-linux-x86_64.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-agy_acp_server_1.1.1-linux-x86_64.zip"
+      }
+    },
     "claude-code": {
       "inputs": {
         "nixpkgs": [
@@ -240,6 +266,8 @@
     },
     "root": {
       "inputs": {
+        "agy-acp-server-darwin": "agy-acp-server-darwin",
+        "agy-acp-server-linux": "agy-acp-server-linux",
         "claude-code": "claude-code",
         "darwin": "darwin",
         "fenix": "fenix",

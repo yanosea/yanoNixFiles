@@ -27,8 +27,10 @@
           if [ -L "$vesktopThemeDest" ]; then
             $DRY_RUN_CMD rm -f "$vesktopThemeDest"
           elif [ -d "$vesktopThemeDest" ]; then
-            # reclaim it only when vesktop left it empty, never drop real themes
-            $DRY_RUN_CMD rmdir "$vesktopThemeDest" || true
+            # links into the store are leftovers of the old per-file scheme, not real themes
+            $DRY_RUN_CMD find "$vesktopThemeDest" -maxdepth 1 -type l -lname '/nix/store/*' -delete
+            # reclaim it only when that left it empty, never drop real themes
+            $DRY_RUN_CMD rmdir "$vesktopThemeDest" 2>/dev/null || true
           fi
           if [ -e "$vesktopThemeDest" ]; then
             echo "vesktop: $vesktopThemeDest is not empty, skipping theme link" >&2

@@ -4,6 +4,7 @@
   # home
   home = {
     packages = with pkgs; [
+      agy-acp-server
       antigravity-cli
       claude-code
       claude-powerline
@@ -11,6 +12,7 @@
       grok-build
       kiro-cli
       spec-kit
+      toad
     ];
   };
 }

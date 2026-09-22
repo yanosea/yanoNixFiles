@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  messages,
   pkgs,
 
   ...
@@ -66,11 +67,12 @@ in
               '';
             in
             lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              echo ""
-              echo "update sheldon plugins..."
-              echo ""
-              ${script}
-              echo ""
+              ${messages.blank}
+              ${messages.step {
+                start = "update sheldon plugins...";
+                done = "update sheldon plugins done!";
+                body = "${script}";
+              }}
             '';
         };
       };

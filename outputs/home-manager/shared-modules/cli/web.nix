@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  messages,
   pkgs,
 
   ...
@@ -85,11 +86,12 @@ in
               '';
             in
             lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              echo ""
-              echo "update web development tools..."
-              echo ""
-              ${script}
-              echo ""
+              ${messages.blank}
+              ${messages.step {
+                start = "update web development tools...";
+                done = "update web development tools done!";
+                body = "${script}";
+              }}
             '';
         };
       };

@@ -26,7 +26,8 @@ gh-pr-merge-wait() {
   fi
 
   while true; do
-    gh pr merge "$pr_number"
+    # --merge keeps this usable from a script: without a strategy gh only asks interactively
+    gh pr merge "$pr_number" --merge
     local state
     state=$(gh pr view "$pr_number" --json state --jq '.state')
     if [[ "$state" == "MERGED" ]]; then

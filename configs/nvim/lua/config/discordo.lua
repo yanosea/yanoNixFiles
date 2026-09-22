@@ -15,13 +15,8 @@ if not is_discordo_available() then
 end
 -- define module
 local M = {}
--- configuration
-local config = {
-	-- window split ratio
-	split_ratio = 0.5,
-	-- terminal height ratio within right split
-	terminal_height_ratio = 0.6,
-}
+-- layout ratios, shared with the other agent tui wrappers
+local config = require("utils.agent_layout")
 -- store window references and state
 M._windows = {
 	main_win = nil,
@@ -103,6 +98,8 @@ end
 
 -- close windows but keep buffers and process
 function M._close_windows()
+	-- keep a manual resize for the next open
+	config.remember(M._windows.discordo_win, M._windows.input_win)
 	-- close input window
 	if M._windows.input_win and vim.api.nvim_win_is_valid(M._windows.input_win) then
 		vim.api.nvim_win_close(M._windows.input_win, true)

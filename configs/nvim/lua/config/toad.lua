@@ -1,7 +1,7 @@
--- codex cli integration config
--- check if codex command is available
-local function is_codex_available()
-	local handle = io.popen("command -v codex 2>/dev/null")
+-- toad integration config
+-- check if toad command is available
+local function is_toad_available()
+	local handle = io.popen("command -v toad 2>/dev/null")
 	if handle then
 		local result = handle:read("*a")
 		handle:close()
@@ -9,8 +9,8 @@ local function is_codex_available()
 	end
 	return false
 end
--- early return if codex is not available
-if not is_codex_available() then
+-- early return if toad is not available
+if not is_toad_available() then
 	return
 end
 -- define module
@@ -24,7 +24,7 @@ M._windows = {
 	prompt_win = nil,
 	terminal_buf = nil,
 	prompt_buf = nil,
-	codex_job_id = nil,
+	toad_job_id = nil,
 }
 M._is_open = false
 
@@ -80,7 +80,7 @@ function M._recreate_split_layout()
 	M._windows.terminal_win = right_win
 	vim.api.nvim_win_set_buf(right_win, M._windows.terminal_buf)
 	-- set winbar for terminal
-	vim.api.nvim_win_set_option(right_win, "winbar", "  CODEX")
+	vim.api.nvim_win_set_option(right_win, "winbar", "  TOAD")
 	-- create horizontal split for prompt
 	vim.cmd("split")
 	local prompt_win = vim.api.nvim_get_current_win()
@@ -118,8 +118,8 @@ end
 -- @param terminal_buf: number - terminal buffer number
 -- @param terminal_win: number - terminal window number
 function M._setup_terminal_keymaps(terminal_buf, terminal_win)
-	-- set winbar for codex terminal
-	vim.api.nvim_win_set_option(terminal_win, "winbar", "  CODEX")
+	-- set winbar for toad terminal
+	vim.api.nvim_win_set_option(terminal_win, "winbar", "  TOAD")
 	-- hide layout with double Esc in normal mode
 	vim.api.nvim_buf_set_keymap(terminal_buf, "n", "<Esc><Esc>", "", {
 		callback = M.hide_layout,
@@ -174,21 +174,17 @@ function M._setup_prompt_buffer(prompt_buf, prompt_win)
 	})
 end
 
--- start codex terminal
+-- start toad terminal
 -- @param terminal_buf: number - terminal buffer number
 -- @param terminal_win: number - terminal window number
--- @param command: string|nil - optional command to run (e.g., "resume")
 -- @return boolean - success status
-function M._start_codex_terminal(terminal_buf, terminal_win, command)
+function M._start_toad_terminal(terminal_buf, terminal_win)
 	vim.api.nvim_set_current_win(terminal_win)
-	-- construct codex command
-	-- inline mode keeps the output in the terminal buffer's scrollback
-	local codex_cmd = command and string.format("codex --no-alt-screen %s", command) or "codex --no-alt-screen"
 	-- start terminal
-	local job_id = vim.fn.termopen(codex_cmd, {
+	local job_id = vim.fn.termopen("toad", {
 		buffer = terminal_buf,
 		on_exit = function()
-			vim.notify("Codex terminal closed", vim.log.levels.INFO)
+			vim.notify("Toad terminal closed", vim.log.levels.INFO)
 			vim.defer_fn(function()
 				M.close_layout()
 			end, 100)
@@ -196,16 +192,16 @@ function M._start_codex_terminal(terminal_buf, terminal_win, command)
 	})
 
 	if job_id == 0 then
-		vim.notify("Failed to start codex", vim.log.levels.ERROR)
+		vim.notify("Failed to start toad", vim.log.levels.ERROR)
 		return false
 	end
 
-	M._windows.codex_job_id = job_id
+	M._windows.toad_job_id = job_id
 	M._setup_terminal_keymaps(terminal_buf, terminal_win)
 	return true
 end
 
--- send prompt from buffer to codex terminal
+-- send prompt from buffer to toad terminal
 -- @param prompt_buf: number - prompt buffer number
 function M._send_prompt_from_buffer(prompt_buf)
 	local lines = vim.api.nvim_buf_get_lines(prompt_buf, 0, -1, false)
@@ -220,18 +216,18 @@ function M._send_prompt_from_buffer(prompt_buf)
 		vim.notify("Empty prompt", vim.log.levels.WARN)
 		return
 	end
-	M._send_to_codex_terminal(table.concat(prompt_lines, "\n"))
+	M._send_to_toad_terminal(table.concat(prompt_lines, "\n"))
 end
 
--- send prompt to codex terminal
+-- send prompt to toad terminal
 -- @param prompt: string - prompt text
-function M._send_to_codex_terminal(prompt)
-	if not M._windows.codex_job_id then
-		vim.notify("Codex terminal not started", vim.log.levels.ERROR)
+function M._send_to_toad_terminal(prompt)
+	if not M._windows.toad_job_id then
+		vim.notify("Toad terminal not started", vim.log.levels.ERROR)
 		return
 	end
 	-- send prompt to terminal
-	vim.fn.chansend(M._windows.codex_job_id, prompt)
+	vim.fn.chansend(M._windows.toad_job_id, prompt)
 	-- switch to terminal and press enter to submit
 	vim.api.nvim_set_current_win(M._windows.terminal_win)
 	vim.defer_fn(function()
@@ -248,7 +244,7 @@ function M._send_to_codex_terminal(prompt)
 	vim.api.nvim_win_set_cursor(M._windows.prompt_win, { 1, 0 })
 end
 
--- hide the layout but keep codex process running
+-- hide the layout but keep toad process running
 function M.hide_layout()
 	M._close_windows()
 	-- clear window references but keep buffers and process
@@ -258,19 +254,19 @@ function M.hide_layout()
 	M._is_open = false
 end
 
--- show the layout with existing codex process
+-- show the layout with existing toad process
 function M.show_layout()
 	M._recreate_split_layout()
 	vim.api.nvim_set_current_win(M._windows.prompt_win)
 	M._is_open = true
 end
 
--- completely close the layout and terminate codex process
+-- completely close the layout and terminate toad process
 function M.close_layout()
-	-- terminate codex process
-	if M._windows.codex_job_id then
-		vim.fn.jobstop(M._windows.codex_job_id)
-		vim.notify("Codex process terminated", vim.log.levels.INFO)
+	-- terminate toad process
+	if M._windows.toad_job_id then
+		vim.fn.jobstop(M._windows.toad_job_id)
+		vim.notify("Toad process terminated", vim.log.levels.INFO)
 	end
 	M._close_windows()
 	-- reset all references
@@ -280,15 +276,15 @@ function M.close_layout()
 		prompt_win = nil,
 		terminal_buf = nil,
 		prompt_buf = nil,
-		codex_job_id = nil,
+		toad_job_id = nil,
 	}
 	M._is_open = false
 end
 
--- open new codex layout
+-- open new toad layout
 function M.open_layout()
 	local layout = M._create_split_layout()
-	if not M._start_codex_terminal(layout.terminal_buf, layout.terminal_win) then
+	if not M._start_toad_terminal(layout.terminal_buf, layout.terminal_win) then
 		M.close_layout()
 		return
 	end
@@ -311,32 +307,10 @@ function M.toggle_layout()
 	end
 end
 
--- resume codex session with the session picker
-function M.resume_session()
-	-- close existing layout
-	if M._is_open then
-		M.close_layout()
-	end
-	local layout = M._create_split_layout()
-	-- start with the resume picker
-	if not M._start_codex_terminal(layout.terminal_buf, layout.terminal_win, "resume") then
-		M.close_layout()
-		return
-	end
-	vim.api.nvim_set_current_win(layout.prompt_win)
-	M._setup_prompt_buffer(layout.prompt_buf, layout.prompt_win)
-	M._is_open = true
-	-- switch to terminal and enter insert mode
-	vim.defer_fn(function()
-		vim.api.nvim_set_current_win(layout.terminal_win)
-		vim.cmd("startinsert")
-	end, 100)
-end
-
 -- setup commands
 function M.setup()
-	vim.api.nvim_create_user_command("Codex", M.toggle_layout, {
-		desc = "Toggle Codex terminal and prompt layout",
+	vim.api.nvim_create_user_command("Toad", M.toggle_layout, {
+		desc = "Toggle Toad terminal and prompt layout",
 	})
 end
 

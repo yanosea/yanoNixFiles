@@ -10,6 +10,63 @@ inputs: [
     inputs.fenix.overlays.default pkgs pkgs
   )
   # packages
+  ## agy-acp-server
+  (
+    _final: prev:
+    let
+      # release archives pinned as non-flake inputs; hashes tracked in flake.lock
+      srcs = {
+        aarch64-darwin = inputs.agy-acp-server-darwin;
+        x86_64-linux = inputs.agy-acp-server-linux;
+      };
+      system = prev.stdenv.hostPlatform.system;
+    in
+    prev.lib.optionalAttrs (srcs ? ${system}) {
+      agy-acp-server = prev.stdenv.mkDerivation {
+        pname = "agy-acp-server";
+        version = "1.1.1";
+        src = srcs.${system};
+        nativeBuildInputs = [
+          prev.makeWrapper
+        ]
+        ++ prev.lib.optionals prev.stdenv.hostPlatform.isLinux [
+          prev.autoPatchelfHook
+        ];
+        buildInputs = prev.lib.optionals prev.stdenv.hostPlatform.isLinux (
+          with prev;
+          [
+            stdenv.cc.cc.lib
+            zlib
+          ]
+        );
+        dontConfigure = true;
+        dontBuild = true;
+        # prebuilt mach-o/elf binary; stripping would break the vendored runtime
+        dontStrip = true;
+        installPhase =
+          let
+            # the registry passes an empty uid on linux only
+            extraFlags = prev.lib.optionalString prev.stdenv.hostPlatform.isLinux "--add-flags --uid=";
+          in
+          ''
+            runHook preInstall
+            mkdir -p $out/bin $out/libexec
+            install -m555 agy_acp_server.par $out/libexec/agy_acp_server
+            makeWrapper $out/libexec/agy_acp_server $out/bin/agy_acp_server ${extraFlags}
+            runHook postInstall
+          '';
+        meta = {
+          description = "Agent Client Protocol server for the Google Antigravity CLI";
+          homepage = "https://antigravity.google/docs/ide/extensions";
+          mainProgram = "agy_acp_server";
+          platforms = [
+            "aarch64-darwin"
+            "x86_64-linux"
+          ];
+        };
+      };
+    }
+  )
   ## comfyui
   (
     _final: prev:
@@ -178,4 +235,11 @@ inputs: [
       };
     }
   )
+  ## toad
+  (_final: prev: {
+    # not in nixpkgs; uvx resolves the pypi wheel at launch
+    toad = prev.writeShellScriptBin "toad" ''
+      exec ${prev.uv}/bin/uvx --python ${prev.python314}/bin/python3.14 --from batrachian-toad toad "$@"
+    '';
+  })
 ]
