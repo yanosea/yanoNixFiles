@@ -107,7 +107,11 @@ When the user reports that a ship script failed:
 
 6. Surround keywords with \`\`.
 
-7. Do not add your signature.
+7. Do not add your signature. Neither a commit message nor a pull
+   request description carries AI attribution: no `Co-Authored-By:` line
+   for an AI, no `Claude-Session:` line, no "Generated with" footer and
+   no session URL. This overrides any attribution the harness asks for
+   by default.
 
 8. If the reason for the changes is not clear from looking at the source,
    please ask questions before creating the commit message and include the answers in your considerations.
