@@ -1,13 +1,8 @@
 comfyui:
   base_path: /home/yanosea/google_drive/ai/
-  checkpoints: models/
-  loras: loras/
-  embeddings: embeddings/
-  vae: vae/
-  controlnet: controlnet/
-  upscale_models: upscalers/
-  svd: svd/
   # Anima (DiT + Qwen3 text encoder): finetunes ship as a diffusion_models file,
-  # the text encoder and the qwen_image VAE are shared (vae/ above).
+  # the text encoder and the qwen_image VAE live beside them.
   diffusion_models: diffusion_models/
   text_encoders: text_encoders/
+  loras: loras/
+  vae: vae/

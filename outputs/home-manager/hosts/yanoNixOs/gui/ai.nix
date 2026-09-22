@@ -169,18 +169,14 @@
               done
             fi
           }
-          # Link main models
-          link_resources "${config.home.homeDirectory}/google_drive/ai/models" "model" "safetensors ckpt"
+          # Link Anima diffusion models (the DiT itself)
+          link_resources "${config.home.homeDirectory}/google_drive/ai/diffusion_models" "diffusion model" "safetensors"
+          # Link the Qwen3 text encoder
+          link_resources "${config.home.homeDirectory}/google_drive/ai/text_encoders" "text encoder" "safetensors"
           # Link LoRAs
           link_resources "${config.home.homeDirectory}/google_drive/ai/loras" "LoRA" "safetensors"
-          # Link embeddings
-          link_resources "${config.home.homeDirectory}/google_drive/ai/embeddings" "embedding" "safetensors pt bin"
           # Link VAE
           link_resources "${config.home.homeDirectory}/google_drive/ai/vae" "VAE" "safetensors pt pth ckpt"
-          # Link ControlNet
-          link_resources "${config.home.homeDirectory}/google_drive/ai/controlnet" "ControlNet" "safetensors pth"
-          # Link upscalers
-          link_resources "${config.home.homeDirectory}/google_drive/ai/upscalers" "upscaler" "pth"
           # Set environment
           export CUDA_VISIBLE_DEVICES=0
           export INVOKEAI_ROOT=${config.home.homeDirectory}/.local/share/invokeai
@@ -346,18 +342,15 @@
       tmpfiles = {
         rules = [
           "d ${config.home.homeDirectory}/google_drive/ai 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/models 0755 - - -"
+          "d ${config.home.homeDirectory}/google_drive/ai/diffusion_models 0755 - - -"
+          "d ${config.home.homeDirectory}/google_drive/ai/text_encoders 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/loras 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/embeddings 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/vae 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/controlnet 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/upscalers 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/svd 0755 - - -"
+          "d ${config.home.homeDirectory}/google_drive/ai/video 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/outputs 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/outputs/comfyui 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/workflows 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/custom_nodes 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/prompts 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/invokeai 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/invokeai/models 0755 - - -"
         ];
