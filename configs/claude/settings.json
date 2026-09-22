@@ -61,8 +61,13 @@
     ]
   },
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-fable-5-1",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-opus-5",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-opus-5",
+    "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "1"
   },
+  "model": "opusplan",
   "permissions": {
     "defaultMode": "auto"
   },
