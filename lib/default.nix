@@ -85,6 +85,8 @@ in
       };
       extraSpecialArgs = {
         inherit homePath inputs username;
+        # status messages shared with the apps
+        messages = import ./messages.nix;
       };
       modules = modules ++ [
         inputs.sops-nix.homeManagerModules.sops

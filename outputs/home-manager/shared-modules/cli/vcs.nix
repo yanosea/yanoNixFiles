@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  messages,
   pkgs,
 
   ...
@@ -82,11 +83,12 @@ in
               '';
             in
             lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              echo ""
-              echo "sync repos..."
-              echo ""
-              ${script}
-              echo ""
+              ${messages.blank}
+              ${messages.step {
+                start = "sync repos...";
+                done = "sync repos done!";
+                body = "${script}";
+              }}
             '';
         };
       };

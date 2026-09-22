@@ -4,25 +4,16 @@ let
   lib = import ../../lib inputs;
   inherit (lib) supportedSystems;
   pkgs = system: import inputs.nixpkgs { inherit system; };
-  # color codes
-  colors = {
-    reset = "\\033[0m";
-    title = "\\033[35m"; # magenta
-    header = "\\033[33m"; # yellow
-    done = "\\033[32m"; # green
-    error = "\\033[31m"; # red
-  };
-  # echo helpers
-  echo = {
-    title = msg: ''echo -e "${colors.title}${msg}${colors.reset}"'';
-    header = msg: ''echo -e "${colors.header}${msg}${colors.reset}"'';
-    done = msg: ''echo -e "${colors.done}${msg}${colors.reset}"'';
-    error = msg: ''echo -e "${colors.error}${msg}${colors.reset}"'';
-    blank = ''echo ""'';
-  };
+  # status messages: the palette and the blank-line rule live in lib/messages.nix
+  messages = import ../../lib/messages.nix;
+  inherit (messages) colors;
   # sudo setup: prompt upfront and keep credential alive during long builds
+  # (the blank line only follows an actual password prompt)
   sudoSetup = ''
-    sudo -v
+    if ! sudo -n true 2>/dev/null; then
+      sudo -v
+      ${messages.blank}
+    fi
     while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
     SUDO_KEEPALIVE_PID=$!
     trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null' EXIT
@@ -102,104 +93,127 @@ let
       buildPath = if host.osType == "nixos" then ".config.system.build.toplevel" else ".system";
     in
     ''
-      ${echo.header "validate system configuration syntax and dependencies..."}
-      nix eval .#${configType}.${host.systemConfig}${buildPath}.drvPath --show-trace
-      ${echo.blank}
-      ${echo.header "validate home configuration syntax and dependencies..."}
-      nix eval .#homeConfigurations."${host.homeConfig}".activationPackage.drvPath --show-trace
-      ${echo.blank}
-      ${echo.header "check system build dependencies without actual building..."}
-      nix build .#${configType}.${host.systemConfig}${buildPath} --dry-run --show-trace
-      ${echo.blank}
-      ${echo.header "check home build dependencies without actual building..."}
-      nix build .#homeConfigurations."${host.homeConfig}".activationPackage --dry-run --show-trace
+      ${messages.step {
+        start = "validate system configuration syntax and dependencies...";
+        done = "validate system configuration done!";
+        body = "nix eval .#${configType}.${host.systemConfig}${buildPath}.drvPath --show-trace";
+      }}
+      ${messages.step {
+        start = "validate home configuration syntax and dependencies...";
+        done = "validate home configuration done!";
+        body = "nix eval .#homeConfigurations.\"${host.homeConfig}\".activationPackage.drvPath --show-trace";
+      }}
+      ${messages.step {
+        start = "check system build dependencies without actual building...";
+        done = "check system build dependencies done!";
+        body = "nix build .#${configType}.${host.systemConfig}${buildPath} --dry-run --show-trace";
+      }}
+      ${messages.step {
+        start = "check home build dependencies without actual building...";
+        done = "check home build dependencies done!";
+        body = "nix build .#homeConfigurations.\"${host.homeConfig}\".activationPackage --dry-run --show-trace";
+      }}
     '';
-  # helper to create system + home update script
-  mkUpdateScript = host: experimental: hostname: ''
-    ${echo.title "update ${hostname}${if experimental then " experimentally" else ""}..."}
-    ${echo.blank}
-    ${sudoSetup}
-    ${echo.blank}
-    ${
-      if host.osType == "darwin" then
-        ''
-          ${echo.title "upgrade nix..."}
-          ${echo.blank}
-          sudo determinate-nixd upgrade
-          ${echo.blank}
-          ${echo.done "upgrade nix done!"}
-          ${echo.blank}
-        ''
-      else
-        ""
-    }
-    ${echo.title "apply system configuration..."}
-    ${echo.blank}
-    ${mkSystemCommand host}
-    ${echo.blank}
-    ${echo.done "apply system configuration done!"}
-    ${echo.blank}
-    ${echo.title "apply home configuration${if experimental then " experimentally" else ""}..."}
-    ${echo.blank}
-    ${mkHomeCommand host experimental}
-    ${echo.done "apply home configuration${if experimental then " experimentally" else ""} done!"}
-    ${echo.blank}
-    ${
-      if experimental then
-        ""
-      else
-        ''
-          ${echo.title "garbage collection (system & user)..."}
-          ${echo.blank}
-          ${echo.header "cleaning up system-wide packages..."}
-          sudo nix-collect-garbage --delete-old
-          sudo -i nix profile wipe-history
-          sudo -i nix store gc
-          ${echo.blank}
-          ${echo.header "cleaning up user packages..."}
-          nix-collect-garbage --delete-old
-          nix profile wipe-history
-          nix store gc
-          ${echo.blank}
-          ${echo.done "garbage collection (system & user) done!"}
-          ${echo.blank}
-        ''
-    }
-    ${echo.done "${if experimental then "experimental " else ""}update done!"}
-    ${echo.blank}
-    ${echo.header "hint: run 'reload' or 'exec zsh' to apply shell changes"}
+  # gc steps for system & user
+  gcSteps = ''
+    ${messages.step {
+      start = "cleaning up system-wide packages...";
+      done = "cleaning up system-wide packages done!";
+      body = ''
+        sudo nix-collect-garbage --delete-old
+        sudo -i nix profile wipe-history
+        sudo -i nix store gc
+      '';
+    }}
+    ${messages.step {
+      start = "cleaning up user packages...";
+      done = "cleaning up user packages done!";
+      body = ''
+        nix-collect-garbage --delete-old
+        nix profile wipe-history
+        nix store gc
+      '';
+    }}
   '';
+  reloadHint = messages.hint "hint: run 'reload' or 'exec zsh' to apply shell changes";
+  # helper to create system + home update script
+  mkUpdateScript =
+    host: experimental: hostname:
+    let
+      suffix = if experimental then " experimentally" else "";
+    in
+    ''
+      ${messages.titleGroup {
+        start = "update ${hostname}${suffix}...";
+        done = "${if experimental then "experimental " else ""}update done!";
+        body = ''
+          ${sudoSetup}
+          ${
+            if host.osType == "darwin" then
+              messages.title {
+                start = "upgrade nix...";
+                done = "upgrade nix done!";
+                body = "sudo determinate-nixd upgrade";
+              }
+            else
+              ""
+          }
+          ${messages.title {
+            start = "apply system configuration...";
+            done = "apply system configuration done!";
+            body = mkSystemCommand host;
+          }}
+          ${messages.title {
+            start = "apply home configuration${suffix}...";
+            done = "apply home configuration${suffix} done!";
+            body = mkHomeCommand host experimental;
+          }}
+          ${
+            if experimental then
+              ""
+            else
+              messages.titleGroup {
+                start = "garbage collection (system & user)...";
+                done = "garbage collection (system & user) done!";
+                body = gcSteps;
+              }
+          }
+        '';
+      }}
+      ${reloadHint}
+    '';
   # host command generators
   hostCommands = hostname: host: {
-    system = ''
-      ${echo.title "apply system configuration..."}
-      ${echo.blank}
-      ${sudoSetup}
-      ${echo.blank}
-      ${mkSystemCommand host}
-      ${echo.blank}
-      ${echo.done "apply system configuration done!"}
-    '';
+    system = messages.title {
+      start = "apply system configuration...";
+      done = "apply system configuration done!";
+      body = ''
+        ${sudoSetup}
+        ${mkSystemCommand host}
+      '';
+    };
     home = ''
-      ${echo.title "apply home configuration..."}
-      ${echo.blank}
-      ${mkHomeCommand host false}
-      ${echo.done "apply home configuration done!"}
-      ${echo.blank}
-      ${echo.header "hint: run 'reload' or 'exec zsh' to apply shell changes"}
+      ${messages.title {
+        start = "apply home configuration...";
+        done = "apply home configuration done!";
+        body = mkHomeCommand host false;
+      }}
+      ${reloadHint}
     '';
     update = mkUpdateScript host false hostname;
     experiment = mkUpdateScript host true hostname;
-    test = ''
-      ${echo.title "test ${hostname} configuration..."}
-      ${echo.blank}
-      ${echo.header "check flake configuration..."}
-      nix flake check
-      ${echo.blank}
-      ${mkTestScript host}
-      ${echo.blank}
-      ${echo.done "test done!"}
-    '';
+    test = messages.titleGroup {
+      start = "test ${hostname} configuration...";
+      done = "test done!";
+      body = ''
+        ${messages.step {
+          start = "check flake configuration...";
+          done = "check flake configuration done!";
+          body = "nix flake check";
+        }}
+        ${mkTestScript host}
+      '';
+    };
   };
   # create host-specific app
   mkHostApp =
@@ -214,15 +228,16 @@ let
         # verify hostname matches
         CURRENT_HOST="$(hostname)"
         if [[ "$CURRENT_HOST" != "${hostname}" ]]; then
-          ${echo.error "error: hostname mismatch"}
+          ${messages.error "error: hostname mismatch"}
           echo -e "  expected: ${hostname}"
           echo -e "  actual:   $CURRENT_HOST"
-          ${echo.blank}
-          echo -e "use ${colors.header}nix run .#$CURRENT_HOST-${target}${colors.reset} or ${colors.header}nix run .#${target}${colors.reset} instead"
+          ${messages.blank}
+          echo -e "use ${colors.hint}nix run .#$CURRENT_HOST-${target}${colors.reset} or ${colors.hint}nix run .#${target}${colors.reset} instead"
           exit 1
         fi
         # execute target action
-        ${commands.${target} or "${echo.error "unsupported target: ${target}"}"}
+        ${messages.blank}
+        ${commands.${target} or "${messages.error "unsupported target: ${target}"}"}
       '';
     in
     {
@@ -247,7 +262,7 @@ let
                   ;;'') hostNames
           )}
           *)
-            ${echo.error "unsupported hostname: $HOSTNAME"}
+            ${messages.error "unsupported hostname: $HOSTNAME"}
             exit 1
             ;;
         esac
@@ -258,48 +273,37 @@ let
       program = "${script}";
     };
   # gc script for system & user
-  gcSystemScript = ''
-    ${echo.title "garbage collection (system & user)..."}
-    ${echo.blank}
-    ${sudoSetup}
-    ${echo.blank}
-    ${echo.header "cleaning up system-wide packages..."}
-    sudo nix-collect-garbage --delete-old
-    sudo -i nix profile wipe-history
-    sudo -i nix store gc
-    ${echo.blank}
-    ${echo.header "cleaning up user packages..."}
-    nix-collect-garbage --delete-old
-    nix profile wipe-history
-    nix store gc
-    ${echo.blank}
-    ${echo.done "garbage collection (system & user) done!"}
-  '';
+  gcSystemScript = messages.titleGroup {
+    start = "garbage collection (system & user)...";
+    done = "garbage collection (system & user) done!";
+    body = ''
+      ${sudoSetup}
+      ${gcSteps}
+    '';
+  };
   # utility command generators
   utilityCommands = {
-    format = ''
-      ${echo.title "format files..."}
-      ${echo.blank}
-      nix fmt
-      ${echo.blank}
-      ${echo.done "format done!"}
-    '';
+    format = messages.title {
+      start = "format files...";
+      done = "format done!";
+      body = "nix fmt";
+    };
     gc = gcSystemScript;
     "gc.system" = gcSystemScript;
-    "gc.user" = ''
-      ${echo.title "garbage collection (user)..."}
-      ${echo.blank}
-      nix profile wipe-history
-      nix store gc
-      ${echo.blank}
-      ${echo.done "garbage collection (user) done!"}
-    '';
-    clean = ''
-      ${echo.title "clean result directory..."}
-      ${echo.blank}
-      rm -fr result
-      ${echo.done "clean done!"}
-    '';
+    "gc.user" = messages.title {
+      start = "garbage collection (user)...";
+      done = "garbage collection (user) done!";
+      body = ''
+        nix profile wipe-history
+        nix store gc
+      '';
+    };
+    clean = messages.title {
+      start = "clean result directory...";
+      done = "clean done!";
+      body = "rm -fr result";
+      quiet = true;
+    };
     help = ''
       CURRENT_HOST="$(hostname)"
       # calculate max width based on longest command (hostname-experiment)
@@ -311,25 +315,24 @@ let
         local desc="$2"
         printf "      ${colors.done}%-''${WIDTH}s${colors.reset} - %s\n" "$cmd" "$desc"
       }
-      ${echo.header "detected hostname: $CURRENT_HOST"}
-      ${echo.blank}
+      ${messages.hint "detected hostname: $CURRENT_HOST"}
       echo -e "  ${colors.title}available commands:${colors.reset}"
-      ${echo.blank}
-      echo -e "    ${colors.header}[host-specific operations (auto-detect)]${colors.reset}"
+      ${messages.blank}
+      echo -e "    ${colors.hint}[host-specific operations (auto-detect)]${colors.reset}"
       print_cmd "nix run .#update" "update whole system"
       print_cmd "nix run .#system" "apply system configuration"
       print_cmd "nix run .#home" "apply home configuration"
       print_cmd "nix run .#experiment" "experimental update (time-consuming sync operations are disabled)"
       print_cmd "nix run .#test" "test configuration (dry-run)"
-      ${echo.blank}
-      echo -e "    ${colors.header}[host-specific operations (explicit)]${colors.reset}"
+      ${messages.blank}
+      echo -e "    ${colors.hint}[host-specific operations (explicit)]${colors.reset}"
       print_cmd "nix run .#$CURRENT_HOST-update" "update whole system"
       print_cmd "nix run .#$CURRENT_HOST-system" "apply system configuration"
       print_cmd "nix run .#$CURRENT_HOST-home" "apply home configuration"
       print_cmd "nix run .#$CURRENT_HOST-experiment" "experimental update (time-consuming sync operations are disabled)"
       print_cmd "nix run .#$CURRENT_HOST-test" "test configuration (dry-run)"
-      ${echo.blank}
-      echo -e "    ${colors.header}[utility operations]${colors.reset}"
+      ${messages.blank}
+      echo -e "    ${colors.hint}[utility operations]${colors.reset}"
       print_cmd "nix run .#format" "format files"
       print_cmd "nix run .#gc" "garbage collection (system & user)"
       print_cmd "nix run .#gc.system" "garbage collection (system & user)"
@@ -346,7 +349,8 @@ let
       script = p.writeShellScript "util-${target}" ''
         set -euo pipefail
         cd "${repoRoot}"
-        ${utilityCommands.${target} or "${echo.error "unsupported target: ${target}"}"}
+        ${messages.blank}
+        ${utilityCommands.${target} or "${messages.error "unsupported target: ${target}"}"}
       '';
     in
     {
