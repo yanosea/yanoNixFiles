@@ -50,6 +50,10 @@ let
     "hypr/hypridle.conf".source = ./hypr/hypridle.conf;
     "hypr/hyprpaper.conf".source = ./hypr/hyprpaper.conf;
   };
+  # claude user memory (the rest of configs/claude is deployed by the generic loop)
+  claudeConfigEntries = {
+    "claude/CLAUDE.md".source = ./agents/global-rules.md;
+  };
   # codex config files (config.toml is deployed by an activation copy instead,
   # since codex writes hook-trust and project-trust state back into it)
   codexConfigEntries = {
@@ -163,6 +167,7 @@ in
     configFile =
       configFiles
       // quickshellOverride
+      // claudeConfigEntries
       // codexConfigEntries
       // grokConfigEntries
       // hyprConfigEntries
