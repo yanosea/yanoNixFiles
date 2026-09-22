@@ -1,6 +1,7 @@
 # Ship command for jj (Jujutsu)
 
-- First, check the current working copy changes using `git diff` and analyze the intent and context of the changes.
+- First, check every change in the working copy with `git status --porcelain` and `git diff HEAD`,
+  including untracked files, and analyze the intent and context of the changes.
 - If any of the following apply, stop and ask questions or suggest improvements before proceeding:
   - The intent of the changes is unclear
   - The changes do not follow best practices
@@ -15,7 +16,7 @@
   1. `gh issue create` command:
      - one command per logical unit, in the order the commits will be made
      - title format: `(scope) description` (e.g., `(ai) expand workflow`)
-     - no body
+     - `--body ""`: the script pipes gh's output, so gh never prompts for one
      - label: `bug` for `fix:` prefix, `enhancement` for others
      - assignee: self (`@me`)
   2. `nix fmt` command to format files
@@ -39,7 +40,9 @@
        - multiple commits: write a `## Summary` section with bullet points for each commit's changes, then append one `closes #<issue-number>` line per issue
      - label: same as issue
      - assignee: same as issue (`@me`)
-  7. `gh pr merge <pr-number>` command to merge the pull request
+  7. merge commands: `source configs/zsh/functions/workflow.zsh`, then `gh-pr-merge-wait "$PR"`,
+     which retries until the pull request is merged. Source the repository's copy, not the
+     deployed one: a fix to the function has to work before the next activation
   8. cleanup commands:
      - `jj git fetch && jj rebase -o main && jj bookmark delete <bookmark>`
 
@@ -53,20 +56,45 @@
   - Use `git status` instead of `jj status`
   - Use `git log` instead of `jj log`
 
-- Predict the issue number and PR number using `gh`:
-  - Get the latest number: `gh pr list --state all --limit 1 --json number --jq '.[0].number'`
-  - The next issue number = latest + 1, PR number = latest + 2; with N logical units the issues are latest + 1 .. latest + N and the PR number is latest + N + 1
-  - Use the predicted numbers directly in all commands (no variables or placeholders)
+- Never predict numbers; the script captures them from `gh`:
+  - one `ISSUE_<unit>=$(gh issue create ... | grep -oE '[0-9]+$')` per unit, in commit order
+  - the bookmark is `"$ISSUE_<first>-<issue-title-in-kebab-case>"`, kept in a `BOOKMARK` variable
+    and reused by `jj bookmark create`, `jj git push -b` and `gh pr create --head`
+  - `PR=$(gh pr create ... | grep -oE '[0-9]+$')` feeds the merge step
 
-- Write all commands to `/tmp/ship-<repo-name>-<issue-number>.md` as a markdown file with the following format:
+- Write the sequence to `/tmp/ship-<repo-name>-<timestamp>.sh` as an executable zsh script.
+  Piping the output to the log makes every `gh` call non-interactive, so each one has to carry
+  the flags it would otherwise prompt for:
   - `<repo-name>` is the current repository name (e.g., `yanoNixFiles`). Detect it from the git remote URL or the current directory name.
-  - `<issue-number>` is the first issue number when there are several
-  - Use `# Ship #<issue-number>` as the document title
-  - Group each step with a `##` heading (e.g., `## Issue`, `## Format`, `## Commit`, `## Branch`, `## Push`, `## PR`, `## Merge`, `## Cleanup`)
-  - Wrap each command in a ```bash code block
-  - No shebang, no variables, no script logic
+  - `<timestamp>` is `date +%Y%m%d-%H%M`
+  - start with `#!/usr/bin/env zsh`, `set -euo pipefail` and `cd "$(git rev-parse --show-toplevel)"`
+  - append every line to `${0:a:r}.log` under a `=== RUN <date> ===` header, so each attempt
+    lands on disk next to the script and earlier attempts stay readable
+  - a `step` helper printing `=== <name> ===` before each phase, using the same phase names the
+    markdown version used as headings
+  - an `ERR` trap that prints the phase, the line, the exit code and the log path, then exits:
+    the run stops at the first failure and every id captured so far is already in the log
+  - echo each captured id (`ISSUE_...=`, `BRANCH=`, `PR=`) so the log carries the state
+  - one command per line in the order above, with no logic beyond the helpers and the captures
+- On failure, follow the recovery procedure below; the log carries everything it needs.
 
-- At the end of your reply, show the output file path: `/tmp/ship-<repo-name>-<issue-number>.md`
+- At the end of your reply, show the command to run it: `zsh /tmp/ship-<repo-name>-<timestamp>.sh`
+
+## Recovery
+
+When the user reports that a ship script failed:
+
+1. Read the newest `/tmp/ship-*.log`, last `=== RUN` block, before asking anything.
+2. Take from it: the completed phases (`===` headers), every captured id (`ISSUE_*=`, `BRANCH=`,
+   `PR=`), the failing phase, line and exit code, and the error text above `=== FAILED ===`.
+3. Diagnose from that error text; look at the repository only when the log is not enough.
+4. Update the same script in place so the user can simply run it again:
+   - replace each completed capture with its literal value (`ISSUE_PACKAGE=1739`, `PR=1747`)
+   - drop the commands that already succeeded; an existing bookmark keeps its literal name and
+     loses its `jj bookmark create`
+   - fix the failing command, or explain the options and ask when the fix is the user's call
+   - keep everything after the failure untouched
+5. Reply with the cause, what changed in the script, and the same run command.
 
 ## Rules
 
