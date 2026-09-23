@@ -148,7 +148,10 @@
           chmod u+w ${config.home.homeDirectory}/.local/share/invokeai/invokeai.yaml
           # Setup models directory and symlinks
           mkdir -p ${config.home.homeDirectory}/.local/share/invokeai/models
-          echo "Creating symlinks for AI resources from Google Drive..."
+          echo "Creating symlinks for AI resources..."
+          # The assets moved out of Google Drive, so every link made under the
+          # old layout dangles. ln refuses to overwrite one, so clear them first.
+          find ${config.home.homeDirectory}/.local/share/invokeai/models -maxdepth 1 -xtype l -delete
           # Function to link files from a directory
           link_resources() {
             local source_dir=$1
@@ -170,13 +173,13 @@
             fi
           }
           # Link Anima diffusion models (the DiT itself)
-          link_resources "${config.home.homeDirectory}/google_drive/ai/diffusion_models" "diffusion model" "safetensors"
+          link_resources "${config.home.homeDirectory}/.local/share/ai-assets/diffusion_models" "diffusion model" "safetensors"
           # Link the Qwen3 text encoder
-          link_resources "${config.home.homeDirectory}/google_drive/ai/text_encoders" "text encoder" "safetensors"
+          link_resources "${config.home.homeDirectory}/.local/share/ai-assets/text_encoders" "text encoder" "safetensors"
           # Link LoRAs
-          link_resources "${config.home.homeDirectory}/google_drive/ai/loras" "LoRA" "safetensors"
+          link_resources "${config.home.homeDirectory}/.local/share/ai-assets/loras" "LoRA" "safetensors"
           # Link VAE
-          link_resources "${config.home.homeDirectory}/google_drive/ai/vae" "VAE" "safetensors pt pth ckpt"
+          link_resources "${config.home.homeDirectory}/.local/share/ai-assets/vae" "VAE" "safetensors pt pth ckpt"
           # Set environment
           export CUDA_VISIBLE_DEVICES=0
           export INVOKEAI_ROOT=${config.home.homeDirectory}/.local/share/invokeai
@@ -342,11 +345,12 @@
       tmpfiles = {
         rules = [
           "d ${config.home.homeDirectory}/google_drive/ai 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/diffusion_models 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/text_encoders 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/loras 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/vae 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/video 0755 - - -"
+          "d ${config.home.homeDirectory}/.local/share/ai-assets 0755 - - -"
+          "d ${config.home.homeDirectory}/.local/share/ai-assets/diffusion_models 0755 - - -"
+          "d ${config.home.homeDirectory}/.local/share/ai-assets/text_encoders 0755 - - -"
+          "d ${config.home.homeDirectory}/.local/share/ai-assets/loras 0755 - - -"
+          "d ${config.home.homeDirectory}/.local/share/ai-assets/vae 0755 - - -"
+          "d ${config.home.homeDirectory}/.local/share/ai-assets/video 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/outputs 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/outputs/comfyui 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/workflows 0755 - - -"
