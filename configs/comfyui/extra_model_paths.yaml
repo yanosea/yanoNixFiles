@@ -1,5 +1,8 @@
 comfyui:
-  base_path: /home/yanosea/google_drive/ai/
+  # The assets live outside Google Drive, on this machine only: Drive mirrors
+  # to every PC and the models were 135GB of it. Each one is listed in
+  # ~/google_drive/ai/docs/model-assets-inventory.md with the URL it came from.
+  base_path: /home/yanosea/.local/share/ai-assets/
   # Anima (DiT + Qwen3 text encoder): finetunes ship as a diffusion_models file,
   # the text encoder and the qwen_image VAE live beside them.
   diffusion_models: diffusion_models/
