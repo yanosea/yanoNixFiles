@@ -8,6 +8,10 @@
 
 set -uo pipefail
 
+# only the openclaw gateway wrapper exports this; its agent has no use for
+# plugin bookkeeping meant for interactive sessions
+[ -n "${OPENCLAW_STATE_DIR:-}" ] && exit 0
+
 PLUGINS_CONF="${HOME}/.config/claude/plugins.conf"
 MARKETPLACE_CACHE="${HOME}/.cache/claude-plugin-sync/claude-plugins-official.json"
 # every registered marketplace, so entries from non-official ones (superpowers)
