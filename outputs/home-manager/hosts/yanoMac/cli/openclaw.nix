@@ -71,6 +71,13 @@ in
             ];
           };
         };
+        memory = {
+          search = {
+            # threads and dms are separate sessions, so recall across them is the
+            # only way the agent carries context between them
+            rememberAcrossConversations = true;
+          };
+        };
         plugins = {
           # bundled but off until named here
           entries = {
@@ -120,6 +127,10 @@ in
               "\${OPENCLAW_DISCORD_USER_ID}"
             ];
             dmPolicy = "allowlist";
+            # a thread otherwise starts blank; seed it from the channel it grew out of
+            thread = {
+              inheritParent = true;
+            };
             # keyed by the numeric server id, which ${VAR} cannot template out
             guilds = {
               "$include" = config.sops.secrets.OPENCLAW_DISCORD_GUILDS.path;
