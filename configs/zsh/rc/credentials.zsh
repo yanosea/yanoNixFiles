@@ -6,6 +6,8 @@
 export ANTHROPIC_API_KEY=$(cat $XDG_DATA_HOME/sops/ANTHROPIC_API_KEY 2>/dev/null || echo "")
 # openai api
 export OPENAI_API_KEY=$(cat $XDG_DATA_HOME/sops/OPENAI_API_KEY 2>/dev/null || echo "")
+# openclaw gateway (the cli needs the same token the gateway is started with)
+export OPENCLAW_GATEWAY_TOKEN=$(cat $XDG_DATA_HOME/sops/OPENCLAW_GATEWAY_TOKEN 2>/dev/null || echo "")
 # spotify api
 export SPOTIFY_ID=$(cat $XDG_DATA_HOME/sops/SPOTIFY_ID 2>/dev/null || echo "")
 export SPOTIFY_REDIRECT_URI=$(cat $XDG_DATA_HOME/sops/SPOTIFY_REDIRECT_URI 2>/dev/null || echo "")

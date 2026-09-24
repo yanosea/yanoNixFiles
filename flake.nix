@@ -88,6 +88,25 @@
         };
       };
     };
+    ## openclaw
+    openclaw = {
+      url = "github:openclaw/nix-openclaw";
+      inputs = {
+        home-manager = {
+          follows = "home-manager";
+        };
+        nix-openclaw-tools = {
+          inputs = {
+            nixpkgs = {
+              follows = "nixpkgs";
+            };
+          };
+        };
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
+    };
     ## terminal-browser (release tarballs; hashes live in flake.lock only)
     terminal-browser-darwin = {
       url = "https://github.com/zenbu-labs/terminal-browser/releases/latest/download/terminal-browser-darwin-arm64.tar.gz";

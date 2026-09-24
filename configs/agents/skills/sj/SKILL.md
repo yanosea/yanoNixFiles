@@ -79,8 +79,9 @@ description: Prepare the full jj (Jujutsu) ship sequence - issue, format, descri
     markdown version used as headings
   - an `ERR` trap that prints the phase, the line, the exit code and the log path, then exits:
     the run stops at the first failure and every id captured so far is already in the log
-  - `trap - ERR` around a command that is expected to fail and retry, such as the merge wait:
-    in zsh the trap fires even under `set +e`, so leaving it armed aborts the retry loop
+  - `trap - ERR` _and_ `set +e` around a command that is expected to fail and retry, such as
+    the merge wait: in zsh the trap fires even under `set +e`, and `set -e` exits the shell on
+    the first non-zero status before the loop can retry, so both have to be off
   - echo each captured id (`ISSUE_...=`, `BRANCH=`, `PR=`) so the log carries the state
   - one command per line in the order above, with no logic beyond the helpers and the captures
 - On failure, follow the recovery procedure below; the log carries everything it needs.

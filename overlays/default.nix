@@ -158,6 +158,43 @@ inputs: [
       };
     }
   )
+  ## openclaw
+  # the home-manager module reads pkgs.openclawPackages, so take the whole overlay
+  inputs.openclaw.overlays.default
+  ## openclaw discord bundling
+  (
+    _final: prev:
+    let
+      # only plugins inside the host package get durable state, so the
+      # `plugins.load.paths` route is refused (openclaw/nix-openclaw#158)
+      gateway = prev.openclaw-gateway.overrideAttrs (old: {
+        installPhase = ''
+          ${old.installPhase}
+          ext="$out/lib/node_modules/openclaw/dist/extensions/discord"
+          cp -r ${prev.openclawRuntimePlugins.discord} "$ext"
+          chmod -R u+w "$ext"
+          # pins the peer to the gateway it was built against, which would load
+          # a second runtime copy; bundled extensions resolve it from the parent
+          rm -f "$ext/node_modules/openclaw"
+        '';
+      });
+      withDiscord =
+        set:
+        set
+        // {
+          openclaw-gateway = gateway;
+          openclaw = set.openclaw.override { openclaw-gateway = gateway; };
+        };
+    in
+    {
+      openclaw-gateway = gateway;
+      openclaw = prev.openclaw.override { openclaw-gateway = gateway; };
+      # the module composes a fresh set when a tool override applies
+      openclawPackages = (withDiscord prev.openclawPackages) // {
+        withTools = args: withDiscord (prev.openclawPackages.withTools args);
+      };
+    }
+  )
   ## terminal-browser
   (
     _final: prev:
