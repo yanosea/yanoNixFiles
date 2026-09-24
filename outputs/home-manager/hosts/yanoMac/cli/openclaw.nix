@@ -49,6 +49,9 @@ in
       environment = {
         OPENCLAW_DISCORD_BOT_TOKEN = config.sops.secrets.OPENCLAW_DISCORD_BOT_TOKEN.path;
         OPENCLAW_DISCORD_USER_ID = config.sops.secrets.OPENCLAW_DISCORD_USER_ID.path;
+        # launchd inherits no login shell, and the claude cli keeps its
+        # credentials here rather than in its default ~/.claude
+        CLAUDE_CONFIG_DIR = "${config.xdg.configHome}/claude";
         # without a fixed token every paired client drops on restart
         OPENCLAW_GATEWAY_TOKEN = config.sops.secrets.OPENCLAW_GATEWAY_TOKEN.path;
         NODE_OPTIONS = "--import file://${esmLoaderShim}";
