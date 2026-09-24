@@ -2,6 +2,7 @@
 {
   config,
   inputs,
+  lib,
   pkgs,
   username,
   ...
@@ -15,13 +16,23 @@ in
   imports = [
     inputs.openclaw.homeManagerModules.openclaw
   ];
-  # sops
-  sops = {
-    secrets = {
-      # `$include` refuses paths outside the config root
-      OPENCLAW_DISCORD_GUILDS = {
-        path = "${config.programs.openclaw.stateDir}/guilds.json5";
-      };
+  # home
+  home = {
+    activation = {
+      # sops-nix can only place a symlink and `$include` rejects one that
+      # resolves out of the config root, so decrypt this one straight in
+      openclawGuilds =
+        lib.hm.dag.entryBetween [ "openclawLaunchdRelink" ] [ "generateAgeKey" "openclawDirs" ]
+          ''
+            dst="${config.programs.openclaw.stateDir}/guilds.json5"
+            # a stale symlink here would redirect the write into the sops store
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/rm -f "$dst"
+            $DRY_RUN_CMD env SOPS_AGE_KEY_FILE="${config.xdg.configHome}/sops/age/keys.txt" \
+              ${pkgs.sops}/bin/sops --decrypt \
+              --extract '["OPENCLAW_DISCORD_GUILDS"]' \
+              "${config.sops.defaultSopsFile}" >"$dst"
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 600 "$dst"
+          '';
     };
   };
   # programs
@@ -38,6 +49,9 @@ in
       environment = {
         OPENCLAW_DISCORD_BOT_TOKEN = config.sops.secrets.OPENCLAW_DISCORD_BOT_TOKEN.path;
         OPENCLAW_DISCORD_USER_ID = config.sops.secrets.OPENCLAW_DISCORD_USER_ID.path;
+        # launchd inherits no login shell, and the claude cli keeps its
+        # credentials here rather than in its default ~/.claude
+        CLAUDE_CONFIG_DIR = "${config.xdg.configHome}/claude";
         # without a fixed token every paired client drops on restart
         OPENCLAW_GATEWAY_TOKEN = config.sops.secrets.OPENCLAW_GATEWAY_TOKEN.path;
         NODE_OPTIONS = "--import file://${esmLoaderShim}";
@@ -133,7 +147,7 @@ in
             };
             # keyed by the numeric server id, which ${VAR} cannot template out
             guilds = {
-              "$include" = config.sops.secrets.OPENCLAW_DISCORD_GUILDS.path;
+              "$include" = "${config.programs.openclaw.stateDir}/guilds.json5";
             };
             token = {
               source = "env";
