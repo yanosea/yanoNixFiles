@@ -11,6 +11,7 @@
       codex
       grok-build
       kiro-cli
+      openclaw
       spec-kit
       toad
     ];
