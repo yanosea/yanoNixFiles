@@ -17,6 +17,7 @@ let
     "OPENCLAW_DISCORD_CHANNEL_ID"
     "OPENCLAW_DISCORD_USER_ID"
     "OPENCLAW_GATEWAY_TOKEN"
+    "OPENCLAW_HEARTBEAT_PROMPT"
   ];
   secretPath = key: "${config.programs.openclaw.stateDir}/secrets/${key}";
 in
@@ -107,6 +108,8 @@ in
         CLAUDE_CONFIG_DIR = "${config.xdg.configHome}/claude";
         # without a fixed token every paired client drops on restart
         OPENCLAW_GATEWAY_TOKEN = secretPath "OPENCLAW_GATEWAY_TOKEN";
+        # the workspace skill it names is private, so it lives in sops
+        OPENCLAW_HEARTBEAT_PROMPT = secretPath "OPENCLAW_HEARTBEAT_PROMPT";
         NODE_OPTIONS = "--import file://${esmLoaderShim}";
       };
       # the subscription route delegates to the claude cli
@@ -117,6 +120,9 @@ in
         agents = {
           defaults = {
             heartbeat = {
+              # the stock prompt ends by asking for `NO_REPLY` when nothing
+              # needs attention, which the workspace skill contradicts
+              prompt = "\${OPENCLAW_HEARTBEAT_PROMPT}";
               # a dm neither threads nor archives, so send the unprompted ones
               # to the channel that does
               target = "discord";
@@ -124,13 +130,6 @@ in
             };
             model = {
               primary = "anthropic/claude-opus-5-5";
-            };
-            models = {
-              "anthropic/claude-opus-5-5" = {
-                agentRuntime = {
-                  id = "claude-cli";
-                };
-              };
             };
           };
         };
@@ -149,6 +148,17 @@ in
             # threads and dms are separate sessions, so recall across them is the
             # only way the agent carries context between them
             rememberAcrossConversations = true;
+          };
+        };
+        models = {
+          # pinning the runtime per model strands `/model`: anything else would
+          # fall to the api key route, which this gateway has no key for
+          providers = {
+            anthropic = {
+              agentRuntime = {
+                id = "claude-cli";
+              };
+            };
           };
         };
         plugins = {
