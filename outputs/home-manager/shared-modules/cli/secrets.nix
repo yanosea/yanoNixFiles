@@ -76,14 +76,8 @@ in
       OPENAI_API_KEY = {
         path = "${config.xdg.dataHome}/sops/OPENAI_API_KEY";
       };
-      OPENCLAW_DISCORD_BOT_TOKEN = {
-        path = "${config.xdg.dataHome}/sops/OPENCLAW_DISCORD_BOT_TOKEN";
-      };
       OPENCLAW_GATEWAY_TOKEN = {
         path = "${config.xdg.dataHome}/sops/OPENCLAW_GATEWAY_TOKEN";
-      };
-      OPENCLAW_DISCORD_USER_ID = {
-        path = "${config.xdg.dataHome}/sops/OPENCLAW_DISCORD_USER_ID";
       };
       SPOTIFY_ID = {
         path = "${config.xdg.dataHome}/sops/SPOTIFY_ID";

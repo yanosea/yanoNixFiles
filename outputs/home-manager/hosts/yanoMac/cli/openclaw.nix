@@ -11,6 +11,15 @@ let
   # any --import brings node's ESM loader up first, which is what makes the
   # bundled discord plugin's dual CJS/ESM dependency resolve
   esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
+  launchdLabel = config.programs.openclaw.launchd.label;
+  secretKeys = [
+    "OPENCLAW_DISCORD_BOT_TOKEN"
+    "OPENCLAW_DISCORD_CHANNEL_ID"
+    "OPENCLAW_DISCORD_USER_ID"
+    "OPENCLAW_GATEWAY_TOKEN"
+    "OPENCLAW_HEARTBEAT_PROMPT"
+  ];
+  secretPath = key: "${config.programs.openclaw.stateDir}/secrets/${key}";
 in
 {
   imports = [
@@ -33,6 +42,49 @@ in
               "${config.sops.defaultSopsFile}" >"$dst"
             $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 600 "$dst"
           '';
+      # openclaw hardcodes `.claude/projects` and never reads CLAUDE_CONFIG_DIR,
+      # so it found no transcript and resumed no claude-cli session
+      openclawClaudeProjects = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        link="${config.home.homeDirectory}/.claude/projects"
+        $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "${config.xdg.configHome}/claude/projects" \
+          "${config.home.homeDirectory}/.claude"
+        # `ln` would nest the link inside a real directory left here
+        if [ -d "$link" ] && [ ! -L "$link" ]; then
+          $DRY_RUN_CMD ${pkgs.coreutils}/bin/mv "$link" "$link.$(${pkgs.coreutils}/bin/date +%s).bak"
+        fi
+        $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln -sfn "${config.xdg.configHome}/claude/projects" "$link"
+      '';
+      # sops-nix decrypts onto a ram disk on darwin, so at login nothing it
+      # places exists yet and launchd hands the gateway these paths verbatim
+      openclawSecrets =
+        lib.hm.dag.entryBetween [ "openclawLaunchdRelink" ] [ "generateAgeKey" "openclawDirs" ]
+          ''
+            dir="${config.programs.openclaw.stateDir}/secrets"
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "$dir"
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 700 "$dir"
+            for key in ${lib.concatStringsSep " " secretKeys}; do
+              # a stale symlink here would redirect the write into the sops store
+              $DRY_RUN_CMD ${pkgs.coreutils}/bin/rm -f "$dir/$key"
+              $DRY_RUN_CMD env SOPS_AGE_KEY_FILE="${config.xdg.configHome}/sops/age/keys.txt" \
+                ${pkgs.sops}/bin/sops --decrypt \
+                --extract "[\"$key\"]" \
+                "${config.sops.defaultSopsFile}" >"$dir/$key"
+              $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 600 "$dir/$key"
+            done
+          '';
+      # upstream points this plist at `/nix/store`, a `noauto` volume a launchd
+      # daemon mounts, so at login it can still be a dangling symlink
+      openclawLaunchdRelink = lib.mkForce (
+        lib.hm.dag.entryAfter [ "linkGeneration" "openclawConfigFiles" ] ''
+          plist="${config.home.homeDirectory}/Library/LaunchAgents/${launchdLabel}.plist"
+          if [ -L "$plist" ]; then
+            $DRY_RUN_CMD /bin/launchctl bootout "gui/$UID/${launchdLabel}" 2>/dev/null || true
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/rm -f "$plist"
+          fi
+          # home-manager skips an unchanged plist, so restart for a new config
+          $DRY_RUN_CMD /bin/launchctl kickstart -k "gui/$UID/${launchdLabel}" 2>/dev/null || true
+        ''
+      );
     };
   };
   # programs
@@ -45,15 +97,19 @@ in
       # unset because it would rewrite them on every activation. the real path,
       # not the ~/google_drive symlink, which has no ordering against this
       workspaceDir = "${config.home.homeDirectory}/GoogleDrive/${username}/openclaw/workspace";
-      # a path in a variable not ending in _FILE is read at runtime
+      # the generated wrapper cats a value that names a file, unless the key
+      # ends in _FILE; openclaw itself would take the path as the secret
       environment = {
-        OPENCLAW_DISCORD_BOT_TOKEN = config.sops.secrets.OPENCLAW_DISCORD_BOT_TOKEN.path;
-        OPENCLAW_DISCORD_USER_ID = config.sops.secrets.OPENCLAW_DISCORD_USER_ID.path;
+        OPENCLAW_DISCORD_BOT_TOKEN = secretPath "OPENCLAW_DISCORD_BOT_TOKEN";
+        OPENCLAW_DISCORD_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_CHANNEL_ID";
+        OPENCLAW_DISCORD_USER_ID = secretPath "OPENCLAW_DISCORD_USER_ID";
         # launchd inherits no login shell, and the claude cli keeps its
         # credentials here rather than in its default ~/.claude
         CLAUDE_CONFIG_DIR = "${config.xdg.configHome}/claude";
         # without a fixed token every paired client drops on restart
-        OPENCLAW_GATEWAY_TOKEN = config.sops.secrets.OPENCLAW_GATEWAY_TOKEN.path;
+        OPENCLAW_GATEWAY_TOKEN = secretPath "OPENCLAW_GATEWAY_TOKEN";
+        # the workspace skill it names is private, so it lives in sops
+        OPENCLAW_HEARTBEAT_PROMPT = secretPath "OPENCLAW_HEARTBEAT_PROMPT";
         NODE_OPTIONS = "--import file://${esmLoaderShim}";
       };
       # the subscription route delegates to the claude cli
@@ -63,15 +119,17 @@ in
       config = {
         agents = {
           defaults = {
+            heartbeat = {
+              # the stock prompt ends by asking for `NO_REPLY` when nothing
+              # needs attention, which the workspace skill contradicts
+              prompt = "\${OPENCLAW_HEARTBEAT_PROMPT}";
+              # a dm neither threads nor archives, so send the unprompted ones
+              # to the channel that does
+              target = "discord";
+              to = "channel:\${OPENCLAW_DISCORD_CHANNEL_ID}";
+            };
             model = {
               primary = "anthropic/claude-opus-5-5";
-            };
-            models = {
-              "anthropic/claude-opus-5-5" = {
-                agentRuntime = {
-                  id = "claude-cli";
-                };
-              };
             };
           };
         };
@@ -90,6 +148,17 @@ in
             # threads and dms are separate sessions, so recall across them is the
             # only way the agent carries context between them
             rememberAcrossConversations = true;
+          };
+        };
+        models = {
+          # pinning the runtime per model strands `/model`: anything else would
+          # fall to the api key route, which this gateway has no key for
+          providers = {
+            anthropic = {
+              agentRuntime = {
+                id = "claude-cli";
+              };
+            };
           };
         };
         plugins = {
@@ -132,6 +201,11 @@ in
               enabled = true;
             };
           };
+        };
+        session = {
+          # the channel is otherwise sealed off in both directions and never
+          # sees the dms, `rememberAcrossConversations` included
+          groupScope = "main";
         };
         channels = {
           discord = {
