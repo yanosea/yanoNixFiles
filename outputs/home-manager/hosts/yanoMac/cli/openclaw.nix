@@ -41,6 +41,18 @@ in
               "${config.sops.defaultSopsFile}" >"$dst"
             $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 600 "$dst"
           '';
+      # openclaw hardcodes `.claude/projects` and never reads CLAUDE_CONFIG_DIR,
+      # so it found no transcript and resumed no claude-cli session
+      openclawClaudeProjects = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        link="${config.home.homeDirectory}/.claude/projects"
+        $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "${config.xdg.configHome}/claude/projects" \
+          "${config.home.homeDirectory}/.claude"
+        # `ln` would nest the link inside a real directory left here
+        if [ -d "$link" ] && [ ! -L "$link" ]; then
+          $DRY_RUN_CMD ${pkgs.coreutils}/bin/mv "$link" "$link.$(${pkgs.coreutils}/bin/date +%s).bak"
+        fi
+        $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln -sfn "${config.xdg.configHome}/claude/projects" "$link"
+      '';
       # sops-nix decrypts onto a ram disk on darwin, so at login nothing it
       # places exists yet and launchd hands the gateway these paths verbatim
       openclawSecrets =
