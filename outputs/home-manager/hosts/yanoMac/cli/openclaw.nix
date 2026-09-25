@@ -11,6 +11,12 @@ let
   # any --import brings node's ESM loader up first, which is what makes the
   # bundled discord plugin's dual CJS/ESM dependency resolve
   esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
+  secretKeys = [
+    "OPENCLAW_DISCORD_BOT_TOKEN"
+    "OPENCLAW_DISCORD_USER_ID"
+    "OPENCLAW_GATEWAY_TOKEN"
+  ];
+  secretPath = key: "${config.programs.openclaw.stateDir}/secrets/${key}";
 in
 {
   imports = [
@@ -33,6 +39,24 @@ in
               "${config.sops.defaultSopsFile}" >"$dst"
             $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 600 "$dst"
           '';
+      # sops-nix decrypts onto a ram disk on darwin, so at login nothing it
+      # places exists yet and launchd hands the gateway these paths verbatim
+      openclawSecrets =
+        lib.hm.dag.entryBetween [ "openclawLaunchdRelink" ] [ "generateAgeKey" "openclawDirs" ]
+          ''
+            dir="${config.programs.openclaw.stateDir}/secrets"
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "$dir"
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 700 "$dir"
+            for key in ${lib.concatStringsSep " " secretKeys}; do
+              # a stale symlink here would redirect the write into the sops store
+              $DRY_RUN_CMD ${pkgs.coreutils}/bin/rm -f "$dir/$key"
+              $DRY_RUN_CMD env SOPS_AGE_KEY_FILE="${config.xdg.configHome}/sops/age/keys.txt" \
+                ${pkgs.sops}/bin/sops --decrypt \
+                --extract "[\"$key\"]" \
+                "${config.sops.defaultSopsFile}" >"$dir/$key"
+              $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 600 "$dir/$key"
+            done
+          '';
     };
   };
   # programs
@@ -45,15 +69,16 @@ in
       # unset because it would rewrite them on every activation. the real path,
       # not the ~/google_drive symlink, which has no ordering against this
       workspaceDir = "${config.home.homeDirectory}/GoogleDrive/${username}/openclaw/workspace";
-      # a path in a variable not ending in _FILE is read at runtime
+      # the generated wrapper cats a value that names a file, unless the key
+      # ends in _FILE; openclaw itself would take the path as the secret
       environment = {
-        OPENCLAW_DISCORD_BOT_TOKEN = config.sops.secrets.OPENCLAW_DISCORD_BOT_TOKEN.path;
-        OPENCLAW_DISCORD_USER_ID = config.sops.secrets.OPENCLAW_DISCORD_USER_ID.path;
+        OPENCLAW_DISCORD_BOT_TOKEN = secretPath "OPENCLAW_DISCORD_BOT_TOKEN";
+        OPENCLAW_DISCORD_USER_ID = secretPath "OPENCLAW_DISCORD_USER_ID";
         # launchd inherits no login shell, and the claude cli keeps its
         # credentials here rather than in its default ~/.claude
         CLAUDE_CONFIG_DIR = "${config.xdg.configHome}/claude";
         # without a fixed token every paired client drops on restart
-        OPENCLAW_GATEWAY_TOKEN = config.sops.secrets.OPENCLAW_GATEWAY_TOKEN.path;
+        OPENCLAW_GATEWAY_TOKEN = secretPath "OPENCLAW_GATEWAY_TOKEN";
         NODE_OPTIONS = "--import file://${esmLoaderShim}";
       };
       # the subscription route delegates to the claude cli
