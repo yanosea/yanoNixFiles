@@ -11,6 +11,7 @@ let
   # any --import brings node's ESM loader up first, which is what makes the
   # bundled discord plugin's dual CJS/ESM dependency resolve
   esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
+  launchdLabel = config.programs.openclaw.launchd.label;
   secretKeys = [
     "OPENCLAW_DISCORD_BOT_TOKEN"
     "OPENCLAW_DISCORD_USER_ID"
@@ -57,6 +58,19 @@ in
               $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 600 "$dir/$key"
             done
           '';
+      # upstream points this plist at `/nix/store`, a `noauto` volume a launchd
+      # daemon mounts, so at login it can still be a dangling symlink
+      openclawLaunchdRelink = lib.mkForce (
+        lib.hm.dag.entryAfter [ "linkGeneration" "openclawConfigFiles" ] ''
+          plist="${config.home.homeDirectory}/Library/LaunchAgents/${launchdLabel}.plist"
+          if [ -L "$plist" ]; then
+            $DRY_RUN_CMD /bin/launchctl bootout "gui/$UID/${launchdLabel}" 2>/dev/null || true
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/rm -f "$plist"
+          fi
+          # home-manager skips an unchanged plist, so restart for a new config
+          $DRY_RUN_CMD /bin/launchctl kickstart -k "gui/$UID/${launchdLabel}" 2>/dev/null || true
+        ''
+      );
     };
   };
   # programs
