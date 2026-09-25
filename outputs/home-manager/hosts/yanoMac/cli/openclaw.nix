@@ -117,12 +117,6 @@ in
         agents = {
           defaults = {
             heartbeat = {
-              # the scheduler otherwise wakes the model every 30m all night, and
-              # only the agent itself knows these hours
-              activeHours = {
-                start = "09:00";
-                end = "23:00";
-              };
               # a dm neither threads nor archives, so send the unprompted ones
               # to the channel that does
               target = "discord";
