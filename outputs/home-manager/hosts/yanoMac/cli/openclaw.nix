@@ -14,6 +14,7 @@ let
   launchdLabel = config.programs.openclaw.launchd.label;
   secretKeys = [
     "OPENCLAW_DISCORD_BOT_TOKEN"
+    "OPENCLAW_DISCORD_CHANNEL_ID"
     "OPENCLAW_DISCORD_USER_ID"
     "OPENCLAW_GATEWAY_TOKEN"
   ];
@@ -87,6 +88,7 @@ in
       # ends in _FILE; openclaw itself would take the path as the secret
       environment = {
         OPENCLAW_DISCORD_BOT_TOKEN = secretPath "OPENCLAW_DISCORD_BOT_TOKEN";
+        OPENCLAW_DISCORD_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_CHANNEL_ID";
         OPENCLAW_DISCORD_USER_ID = secretPath "OPENCLAW_DISCORD_USER_ID";
         # launchd inherits no login shell, and the claude cli keeps its
         # credentials here rather than in its default ~/.claude
@@ -102,6 +104,18 @@ in
       config = {
         agents = {
           defaults = {
+            heartbeat = {
+              # the scheduler otherwise wakes the model every 30m all night, and
+              # only the agent itself knows these hours
+              activeHours = {
+                start = "09:00";
+                end = "23:00";
+              };
+              # a dm neither threads nor archives, so send the unprompted ones
+              # to the channel that does
+              target = "discord";
+              to = "channel:\${OPENCLAW_DISCORD_CHANNEL_ID}";
+            };
             model = {
               primary = "anthropic/claude-opus-5-5";
             };
@@ -171,6 +185,11 @@ in
               enabled = true;
             };
           };
+        };
+        session = {
+          # the channel is otherwise sealed off in both directions and never
+          # sees the dms, `rememberAcrossConversations` included
+          groupScope = "main";
         };
         channels = {
           discord = {
