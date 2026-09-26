@@ -9,11 +9,12 @@ description: Triage a failing daily flake.lock auto-update PR (branch auto-updat
 
 ```bash
 gh pr list --state open --json number,title,headRefName,createdAt
-gh run list --limit 15 --json databaseId,name,status,conclusion,headBranch,event,createdAt
+gh pr checks <n>
+gh run list --branch auto-update/flake-lock/<date> --json databaseId,name,status,conclusion,event
 ```
 
-- The PR's own `pull_request` runs sit at `action_required`; ignore them. The updater tests the PR branch through `repository_dispatch` (`test-flake`), so the runs that count are listed under `main` and created at the same time.
-- If all three test workflows passed and only `Auto Merge Dependency PR` failed, it is a timeout, not a breakage: say so and offer `gh pr merge <n> --merge`.
+- The updater opens the PR with a GitHub App token, so the PR's own `pull_request` runs are the real ones. `Auto Approve Owner's PR` is expected to be `skipped` there, because the author is the app, not the owner.
+- `Auto Merge Dependency PR` runs on `workflow_run` and is listed under `main`, not the branch. If all three test workflows passed and only that one failed, it is the 3600 s timeout, not a breakage: say so and offer `gh pr merge <n> --merge`.
 
 ## 2. Extract the error
 
