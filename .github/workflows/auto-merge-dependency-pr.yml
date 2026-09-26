@@ -92,7 +92,7 @@ jobs:
             all_success=true
             any_failed=false
             for context in "${REQUIRED_CONTEXTS[@]}"; do
-              # Check the required commit status directly, ignoring action_required check runs
+              # branch protection requires the rollup commit status, not the per-job check runs
               STATE=$(echo "$PR_DATA" | jq -r --arg ctx "$context" '
                 .statusCheckRollup[]
                 | select(.__typename == "StatusContext" and .context == $ctx)

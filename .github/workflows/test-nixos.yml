@@ -3,8 +3,6 @@ on:
   pull_request:
     branches:
       - main
-  repository_dispatch:
-    types: [test-flake]
   workflow_dispatch:
 permissions:
   # checkout only; jobs that need more declare it themselves
@@ -31,7 +29,6 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.client_payload.branch || github.ref }}
           # nothing here pushes, so do not leave the token in .git/config
           persist-credentials: false
       - name: install Nix
@@ -80,7 +77,6 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.client_payload.branch || github.ref }}
           # nothing here pushes, so do not leave the token in .git/config
           persist-credentials: false
       - name: install Nix
@@ -103,12 +99,10 @@ jobs:
     needs:
       - test-nixos-builds
       - test-home-manager-builds
-    if: always() && (github.event_name == 'repository_dispatch' || github.event_name == 'pull_request')
+    if: always() && github.event_name == 'pull_request'
     permissions:
       # post the rollup commit status
       statuses: write
-      # look up the head sha of the dispatched PR
-      pull-requests: read
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -125,30 +119,10 @@ jobs:
             echo "state=success" >> "$GITHUB_OUTPUT"
             echo "description=All tests passed" >> "$GITHUB_OUTPUT"
           fi
-      - name: get commit SHA
-        id: sha
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          REPOSITORY: ${{ github.repository }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          # pass untrusted dispatch input via env to avoid script injection
-          DISPATCH_PR_NUMBER: ${{ github.event.client_payload.pr_number }}
-        run: |
-          if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            echo "sha=$PR_HEAD_SHA" >> "$GITHUB_OUTPUT"
-          else
-            # the dispatch payload is untrusted, so reject anything but a number
-            if [[ ! "$DISPATCH_PR_NUMBER" =~ ^[0-9]+$ ]]; then
-              echo "::error::client_payload.pr_number is not a number"
-              exit 1
-            fi
-            SHA=$(gh api "/repos/$REPOSITORY/pulls/$DISPATCH_PR_NUMBER" --jq '.head.sha')
-            echo "sha=$SHA" >> "$GITHUB_OUTPUT"
-          fi
       - name: report commit status
         env:
           REPOSITORY: ${{ github.repository }}
-          COMMIT_SHA: ${{ steps.sha.outputs.sha }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           STATE: ${{ steps.status.outputs.state }}
           DESCRIPTION: ${{ steps.status.outputs.description }}
           TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
