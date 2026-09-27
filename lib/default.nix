@@ -92,6 +92,8 @@ in
           system
           username
           ;
+        # the claude model tier pins, shared by the claude and openclaw configs
+        aiModels = import ./ai-models.nix;
         # status messages shared with the apps
         messages = import ./messages.nix;
       };

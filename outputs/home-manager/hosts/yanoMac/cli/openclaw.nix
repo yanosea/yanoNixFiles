@@ -1,5 +1,6 @@
 # home openclaw module
 {
+  aiModels,
   config,
   hostname,
   inputs,
@@ -163,8 +164,10 @@ in
               target = "discord";
               to = "channel:\${OPENCLAW_DISCORD_CHANNEL_ID}";
             };
+            # the same tier the claude cli drops to outside plan mode, from
+            # lib/ai-models.nix; this gateway never plans
             model = {
-              primary = "anthropic/claude-opus-5-5";
+              primary = "anthropic/${aiModels.run}";
             };
           };
         };
