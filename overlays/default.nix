@@ -99,7 +99,7 @@ inputs: [
             zlib
           ]);
         profile = ''
-          export COMFYUI_ROOT=~/.local/share/comfyui
+          export COMFYUI_ROOT="$HOME/.local/share/comfyui"
         '';
         runScript = "${prev.bash}/bin/bash";
         meta = with prev.lib; {
@@ -146,7 +146,7 @@ inputs: [
             zlib
           ]);
         profile = ''
-          export INVOKEAI_ROOT=~/.local/share/invokeai
+          export INVOKEAI_ROOT="$HOME/.local/share/invokeai"
         '';
         runScript = "${prev.bash}/bin/bash";
         meta = with prev.lib; {
