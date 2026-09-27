@@ -71,6 +71,7 @@ in
   mkHomeManagerConfiguration =
     {
       homePath,
+      hostname,
       modules,
       overlays,
       system,
@@ -84,7 +85,13 @@ in
         };
       };
       extraSpecialArgs = {
-        inherit homePath inputs username;
+        inherit
+          homePath
+          hostname
+          inputs
+          system
+          username
+          ;
         # status messages shared with the apps
         messages = import ./messages.nix;
       };

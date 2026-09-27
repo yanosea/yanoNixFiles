@@ -36,7 +36,7 @@ let
         ./shared-modules
         ../${hostConfig.osType}/${hostname}/home.nix
       ];
-      inherit username overlays;
+      inherit hostname username overlays;
       inherit (systemConfig) system homePath;
     };
 in
