@@ -2,5 +2,6 @@
 {
   imports = [
     ./openclaw.nix
+    ./voicevox.nix
   ];
 }
