@@ -1,13 +1,17 @@
 # home openclaw module
 {
   config,
+  hostname,
   inputs,
   lib,
   pkgs,
+  system,
   username,
   ...
 }:
 let
+  # the gateway listens here; the control ui is served off the same port
+  gatewayPort = 18789;
   # any --import brings node's ESM loader up first, which is what makes the
   # bundled discord plugin's dual CJS/ESM dependency resolve
   esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
@@ -20,10 +24,41 @@ let
     "OPENCLAW_HEARTBEAT_PROMPT"
   ];
   secretPath = key: "${config.programs.openclaw.stateDir}/secrets/${key}";
+  # `imports` is resolved before the module system settles, so the `pkgs`
+  # module argument cannot be used to build one. take a bare nixpkgs instead
+  patchPkgs = inputs.nixpkgs.legacyPackages.${system};
+  # upstream declares every provider record open — zod `.catchall` for tts,
+  # typebox `additionalProperties: true` for talk — because the provider keys
+  # come from the extensions, not the core schema. nix-openclaw's generator
+  # drops that tail, so the options it emits accept `apiKey` and nothing else
+  # and `tts.providers."tts-local-cli".command` fails to evaluate. restore the
+  # freeform tail on the six records that have it upstream; the count is
+  # asserted so a regenerated file cannot quietly stop matching
+  openclawSrc = patchPkgs.runCommand "nix-openclaw-freeform-providers" { } ''
+    ${patchPkgs.coreutils}/bin/cp -r ${inputs.openclaw} $out
+    ${patchPkgs.coreutils}/bin/chmod -R u+w $out
+    ${patchPkgs.lib.getExe patchPkgs.python3} - "$out/nix/generated/openclaw-config-options.nix" <<'PY'
+    import re, sys, pathlib
+
+    path = pathlib.Path(sys.argv[1])
+    text = path.read_text()
+    # `apiKey` as the first field is what marks the open provider records
+    # (tts x4, talk x2). `models.providers` and `secrets.providers` share the
+    # shape but are closed upstream, and lead with a different field
+    pattern = re.compile(
+        r"(providers = lib\.mkOption \{\n\s*type = t\.nullOr "
+        r"\(t\.attrsOf \(t\.submodule \{) (options = \{\n\s*apiKey = )"
+    )
+    text, count = pattern.subn(r"\1 freeformType = t.attrsOf t.anything; \2", text)
+    if count != 6:
+        raise SystemExit(f"expected 6 open provider records, patched {count}")
+    path.write_text(text)
+    PY
+  '';
 in
 {
   imports = [
-    inputs.openclaw.homeManagerModules.openclaw
+    "${openclawSrc}/nix/modules/home-manager/openclaw.nix"
   ];
   # home
   home = {
@@ -133,14 +168,46 @@ in
             };
           };
         };
+        commands = {
+          # only pairing registers a command owner, and an allowlisted sender
+          # counts as approved without the handshake, so none was ever
+          # recorded and every owner-only command came back unauthorized.
+          # the pairing bootstrap writes the owner into the config too, which
+          # nix owns here, so it could not have landed either way
+          ownerAllowFrom = [ "discord:\${OPENCLAW_DISCORD_USER_ID}" ];
+          # the only sender that reaches this gateway is already the owner, so
+          # the second allowlist layer has nothing left to keep out
+          allowFrom = {
+            discord = [ "*" ];
+          };
+          # the rest of the chat commands that ship disabled. `/config`,
+          # `/mcp` and `/plugins` persist into `openclaw.json`, which is a
+          # read-only nix symlink here, so those read fine and fail on write
+          bash = true;
+          config = true;
+          debug = true;
+          mcp = true;
+          plugins = true;
+        };
         gateway = {
           # reachable from the home lan; the fixed token and this origin list are
           # what a non-loopback bind requires
           bind = "lan";
           controlUi = {
             allowedOrigins = [
-              "http://yanoMac.local:18789"
+              "https://${hostname}.local:${toString gatewayPort}"
+              "https://${hostname}:${toString gatewayPort}"
             ];
+          };
+          # the ios app refuses full access over plaintext lan `ws://` and
+          # silently pairs limited, so `operator.admin` is unreachable without
+          # this. `autoGenerate` writes a self-signed pair on first start when
+          # both files are missing; the phone has to accept that cert once
+          tls = {
+            enabled = true;
+            autoGenerate = true;
+            certPath = "${config.programs.openclaw.stateDir}/gateway-tls.crt";
+            keyPath = "${config.programs.openclaw.stateDir}/gateway-tls.key";
           };
         };
         memory = {
@@ -203,9 +270,17 @@ in
           };
         };
         session = {
-          # the channel is otherwise sealed off in both directions and never
-          # sees the dms, `rememberAcrossConversations` included
           groupScope = "main";
+        };
+        tools = {
+          elevated = {
+            enabled = true;
+            allowFrom = {
+              discord = [
+                "\${OPENCLAW_DISCORD_USER_ID}"
+              ];
+            };
+          };
         };
         channels = {
           discord = {
