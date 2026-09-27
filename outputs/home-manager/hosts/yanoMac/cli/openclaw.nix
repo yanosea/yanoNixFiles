@@ -1,5 +1,6 @@
 # home openclaw module
 {
+  aiModels,
   config,
   hostname,
   inputs,
@@ -17,6 +18,9 @@ let
   esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
   launchdLabel = config.programs.openclaw.launchd.label;
   secretKeys = [
+    # the daily-thread job's prompt names private workspace conventions, so it
+    # lives in sops next to the heartbeat prompt rather than in this repository
+    "OPENCLAW_DAILY_THREAD_EVENT"
     "OPENCLAW_DISCORD_BOT_TOKEN"
     "OPENCLAW_DISCORD_CHANNEL_ID"
     "OPENCLAW_DISCORD_USER_ID"
@@ -107,6 +111,52 @@ in
               $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 600 "$dir/$key"
             done
           '';
+      # openclaw has no config surface for scheduled jobs: `cron` in the schema
+      # only carries global behaviour, and the jobs shipped by features declare
+      # themselves in code. so the one job this workspace wants is declared from
+      # here instead, where it is reviewable and survives a rebuild.
+      # `--declaration-key` is an upsert: re-running this updates the existing
+      # job in place rather than adding a second one, so activation is safe to
+      # repeat. that key is the job's identity — renaming it creates a second
+      # job and orphans the first, so it has to stay put
+      openclawAutomations = lib.hm.dag.entryAfter [ "openclawLaunchdRelink" ] ''
+        # without the env the cli reads its own default config, points at
+        # `ws://` and never reaches this gateway. the redirections matter just
+        # as much: the cli reaches for the terminal, and activation does not
+        # always own one, so a bare call earns SIGTTOU and suspends the switch
+        openclaw() {
+          ${lib.getExe config.programs.openclaw.package} "$@" \
+            </dev/null >/dev/null 2>&1
+        }
+        export OPENCLAW_CONFIG_PATH="${config.programs.openclaw.stateDir}/openclaw.json"
+        export OPENCLAW_STATE_DIR="${config.programs.openclaw.stateDir}"
+        # the gateway was just kicked; the cli talks to it over the socket, so
+        # wait for it to answer before declaring anything
+        ready=""
+        for _ in $(${pkgs.coreutils}/bin/seq 1 30); do
+          if openclaw automations list; then
+            ready=1
+            break
+          fi
+          ${pkgs.coreutils}/bin/sleep 1
+        done
+        event="${secretPath "OPENCLAW_DAILY_THREAD_EVENT"}"
+        if [ -z "$ready" ]; then
+          echo "openclaw gateway did not answer; skipped declaring automations" >&2
+        elif [ ! -s "$event" ]; then
+          # declaring the job with an empty prompt would leave it firing into
+          # nothing every midnight, which is worse than not declaring it
+          echo "missing $event; skipped declaring automations" >&2
+        elif ! $DRY_RUN_CMD openclaw automations add \
+          --name daily-thread \
+          --display-name "Daily thread" \
+          --declaration-key workspace:daily-thread \
+          --cron "0 0 * * *" --tz Asia/Tokyo --exact \
+          --session main \
+          --system-event "$(${pkgs.coreutils}/bin/cat "$event")"; then
+          echo "failed to declare the daily-thread automation" >&2
+        fi
+      '';
       # upstream points this plist at `/nix/store`, a `noauto` volume a launchd
       # daemon mounts, so at login it can still be a dangling symlink
       openclawLaunchdRelink = lib.mkForce (
@@ -126,6 +176,12 @@ in
   programs = {
     openclaw = {
       enable = true;
+      # the mac app ships as a bundle of ~80k files, and upstream places it
+      # through `home.file` with `recursive = true`, so every rebuild relinked
+      # all of them one at a time — 99% of this generation's links and most of
+      # `make home`'s wall clock. nothing here uses the gui; the gateway runs
+      # under launchd, which this does not touch
+      installApp = false;
       # sessions, sqlite and logs; the generated config sits here too
       stateDir = "${config.xdg.stateHome}/openclaw";
       # keeps the persona files out of this public repo; `bootstrapFiles` stays
@@ -163,8 +219,10 @@ in
               target = "discord";
               to = "channel:\${OPENCLAW_DISCORD_CHANNEL_ID}";
             };
+            # the same tier the claude cli drops to outside plan mode, from
+            # lib/ai-models.nix; this gateway never plans
             model = {
-              primary = "anthropic/claude-opus-5-5";
+              primary = "anthropic/${aiModels.run}";
             };
           };
         };

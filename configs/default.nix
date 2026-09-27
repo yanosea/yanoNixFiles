@@ -1,5 +1,6 @@
 # configs (dotfiles)
 {
+  aiModels,
   lib,
   pkgs,
   ...
@@ -29,6 +30,17 @@ let
       force = true;
     };
   };
+  # settings.json is generated below rather than copied, so keep it out of the
+  # recursive link: home-manager resolves an overlap between a recursively
+  # linked directory and a single file by silently dropping the single file
+  claudeOverride = {
+    "claude" = configFiles."claude" // {
+      source = lib.fileset.toSource {
+        root = ./claude;
+        fileset = lib.fileset.difference ./claude ./claude/settings.json;
+      };
+    };
+  };
   # hypr config files with custom onChange hook for hyprland.conf
   hyprConfigEntries = {
     "hypr/hyprland.conf" = {
@@ -53,6 +65,18 @@ let
   # claude user memory (the rest of configs/claude is deployed by the generic loop)
   claudeConfigEntries = {
     "claude/CLAUDE.md".source = ./agents/global-rules.md;
+    # the model ids come from lib/ai-models.nix so one tier list drives the
+    # `opusplan` slots, the subagent pin and openclaw's primary. `opus` is the
+    # plan-mode slot and `sonnet` the execution one, whatever they resolve to
+    "claude/settings.json".source = (pkgs.formats.json { }).generate "claude-settings.json" (
+      lib.recursiveUpdate (builtins.fromJSON (builtins.readFile ./claude/settings.json)) {
+        env = {
+          ANTHROPIC_DEFAULT_OPUS_MODEL = aiModels.plan;
+          ANTHROPIC_DEFAULT_SONNET_MODEL = aiModels.run;
+          CLAUDE_CODE_SUBAGENT_MODEL = aiModels.run;
+        };
+      }
+    );
   };
   # codex config files (config.toml is deployed by an activation copy instead,
   # since codex writes hook-trust and project-trust state back into it)
@@ -167,6 +191,7 @@ in
     configFile =
       configFiles
       // quickshellOverride
+      // claudeOverride
       // claudeConfigEntries
       // codexConfigEntries
       // grokConfigEntries

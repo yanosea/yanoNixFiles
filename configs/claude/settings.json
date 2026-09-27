@@ -17,6 +17,11 @@
           },
           {
             "type": "command",
+            "command": "bash \"$HOME/.config/claude/hooks/check-model-drift.sh\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
             "command": "bash \"$HOME/.config/claude/hooks/sync-plugins.sh\"",
             "async": true,
             "timeout": 300
@@ -24,6 +29,12 @@
           {
             "type": "command",
             "command": "bash \"$HOME/.config/claude/hooks/sync-mcp-servers.sh\"",
+            "async": true,
+            "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.config/claude/hooks/sync-models.sh\"",
             "async": true,
             "timeout": 60
           },
@@ -61,10 +72,7 @@
     ]
   },
   "env": {
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-fable-5-1",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-opus-5",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-opus-5",
     "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "1"
   },
   "model": "opusplan",
