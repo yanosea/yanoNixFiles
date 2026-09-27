@@ -3,5 +3,6 @@
   imports = [
     ./openclaw.nix
     ./voicevox.nix
+    ./whisper.nix
   ];
 }
