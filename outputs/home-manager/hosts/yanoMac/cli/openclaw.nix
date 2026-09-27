@@ -176,6 +176,12 @@ in
   programs = {
     openclaw = {
       enable = true;
+      # the mac app ships as a bundle of ~80k files, and upstream places it
+      # through `home.file` with `recursive = true`, so every rebuild relinked
+      # all of them one at a time — 99% of this generation's links and most of
+      # `make home`'s wall clock. nothing here uses the gui; the gateway runs
+      # under launchd, which this does not touch
+      installApp = false;
       # sessions, sqlite and logs; the generated config sits here too
       stateDir = "${config.xdg.stateHome}/openclaw";
       # keeps the persona files out of this public repo; `bootstrapFiles` stays
