@@ -67,6 +67,51 @@ inputs: [
       };
     }
   )
+  ## aivisspeech-engine
+  (
+    _final: prev:
+    prev.lib.optionalAttrs (prev.stdenv.hostPlatform.system == "aarch64-darwin") {
+      aivisspeech-engine = prev.stdenv.mkDerivation rec {
+        pname = "aivisspeech-engine";
+        version = "1.2.0";
+        # the release ships a single-volume 7z, which fetchzip cannot open
+        src = prev.fetchurl {
+          url = "https://github.com/Aivis-Project/AivisSpeech-Engine/releases/download/${version}/AivisSpeech-Engine-macOS-arm64-${version}.7z.001";
+          hash = "sha256-WBp/NK+yxTQ/+LJ9bYiFkIM3WGhgdlfelfrVBpORhd8=";
+        };
+        nativeBuildInputs = [
+          prev._7zz
+          prev.makeWrapper
+        ];
+        unpackPhase = ''
+          runHook preUnpack
+          7zz x -y $src
+          runHook postUnpack
+        '';
+        sourceRoot = "macOS-arm64";
+        dontConfigure = true;
+        dontBuild = true;
+        # prebuilt pyinstaller bundle; stripping would break the vendored runtime
+        dontStrip = true;
+        # the engine resolves its resources next to `sys.executable`, so the
+        # bundle stays whole and bin/ gets a wrapper rather than a symlink
+        installPhase = ''
+          runHook preInstall
+          mkdir -p $out/bin $out/opt
+          cp -R . $out/opt/aivisspeech-engine
+          makeWrapper $out/opt/aivisspeech-engine/run $out/bin/aivisspeech-engine
+          runHook postInstall
+        '';
+        meta = {
+          description = "Style-Bert-VITS2 based Japanese text to speech engine";
+          homepage = "https://github.com/Aivis-Project/AivisSpeech-Engine";
+          license = prev.lib.licenses.lgpl3Only;
+          mainProgram = "aivisspeech-engine";
+          platforms = [ "aarch64-darwin" ];
+        };
+      };
+    }
+  )
   ## comfyui
   (
     _final: prev:
@@ -192,83 +237,6 @@ inputs: [
       # the module composes a fresh set when a tool override applies
       openclawPackages = (withDiscord prev.openclawPackages) // {
         withTools = args: withDiscord (prev.openclawPackages.withTools args);
-      };
-    }
-  )
-  ## terminal-browser
-  (
-    _final: prev:
-    let
-      # release tarballs pinned as non-flake inputs; hashes tracked in flake.lock
-      srcs = {
-        aarch64-darwin = inputs.terminal-browser-darwin;
-        x86_64-linux = inputs.terminal-browser-linux;
-      };
-      system = prev.stdenv.hostPlatform.system;
-    in
-    prev.lib.optionalAttrs (srcs ? ${system}) {
-      terminal-browser = prev.stdenv.mkDerivation {
-        pname = "terminal-browser";
-        version = prev.lib.removePrefix "v" (prev.lib.trim (builtins.readFile "${srcs.${system}}/VERSION"));
-        src = srcs.${system};
-        nativeBuildInputs = prev.lib.optionals prev.stdenv.hostPlatform.isLinux [
-          prev.autoPatchelfHook
-        ];
-        buildInputs = prev.lib.optionals prev.stdenv.hostPlatform.isLinux (
-          with prev;
-          [
-            alsa-lib
-            at-spi2-atk
-            at-spi2-core
-            atk
-            cairo
-            cups
-            dbus
-            expat
-            gdk-pixbuf
-            glib
-            gtk3
-            libGL
-            libdrm
-            libgbm
-            libx11
-            libxcb
-            libxcomposite
-            libxdamage
-            libxext
-            libxfixes
-            libxkbcommon
-            libxrandr
-            nspr
-            nss
-            pango
-            stdenv.cc.cc.lib
-            systemd
-          ]
-        );
-        dontConfigure = true;
-        dontBuild = true;
-        # prebuilt binaries; stripping would break the signed darwin app bundle
-        dontStrip = true;
-        installPhase = ''
-          runHook preInstall
-          # drop AppleDouble sidecar files (._*) from the tarball; the extra
-          # files break the darwin codesign resource seal ("damaged" error)
-          find . -name '._*' -delete
-          mkdir -p $out/bin $out/opt
-          cp -R . $out/opt/terminal-browser
-          ln -s $out/opt/terminal-browser/bin/terminal-browser $out/bin/terminal-browser
-          runHook postInstall
-        '';
-        meta = {
-          description = "A real browser that runs inside your terminal";
-          homepage = "https://github.com/zenbu-labs/terminal-browser";
-          mainProgram = "terminal-browser";
-          platforms = [
-            "aarch64-darwin"
-            "x86_64-linux"
-          ];
-        };
       };
     }
   )

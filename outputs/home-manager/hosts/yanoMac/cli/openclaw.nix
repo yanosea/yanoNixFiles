@@ -283,6 +283,20 @@ in
               agentRuntime = {
                 id = "claude-cli";
               };
+              # the claude cli only compacts near the 1M window by default;
+              # this budget becomes its CLAUDE_CODE_AUTO_COMPACT_WINDOW.
+              # both ids are listed because the run resolves either
+              models =
+                map
+                  (id: {
+                    inherit id;
+                    name = id;
+                    contextTokens = 300000;
+                  })
+                  [
+                    "claude-opus-5"
+                    "claude-opus-5-5"
+                  ];
             };
           };
         };
