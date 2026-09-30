@@ -4,6 +4,12 @@
 
 set -uo pipefail
 
+# openclaw-feeds runs grok unattended: do nothing
+if [ -n "${OPENCLAW_FEEDS:-}" ]; then
+  cat >/dev/null 2>&1 || true
+  exit 0
+fi
+
 input=$(cat)
 session_id=$(echo "$input" | jq -r '.sessionId // .session_id // empty')
 cwd=$(echo "$input" | jq -r '.workspaceRoot // .cwd // empty')

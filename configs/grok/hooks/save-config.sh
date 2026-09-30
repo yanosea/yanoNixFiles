@@ -6,6 +6,12 @@
 
 set -uo pipefail
 
+# openclaw-feeds runs grok unattended: do nothing
+if [ -n "${OPENCLAW_FEEDS:-}" ]; then
+  cat >/dev/null 2>&1 || true
+  exit 0
+fi
+
 cat >/dev/null
 
 LIVE="${GROK_HOME:-$HOME/.config/grok}/config.toml"

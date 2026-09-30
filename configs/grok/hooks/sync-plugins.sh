@@ -4,6 +4,12 @@
 
 set -uo pipefail
 
+# openclaw-feeds runs grok unattended: do nothing
+if [ -n "${OPENCLAW_FEEDS:-}" ]; then
+  cat >/dev/null 2>&1 || true
+  exit 0
+fi
+
 if [ -z "${GROK_PLUGIN_SYNC_DETACHED:-}" ]; then
   cat >/dev/null
   if command -v setsid >/dev/null 2>&1; then
