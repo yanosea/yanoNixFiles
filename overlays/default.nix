@@ -67,6 +67,51 @@ inputs: [
       };
     }
   )
+  ## aivisspeech-engine
+  (
+    _final: prev:
+    prev.lib.optionalAttrs (prev.stdenv.hostPlatform.system == "aarch64-darwin") {
+      aivisspeech-engine = prev.stdenv.mkDerivation rec {
+        pname = "aivisspeech-engine";
+        version = "1.2.0";
+        # the release ships a single-volume 7z, which fetchzip cannot open
+        src = prev.fetchurl {
+          url = "https://github.com/Aivis-Project/AivisSpeech-Engine/releases/download/${version}/AivisSpeech-Engine-macOS-arm64-${version}.7z.001";
+          hash = "sha256-WBp/NK+yxTQ/+LJ9bYiFkIM3WGhgdlfelfrVBpORhd8=";
+        };
+        nativeBuildInputs = [
+          prev._7zz
+          prev.makeWrapper
+        ];
+        unpackPhase = ''
+          runHook preUnpack
+          7zz x -y $src
+          runHook postUnpack
+        '';
+        sourceRoot = "macOS-arm64";
+        dontConfigure = true;
+        dontBuild = true;
+        # prebuilt pyinstaller bundle; stripping would break the vendored runtime
+        dontStrip = true;
+        # the engine resolves its resources next to `sys.executable`, so the
+        # bundle stays whole and bin/ gets a wrapper rather than a symlink
+        installPhase = ''
+          runHook preInstall
+          mkdir -p $out/bin $out/opt
+          cp -R . $out/opt/aivisspeech-engine
+          makeWrapper $out/opt/aivisspeech-engine/run $out/bin/aivisspeech-engine
+          runHook postInstall
+        '';
+        meta = {
+          description = "Style-Bert-VITS2 based Japanese text to speech engine";
+          homepage = "https://github.com/Aivis-Project/AivisSpeech-Engine";
+          license = prev.lib.licenses.lgpl3Only;
+          mainProgram = "aivisspeech-engine";
+          platforms = [ "aarch64-darwin" ];
+        };
+      };
+    }
+  )
   ## comfyui
   (
     _final: prev:
