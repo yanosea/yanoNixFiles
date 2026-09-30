@@ -35,7 +35,6 @@ in
           nodejs_latest
           pnpm
           posting
-          terminal-browser
           wget
           xh
         ];
