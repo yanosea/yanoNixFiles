@@ -5,6 +5,7 @@
   hostname,
   inputs,
   lib,
+  openclawFeeds,
   pkgs,
   system,
   username,
@@ -17,15 +18,29 @@ let
   # bundled discord plugin's dual CJS/ESM dependency resolve
   esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
   launchdLabel = config.programs.openclaw.launchd.label;
+  # the same real path as the main workspace, not the symlink
+  devWorkspaceDir = "${config.home.homeDirectory}/GoogleDrive/${username}/openclaw/workspace-dev";
+  # the private details live in the workspace skills AGENTS.md names, so the
+  # prompt itself says nothing private. the stock one ends by asking for
+  # `NO_REPLY` when nothing needs attention, which those skills contradict
+  heartbeatPrompt = "Follow the heartbeat check-in skill named in AGENTS.md. Send at most one check-in with the message tool, then reply exactly NO_REPLY.";
+  # feedsArgv <workspace>: the command a feeds job runs; its config is private
+  # and sits in the workspace
+  feedsArgv =
+    workspace:
+    lib.escapeShellArg (
+      builtins.toJSON [
+        (lib.getExe openclawFeeds)
+        "${workspace}/skills/feeds/config.json"
+      ]
+    );
   secretKeys = [
-    # the daily-thread job's prompt names private workspace conventions, so it
-    # lives in sops next to the heartbeat prompt rather than in this repository
-    "OPENCLAW_DAILY_THREAD_EVENT"
     "OPENCLAW_DISCORD_BOT_TOKEN"
     "OPENCLAW_DISCORD_CHANNEL_ID"
+    # keeps the channel id out of this public repository
+    "OPENCLAW_DISCORD_DEV_CHANNEL_ID"
     "OPENCLAW_DISCORD_USER_ID"
     "OPENCLAW_GATEWAY_TOKEN"
-    "OPENCLAW_HEARTBEAT_PROMPT"
   ];
   secretPath = key: "${config.programs.openclaw.stateDir}/secrets/${key}";
   # `imports` is resolved before the module system settles, so the `pkgs`
@@ -113,7 +128,7 @@ in
           '';
       # openclaw has no config surface for scheduled jobs: `cron` in the schema
       # only carries global behaviour, and the jobs shipped by features declare
-      # themselves in code. so the one job this workspace wants is declared from
+      # themselves in code. so the jobs these workspaces want are declared from
       # here instead, where it is reviewable and survives a rebuild.
       # `--declaration-key` is an upsert: re-running this updates the existing
       # job in place rather than adding a second one, so activation is safe to
@@ -140,21 +155,85 @@ in
           fi
           ${pkgs.coreutils}/bin/sleep 1
         done
-        event="${secretPath "OPENCLAW_DAILY_THREAD_EVENT"}"
+        devChannel="${secretPath "OPENCLAW_DISCORD_DEV_CHANNEL_ID"}"
         if [ -z "$ready" ]; then
           echo "openclaw gateway did not answer; skipped declaring automations" >&2
-        elif [ ! -s "$event" ]; then
-          # declaring the job with an empty prompt would leave it firing into
-          # nothing every midnight, which is worse than not declaring it
-          echo "missing $event; skipped declaring automations" >&2
-        elif ! $DRY_RUN_CMD openclaw automations add \
-          --name daily-thread \
-          --display-name "Daily thread" \
-          --declaration-key workspace:daily-thread \
-          --cron "0 0 * * *" --tz Asia/Tokyo --exact \
-          --session main \
-          --system-event "$(${pkgs.coreutils}/bin/cat "$event")"; then
-          echo "failed to declare the daily-thread automation" >&2
+        else
+          # the main session, not an isolated one: an isolated run would sit
+          # next to the heartbeat instead of in the conversation it continues
+          if ! $DRY_RUN_CMD openclaw automations add \
+            --name daily-thread \
+            --display-name "Daily thread" \
+            --declaration-key workspace:daily-thread \
+            --cron "0 0 * * *" --tz Asia/Tokyo --exact \
+            --session main \
+            --system-event "Use the daily-thread skill."; then
+            echo "failed to declare the daily-thread automation" >&2
+          fi
+          # the feeds jobs run openclaw-feeds with no model turn. the scheduler
+          # kills a command after 10 minutes by default, and the grok sections
+          # alone may take 20. GROK_HOME is where grok signs in, and
+          # OPENCLAW_FEEDS keeps my grok hooks out of the run. once each morning:
+          # the grok sections have to fit the plan's weekly allowance
+          if ! $DRY_RUN_CMD openclaw automations add \
+            --name feeds \
+            --display-name "Feeds" \
+            --declaration-key workspace:feeds \
+            --agent main \
+            --cron "0 6 * * *" --tz Asia/Tokyo --exact \
+            --no-deliver \
+            --timeout-seconds 1800 \
+            --command-argv ${feedsArgv config.programs.openclaw.workspaceDir} \
+            --command-env "GROK_HOME=${config.xdg.configHome}/grok" \
+            --command-env OPENCLAW_FEEDS=1; then
+            echo "failed to declare the feeds automation" >&2
+          fi
+          if ! $DRY_RUN_CMD openclaw automations add \
+            --name dev-feeds \
+            --display-name "Dev feeds" \
+            --declaration-key workspace-dev:feeds \
+            --agent dev \
+            --cron "30 6 * * *" --tz Asia/Tokyo --exact \
+            --no-deliver \
+            --timeout-seconds 1800 \
+            --command-argv ${feedsArgv devWorkspaceDir} \
+            --command-env "GROK_HOME=${config.xdg.configHome}/grok" \
+            --command-env OPENCLAW_FEEDS=1; then
+            echo "failed to declare the dev-feeds automation" >&2
+          fi
+          # both dev jobs post with the message tool into today's thread, so
+          # nothing is delivered from the final reply. `--to` stays because
+          # it is what gives the run its current channel; an empty id would
+          # leave the run with no channel to post in. the half-hour lead on
+          # dev-trends leaves dev-feeds time to refresh the file it reads
+          if [ ! -s "$devChannel" ]; then
+            echo "missing $devChannel; skipped declaring dev-trends and dev-daily-thread" >&2
+          else
+            if ! $DRY_RUN_CMD openclaw automations add \
+              --name dev-trends \
+              --display-name "Dev trends" \
+              --declaration-key workspace-dev:dev-trends \
+              --agent dev \
+              --cron "0 7,19 * * *" --tz Asia/Tokyo --exact \
+              --session isolated \
+              --no-deliver --channel discord \
+              --to "channel:$(${pkgs.coreutils}/bin/cat "$devChannel")" \
+              --message "Use the dev-trends skill."; then
+              echo "failed to declare the dev-trends automation" >&2
+            fi
+            if ! $DRY_RUN_CMD openclaw automations add \
+              --name dev-daily-thread \
+              --display-name "Dev daily thread" \
+              --declaration-key workspace-dev:daily-thread \
+              --agent dev \
+              --cron "0 0 * * *" --tz Asia/Tokyo --exact \
+              --session isolated \
+              --no-deliver --channel discord \
+              --to "channel:$(${pkgs.coreutils}/bin/cat "$devChannel")" \
+              --message "Use the daily-thread skill."; then
+              echo "failed to declare the dev-daily-thread automation" >&2
+            fi
+          fi
         fi
       '';
       # upstream points this plist at `/nix/store`, a `noauto` volume a launchd
@@ -170,6 +249,15 @@ in
           $DRY_RUN_CMD /bin/launchctl kickstart -k "gui/$UID/${launchdLabel}" 2>/dev/null || true
         ''
       );
+    };
+  };
+  # services
+  services = {
+    # the dev agent signs unattended with my key, so one passphrase entry has
+    # to last until the next login. the agent still forgets it on restart
+    gpg-agent = {
+      defaultCacheTtl = 31536000;
+      maxCacheTtl = 31536000;
     };
   };
   # programs
@@ -193,31 +281,43 @@ in
       environment = {
         OPENCLAW_DISCORD_BOT_TOKEN = secretPath "OPENCLAW_DISCORD_BOT_TOKEN";
         OPENCLAW_DISCORD_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_CHANNEL_ID";
+        OPENCLAW_DISCORD_DEV_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_DEV_CHANNEL_ID";
         OPENCLAW_DISCORD_USER_ID = secretPath "OPENCLAW_DISCORD_USER_ID";
         # launchd inherits no login shell, and the claude cli keeps its
         # credentials here rather than in its default ~/.claude
         CLAUDE_CONFIG_DIR = "${config.xdg.configHome}/claude";
         # without a fixed token every paired client drops on restart
         OPENCLAW_GATEWAY_TOKEN = secretPath "OPENCLAW_GATEWAY_TOKEN";
-        # the workspace skill it names is private, so it lives in sops
-        OPENCLAW_HEARTBEAT_PROMPT = secretPath "OPENCLAW_HEARTBEAT_PROMPT";
+        # launchd sets no locale, and the agents count characters: with none,
+        # `wc -m` counts bytes
+        LANG = "ja_JP.UTF-8";
         NODE_OPTIONS = "--import file://${esmLoaderShim}";
+        # the agents ask grok about x; it signs in from here, and my grok hooks
+        # skip when this is set instead of editing the dotfiles repository
+        GROK_HOME = "${config.xdg.configHome}/grok";
+        OPENCLAW_FEEDS = "1";
       };
-      # the subscription route delegates to the claude cli
+      # the subscription route delegates to the claude cli. gpg lets the dev
+      # agent sign its commits as me: branch protection rejects unsigned ones.
+      # openclaw-feeds is there for an agent to refresh its feeds by hand
       runtimePackages = [
+        openclawFeeds
         pkgs.claude-code
+        pkgs.gnupg
+        pkgs.grok-build
       ];
       config = {
         agents = {
           defaults = {
+            # the check-ins go out through the message tool into the day's
+            # thread, so nothing from the turn itself is delivered: a preamble
+            # the model writes before its tools would otherwise land in the
+            # channel as is
+            # hourly: the check-in skills only stay quiet mid-conversation, so
+            # the interval alone sets how often they speak up
             heartbeat = {
-              # the stock prompt ends by asking for `NO_REPLY` when nothing
-              # needs attention, which the workspace skill contradicts
-              prompt = "\${OPENCLAW_HEARTBEAT_PROMPT}";
-              # a dm neither threads nor archives, so send the unprompted ones
-              # to the channel that does
-              target = "discord";
-              to = "channel:\${OPENCLAW_DISCORD_CHANNEL_ID}";
+              every = "1h";
+              target = "none";
             };
             # the same tier the claude cli drops to outside plan mode, from
             # lib/ai-models.nix; this gateway never plans
@@ -225,7 +325,38 @@ in
               primary = "anthropic/${aiModels.run}";
             };
           };
+          # once any entry carries a heartbeat block, only the entries that
+          # carry one run heartbeats, so main needs its own as well
+          entries = {
+            main = {
+              default = true;
+              workspace = config.programs.openclaw.workspaceDir;
+              heartbeat = {
+                prompt = heartbeatPrompt;
+              };
+            };
+            dev = {
+              workspace = devWorkspaceDir;
+              heartbeat = {
+                prompt = heartbeatPrompt;
+              };
+            };
+          };
         };
+        # the dev channel and its threads go to the dev agent; everything
+        # else falls to main
+        bindings = [
+          {
+            agentId = "dev";
+            match = {
+              channel = "discord";
+              peer = {
+                kind = "channel";
+                id = "\${OPENCLAW_DISCORD_DEV_CHANNEL_ID}";
+              };
+            };
+          }
+        ];
         commands = {
           # only pairing registers a command owner, and an allowlisted sender
           # counts as approved without the handshake, so none was ever
@@ -345,6 +476,11 @@ in
           groupScope = "main";
         };
         tools = {
+          # the two agents keep separate workspaces and memories; neither
+          # should be able to drive the other
+          agentToAgent = {
+            enabled = false;
+          };
           elevated = {
             enabled = true;
             allowFrom = {

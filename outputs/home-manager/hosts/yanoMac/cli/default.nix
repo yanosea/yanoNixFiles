@@ -2,6 +2,7 @@
 {
   imports = [
     ./aivisspeech.nix
+    ./openclaw-feeds.nix
     ./openclaw.nix
     ./whisper.nix
   ];

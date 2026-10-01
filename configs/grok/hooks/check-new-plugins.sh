@@ -4,6 +4,9 @@
 
 set -uo pipefail
 
+# openclaw-feeds runs grok unattended: no plugin triage
+[ -n "${OPENCLAW_FEEDS:-}" ] && exit 0
+
 GROK_DIR="${GROK_HOME:-$HOME/.config/grok}"
 PLUGINS_CONF="${GROK_DIR}/plugins.conf"
 
