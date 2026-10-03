@@ -201,13 +201,13 @@ in
             --command-env OPENCLAW_FEEDS=1; then
             echo "failed to declare the dev-feeds automation" >&2
           fi
-          # both dev jobs post with the message tool into today's thread, so
+          # the dev jobs post with the message tool into today's thread, so
           # nothing is delivered from the final reply. `--to` stays because
           # it is what gives the run its current channel; an empty id would
           # leave the run with no channel to post in. the half-hour lead on
           # dev-trends leaves dev-feeds time to refresh the file it reads
           if [ ! -s "$devChannel" ]; then
-            echo "missing $devChannel; skipped declaring dev-trends and dev-daily-thread" >&2
+            echo "missing $devChannel; skipped declaring the dev jobs" >&2
           else
             if ! $DRY_RUN_CMD openclaw automations add \
               --name dev-trends \
@@ -232,6 +232,20 @@ in
               --to "channel:$(${pkgs.coreutils}/bin/cat "$devChannel")" \
               --message "Use the daily-thread skill."; then
               echo "failed to declare the dev-daily-thread automation" >&2
+            fi
+            # the updater opens the flake.lock pr around 5:00 and darwin takes
+            # up to two hours, so by 7:00 the run has settled either way
+            if ! $DRY_RUN_CMD openclaw automations add \
+              --name dev-triage-update-pr \
+              --display-name "Dev triage update PR" \
+              --declaration-key workspace-dev:triage-update-pr \
+              --agent dev \
+              --cron "0 7 * * *" --tz Asia/Tokyo --exact \
+              --session isolated \
+              --no-deliver --channel discord \
+              --to "channel:$(${pkgs.coreutils}/bin/cat "$devChannel")" \
+              --message "Use the triage-update-pr skill."; then
+              echo "failed to declare the dev-triage-update-pr automation" >&2
             fi
           fi
         fi
