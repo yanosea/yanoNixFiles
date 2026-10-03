@@ -156,10 +156,18 @@ inputs: [
       };
     }
   )
-  ## claude-code
-  (_final: prev: {
-    claude-code = inputs.claude-code.packages.${prev.stdenv.hostPlatform.system}.default;
-  })
+  ## llm-agents
+  (
+    _final: prev:
+    let
+      llm-agents = inputs.llm-agents.packages.${prev.stdenv.hostPlatform.system};
+    in
+    {
+      inherit (llm-agents) claude-code;
+      inherit (llm-agents) codex;
+      grok-build = llm-agents.grok;
+    }
+  )
   ## invokeai
   (
     _final: prev:
