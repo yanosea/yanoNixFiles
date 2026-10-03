@@ -84,14 +84,10 @@
       url = "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-agy_acp_server_1.1.1-linux-x86_64.zip";
       flake = false;
     };
-    ## claude-code
-    claude-code = {
-      url = "github:sadjow/claude-code-nix/main";
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
+    ## llm-agents (claude-code, codex, grok)
+    ## no nixpkgs follows: it would miss the numtide binary cache
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
     };
     ## openclaw
     openclaw = {
