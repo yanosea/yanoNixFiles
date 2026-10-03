@@ -33,6 +33,11 @@
         };
       };
     };
+    ## determinate (nix-darwin module for Determinate Nix)
+    ## no nixpkgs follows: upstream advises against it (FlakeHub Cache misses)
+    determinate = {
+      url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
+    };
     ## home-manager
     home-manager = {
       url = "github:nix-community/home-manager/master";
