@@ -3,7 +3,17 @@ on:
   pull_request:
     branches:
       - main
+  # main is not required to be up to date before a merge, so check the
+  # merged result too: a pair of PRs can break main without conflicting
+  push:
+    branches:
+      - main
   workflow_dispatch:
+# a newer push or PR update supersedes the running check; the run on the
+# latest main covers every merge before it
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   # checkout only; jobs that need more declare it themselves
   contents: read
