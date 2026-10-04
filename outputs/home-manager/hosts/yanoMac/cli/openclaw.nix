@@ -315,9 +315,16 @@ in
             # channel as is
             # hourly: the check-in skills only stay quiet mid-conversation, so
             # the interval alone sets how often they speak up
+            # nothing between midnight and six: the turn itself is skipped, so
+            # the night costs no usage either
             heartbeat = {
               every = "1h";
               target = "none";
+              activeHours = {
+                start = "06:00";
+                end = "24:00";
+                timezone = "Asia/Tokyo";
+              };
             };
             # the same tier the claude cli drops to outside plan mode, from
             # lib/ai-models.nix; this gateway never plans
