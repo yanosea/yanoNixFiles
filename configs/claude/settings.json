@@ -84,7 +84,7 @@
   "remoteControlAtStartup": true,
   "statusLine": {
     "type": "command",
-    "command": "claude-powerline",
+    "command": "bash ~/.config/claude-powerline/record-rate-limits.sh",
     "padding": 0
   }
 }
