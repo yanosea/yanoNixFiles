@@ -404,6 +404,15 @@ in
             # threads and dms are separate sessions, so recall across them is the
             # only way the agent carries context between them
             rememberAcrossConversations = true;
+            # unset means openai embeddings, which this gateway has no key for:
+            # every sync aborted. keyword search needs nothing, and trigram
+            # lets it match japanese, which has no spaces to split on
+            provider = "none";
+            store = {
+              fts = {
+                tokenizer = "trigram";
+              };
+            };
           };
         };
         models = {
