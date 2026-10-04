@@ -416,10 +416,12 @@ in
       };
       # the subscription route delegates to the claude cli. gpg lets the dev
       # agent sign its commits as me: branch protection rejects unsigned ones.
-      # openclaw-feeds is there for an agent to refresh its feeds by hand
+      # openclaw-feeds is there for an agent to refresh its feeds by hand. gh
+      # is for the dev agent's PR and CI checks: job turns get only this path
       runtimePackages = [
         openclawFeeds
         pkgs.claude-code
+        pkgs.gh
         pkgs.gnupg
         pkgs.grok-build
       ];
