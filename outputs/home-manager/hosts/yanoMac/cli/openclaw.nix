@@ -531,10 +531,12 @@ in
             # with streaming off, text the model writes between tool calls ends
             # up in the reply. progress mode files it as the headline of a
             # temporary status message, deleted once the reply lands. no
-            # narration: its filler costs extra model calls
+            # narration: its filler costs extra model calls. no label: the
+            # default is an english "Working" while the turn runs
             streaming = {
               mode = "progress";
               progress = {
+                label = false;
                 narration = false;
               };
             };
