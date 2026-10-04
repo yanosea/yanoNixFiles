@@ -514,6 +514,16 @@ in
               "\${OPENCLAW_DISCORD_USER_ID}"
             ];
             dmPolicy = "allowlist";
+            # with streaming off, text the model writes between tool calls ends
+            # up in the reply. progress mode files it as the headline of a
+            # temporary status message, deleted once the reply lands. no
+            # narration: its filler costs extra model calls
+            streaming = {
+              mode = "progress";
+              progress = {
+                narration = false;
+              };
+            };
             # a thread otherwise starts blank; seed it from the channel it grew out of
             thread = {
               inheritParent = true;
