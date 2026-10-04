@@ -315,9 +315,16 @@ in
             # channel as is
             # hourly: the check-in skills only stay quiet mid-conversation, so
             # the interval alone sets how often they speak up
+            # nothing between midnight and six: the turn itself is skipped, so
+            # the night costs no usage either
             heartbeat = {
               every = "1h";
               target = "none";
+              activeHours = {
+                start = "06:00";
+                end = "24:00";
+                timezone = "Asia/Tokyo";
+              };
             };
             # the same tier the claude cli drops to outside plan mode, from
             # lib/ai-models.nix; this gateway never plans
@@ -404,6 +411,15 @@ in
             # threads and dms are separate sessions, so recall across them is the
             # only way the agent carries context between them
             rememberAcrossConversations = true;
+            # unset means openai embeddings, which this gateway has no key for:
+            # every sync aborted. keyword search needs nothing, and trigram
+            # lets it match japanese, which has no spaces to split on
+            provider = "none";
+            store = {
+              fts = {
+                tokenizer = "trigram";
+              };
+            };
           };
         };
         models = {
@@ -498,6 +514,16 @@ in
               "\${OPENCLAW_DISCORD_USER_ID}"
             ];
             dmPolicy = "allowlist";
+            # with streaming off, text the model writes between tool calls ends
+            # up in the reply. progress mode files it as the headline of a
+            # temporary status message, deleted once the reply lands. no
+            # narration: its filler costs extra model calls
+            streaming = {
+              mode = "progress";
+              progress = {
+                narration = false;
+              };
+            };
             # a thread otherwise starts blank; seed it from the channel it grew out of
             thread = {
               inheritParent = true;

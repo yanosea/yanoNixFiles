@@ -14,6 +14,8 @@ let
     : "''${FEEDS_SKIP_GROK:=}"
     # seconds per grok call
     FEEDS_GROK_TIMEOUT="''${FEEDS_GROK_TIMEOUT:-900}"
+    # seconds between tries of a failed http fetch
+    FEEDS_HTTP_RETRY_WAIT="''${FEEDS_HTTP_RETRY_WAIT:-15}"
     # grok hooks see this and do nothing (no repo edits, no injected triage)
     export OPENCLAW_FEEDS=1
     mkdir -p "$FEEDS_DIR"
@@ -241,7 +243,7 @@ let
       # fetch <i> <j>: sets out to the body of a non-grok part. runs in this
       # shell so gh-releases can clear the mark
       fetch() {
-        local filter_file format line found failed ok q repo
+        local filter_file format line found failed ok q repo url err attempt
         local -a filter repos queries
         case "$(part "$1" "$2" .kind)" in
           http)
@@ -254,11 +256,32 @@ let
               filter=("$(part "$1" "$2" .filter)")
             fi
             format=$(part "$1" "$2" '.format // "json"')
-            if [ "$format" = xml ]; then
-              out=$(curl -fsS --max-time 30 "$(part "$1" "$2" .url)" 2>/dev/null | yq -p xml -o json 2>/dev/null | jq -er "''${filter[@]}" 2>/dev/null) || out=$fail_text
+            url=$(part "$1" "$2" .url)
+            # free apis turn requests away when every scheduler fires on the
+            # hour, so a failed fetch is tried again after a pause
+            err=""
+            for attempt in 1 2 3; do
+              if err=$(curl -fsS --max-time 30 "$url" 2>&1 >"$work/http.body"); then
+                break
+              fi
+              err=''${err:-curl failed}
+              [ "$attempt" -eq 3 ] || sleep "$FEEDS_HTTP_RETRY_WAIT"
+            done
+            if [ -n "$err" ]; then
+              out=$fail_text
+            elif [ "$format" = xml ]; then
+              out=$(yq -p xml -o json <"$work/http.body" 2>/dev/null | jq -er "''${filter[@]}" 2>/dev/null) || {
+                out=$fail_text
+                err="the filter found nothing"
+              }
             else
-              out=$(curl -fsS --max-time 30 "$(part "$1" "$2" .url)" 2>/dev/null | jq -er "''${filter[@]}" 2>/dev/null) || out=$fail_text
+              out=$(jq -er "''${filter[@]}" <"$work/http.body" 2>/dev/null) || {
+                out=$fail_text
+                err="the filter found nothing"
+              }
             fi
+            # the run still succeeds, so this line is the only trace of why
+            [ -z "$err" ] || printf 'openclaw-feeds: sections[%s].parts[%s]: %s\n' "$1" "$2" "$err" >&2
             ;;
           gh-search)
             # repos matching any query, each once, most stars first
