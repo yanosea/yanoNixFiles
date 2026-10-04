@@ -170,6 +170,18 @@ in
             --system-event "Use the daily-thread skill."; then
             echo "failed to declare the daily-thread automation" >&2
           fi
+          # the hourly check-in: the same main-session heartbeat turn, woken on
+          # the hour (dev-checkin below speaks at :00 too). the 0:00 one comes
+          # from the daily-thread skill once the thread is up; none from 1 to 5
+          if ! $DRY_RUN_CMD openclaw automations add \
+            --name checkin \
+            --display-name "Check-in" \
+            --declaration-key workspace:checkin \
+            --cron "0 6-23 * * *" --tz Asia/Tokyo --exact \
+            --session main \
+            --system-event ${lib.escapeShellArg heartbeatPrompt}; then
+            echo "failed to declare the checkin automation" >&2
+          fi
           # the feeds jobs run openclaw-feeds with no model turn. the scheduler
           # kills a command after 10 minutes by default, and the grok sections
           # alone may take 20. GROK_HOME is where grok signs in, and
@@ -232,6 +244,22 @@ in
               --to "channel:$(${pkgs.coreutils}/bin/cat "$devChannel")" \
               --message "Use the daily-thread skill."; then
               echo "failed to declare the dev-daily-thread automation" >&2
+            fi
+            # only the default agent may wake its main session from a job, so
+            # dev's hourly check-in is an isolated turn like dev-trends: it
+            # reads today's thread and notes itself. 7 and 19 belong to
+            # dev-trends, 0 is the daily-thread skill's, and none from 1 to 5
+            if ! $DRY_RUN_CMD openclaw automations add \
+              --name dev-checkin \
+              --display-name "Dev check-in" \
+              --declaration-key workspace-dev:checkin \
+              --agent dev \
+              --cron "0 6,8-18,20-23 * * *" --tz Asia/Tokyo --exact \
+              --session isolated \
+              --no-deliver --channel discord \
+              --to "channel:$(${pkgs.coreutils}/bin/cat "$devChannel")" \
+              --message ${lib.escapeShellArg heartbeatPrompt}; then
+              echo "failed to declare the dev-checkin automation" >&2
             fi
             # the updater opens the flake.lock pr around 5:00 and darwin takes
             # up to two hours, so by 7:00 the run has settled either way
@@ -327,18 +355,13 @@ in
             # thread, so nothing from the turn itself is delivered: a preamble
             # the model writes before its tools would otherwise land in the
             # channel as is
-            # hourly: the check-in skills only stay quiet mid-conversation, so
-            # the interval alone sets how often they speak up
-            # nothing between midnight and six: the turn itself is skipped, so
-            # the night costs no usage either
+            # no interval of its own: its minute is a hash of the device and
+            # agent ids, so the `checkin` job wakes main's on the hour instead,
+            # from 6 to 23 (a cron wake skips `activeHours`); dev's check-in is
+            # an isolated `dev-checkin` job
             heartbeat = {
-              every = "1h";
+              every = "0m";
               target = "none";
-              activeHours = {
-                start = "06:00";
-                end = "24:00";
-                timezone = "Asia/Tokyo";
-              };
             };
             # the same tier the claude cli drops to outside plan mode, from
             # lib/ai-models.nix; this gateway never plans
