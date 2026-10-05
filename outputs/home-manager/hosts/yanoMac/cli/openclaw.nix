@@ -43,6 +43,69 @@ let
     "OPENCLAW_GATEWAY_TOKEN"
   ];
   secretPath = key: "${config.programs.openclaw.stateDir}/secrets/${key}";
+  # closes the daily threads (named yyyymmdd) older than today in the given
+  # channels with the bot token. openclaw refuses Discord admin actions from
+  # declared automations, so this runs as a plain command job instead.
+  # DRY_RUN=1 only lists what it would close
+  closeDailyThreads = pkgs.writeShellApplication {
+    name = "openclaw-close-daily-threads";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.curl
+      pkgs.jq
+    ];
+    text = ''
+      if [ "$#" -lt 2 ]; then
+        echo "usage: openclaw-close-daily-threads <token file> <channel id file>..." >&2
+        exit 2
+      fi
+      token=$(cat -- "$1")
+      shift
+      api=https://discord.com/api/v10
+      # discord: discord.com/developers/docs/reference#user-agent
+      agent="DiscordBot (https://github.com/yanosea/yanoNixFiles, 1)"
+      call() {
+        curl -fsS --max-time 30 -H "Authorization: Bot $token" -H "User-Agent: $agent" "$@"
+      }
+      channels=()
+      for file in "$@"; do
+        channels+=("$(cat -- "$file")")
+      done
+      guild=$(call "$api/channels/''${channels[0]}" | jq -er .guild_id)
+      today=$(TZ=Asia/Tokyo date +%Y%m%d)
+      parents=$(printf '%s\n' "''${channels[@]}" | jq -R . | jq -sc .)
+      active=$(call "$api/guilds/$guild/threads/active")
+      mapfile -t old < <(jq -r --argjson parents "$parents" --arg today "$today" '
+        .threads[]
+        | select((.parent_id as $p | $parents | index($p)) and (.name | test("^[0-9]{8}$")) and .name < $today)
+        | "\(.id) \(.name)"' <<<"$active")
+      failed=0
+      for line in "''${old[@]}"; do
+        id=''${line%% *}
+        if [ -n "''${DRY_RUN:-}" ]; then
+          echo "would close $line"
+        elif call -X PATCH -H "Content-Type: application/json" -d '{"archived":true}' "$api/channels/$id" | jq -e '.thread_metadata.archived == true' >/dev/null; then
+          echo "closed $line"
+        else
+          echo "failed to close $line" >&2
+          failed=1
+        fi
+        # stay well under discord's per-route rate limit
+        sleep 1
+      done
+      exit "$failed"
+    '';
+  };
+  # the token and channel ids stay in the secret files; only their paths are
+  # in the job's argv
+  closeThreadsArgv = lib.escapeShellArg (
+    builtins.toJSON [
+      (lib.getExe closeDailyThreads)
+      (secretPath "OPENCLAW_DISCORD_BOT_TOKEN")
+      (secretPath "OPENCLAW_DISCORD_CHANNEL_ID")
+      (secretPath "OPENCLAW_DISCORD_DEV_CHANNEL_ID")
+    ]
+  );
   # `imports` is resolved before the module system settles, so the `pkgs`
   # module argument cannot be used to build one. take a bare nixpkgs instead
   patchPkgs = inputs.nixpkgs.legacyPackages.${system};
@@ -169,6 +232,18 @@ in
             --session main \
             --system-event "Use the daily-thread skill."; then
             echo "failed to declare the daily-thread automation" >&2
+          fi
+          # a minute after the new threads open, close the older daily ones
+          if ! $DRY_RUN_CMD openclaw automations add \
+            --name close-daily-threads \
+            --display-name "Close daily threads" \
+            --declaration-key workspace:close-daily-threads \
+            --agent main \
+            --cron "1 0 * * *" --tz Asia/Tokyo --exact \
+            --no-deliver \
+            --timeout-seconds 300 \
+            --command-argv ${closeThreadsArgv}; then
+            echo "failed to declare the close-daily-threads automation" >&2
           fi
           # the hourly check-in: the same main-session heartbeat turn, woken on
           # the hour (dev-checkin below speaks at :00 too). the 0:00 one comes
@@ -341,10 +416,12 @@ in
       };
       # the subscription route delegates to the claude cli. gpg lets the dev
       # agent sign its commits as me: branch protection rejects unsigned ones.
-      # openclaw-feeds is there for an agent to refresh its feeds by hand
+      # openclaw-feeds is there for an agent to refresh its feeds by hand. gh
+      # is for the dev agent's PR and CI checks: job turns get only this path
       runtimePackages = [
         openclawFeeds
         pkgs.claude-code
+        pkgs.gh
         pkgs.gnupg
         pkgs.grok-build
       ];
