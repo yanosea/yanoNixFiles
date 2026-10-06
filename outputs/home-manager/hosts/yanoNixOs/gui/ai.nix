@@ -8,6 +8,9 @@
   # home
   home = {
     packages = with pkgs; [
+      antigravity
+      chatgpt
+      claude-desktop
       comfyui
       invokeai
     ];

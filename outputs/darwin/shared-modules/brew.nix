@@ -17,6 +17,7 @@
     ];
     casks = [
       "ableton-live-suite"
+      "antigravity"
       "appcleaner"
       "aquaskk"
       "arc"
@@ -24,7 +25,9 @@
       "bitwig-studio"
       "blackhole-16ch"
       "blender"
+      "chatgpt"
       "chrome-remote-desktop-host"
+      "claude"
       "contexts"
       "coteditor"
       "daisydisk"

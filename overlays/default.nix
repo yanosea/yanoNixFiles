@@ -163,7 +163,9 @@ inputs: [
       llm-agents = inputs.llm-agents.packages.${prev.stdenv.hostPlatform.system};
     in
     {
+      inherit (llm-agents) chatgpt;
       inherit (llm-agents) claude-code;
+      inherit (llm-agents) claude-desktop;
       inherit (llm-agents) codex;
       grok-build = llm-agents.grok;
     }
