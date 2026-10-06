@@ -163,6 +163,7 @@ inputs: [
       llm-agents = inputs.llm-agents.packages.${prev.stdenv.hostPlatform.system};
     in
     {
+      inherit (llm-agents) agentsview;
       inherit (llm-agents) claude-code;
       inherit (llm-agents) codex;
       grok-build = llm-agents.grok;

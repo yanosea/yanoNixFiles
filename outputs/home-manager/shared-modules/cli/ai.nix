@@ -4,6 +4,7 @@
   # home
   home = {
     packages = with pkgs; [
+      agentsview
       agy-acp-server
       anthy
       antigravity-cli
