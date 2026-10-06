@@ -27,6 +27,8 @@ cwd=$(echo "$input" | jq -r '.cwd // empty' 2>/dev/null)
 [ -z "$cwd" ] && cwd="${CLAUDE_PROJECT_DIR:-$PWD}"
 
 PLUGINS_CONF="${HOME}/.config/claude/plugins.conf"
+# plugin, marketplace, repository for every non-official plugin
+MARKETPLACES_CONF="${HOME}/.config/claude/plugin-marketplaces.conf"
 CACHE_DIR="${HOME}/.cache/claude-plugin-sync"
 MARKETPLACE_CACHE="${CACHE_DIR}/claude-plugins-official.json"
 CACHE_TTL=86400 # 24 hours
@@ -38,6 +40,11 @@ UPDATE_BUDGET=200 # seconds from script start the update pass may consume
 mkdir -p "$CACHE_DIR"
 
 [ ! -f "$PLUGINS_CONF" ] && exit 0
+
+# the plugin, marketplace, repository rows, comments and blanks dropped
+third_party() {
+  [ -f "$MARKETPLACES_CONF" ] && grep -vE '^[[:space:]]*(#|$)' "$MARKETPLACES_CONF"
+}
 
 stamp_age() {
   if [[ $OSTYPE == "darwin"* ]]; then
@@ -60,15 +67,10 @@ if [ "$FETCH_NEEDED" = true ]; then
 
   # refresh marketplace listings to pick up latest plugin versions
   claude plugin marketplace update claude-plugins-official 2>/dev/null || true
-  claude plugin marketplace update superpowers-marketplace 2>/dev/null || true
-  claude plugin marketplace update claude-vime 2>/dev/null || true
+  for mp in $(third_party | awk '{ print $2 }' | sort -u); do
+    claude plugin marketplace update "$mp" 2>/dev/null || true
+  done
 fi
-
-# plugin names sourced from the superpowers-marketplace rather than the
-# official one (upstream, not a possibly-stale mirror)
-SUPERPOWERS_PLUGINS=" superpowers superpowers-chrome "
-# japanese input in the prompt box; needs `anthy-agent` on PATH
-VIME_PLUGINS=" vime "
 
 in_list() {
   case "$1" in *" $2 "*) return 0 ;; *) return 1 ;; esac
@@ -82,28 +84,16 @@ DECLARED_X=" $(grep -E '^\[x\] ' "$PLUGINS_CONF" | sed -E 's/^\[x\] +([^ ]+).*/\
 # same names, indexable: the update pass resumes at a saved position
 read -ra DECLARED_ARR <<<"$DECLARED_X"
 
-# ensure superpowers marketplace is registered if any of its plugins are wanted
-for plugin in $SUPERPOWERS_PLUGINS; do
-  if in_list "$DECLARED_X" "$plugin"; then
-    claude plugin marketplace add obra/superpowers-marketplace 2>/dev/null || true
-    break
-  fi
-done
-for plugin in $VIME_PLUGINS; do
-  if in_list "$DECLARED_X" "$plugin"; then
-    claude plugin marketplace add skanehira/claude-vime 2>/dev/null || true
-    break
-  fi
+# register a third-party marketplace once any of its plugins is wanted
+for repo in $(third_party | while read -r name _ source; do
+  in_list "$DECLARED_X" "$name" && echo "$source"
+done | sort -u); do
+  claude plugin marketplace add "$repo" 2>/dev/null || true
 done
 
 marketplace_for() {
-  if in_list "$SUPERPOWERS_PLUGINS" "$1"; then
-    echo "superpowers-marketplace"
-  elif in_list "$VIME_PLUGINS" "$1"; then
-    echo "claude-vime"
-  else
-    echo "claude-plugins-official"
-  fi
+  mp=$(third_party | awk -v p="$1" '$1 == p { print $2; exit }')
+  echo "${mp:-claude-plugins-official}"
 }
 
 # Snapshot once: `claude plugin install` costs ~2.5s even when already installed,
