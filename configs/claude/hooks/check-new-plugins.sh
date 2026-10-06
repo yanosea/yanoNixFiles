@@ -17,14 +17,16 @@ MARKETPLACE_CACHE="${HOME}/.cache/claude-plugin-sync/claude-plugins-official.jso
 # every registered marketplace, so entries from non-official ones (superpowers)
 # are not mistaken for removals; new-plugin detection stays official-only.
 MARKETPLACE_DIR="${HOME}/.config/claude/plugins/marketplaces"
+# plugin, marketplace, repository for every non-official plugin
+MARKETPLACES_CONF="${HOME}/.config/claude/plugin-marketplaces.conf"
 
 [ ! -f "$PLUGINS_CONF" ] && exit 0
 [ ! -s "$MARKETPLACE_CACHE" ] && exit 0
 
-python3 - "$PLUGINS_CONF" "$MARKETPLACE_CACHE" "$MARKETPLACE_DIR" <<'PYEOF'
+python3 - "$PLUGINS_CONF" "$MARKETPLACE_CACHE" "$MARKETPLACE_DIR" "$MARKETPLACES_CONF" <<'PYEOF'
 import glob, json, os, re, sys
 
-conf_path, mp_path, mp_dir = sys.argv[1], sys.argv[2], sys.argv[3]
+conf_path, mp_path, mp_dir, third_party_path = sys.argv[1:5]
 
 declared = set()
 with open(conf_path, encoding='utf-8') as f:
@@ -53,7 +55,18 @@ for path in manifests:
         known |= {p['name'] for p in json.load(open(path, encoding='utf-8')).get('plugins', [])}
     except Exception:
         complete = False
-gone = sorted(declared - known) if manifests and complete and known else []
+# sync-plugins.sh registers a third-party marketplace on its first run, which
+# can land after this hook: until then its plugins are absent, not removed.
+pending = {}
+if os.path.isfile(third_party_path):
+    with open(third_party_path, encoding='utf-8') as f:
+        for line in f:
+            fields = line.split()
+            if len(fields) >= 2 and not fields[0].startswith('#'):
+                pending[fields[0]] = fields[1]
+gone = sorted(n for n in declared - known
+              if not (n in pending and not os.path.isdir(os.path.join(mp_dir, pending[n]))))
+gone = gone if manifests and complete and known else []
 
 if not new and not gone:
     sys.exit(0)

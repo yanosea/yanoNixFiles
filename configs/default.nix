@@ -78,6 +78,11 @@ let
       }
     );
   };
+  # the skill that lets claude search its own history through claude-history
+  claudeHistorySkill = lib.optionalAttrs (pkgs ? claude-history) {
+    "claude/skills/claude-history".source =
+      "${pkgs.claude-history}/share/claude-history/skills/claude-history";
+  };
   # codex config files (config.toml is deployed by an activation copy instead,
   # since codex writes hook-trust and project-trust state back into it)
   codexConfigEntries = {
@@ -193,6 +198,7 @@ in
       // quickshellOverride
       // claudeOverride
       // claudeConfigEntries
+      // claudeHistorySkill
       // codexConfigEntries
       // grokConfigEntries
       // hyprConfigEntries

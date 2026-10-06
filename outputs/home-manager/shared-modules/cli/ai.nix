@@ -4,9 +4,12 @@
   # home
   home = {
     packages = with pkgs; [
+      agentsview
       agy-acp-server
+      anthy
       antigravity-cli
       claude-code
+      claude-history
       claude-powerline
       codex
       grok-build
