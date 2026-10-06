@@ -84,6 +84,21 @@
       url = "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-agy_acp_server_1.1.1-linux-x86_64.zip";
       flake = false;
     };
+    ## claude-history
+    ## prebuilt: its semantic search bundles onnxruntime, which cargo fetches at build time
+    claude-history-darwin = {
+      url = "https://github.com/raine/claude-history/releases/download/v0.1.76/claude-history-darwin-arm64.tar.gz";
+      flake = false;
+    };
+    claude-history-linux = {
+      url = "https://github.com/raine/claude-history/releases/download/v0.1.76/claude-history-linux-amd64.tar.gz";
+      flake = false;
+    };
+    ## the companion skill, at the same tag as the binaries
+    claude-history-src = {
+      url = "github:raine/claude-history/v0.1.76";
+      flake = false;
+    };
     ## llm-agents (claude-code, codex, grok)
     ## no nixpkgs follows: it would miss the numtide binary cache
     llm-agents = {

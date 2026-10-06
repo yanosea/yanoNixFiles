@@ -77,6 +77,49 @@
         "type": "github"
       }
     },
+    "claude-history-darwin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789889114,
+        "narHash": "sha256-JyFKqaWfnm9238Sxd7B1V1ClVTJRdXUYvOeK/t+zj68=",
+        "type": "tarball",
+        "url": "https://github.com/raine/claude-history/releases/download/v0.1.76/claude-history-darwin-arm64.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/raine/claude-history/releases/download/v0.1.76/claude-history-darwin-arm64.tar.gz"
+      }
+    },
+    "claude-history-linux": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789889093,
+        "narHash": "sha256-doB18UXYEmpFULZBgLlRNI4fc4BHMPlKQfjqY5N8JzE=",
+        "type": "tarball",
+        "url": "https://github.com/raine/claude-history/releases/download/v0.1.76/claude-history-linux-amd64.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/raine/claude-history/releases/download/v0.1.76/claude-history-linux-amd64.tar.gz"
+      }
+    },
+    "claude-history-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789888646,
+        "narHash": "sha256-H0V3g3Jz+ztHhCmKvWQ/MbO5eUick5Ie99yPF4/9VN0=",
+        "owner": "raine",
+        "repo": "claude-history",
+        "rev": "02789c290156d43f531b35d852540be63dadf013",
+        "type": "github"
+      },
+      "original": {
+        "owner": "raine",
+        "ref": "v0.1.76",
+        "repo": "claude-history",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1789760033,
@@ -644,6 +687,9 @@
       "inputs": {
         "agy-acp-server-darwin": "agy-acp-server-darwin",
         "agy-acp-server-linux": "agy-acp-server-linux",
+        "claude-history-darwin": "claude-history-darwin",
+        "claude-history-linux": "claude-history-linux",
+        "claude-history-src": "claude-history-src",
         "darwin": "darwin",
         "determinate": "determinate",
         "fenix": "fenix",

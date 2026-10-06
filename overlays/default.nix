@@ -67,6 +67,59 @@ inputs: [
       };
     }
   )
+  ## claude-history
+  (
+    _final: prev:
+    let
+      # release archives pinned as non-flake inputs; hashes tracked in flake.lock
+      srcs = {
+        aarch64-darwin = inputs.claude-history-darwin;
+        x86_64-linux = inputs.claude-history-linux;
+      };
+      system = prev.stdenv.hostPlatform.system;
+    in
+    prev.lib.optionalAttrs (srcs ? ${system}) {
+      claude-history = prev.stdenv.mkDerivation {
+        pname = "claude-history";
+        version = "0.1.76";
+        src = srcs.${system};
+        nativeBuildInputs = [
+          prev.makeWrapper
+        ]
+        ++ prev.lib.optionals prev.stdenv.hostPlatform.isLinux [
+          prev.autoPatchelfHook
+        ];
+        buildInputs = prev.lib.optionals prev.stdenv.hostPlatform.isLinux [
+          prev.stdenv.cc.cc.lib
+        ];
+        dontConfigure = true;
+        dontBuild = true;
+        # prebuilt binary; stripping would break the vendored runtime
+        dontStrip = true;
+        # semantic search loads onnxruntime from lib/ next to the running
+        # executable, so keep the pair together and wrap instead of linking
+        installPhase = ''
+          runHook preInstall
+          mkdir -p $out/bin $out/libexec/claude-history $out/share/claude-history
+          install -m555 claude-history $out/libexec/claude-history/claude-history
+          cp -RP lib $out/libexec/claude-history/lib
+          makeWrapper $out/libexec/claude-history/claude-history $out/bin/claude-history
+          cp -r ${inputs.claude-history-src}/skills $out/share/claude-history/skills
+          runHook postInstall
+        '';
+        meta = {
+          description = "Fuzzy-search Claude Code conversation history from the terminal";
+          homepage = "https://github.com/raine/claude-history";
+          license = prev.lib.licenses.mit;
+          mainProgram = "claude-history";
+          platforms = [
+            "aarch64-darwin"
+            "x86_64-linux"
+          ];
+        };
+      };
+    }
+  )
   ## aivisspeech-engine
   (
     _final: prev:

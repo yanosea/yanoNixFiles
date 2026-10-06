@@ -9,6 +9,7 @@
       anthy
       antigravity-cli
       claude-code
+      claude-history
       claude-powerline
       codex
       grok-build
