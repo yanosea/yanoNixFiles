@@ -22,8 +22,10 @@ let
   devWorkspaceDir = "${config.home.homeDirectory}/GoogleDrive/${username}/openclaw/workspace-dev";
   # the private details live in the workspace skills AGENTS.md names, so the
   # prompt itself says nothing private. the stock one ends by asking for
-  # `NO_REPLY` when nothing needs attention, which those skills contradict
-  heartbeatPrompt = "Follow the heartbeat check-in skill named in AGENTS.md. Send at most one check-in with the message tool, then reply exactly NO_REPLY.";
+  # `NO_REPLY` when nothing needs attention, which those skills contradict.
+  # the main session is long-lived, so the prompt makes the agent load the
+  # skill again each turn; otherwise it skips check-ins from stale context
+  heartbeatPrompt = "Load the check-in skill named in AGENTS.md with the Skill tool now (it may have changed), read today's thread, and send exactly one check-in with the message tool unless that skill says to stay silent. Then reply exactly NO_REPLY.";
   # feedsArgv <workspace>: the command a feeds job runs; its config is private
   # and sits in the workspace
   feedsArgv =
