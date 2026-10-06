@@ -217,7 +217,9 @@ inputs: [
     in
     {
       inherit (llm-agents) agentsview;
+      inherit (llm-agents) chatgpt;
       inherit (llm-agents) claude-code;
+      inherit (llm-agents) claude-desktop;
       inherit (llm-agents) codex;
       grok-build = llm-agents.grok;
     }
