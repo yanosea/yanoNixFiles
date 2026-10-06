@@ -20,6 +20,7 @@ model_reasoning_effort = "high"
 # read this repo's CLAUDE.md where no AGENTS.md exists, instead of duplicating it
 project_doc_fallback_filenames = ["CLAUDE.md"]
 sandbox_mode = "workspace-write"
+model = "gpt-6-astra"
 
 [features]
 # on by default in 0.153.4, pinned explicitly so a default flip cannot kill the hooks
@@ -60,6 +61,10 @@ status_line = [
 ]
 # render the items with the active /theme colours
 status_line_use_colors = true
+screen_reader_detection_done = true
+
+[tui.model_availability_nux]
+"gpt-6.1-sol" = 4
 
 # mcp servers: same set as configs/claude/mcp-servers.conf, declared natively
 # (codex reads them straight from config.toml, so no sync hook is needed)
