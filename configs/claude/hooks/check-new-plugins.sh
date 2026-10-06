@@ -53,7 +53,14 @@ for path in manifests:
         known |= {p['name'] for p in json.load(open(path, encoding='utf-8')).get('plugins', [])}
     except Exception:
         complete = False
-gone = sorted(declared - known) if manifests and complete and known else []
+# sync-plugins.sh registers a third-party marketplace on its first run, which
+# can land after this hook: until then its plugins are absent, not removed.
+pending = {'superpowers': 'superpowers-marketplace',
+           'superpowers-chrome': 'superpowers-marketplace',
+           'vime': 'claude-vime'}
+gone = sorted(n for n in declared - known
+              if not (n in pending and not os.path.isdir(os.path.join(mp_dir, pending[n]))))
+gone = gone if manifests and complete and known else []
 
 if not new and not gone:
     sys.exit(0)
