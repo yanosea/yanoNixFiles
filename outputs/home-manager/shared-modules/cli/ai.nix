@@ -5,6 +5,7 @@
   home = {
     packages = with pkgs; [
       agy-acp-server
+      anthy
       antigravity-cli
       claude-code
       claude-powerline

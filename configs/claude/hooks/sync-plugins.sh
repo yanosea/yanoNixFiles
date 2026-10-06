@@ -61,11 +61,14 @@ if [ "$FETCH_NEEDED" = true ]; then
   # refresh marketplace listings to pick up latest plugin versions
   claude plugin marketplace update claude-plugins-official 2>/dev/null || true
   claude plugin marketplace update superpowers-marketplace 2>/dev/null || true
+  claude plugin marketplace update claude-vime 2>/dev/null || true
 fi
 
 # plugin names sourced from the superpowers-marketplace rather than the
 # official one (upstream, not a possibly-stale mirror)
 SUPERPOWERS_PLUGINS=" superpowers superpowers-chrome "
+# japanese input in the prompt box; needs `anthy-agent` on PATH
+VIME_PLUGINS=" vime "
 
 in_list() {
   case "$1" in *" $2 "*) return 0 ;; *) return 1 ;; esac
@@ -86,10 +89,18 @@ for plugin in $SUPERPOWERS_PLUGINS; do
     break
   fi
 done
+for plugin in $VIME_PLUGINS; do
+  if in_list "$DECLARED_X" "$plugin"; then
+    claude plugin marketplace add skanehira/claude-vime 2>/dev/null || true
+    break
+  fi
+done
 
 marketplace_for() {
   if in_list "$SUPERPOWERS_PLUGINS" "$1"; then
     echo "superpowers-marketplace"
+  elif in_list "$VIME_PLUGINS" "$1"; then
+    echo "claude-vime"
   else
     echo "claude-plugins-official"
   fi
