@@ -136,6 +136,29 @@ let
     }}
   '';
   reloadHint = messages.hint "hint: run 'reload' or 'exec zsh' to apply shell changes";
+  # homebrew upgrades, kept out of the darwin activation so one failed cask
+  # warns instead of stopping the update. the brewfile and its env are the
+  # ones the activation itself uses
+  mkBrewUpgrade =
+    host:
+    let
+      darwin = ".#darwinConfigurations.${host.systemConfig}.config.homebrew";
+      envList = "e: builtins.concatStringsSep \" \" (builtins.attrValues (builtins.mapAttrs (k: v: k + \"=\" + v) e))";
+    in
+    messages.title {
+      start = "upgrade homebrew packages...";
+      done = "upgrade homebrew packages done!";
+      body = ''
+        brewfile=$(mktemp)
+        nix eval --raw ${darwin}.brewfile >"$brewfile"
+        brewEnv=$(nix eval --raw ${darwin}.onActivation.extraEnv --apply '${envList}')
+        # shellcheck disable=SC2086
+        if ! env $brewEnv brew bundle --file="$brewfile"; then
+          ${messages.error "warning: some homebrew packages failed to upgrade; the next update tries them again"}
+        fi
+        rm -f "$brewfile"
+      '';
+    };
   # helper to create system + home update script
   mkUpdateScript =
     host: experimental: hostname:
@@ -163,6 +186,7 @@ let
             done = "apply system configuration done!";
             body = mkSystemCommand host;
           }}
+          ${if host.osType == "darwin" then mkBrewUpgrade host else ""}
           ${messages.title {
             start = "apply home configuration${suffix}...";
             done = "apply home configuration${suffix} done!";

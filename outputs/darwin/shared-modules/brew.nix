@@ -6,7 +6,10 @@
     onActivation = {
       autoUpdate = true;
       cleanup = "zap";
-      upgrade = true;
+      # a failed upgrade (a cask whose download is gone) aborts the whole
+      # activation, so `nix run .#update` upgrades in a step of its own that
+      # only warns
+      upgrade = false;
       extraEnv = {
         HOMEBREW_NO_REQUIRE_TAP_TRUST = "1";
       };
