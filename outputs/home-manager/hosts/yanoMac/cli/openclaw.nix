@@ -426,6 +426,8 @@ in
         pkgs.gh
         pkgs.gnupg
         pkgs.grok-build
+        # yomiyasu's linter
+        pkgs.python3
       ];
       config = {
         agents = {
@@ -607,6 +609,12 @@ in
         session = {
           groupScope = "main";
         };
+        # the agents run claude with user settings only, so the plugins that
+        # claude code installs per project never reach them. this is the
+        # same yomiyasu checkout, kept current by the plugin sync
+        skills.load.extraDirs = [
+          "${config.xdg.configHome}/claude/plugins/marketplaces/yomiyasu"
+        ];
         tools = {
           # the two agents keep separate workspaces and memories; neither
           # should be able to drive the other
