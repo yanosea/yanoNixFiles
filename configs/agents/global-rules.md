@@ -5,3 +5,9 @@
 - If a `HANDOVER.md` exists at the project root and its content is not already in context, read it before starting work: it carries the previous session's context.
 - Work whose approach is not settled starts in plan mode: the change spans multiple files or commits, two or more approaches are viable, or the cause of a defect is unidentified. Skip plan mode for single-file fixes, CI triage, formatting, dependency bumps, and lookups; it can run on a model with a tighter usage limit.
 - Enter plan mode yourself where a tool exists (`EnterPlanMode` on Claude Code, `enter_plan_mode` on Grok). Codex and Antigravity only let the user switch, so ask before touching anything.
+
+## Japanese writing (yomiyasu)
+
+- Invoke the `yomiyasu` skill once per session, before the first Japanese reply, and write every Japanese reply in that session by its rules.
+- Japanese documents (issues, PR bodies, READMEs, articles, reports, release notes, the Japanese parts of any file you write) go through the skill's full steps, linter included, even when nobody asks. Deliver only the finished text; add its change notes only when asked.
+- A persona that a workspace `AGENTS.md` defines (the openclaw agents) keeps its own voice in conversation, check-ins and memory, so it does not load the skill for those. Its Japanese documents still go through `yomiyasu`.
