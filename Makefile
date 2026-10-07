@@ -75,7 +75,7 @@ MAKEFLAGS += --no-print-directory
 #
 # unified targets
 #
-.PHONY: update system home experiment format gc gc.system gc.user
+.PHONY: update system brew home experiment format gc gc.system gc.user
 
 # update whole system (settings, packages)
 update:
@@ -112,6 +112,7 @@ else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_DONE)upgrade nix done!$(COLOR_RESET)"
 	@echo ""
 	make system
+	make brew
 	make home
 	make gc
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
@@ -129,6 +130,7 @@ else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_DONE)upgrade nix done!$(COLOR_RESET)"
 	@echo ""
 	make system
+	make brew
 	make home
 	make gc
 	@echo "$(COLOR_DONE)update done!$(COLOR_RESET)"
@@ -205,6 +207,32 @@ else ifeq ($(IS_MACBOOK),1)
 else
 	@[ $(MAKELEVEL) -ne 0 ] || echo ""
 	@echo "$(COLOR_ERROR)unsupported platform...$(COLOR_RESET)"
+	@echo ""
+endif
+
+# upgrade homebrew packages. the darwin activation only installs and cleans
+# up, since one cask whose download is gone aborted all of it; here a failed
+# upgrade only warns. the brewfile and env are the ones the activation uses
+brew:
+ifeq ($(IS_DARWIN),1)
+	@[ $(MAKELEVEL) -ne 0 ] || echo ""
+	@echo "$(COLOR_TITLE)upgrade homebrew packages...$(COLOR_RESET)"
+	@echo ""
+	@host=$$([ "$(IS_MACBOOK)" = 1 ] && echo yanoMacBook || echo yanoMac); \
+	darwin=".#darwinConfigurations.$$host.config.homebrew"; \
+	brewfile=$$(mktemp); \
+	nix eval --raw "$$darwin.brewfile" >"$$brewfile"; \
+	brewEnv=$$(nix eval --raw "$$darwin.onActivation.extraEnv" --apply 'e: builtins.concatStringsSep " " (builtins.attrValues (builtins.mapAttrs (k: v: k + "=" + v) e))'); \
+	if ! env $$brewEnv brew bundle --file="$$brewfile"; then \
+		echo "$(COLOR_ERROR)warning: some homebrew packages failed to upgrade; the next update tries them again$(COLOR_RESET)"; \
+	fi; \
+	rm -f "$$brewfile"
+	@echo ""
+	@echo "$(COLOR_DONE)upgrade homebrew packages done!$(COLOR_RESET)"
+	@echo ""
+else
+	@[ $(MAKELEVEL) -ne 0 ] || echo ""
+	@echo "$(COLOR_ERROR)this target is only for darwin...$(COLOR_RESET)"
 	@echo ""
 endif
 
@@ -313,6 +341,7 @@ else ifeq ($(IS_MAC),1)
 	@echo "$(COLOR_DONE)upgrade nix done!$(COLOR_RESET)"
 	@echo ""
 	make system
+	make brew
 	@echo "$(COLOR_TITLE)apply home configuration experimentally...$(COLOR_RESET)"
 	@echo ""
 	rm $$HOME/.config/AquaSKK/DictionarySet.plist
@@ -337,6 +366,7 @@ else ifeq ($(IS_MACBOOK),1)
 	@echo "$(COLOR_DONE)upgrade nix done!$(COLOR_RESET)"
 	@echo ""
 	make system
+	make brew
 	@echo "$(COLOR_TITLE)apply home configuration experimentally...$(COLOR_RESET)"
 	@echo ""
 	rm $$HOME/.config/AquaSKK/DictionarySet.plist
@@ -843,6 +873,7 @@ ifeq ($(IS_WINDOWS),0)
 	@echo "      $(COLOR_CMD)update$(COLOR_RESET)     - update whole system (settings, packages)"
 	@echo "      $(COLOR_CMD)experiment$(COLOR_RESET) - experimental update (time-consuming sync operations are disabled)"
 	@echo "      $(COLOR_CMD)system$(COLOR_RESET)     - apply system configuration"
+	@echo "      $(COLOR_CMD)brew$(COLOR_RESET)       - upgrade homebrew packages (darwin)"
 	@echo "      $(COLOR_CMD)home$(COLOR_RESET)       - apply home configuration"
 	@echo "      $(COLOR_CMD)format$(COLOR_RESET)     - format files"
 	@echo "      $(COLOR_CMD)gc$(COLOR_RESET)         - garbage collection (system & user) [alias for gc.system]"
