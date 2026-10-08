@@ -611,9 +611,11 @@ in
         };
         # the agents run claude with user settings only, so the plugins that
         # claude code installs per project never reach them. this is the
-        # same yomiyasu checkout, kept current by the plugin sync
+        # same yomiyasu checkout, kept current by the plugin sync.
+        # point at its skills dir: the repo root has no SKILL.md and logs a
+        # warning on every turn
         skills.load.extraDirs = [
-          "${config.xdg.configHome}/claude/plugins/marketplaces/yomiyasu"
+          "${config.xdg.configHome}/claude/plugins/marketplaces/yomiyasu/skills"
         ];
         tools = {
           # the two agents keep separate workspaces and memories; neither
