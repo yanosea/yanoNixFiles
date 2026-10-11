@@ -1,7 +1,5 @@
 #!/bin/bash
-# remind-websearch.sh - counterpart of the inline UserPromptSubmit hook in
-# configs/claude/settings.json. A script rather than an inline echo because
-# codex only guarantees the JSON output shape, not bare stdout, on this event.
+# remind-websearch.sh - inject a reminder to verify time-sensitive information.
 
 set -euo pipefail
 

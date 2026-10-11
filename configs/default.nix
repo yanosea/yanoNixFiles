@@ -1,12 +1,13 @@
 # configs (dotfiles)
 {
   aiModels,
+  config,
   lib,
   pkgs,
   ...
 }:
 let
-  # regular config files (excluding default.nix, agents, antigravity, codex, grok, and zsh directories)
+  # regular config files (excluding directories with custom deployment below)
   contents = builtins.readDir ./.;
   filteredContents = lib.filterAttrs (
     name: _:
@@ -14,6 +15,7 @@ let
     && name != "agents"
     && name != "antigravity"
     && name != "codex"
+    && name != "goose"
     && name != "grok"
     && name != "zsh"
   ) contents;
@@ -65,6 +67,13 @@ let
   # claude user memory (the rest of configs/claude is deployed by the generic loop)
   claudeConfigEntries = {
     "claude/CLAUDE.md".source = ./agents/global-rules.md;
+    "claude/commands/handover.md".source = ./agents/skills/handover/SKILL.md;
+    "claude/commands/sg.md".source = ./agents/skills/sg/SKILL.md;
+    "claude/commands/sj.md".source = ./agents/skills/sj/SKILL.md;
+    "claude/skills/triage-update-pr" = {
+      source = ./agents/skills/triage-update-pr;
+      recursive = true;
+    };
     # the model ids come from lib/ai-models.nix so one tier list drives the
     # `opusplan` slots, the subagent pin and openclaw's primary. `opus` is the
     # plan-mode slot and `sonnet` the execution one, whatever they resolve to
@@ -106,6 +115,11 @@ let
       recursive = true;
     };
   };
+  # opencode user rules (the rest of configs/opencode is deployed by the generic loop,
+  # since opencode never rewrites its config)
+  opencodeConfigEntries = {
+    "opencode/AGENTS.md".source = ./agents/global-rules.md;
+  };
   # config.local.toml goes first so its top-level keys precede every table,
   # which keeps unpublishable settings out of this repository
   copyWritableConfig = dir: src: ''
@@ -137,6 +151,38 @@ in
       copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
         copyWritableConfig "codex" ./codex/config.toml
       );
+      # Goose rewrites its config. Deploy the authoritative settings as a private,
+      # writable copy, retaining the initial different config outside the store.
+      copyGooseConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        if [ -n "''${DRY_RUN_CMD:-}" ] || [ -n "''${DRY_RUN:-}" ]; then
+          echo "Would copy Goose config to ''${XDG_CONFIG_HOME:-$HOME/.config}/goose/config.yaml"
+        else
+          (
+            set -e
+            umask 077
+            configDir="''${XDG_CONFIG_HOME:-$HOME/.config}/goose"
+            configFile="$configDir/config.yaml"
+            backupFile="$configDir/config.yaml.before-nix"
+            configTmp=""
+            backupTmp=""
+            trap 'rm -f -- "$configTmp" "$backupTmp"' EXIT
+            mkdir -p "$configDir"
+            if [ -d "$configFile" ]; then
+              echo "Cannot replace Goose config directory: $configFile" >&2
+              exit 1
+            fi
+            if [ -f "$configFile" ] && ! cmp -s "$configFile" ${./goose/config.yaml} \
+              && [ ! -e "$backupFile" ] && [ ! -L "$backupFile" ]; then
+              backupTmp=$(mktemp "$configDir/.config.yaml.backup.XXXXXX")
+              ${pkgs.coreutils}/bin/install -m 600 "$configFile" "$backupTmp"
+              ln "$backupTmp" "$backupFile"
+            fi
+            configTmp=$(mktemp "$configDir/.config.yaml.XXXXXX")
+            ${pkgs.coreutils}/bin/install -m 600 ${./goose/config.yaml} "$configTmp"
+            mv -f "$configTmp" "$configFile"
+          )
+        fi
+      '';
       # copied rather than symlinked: grok writes back to config.toml
       # merged rather than replaced: agy keeps trustedWorkspaces in the same file
       mergeAntigravitySettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
@@ -162,6 +208,9 @@ in
         source = ./agents;
         recursive = true;
       };
+      # yomiyasu comes from claude's plugin sync; codex and opencode read it here
+      ".agents/skills/yomiyasu".source =
+        config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/claude/plugins/marketplaces/yomiyasu/skills/yomiyasu";
       # antigravity ignores XDG (settings.json and mcp_config.json are agy-managed)
       ".gemini/config/AGENTS.md".source = ./agents/global-rules.md;
       ".gemini/config/skills" = {
@@ -201,6 +250,7 @@ in
       // claudeHistorySkill
       // codexConfigEntries
       // grokConfigEntries
+      // opencodeConfigEntries
       // hyprConfigEntries
       // zshConfigEntries;
   };

@@ -49,14 +49,22 @@ return {
 						desc = "ai claude: resume",
 					},
 					{ "<LEADER>act", "<CMD>ClaudeCode<CR>", desc = "ai claude: toggle" },
-					-- ai: antigravity
-					{ "<LEADER>ag", group = "antigravity" },
+					-- ai: codex
+					{ "<LEADER>ad", group = "codex" },
 					{
-						"<LEADER>agr",
-						"<CMD>lua require('config.antigravity').resume_session()<CR>",
-						desc = "ai antigravity: resume",
+						"<LEADER>adr",
+						"<CMD>lua require('config.codex').resume_session()<CR>",
+						desc = "ai codex: resume",
 					},
-					{ "<LEADER>agt", "<CMD>Antigravity<CR>", desc = "ai antigravity: toggle" },
+					{ "<LEADER>adt", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
+					-- ai: Goose
+					{ "<LEADER>ag", group = "goose" },
+					{ "<LEADER>agt", "<CMD>Goose<CR>", desc = "ai Goose: toggle selected provider" },
+					{ "<LEADER>agc", "<CMD>GooseClaude<CR>", desc = "ai Goose: toggle Claude subscription" },
+					{ "<LEADER>agd", "<CMD>GooseCodex<CR>", desc = "ai Goose: toggle Codex subscription" },
+					-- ai: Happier
+					{ "<LEADER>ah", group = "happier" },
+					{ "<LEADER>aht", "<CMD>Happier<CR>", desc = "ai Happier: toggle" },
 					-- ai: kiro
 					{ "<LEADER>ak", group = "kiro" },
 					{
@@ -65,17 +73,25 @@ return {
 						desc = "ai kiro: resume",
 					},
 					{ "<LEADER>akt", "<CMD>Kiro<CR>", desc = "ai kiro: toggle" },
-					-- ai: codex
-					{ "<LEADER>ao", group = "codex" },
+					-- ai: opencode
+					{ "<LEADER>ao", group = "opencode" },
 					{
 						"<LEADER>aor",
-						"<CMD>lua require('config.codex').resume_session()<CR>",
-						desc = "ai codex: resume",
+						"<CMD>lua require('config.opencode').resume_session()<CR>",
+						desc = "ai opencode: resume",
 					},
-					{ "<LEADER>aot", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
+					{ "<LEADER>aot", "<CMD>Opencode<CR>", desc = "ai opencode: toggle" },
 					-- ai: toad
 					{ "<LEADER>at", group = "toad" },
 					{ "<LEADER>att", "<CMD>Toad<CR>", desc = "ai toad: toggle" },
+					-- ai: antigravity
+					{ "<LEADER>av", group = "antigravity" },
+					{
+						"<LEADER>avr",
+						"<CMD>lua require('config.antigravity').resume_session()<CR>",
+						desc = "ai antigravity: resume",
+					},
+					{ "<LEADER>avt", "<CMD>Antigravity<CR>", desc = "ai antigravity: toggle" },
 					-- ai: grok
 					{ "<LEADER>ax", group = "grok" },
 					{

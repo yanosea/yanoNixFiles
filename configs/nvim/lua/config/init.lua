@@ -14,6 +14,10 @@ require("config.codex")
 require("config.antigravity")
 -- grok integration if available
 require("config.grok")
+-- opencode integration if available
+require("config.opencode")
+-- Happier remote coding client if available
+require("config.remote_agents")
 -- kiro integration if available
 require("config.kiro")
 -- toad integration if available

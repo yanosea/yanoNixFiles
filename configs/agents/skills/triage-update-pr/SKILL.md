@@ -14,7 +14,7 @@ gh run list --branch auto-update/flake-lock/<date> --json databaseId,name,status
 ```
 
 - The updater opens the PR with a GitHub App token, so the PR's own `pull_request` runs are the real ones. `Auto Approve Owner's PR` is expected to be `skipped` there, because the author is the app, not the owner.
-- `Auto Merge Dependency PR` runs on `workflow_run` and is listed under `main`, not the branch. If all three test workflows passed and only that one failed, it is the 3600 s timeout, not a breakage: say so and offer `gh pr merge <n> --merge`.
+- `Auto Merge Dependency PR` runs on `workflow_run` and is listed under `main`, not the branch. If all three test workflows passed and only that one failed, it is the 10800 s (3 h) wait timing out, not a breakage: say so and offer `gh pr merge <n> --merge`.
 
 ## 2. Extract the error
 

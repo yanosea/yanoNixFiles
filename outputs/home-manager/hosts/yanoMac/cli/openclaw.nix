@@ -25,7 +25,7 @@ let
   # `NO_REPLY` when nothing needs attention, which those skills contradict.
   # the main session is long-lived, so the prompt makes the agent load the
   # skill again each turn; otherwise it skips check-ins from stale context
-  heartbeatPrompt = "Load the check-in skill named in AGENTS.md with the Skill tool now (it may have changed), read today's thread, and send exactly one check-in with the message tool unless that skill says to stay silent. Then reply exactly NO_REPLY.";
+  heartbeatPrompt = "Read the SKILL.md of the check-in skill named in AGENTS.md now (it may have changed), read today's thread, and send exactly one check-in with the message tool unless that skill says to stay silent. Then reply exactly NO_REPLY.";
   # feedsArgv <workspace>: the command a feeds job runs; its config is private
   # and sits in the workspace
   feedsArgv =
@@ -609,12 +609,11 @@ in
         session = {
           groupScope = "main";
         };
-        # the agents run claude with user settings only, so the plugins that
-        # claude code installs per project never reach them. this is the
-        # same yomiyasu checkout, kept current by the plugin sync.
-        # point at its skills dir: the repo root has no SKILL.md and logs a
-        # warning on every turn
+        # a custom stateDir excludes home skill roots. use the shared source
+        # directly: home-manager's per-file symlinks escape the skill root.
         skills.load.extraDirs = [
+          "${../../../../../configs/agents/skills}"
+          # the plugin sync keeps this checkout current
           "${config.xdg.configHome}/claude/plugins/marketplaces/yomiyasu/skills"
         ];
         tools = {

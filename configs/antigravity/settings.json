@@ -3,7 +3,7 @@
   "colorScheme": "tokyo night",
   "statusLine": {
     "type": "command",
-    "command": "bash ~/.config/claude-powerline/statusline.sh",
+    "command": "bash ~/.agents/statusline.sh",
     "enabled": true
   }
 }
