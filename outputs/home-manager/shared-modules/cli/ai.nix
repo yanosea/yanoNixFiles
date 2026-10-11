@@ -13,7 +13,10 @@
       claude-history
       claude-powerline
       codex
-      (codex-acp.override { inherit (pkgs) codex; })
+      # the npm test suite fails on darwin builders reading managed preferences
+      ((codex-acp.override { inherit (pkgs) codex; }).overrideAttrs {
+        doCheck = !stdenv.hostPlatform.isDarwin;
+      })
       goose-cli
       grok-build
       kiro-cli
