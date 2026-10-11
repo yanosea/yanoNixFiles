@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# sync-mcp-servers.sh - reconcile agy MCP servers with configs/claude/mcp-servers.conf.
+# sync-mcp-servers.sh - reconcile agy MCP servers with configs/agents/mcp-servers.conf.
 # Run from the claude hook: agy skips its own hooks once ~30 plugins are loaded.
 
 set -uo pipefail
 # keep `mcp<2` unglobbed
 set -f
 
-MCP_SERVERS_CONF="${CLAUDE_CONFIG_DIR:-$HOME/.config/claude}/mcp-servers.conf"
+MCP_SERVERS_CONF="${HOME}/.agents/mcp-servers.conf"
 MCP_CONFIG="${HOME}/.gemini/config/mcp_config.json"
 
 [ ! -f "$MCP_SERVERS_CONF" ] && exit 0

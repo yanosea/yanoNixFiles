@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # sync-mcp-servers.sh - Reconcile the user-scope MCP servers with the set
-# declared in configs/claude/mcp-servers.conf (SessionStart, async).
+# declared in configs/agents/mcp-servers.conf (SessionStart, async).
 #
 # The conf file is authoritative: missing servers are added, undeclared ones are
 # removed. User-scope MCP lives only in .claude.json, which Claude Code rewrites
@@ -13,7 +13,7 @@ set -uo pipefail
 # keep any claude call on the subscription login; the sops api key would bill per token
 unset ANTHROPIC_API_KEY
 
-MCP_SERVERS_CONF="${HOME}/.config/claude/mcp-servers.conf"
+MCP_SERVERS_CONF="${HOME}/.agents/mcp-servers.conf"
 CLAUDE_JSON="${CLAUDE_CONFIG_DIR:-$HOME}/.claude.json"
 
 [ ! -f "$MCP_SERVERS_CONF" ] && exit 0

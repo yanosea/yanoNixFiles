@@ -1,24 +1,33 @@
 #!/usr/bin/env bash
 # statusline.sh - claude-powerline look for grok and antigravity, whose payloads
 # lack the transcript and rate-limit fields claude-powerline reads. Colours come
-# from config.json next to this script.
+# from the shared claude-powerline configuration.
 
 set -uo pipefail
 
 input=$(cat)
-config="$(dirname "$0")/config.json"
+config="${XDG_CONFIG_HOME:-$HOME/.config}/claude-powerline/config.json"
 SEP=$'\xee\x82\xb0' # U+E0B0, as bytes so it needs no UTF-8 locale
 
 j() { echo "$input" | jq -r "$1 // empty" 2>/dev/null; }
 
 hex() {
   local h=${1#\#}
+  [[ $h =~ ^[[:xdigit:]]{6}$ ]] || {
+    printf '0;0;0'
+    return
+  }
   printf '%d;%d;%d' "0x${h:0:2}" "0x${h:2:2}" "0x${h:4:2}"
 }
 
 # "bg fg bold" of a claude-powerline colour key
 colour() {
-  jq -r --arg k "$1" '.colors.custom[$k] | "\(.bg) \(.fg) \(.bold // false)"' "$config" 2>/dev/null
+  local value
+  value=$(jq -r --arg k "$1" '.colors.custom[$k] | "\(.bg) \(.fg) \(.bold // false)"' "$config" 2>/dev/null || true)
+  case "$value" in
+  "" | "null null false") printf '#3b4252 #d8dee9 false\n' ;;
+  *) printf '%s\n' "$value" ;;
+  esac
 }
 
 # render one line from "key<TAB>text" entries on stdin
@@ -33,7 +42,7 @@ render() {
     out+=" ${text} \e[22m"
     prev=$bg
   done
-  [ -z "$prev" ] && return
+  [ -z "$prev" ] && return 0
   printf '%b\n' "${out}\e[0m\e[38;2;$(hex "$prev")m${SEP}\e[0m"
 }
 
@@ -106,5 +115,5 @@ echo "$input" | jq -r '.quota // {} | to_entries[]
   version=$(j '.version')
   [ -n "$model" ] && printf 'model\t✱ %s\n' "$model"
   [ -n "$effort" ] && printf 'thinking\t✦ %s\n' "$effort"
-  [ -n "$version" ] && printf 'version\t◈ v%s\n' "$version"
+  if [ -n "$version" ]; then printf 'version\t◈ v%s\n' "$version"; fi
 } | render

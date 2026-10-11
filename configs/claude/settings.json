@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.config/claude/hooks/load-handover.sh\"",
+            "command": "bash \"$HOME/.agents/hooks/load-handover.sh\"",
             "timeout": 10
           },
           {
@@ -53,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'IMPORTANT: if this task touches library/API versions, tool behavior, pricing, or best practices that may have changed since training, you MUST call WebSearch or WebFetch before answering. Do not rely on training-data memory for anything time-sensitive; skipping this when it applies is a mistake.'"
+            "command": "bash \"$HOME/.agents/hooks/remind-websearch.sh\""
           }
         ]
       }
@@ -64,7 +64,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.config/claude/hooks/generate-handover.sh\"",
+            "command": "bash \"$HOME/.agents/hooks/generate-handover.sh\"",
             "timeout": 30
           }
         ]

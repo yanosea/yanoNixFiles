@@ -28,7 +28,7 @@ scroll_mode = "auto"
 
 [ui.status_line]
 type = "command"
-command = "bash ~/.config/claude-powerline/statusline.sh"
+command = "bash ~/.agents/statusline.sh"
 
 [marketplace]
 default_skills_installs_purged = true
@@ -78,7 +78,7 @@ timeout = 10
 
 [[hooks.PreCompact.hooks]]
 type = "command"
-command = "bash ~/.config/grok/hooks/generate-handover.sh"
+command = "bash ~/.agents/hooks/generate-handover.sh"
 timeout = 30
 
 [[hooks.SessionEnd]]
