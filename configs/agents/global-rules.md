@@ -4,7 +4,14 @@
 - If a task touches library/API versions, tool behavior, pricing, or best practices that may have changed since training, search the web before answering. Do not rely on training-data memory for anything time-sensitive.
 - If a `HANDOVER.md` exists at the project root and its content is not already in context, read it before starting work: it carries the previous session's context.
 - Work whose approach is not settled starts in plan mode: the change spans multiple files or commits, two or more approaches are viable, or the cause of a defect is unidentified. Skip plan mode for single-file fixes, CI triage, formatting, dependency bumps, and lookups; it can run on a model with a tighter usage limit.
-- Enter plan mode yourself where a tool exists (`EnterPlanMode` on Claude Code, `enter_plan_mode` on Grok). Codex and Antigravity only let the user switch, so ask before touching anything.
+- Enter plan mode yourself where a tool exists (`EnterPlanMode` on Claude Code, `enter_plan_mode` on Grok). Codex, Antigravity and OpenCode only let the user switch, so ask before touching anything.
+
+## Codex delegation
+
+- In Codex, the main agent (Astra by default) handles user dialogue, investigation, planning, task decomposition, review, and final reporting. Once implementation is authorized and Plan mode is no longer active, proactively delegate implementation, tests, and review fixes to `gpt-6.1-sol` subagents with `high` reasoning effort; do not wait for a separate request to use subagents.
+- Give each subagent the approved plan, relevant context, owned files or scope, and completion criteria. Use a fresh context with an explicit model selection when a full-history fork would inherit the parent's model. Subagents carry out their assigned work rather than recursively delegating it.
+- Parallelize independent work only; avoid concurrent edits to the same files. The main agent inspects the resulting diff and verification evidence, requests fixes from Sol as needed, and reports unresolved issues before declaring completion.
+- Respect Plan mode in both parent and child agents; do not delegate implementation to bypass it. If Sol is unavailable or the client cannot select it, report the limitation instead of silently substituting another model.
 
 ## Japanese writing (yomiyasu)
 
