@@ -1,0 +1,47 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // nix owns the binary
+  "autoupdate": false,
+  "share": "disabled",
+  // same model and effort as configs/codex/config.toml, on the chatgpt login
+  "model": "openai/gpt-6-astra",
+  "provider": {
+    "openai": {
+      "models": {
+        "gpt-6-astra": {
+          "options": { "reasoningEffort": "high" }
+        }
+      }
+    }
+  },
+  // the other agent clis run in auto mode
+  "permission": {
+    "edit": "allow",
+    "bash": "allow",
+    "webfetch": "allow",
+    "websearch": "allow"
+  },
+  // load the handover from the project directory
+  "instructions": ["HANDOVER.md"],
+  // same servers as configs/agents/mcp-servers.conf
+  "mcp": {
+    "comfyui": {
+      "type": "local",
+      "command": ["npx", "-y", "comfyui-mcp"],
+      "environment": { "COMFYUI_URL": "http://127.0.0.1:8188" }
+    },
+    "invokeai": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--from",
+        "invokeai-mcp-server",
+        "--with",
+        "mcp<2",
+        "python",
+        "-m",
+        "invokeai_mcp_server"
+      ]
+    }
+  }
+}
