@@ -13,15 +13,6 @@ return {
 						name = "Antigravity ACP",
 						command = "agy_acp_server",
 					},
-					-- bunx resolves the adapter at launch; not packaged in nixpkgs
-					["claude-agent-acp"] = {
-						command = "bunx",
-						args = { "@agentclientprotocol/claude-agent-acp@latest" },
-					},
-					["codex-acp"] = {
-						command = "bunx",
-						args = { "@agentclientprotocol/codex-acp@latest" },
-					},
 					-- xai ships acp natively as a subcommand
 					["grok-acp"] = {
 						name = "Grok ACP",
