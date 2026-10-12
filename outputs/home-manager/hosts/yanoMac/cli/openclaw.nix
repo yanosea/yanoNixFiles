@@ -682,8 +682,7 @@ in
         # directly: home-manager's per-file symlinks escape the skill root.
         skills.load.extraDirs = [
           "${../../../../../configs/agents/skills}"
-          # the plugin sync keeps this checkout current
-          "${config.xdg.configHome}/claude/plugins/marketplaces/yomiyasu/skills"
+          "${inputs.yomiyasu}/skills"
         ];
         tools = {
           # the two agents keep separate workspaces and memories; neither

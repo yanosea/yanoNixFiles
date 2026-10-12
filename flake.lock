@@ -701,7 +701,8 @@
         "nixpkgs": "nixpkgs_4",
         "openclaw": "openclaw",
         "sops-nix": "sops-nix",
-        "treefmt-nix": "treefmt-nix_2"
+        "treefmt-nix": "treefmt-nix_2",
+        "yomiyasu": "yomiyasu"
       }
     },
     "rust-analyzer-src": {
@@ -832,6 +833,22 @@
         "owner": "numtide",
         "ref": "main",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "yomiyasu": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791753025,
+        "narHash": "sha256-hBI3qm7wJJAR1xgVWAk/GIIAQZA9SEn2BTIHLoBoFEI=",
+        "owner": "nanaism",
+        "repo": "yomiyasu",
+        "rev": "602a3690dadd5d620bb21524353b8d192914eabb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nanaism",
+        "repo": "yomiyasu",
         "type": "github"
       }
     }

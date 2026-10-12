@@ -132,6 +132,11 @@
         };
       };
     };
+    ## yomiyasu (the skill every agent cli reads; claude installs it as a plugin)
+    yomiyasu = {
+      url = "github:nanaism/yomiyasu";
+      flake = false;
+    };
   };
   outputs =
     inputs:
