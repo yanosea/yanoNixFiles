@@ -126,6 +126,8 @@
         ];
         home = "${homePath}/${username}";
         isNormalUser = true;
+        # start user services at boot, before any login (the opencode service)
+        linger = true;
         shell = pkgs.zsh;
       };
     };

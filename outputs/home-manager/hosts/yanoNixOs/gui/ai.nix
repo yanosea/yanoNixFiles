@@ -345,6 +345,27 @@
   # systemd
   systemd = {
     user = {
+      # opencode's background service from boot, so `opencode pair --remote`
+      # reaches it before anyone logs in. remote access and the password live
+      # in ~/.config/opencode/service.json, which opencode itself rewrites
+      services = {
+        opencode = {
+          Unit = {
+            Description = "OpenCode background service";
+          };
+          Service = {
+            # a login shell for the same PATH and XDG dirs as a terminal; the
+            # tavily plugin's key is otherwise only exported by interactive zsh.
+            # $$ keeps systemd from expanding the variables itself
+            ExecStart = "${pkgs.zsh}/bin/zsh -lc 'export TAVILY_API_KEY=\"$$(cat \"$$XDG_DATA_HOME/sops/TAVILY_API_KEY\" 2>/dev/null)\"; exec opencode serve --service'";
+            Restart = "on-failure";
+            RestartSec = 10;
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+        };
+      };
       tmpfiles = {
         rules = [
           "d ${config.home.homeDirectory}/google_drive/ai 0755 - - -"
