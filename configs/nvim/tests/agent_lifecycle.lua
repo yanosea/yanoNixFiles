@@ -82,7 +82,7 @@ local function reset()
 end
 -- tui wrappers under lua/config, with the command each resume launches
 local tuis = {
-	opencode = { user_command = "Opencode", resume = "opencode --mini --continue" },
+	opencode = { user_command = "Opencode", resume = "opencode mini --continue" },
 	grok = { user_command = "Grok", resume = "grok --no-alt-screen /resume" },
 }
 local function adapter(kind)

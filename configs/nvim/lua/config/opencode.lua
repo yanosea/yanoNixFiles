@@ -196,7 +196,7 @@ function M._start_opencode_terminal(terminal_buf, terminal_win, command)
 	vim.api.nvim_set_current_win(terminal_win)
 	-- construct opencode command
 	-- mini mode renders inline, keeping the output in the terminal buffer's scrollback
-	local opencode_cmd = command and string.format("opencode --mini %s", command) or "opencode --mini"
+	local opencode_cmd = command and string.format("opencode mini %s", command) or "opencode mini"
 	-- start terminal
 	local windows = M._windows
 	local job_id = vim.fn.termopen(opencode_cmd, {
