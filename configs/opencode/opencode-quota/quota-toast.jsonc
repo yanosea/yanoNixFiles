@@ -1,0 +1,14 @@
+{
+  // the subscription logins; the claude lookup ignores CLAUDE_CONFIG_DIR and fails.
+  // chatgpt's quota needs the codex login, not sign in with chatgpt or an api key
+  "enabledProviders": ["openai", "xai"],
+  "tuiCommandDisplay": "inline",
+  // one line below the prompt, like the other clis' statusline
+  "tuiCompactStatus": { "enabled": true },
+  // every window per provider (5h and weekly), not just the tightest one
+  "formatStyle": "allWindows",
+  // 5.0.2 draws the sidebar panel either way; off only leaves it empty
+  "tuiSidebarPanel": { "enabled": true },
+  "enableToast": false,
+  "maintainerAnnouncements": { "enabled": false }
+}

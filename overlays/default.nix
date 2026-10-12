@@ -222,6 +222,24 @@ inputs: [
       inherit (llm-agents) claude-desktop;
       inherit (llm-agents) codex;
       grok-build = llm-agents.grok;
+      # opencode 2; llm-agents names the binary opencode2 so it can sit beside
+      # v1, and nothing here keeps v1. the shell exports api keys for other
+      # tools; dropped here, opencode (and the service it spawns) stays on the
+      # subscription logins instead of billing the api
+      opencode =
+        prev.runCommand "opencode-${llm-agents.opencode2.version}"
+          {
+            nativeBuildInputs = [ prev.makeWrapper ];
+            inherit (llm-agents.opencode2) version;
+          }
+          ''
+            makeWrapper ${llm-agents.opencode2}/bin/opencode2 $out/bin/opencode \
+              --unset ANTHROPIC_API_KEY \
+              --unset ANTHROPIC_AUTH_TOKEN \
+              --unset ANTHROPIC_BASE_URL \
+              --unset OPENAI_API_KEY \
+              --unset OPENAI_BASE_URL
+          '';
     }
   )
   ## invokeai
