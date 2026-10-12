@@ -7,14 +7,17 @@ vim.notify = function() end
 local fixture = vim.fn.tempname()
 vim.fn.mkdir(fixture, "p")
 local command = fixture .. "/opencode"
-vim.fn.writefile({
-	"#!/bin/sh",
-	'if test "$NVIM_AGENT_PTY_BYTES" = ""; then exec cat; fi',
-	"stty -echo -icanon min 1 time 0",
-	"printf READY",
-	'exec dd bs=1 count="$NVIM_AGENT_PTY_BYTES" of="$NVIM_AGENT_PTY_OUTPUT" 2>/dev/null',
-}, command)
-vim.fn.setfperm(command, "rwx------")
+-- the tui wrappers find the same fixture under each cli's name
+for _, name in ipairs({ "opencode", "grok" }) do
+	vim.fn.writefile({
+		"#!/bin/sh",
+		'if test "$NVIM_AGENT_PTY_BYTES" = ""; then exec cat; fi',
+		"stty -echo -icanon min 1 time 0",
+		"printf READY",
+		'exec dd bs=1 count="$NVIM_AGENT_PTY_BYTES" of="$NVIM_AGENT_PTY_OUTPUT" 2>/dev/null',
+	}, fixture .. "/" .. name)
+	vim.fn.setfperm(fixture .. "/" .. name, "rwx------")
+end
 local old_path = vim.env.PATH
 vim.env.PATH = fixture .. ":" .. old_path
 local old_bytes, old_output = vim.env.NVIM_AGENT_PTY_BYTES, vim.env.NVIM_AGENT_PTY_OUTPUT
@@ -51,7 +54,7 @@ local function adapter(kind)
 			end,
 		}
 	end
-	local c = require("config.opencode")
+	local c = require("config." .. kind)
 	return {
 		object = c,
 		open = c.open_layout,
@@ -60,7 +63,7 @@ local function adapter(kind)
 		show = c.show_layout,
 		resume = c.resume_session,
 		job = function()
-			return c._windows.opencode_job_id
+			return c._windows[kind .. "_job_id"]
 		end,
 	}
 end
@@ -74,7 +77,7 @@ local function submit(c)
 	error("prompt mapping missing")
 end
 local cases = {}
-for _, kind in ipairs({ "remote", "remote_argv", "opencode" }) do
+for _, kind in ipairs({ "remote", "remote_argv", "opencode", "grok" }) do
 	for _, hidden in ipairs({ false, true }) do
 		cases[#cases + 1] = {
 			name = kind .. " PTY multiline and " .. (hidden and "hidden" or "visible") .. " natural exit",
@@ -139,25 +142,27 @@ for _, kind in ipairs({ "remote", "remote_argv", "opencode" }) do
 		end,
 	}
 end
-cases[#cases + 1] = {
-	name = "opencode PTY hidden resume terminates old process",
-	run = function()
-		vim.env.NVIM_AGENT_PTY_BYTES = ""
-		local c = adapter("opencode")
-		c.open()
-		local old = c.job()
-		c.hide()
-		c.resume()
-		local current = c.job()
-		wait_for(function()
-			return vim.fn.jobwait({ old }, 0)[1] ~= -1
-		end, "hidden old PTY stops")
-		vim.wait(150)
-		equal(vim.fn.jobwait({ current }, 0)[1], -1, "continued PTY stays alive")
-		equal(c.object._is_open, true, "continued layout stays open")
-		c.close()
-	end,
-}
+for _, kind in ipairs({ "opencode", "grok" }) do
+	cases[#cases + 1] = {
+		name = kind .. " PTY hidden resume terminates old process",
+		run = function()
+			vim.env.NVIM_AGENT_PTY_BYTES = ""
+			local c = adapter(kind)
+			c.open()
+			local old = c.job()
+			c.hide()
+			c.resume()
+			local current = c.job()
+			wait_for(function()
+				return vim.fn.jobwait({ old }, 0)[1] ~= -1
+			end, "hidden old PTY stops")
+			vim.wait(150)
+			equal(vim.fn.jobwait({ current }, 0)[1], -1, "resumed PTY stays alive")
+			equal(c.object._is_open, true, "resumed layout stays open")
+			c.close()
+		end,
+	}
+end
 local failures = 0
 for _, test in ipairs(cases) do
 	local ok, err = pcall(test.run)
@@ -167,8 +172,10 @@ for _, test in ipairs(cases) do
 		failures = failures + 1
 		print("FAIL " .. test.name .. ": " .. tostring(err))
 	end
-	if package.loaded["config.opencode"] then
-		package.loaded["config.opencode"].close_layout()
+	for _, name in ipairs({ "config.opencode", "config.grok" }) do
+		if package.loaded[name] then
+			package.loaded[name].close_layout()
+		end
 	end
 	vim.cmd("silent! only!")
 end

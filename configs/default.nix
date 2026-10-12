@@ -1,7 +1,7 @@
 # configs (dotfiles)
 {
   aiModels,
-  config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -208,9 +208,8 @@ in
         source = ./agents;
         recursive = true;
       };
-      # yomiyasu comes from claude's plugin sync; codex and opencode read it here
-      ".agents/skills/yomiyasu".source =
-        config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/claude/plugins/marketplaces/yomiyasu/skills/yomiyasu";
+      # yomiyasu comes from its flake input; codex and opencode read it here
+      ".agents/skills/yomiyasu".source = "${inputs.yomiyasu}/skills/yomiyasu";
       # antigravity ignores XDG (settings.json and mcp_config.json are agy-managed)
       ".gemini/config/AGENTS.md".source = ./agents/global-rules.md;
       ".gemini/config/skills" = {

@@ -80,6 +80,11 @@ local function reset()
 		}
 	end
 end
+-- tui wrappers under lua/config, with the command each resume launches
+local tuis = {
+	opencode = { user_command = "Opencode", resume = "opencode --mini --continue" },
+	grok = { user_command = "Grok", resume = "grok --no-alt-screen /resume" },
+}
 local function adapter(kind)
 	if kind == "remote" or kind == "remote_argv" then
 		package.loaded["utils.remote_agent"] = nil
@@ -99,9 +104,10 @@ local function adapter(kind)
 			end,
 		}
 	end
-	package.loaded["config.opencode"] = nil
-	pcall(vim.api.nvim_del_user_command, "Opencode")
-	local client = require("config.opencode")
+	local tui = tuis[kind]
+	package.loaded["config." .. kind] = nil
+	pcall(vim.api.nvim_del_user_command, tui.user_command)
+	local client = require("config." .. kind)
 	return {
 		object = client,
 		open = client.open_layout,
@@ -110,7 +116,7 @@ local function adapter(kind)
 		show = client.show_layout,
 		resume = client.resume_session,
 		job = function()
-			return client._windows.opencode_job_id
+			return client._windows[kind .. "_job_id"]
 		end,
 	}
 end
@@ -133,7 +139,7 @@ local cases = {}
 local function case(name, callback)
 	cases[#cases + 1] = { name = name, callback = callback }
 end
-for _, kind in ipairs({ "remote", "remote_argv", "opencode" }) do
+for _, kind in ipairs({ "remote", "remote_argv", "opencode", "grok" }) do
 	case(kind .. " stale exit cannot close a reopened job", function()
 		local c = adapter(kind)
 		c.open()
@@ -283,47 +289,49 @@ case("remote argv thrown spawn failure cleans resources", function()
 	equal(#vim.api.nvim_list_wins(), 1, "failed layout windows removed")
 	equal(#vim.api.nvim_list_bufs(), before, "failed layout buffers removed")
 end)
-case("opencode resume stops the hidden old job", function()
-	local c = adapter("opencode")
-	c.open()
-	local old = c.job()
-	local windows = vim.deepcopy(c.object._windows)
-	c.hide()
-	c.resume()
-	equal(stopped[old], true, "hidden old process stopped")
-	deleted(windows)
-	equal(jobs[c.job()].command, "opencode --mini --continue", "continue command preserved")
-end)
-case("opencode stale exit cannot close the resumed job", function()
-	local c = adapter("opencode")
-	c.open()
-	local old = c.job()
-	c.resume()
-	local current = c.job()
-	jobs[old].opts.on_exit(old, 0, "exit")
-	drain()
-	equal(stopped[current], nil, "resumed job remains running")
-	equal(c.object._is_open, true, "resumed layout remains open")
-end)
-for _, action in ipairs({ "hide", "close", "reopen", "hide_show" }) do
-	case("opencode delayed resume cancelled by " .. action, function()
-		local c = adapter("opencode")
+for _, kind in ipairs({ "opencode", "grok" }) do
+	case(kind .. " resume stops the hidden old job", function()
+		local c = adapter(kind)
+		c.open()
+		local old = c.job()
+		local windows = vim.deepcopy(c.object._windows)
+		c.hide()
 		c.resume()
-		if action == "hide" then
-			c.hide()
-		elseif action == "close" then
-			c.close()
-		elseif action == "reopen" then
-			c.close()
-			c.open()
-		else
-			c.hide()
-			c.show()
-		end
-		local focus = vim.api.nvim_get_current_win()
-		drain()
-		equal(vim.api.nvim_get_current_win(), focus, "resume does not refocus an old window")
+		equal(stopped[old], true, "hidden old process stopped")
+		deleted(windows)
+		equal(jobs[c.job()].command, tuis[kind].resume, "resume command preserved")
 	end)
+	case(kind .. " stale exit cannot close the resumed job", function()
+		local c = adapter(kind)
+		c.open()
+		local old = c.job()
+		c.resume()
+		local current = c.job()
+		jobs[old].opts.on_exit(old, 0, "exit")
+		drain()
+		equal(stopped[current], nil, "resumed job remains running")
+		equal(c.object._is_open, true, "resumed layout remains open")
+	end)
+	for _, action in ipairs({ "hide", "close", "reopen", "hide_show" }) do
+		case(kind .. " delayed resume cancelled by " .. action, function()
+			local c = adapter(kind)
+			c.resume()
+			if action == "hide" then
+				c.hide()
+			elseif action == "close" then
+				c.close()
+			elseif action == "reopen" then
+				c.close()
+				c.open()
+			else
+				c.hide()
+				c.show()
+			end
+			local focus = vim.api.nvim_get_current_win()
+			drain()
+			equal(vim.api.nvim_get_current_win(), focus, "resume does not refocus an old window")
+		end)
+	end
 end
 local failures = 0
 for _, test in ipairs(cases) do
