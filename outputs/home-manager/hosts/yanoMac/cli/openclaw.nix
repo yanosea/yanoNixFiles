@@ -108,6 +108,48 @@ let
       (secretPath "OPENCLAW_DISCORD_DEV_CHANNEL_ID")
     ]
   );
+  # wakes a check-in job unless the workspace pauses it. the agents' `checkin`
+  # skill writes `state/checkin-pause` (an epoch second, or `off`) when asked
+  # to stay quiet, so a paused hour starts no model turn at all. the check-in
+  # jobs themselves are declared disabled and only ever run through this
+  checkinGate = pkgs.writeShellApplication {
+    name = "openclaw-checkin-gate";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.jq
+    ];
+    text = ''
+      if [ "$#" -ne 2 ]; then
+        echo "usage: openclaw-checkin-gate <workspace> <job name>" >&2
+        exit 2
+      fi
+      pause="$1/state/checkin-pause"
+      if [ -f "$pause" ]; then
+        until=$(head -n 1 -- "$pause")
+        if [ "$until" = off ] || { [[ $until =~ ^[0-9]+$ ]] && [ "$(date +%s)" -lt "$until" ]; }; then
+          echo "paused until $(sed -n 2p "$pause")"
+          exit 0
+        fi
+        # the pause is over (or unreadable); the hour runs as usual
+        rm -f -- "$pause"
+      fi
+      export OPENCLAW_CONFIG_PATH="${config.programs.openclaw.stateDir}/openclaw.json"
+      export OPENCLAW_STATE_DIR="${config.programs.openclaw.stateDir}"
+      export OPENCLAW_NIX_MODE=1
+      oc=${lib.getExe config.programs.openclaw.package}
+      id=$("$oc" cron list --all --json </dev/null | jq -er --arg name "$2" '(.jobs // .)[] | select(.name == $name) | .id')
+      "$oc" cron run "$id" </dev/null
+    '';
+  };
+  checkinGateArgv =
+    workspace: job:
+    lib.escapeShellArg (
+      builtins.toJSON [
+        (lib.getExe checkinGate)
+        workspace
+        job
+      ]
+    );
   # `imports` is resolved before the module system settles, so the `pkgs`
   # module argument cannot be used to build one. take a bare nixpkgs instead
   patchPkgs = inputs.nixpkgs.legacyPackages.${system};
@@ -249,15 +291,29 @@ in
           fi
           # the hourly check-in: the same main-session heartbeat turn, woken on
           # the hour (dev-checkin below speaks at :00 too). the 0:00 one comes
-          # from the daily-thread skill once the thread is up; none from 1 to 5
+          # from the daily-thread skill once the thread is up; none from 1 to 5.
+          # the job is disabled: `checkin-gate` runs it each hour unless
+          # mizuki has paused the check-ins
           if ! $DRY_RUN_CMD openclaw automations add \
             --name checkin \
             --display-name "Check-in" \
             --declaration-key workspace:checkin \
             --cron "0 6-23 * * *" --tz Asia/Tokyo --exact \
+            --disabled \
             --session main \
             --system-event ${lib.escapeShellArg heartbeatPrompt}; then
             echo "failed to declare the checkin automation" >&2
+          fi
+          if ! $DRY_RUN_CMD openclaw automations add \
+            --name checkin-gate \
+            --display-name "Check-in gate" \
+            --declaration-key workspace:checkin-gate \
+            --agent main \
+            --cron "0 6-23 * * *" --tz Asia/Tokyo --exact \
+            --no-deliver \
+            --timeout-seconds 60 \
+            --command-argv ${checkinGateArgv config.programs.openclaw.workspaceDir "checkin"}; then
+            echo "failed to declare the checkin-gate automation" >&2
           fi
           # the feeds jobs run openclaw-feeds with no model turn. the scheduler
           # kills a command after 10 minutes by default, and the grok sections
@@ -325,18 +381,31 @@ in
             # only the default agent may wake its main session from a job, so
             # dev's hourly check-in is an isolated turn like dev-trends: it
             # reads today's thread and notes itself. 7 and 19 belong to
-            # dev-trends, 0 is the daily-thread skill's, and none from 1 to 5
+            # dev-trends, 0 is the daily-thread skill's, and none from 1 to 5.
+            # disabled like `checkin`: `dev-checkin-gate` runs it
             if ! $DRY_RUN_CMD openclaw automations add \
               --name dev-checkin \
               --display-name "Dev check-in" \
               --declaration-key workspace-dev:checkin \
               --agent dev \
               --cron "0 6,8-18,20-23 * * *" --tz Asia/Tokyo --exact \
+              --disabled \
               --session isolated \
               --no-deliver --channel discord \
               --to "channel:$(${pkgs.coreutils}/bin/cat "$devChannel")" \
               --message ${lib.escapeShellArg heartbeatPrompt}; then
               echo "failed to declare the dev-checkin automation" >&2
+            fi
+            if ! $DRY_RUN_CMD openclaw automations add \
+              --name dev-checkin-gate \
+              --display-name "Dev check-in gate" \
+              --declaration-key workspace-dev:checkin-gate \
+              --agent dev \
+              --cron "0 6,8-18,20-23 * * *" --tz Asia/Tokyo --exact \
+              --no-deliver \
+              --timeout-seconds 60 \
+              --command-argv ${checkinGateArgv devWorkspaceDir "dev-checkin"}; then
+              echo "failed to declare the dev-checkin-gate automation" >&2
             fi
             # the updater opens the flake.lock pr around 5:00 and darwin takes
             # up to two hours, so by 7:00 the run has settled either way
