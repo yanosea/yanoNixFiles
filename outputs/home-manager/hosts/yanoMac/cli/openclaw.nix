@@ -642,6 +642,9 @@ in
           entries = {
             "common-hooks" = {
               enabled = true;
+              hooks = {
+                allowConversationAccess = true;
+              };
             };
             "active-memory" = {
               enabled = true;
