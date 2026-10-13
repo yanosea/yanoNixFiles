@@ -1,0 +1,15 @@
+{
+  "deny": {
+    "git_reset_hard": true,
+    "git_clean_force": true,
+    "git_force_push": true,
+    "git_metadata_write": true
+  },
+  "checks": {
+    "whitespace": true,
+    "conflict_markers": true
+  },
+  "research_reminder": true,
+  "project_commands": [],
+  "overall_timeout": 90
+}

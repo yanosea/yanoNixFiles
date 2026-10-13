@@ -7,11 +7,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.agents/hooks/load-handover.sh\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
             "command": "bash \"$HOME/.config/claude/hooks/check-new-plugins.sh\"",
             "timeout": 10
           },
@@ -45,27 +40,68 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event SessionStart",
+            "timeout": 30
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.agents/hooks/remind-websearch.sh\""
+            "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event UserPromptSubmit",
+            "timeout": 30
           }
         ]
       }
     ],
     "PreCompact": [
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.agents/hooks/generate-handover.sh\"",
+            "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event PreCompact",
             "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event PreToolUse",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event PostToolUse",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event Stop",
+            "timeout": 120
           }
         ]
       }

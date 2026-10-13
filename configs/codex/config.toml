@@ -1,10 +1,14 @@
-# codex cli configuration
+# Codex CLI config with shared agent hooks
+#
+# The new first-line marker prevents the previously deployed SessionEnd saver
+# from replacing this unapplied migration with its old live configuration.
+# Normal saving resumes once activation deploys this same marker.
 #
 # Deployed by a copy in configs/default.nix, not a store symlink: codex appends
 # its own state here ([hooks.state] hook-trust hashes, [projects.*] trust_level)
-# and those writes fail against a read-only store path. A `nix run .#home`
-# restores this file, so anything codex or the TUI wrote since is dropped and
-# hook trust has to be granted once more.
+# and those writes fail against a read-only store path. Activation merges the
+# declared settings while retaining hook-trust, project-trust and unrelated
+# hooks. A new or changed hook still requires the user's normal trust decision.
 #
 # Settings that should not be published live in `config.local.toml` next to the
 # deployed copy; activation prepends that file, so its top-level keys land ahead
@@ -20,6 +24,7 @@ project_doc_fallback_filenames = ["CLAUDE.md"]
 project_doc_max_bytes = 24000
 sandbox_mode = "workspace-write"
 model = "gpt-6-astra"
+plan_mode_reasoning_effort = "high"
 
 [agents]
 default_subagent_model = "gpt-6.1-sol"
@@ -98,13 +103,22 @@ args = [
   "invokeai_mcp_server",
 ]
 
-[[hooks.SessionStart]]
+[[hooks.SessionEnd]]
 
-[[hooks.SessionStart.hooks]]
+[[hooks.SessionEnd.hooks]]
 type = "command"
-command = "bash ~/.agents/hooks/load-handover.sh"
-statusMessage = "Loading handover note"
-timeout = 10
+command = "bash ~/.config/codex/hooks/save-config.sh"
+# SessionEnd is capped at 3s; anything larger is clamped with a warning
+timeout = 3
+
+[[hooks.SessionEnd]]
+
+[[hooks.SessionEnd.hooks]]
+type = "command"
+command = 'python3 "$HOME/.agents/hooks/common_hook.py" --harness codex --event SessionEnd'
+timeout = 3
+
+[[hooks.SessionStart]]
 
 [[hooks.SessionStart.hooks]]
 type = "command"
@@ -117,25 +131,56 @@ command = "bash ~/.config/codex/hooks/sync-plugins.sh"
 async = true
 timeout = 300
 
+[[hooks.SessionStart]]
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness codex --event SessionStart"
+timeout = 30
+
 [[hooks.UserPromptSubmit]]
 
 [[hooks.UserPromptSubmit.hooks]]
 type = "command"
-command = "bash ~/.agents/hooks/remind-websearch.sh"
-timeout = 10
+command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness codex --event UserPromptSubmit"
+timeout = 30
+
+[[hooks.PreToolUse]]
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness codex --event PreToolUse"
+timeout = 30
+
+[[hooks.PostToolUse]]
+
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness codex --event PostToolUse"
+timeout = 30
+
+[[hooks.Stop]]
+
+[[hooks.Stop.hooks]]
+type = "command"
+command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness codex --event Stop"
+timeout = 120
 
 [[hooks.PreCompact]]
 
 [[hooks.PreCompact.hooks]]
 type = "command"
-command = "bash ~/.agents/hooks/generate-handover.sh"
-statusMessage = "Writing handover note"
+command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness codex --event PreCompact"
 timeout = 30
 
-[[hooks.SessionEnd]]
 
-[[hooks.SessionEnd.hooks]]
+[notice]
+hide_rate_limit_model_nudge = true
+
+# Pause only an explicitly active development loop on native cancellation/end.
+[[hooks.Interrupt]]
+
+[[hooks.Interrupt.hooks]]
 type = "command"
-command = "bash ~/.config/codex/hooks/save-config.sh"
-# SessionEnd is capped at 3s; anything larger is clamped with a warning
+command = 'python3 "$HOME/.agents/hooks/common_hook.py" --harness codex --event Interrupt'
 timeout = 3

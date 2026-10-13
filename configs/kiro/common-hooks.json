@@ -1,0 +1,34 @@
+{
+  "hooks": {
+    "agentSpawn": [
+      {
+        "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness kiro --event agentSpawn",
+        "timeout_ms": 30000
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness kiro --event userPromptSubmit",
+        "timeout_ms": 30000
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness kiro --event preToolUse",
+        "timeout_ms": 30000
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness kiro --event postToolUse",
+        "timeout_ms": 30000
+      }
+    ],
+    "stop": [
+      {
+        "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness kiro --event stop",
+        "timeout_ms": 120000
+      }
+    ]
+  }
+}

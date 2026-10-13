@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# inject-context.sh - pass HANDOVER.md, plugin triage and the web search
-# reminder to the model once per session; PostToolUse is the only grok event
+# inject-context.sh - pass plugin triage to the model once per session; PostToolUse is the only grok event
 # whose output reaches the model.
 
 set -uo pipefail
@@ -27,15 +26,8 @@ touch "$marker"
 find "$STATE_DIR" -type f -mtime +7 -delete 2>/dev/null
 
 sections=()
-if [ -f "$cwd/HANDOVER.md" ]; then
-  sections+=("$(cat "$cwd/HANDOVER.md")")
-fi
 plugins=$(bash "$(dirname "$0")/check-new-plugins.sh" 2>/dev/null)
 [ -n "$plugins" ] && sections+=("$plugins")
-# the other clis get this per prompt; grok drops UserPromptSubmit output
-reminder=$(bash "${HOME}/.agents/hooks/remind-websearch.sh" </dev/null 2>/dev/null |
-  jq -r '.hookSpecificOutput.additionalContext // empty')
-[ -n "$reminder" ] && sections+=("$reminder")
 
 [ ${#sections[@]} -eq 0 ] && exit 0
 

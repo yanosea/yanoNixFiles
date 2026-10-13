@@ -1,0 +1,47 @@
+{
+  "common-agents": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness antigravity --event SessionStart",
+        "timeout": 30
+      }
+    ],
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness antigravity --event PreInvocation",
+        "timeout": 30
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness antigravity --event PreToolUse",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness antigravity --event PostToolUse",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness antigravity --event Stop",
+        "timeout": 120
+      }
+    ]
+  }
+}

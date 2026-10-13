@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event sessionStart",
+        "timeoutSec": 30
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event userPromptSubmitted",
+        "timeoutSec": 30
+      }
+    ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event preToolUse",
+        "timeoutSec": 30
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event postToolUse",
+        "timeoutSec": 30
+      }
+    ],
+    "agentStop": [
+      {
+        "type": "command",
+        "bash": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event agentStop",
+        "timeoutSec": 120
+      }
+    ],
+    "preCompact": [
+      {
+        "type": "command",
+        "bash": "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event preCompact",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}
