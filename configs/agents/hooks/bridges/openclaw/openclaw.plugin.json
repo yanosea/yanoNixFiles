@@ -1,0 +1,10 @@
+{
+  "id": "common-hooks",
+  "name": "Common hooks",
+  "description": "Native local policy checks; agent_end observations never submit prompts or send messages.",
+  "configSchema": {
+    "type": "object",
+    "properties": {},
+    "additionalProperties": false
+  }
+}

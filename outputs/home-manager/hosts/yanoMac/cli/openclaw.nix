@@ -635,8 +635,14 @@ in
           };
         };
         plugins = {
+          # Use the complete source directory: per-file Home Manager symlinks
+          # escape the plugin root and fail OpenClaw's path-safety validation.
+          load.paths = [ "${../../../../../configs/agents/hooks/bridges/openclaw}" ];
           # bundled but off until named here
           entries = {
+            "common-hooks" = {
+              enabled = true;
+            };
             "active-memory" = {
               enabled = true;
             };

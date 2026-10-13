@@ -7,6 +7,7 @@
   ...
 }:
 let
+  hookPython = pkgs.python3.withPackages (pythonPackages: [ pythonPackages.tomlkit ]);
   # regular config files (excluding directories with custom deployment below)
   contents = builtins.readDir ./.;
   filteredContents = lib.filterAttrs (
@@ -14,6 +15,8 @@ let
     name != "default.nix"
     && name != "agents"
     && name != "antigravity"
+    && name != "copilot"
+    && name != "kiro"
     && name != "codex"
     && name != "goose"
     && name != "grok"
@@ -70,6 +73,10 @@ let
     "claude/commands/handover.md".source = ./agents/skills/handover/SKILL.md;
     "claude/commands/sg.md".source = ./agents/skills/sg/SKILL.md;
     "claude/commands/sj.md".source = ./agents/skills/sj/SKILL.md;
+    "claude/skills/agent-loop" = {
+      source = ./agents/skills/agent-loop;
+      recursive = true;
+    };
     "claude/skills/triage-update-pr" = {
       source = ./agents/skills/triage-update-pr;
       recursive = true;
@@ -119,18 +126,18 @@ let
   # since opencode never rewrites its config)
   opencodeConfigEntries = {
     "opencode/AGENTS.md".source = ./agents/global-rules.md;
+    "opencode/plugins/common-hooks.ts".source = ./agents/hooks/bridges/opencode.ts;
   };
   # config.local.toml goes first so its top-level keys precede every table,
   # which keeps unpublishable settings out of this repository
   copyWritableConfig = dir: src: ''
     configDir="''${XDG_CONFIG_HOME:-$HOME/.config}/${dir}"
     $DRY_RUN_CMD mkdir -p "$configDir"
-    if [ -f "$configDir/config.local.toml" ]; then
-      $DRY_RUN_CMD cat "$configDir/config.local.toml" ${src} >"$configDir/config.toml"
-    else
-      $DRY_RUN_CMD cat ${src} >"$configDir/config.toml"
+    if [ -z "''${DRY_RUN_CMD:-}" ] && [ -z "''${DRY_RUN:-}" ]; then
+      ${hookPython}/bin/python3 ${./agents/hooks/wiring.py} merge-toml \
+        --base ${src} --destination "$configDir/config.toml" \
+        --local "$configDir/config.local.toml"
     fi
-    $DRY_RUN_CMD chmod 644 "$configDir/config.toml"
   '';
   # zsh config subdirectories (excluding .zshrc/.zshenv which are managed by programs.zsh)
   zshContents = builtins.readDir ./zsh;
@@ -141,11 +148,91 @@ let
       recursive = type == "directory";
     };
   }) zshContents;
+  # Codex discovers directory symlinks, but skips symlinked SKILL.md files.
+  sharedSkillEntries =
+    lib.mapAttrs'
+      (name: _: {
+        name = ".agents/skills/${name}";
+        value = {
+          source = ./agents/skills + "/${name}";
+          recursive = false;
+        };
+      })
+      (
+        lib.filterAttrs (
+          name: type:
+          type == "directory"
+          && name != "yomiyasu"
+          && builtins.pathExists (./agents/skills + "/${name}/SKILL.md")
+        ) (builtins.readDir ./agents/skills)
+      );
 in
 {
   # home directory files
   home = {
     activation = {
+      # Preserve the old per-file layout before checking whole-directory links.
+      migrateSharedAgentSkills = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+        if [ -n "''${oldGenPath:-}" ]; then
+          oldSkillFiles=$(${pkgs.coreutils}/bin/readlink -e "$oldGenPath/home-files")
+          skillBackupRoot="$HOME/.agents/skill-migration-backups/''${newGenPath##*/}"
+          declare -a skillMigrationSources=() skillMigrationBackups=()
+          for skillName in ${
+            lib.escapeShellArgs (
+              map (name: lib.removePrefix ".agents/skills/" name) (builtins.attrNames sharedSkillEntries)
+            )
+          }; do
+            skillDirectory="$HOME/.agents/skills/$skillName"
+            if [ -d "$skillDirectory" ] && [ ! -L "$skillDirectory" ] && [ -L "$skillDirectory/SKILL.md" ]; then
+              skillLink=$(${pkgs.coreutils}/bin/readlink "$skillDirectory/SKILL.md")
+              if [ "$skillLink" = "$oldSkillFiles/.agents/skills/$skillName/SKILL.md" ]; then
+                skillBackup="$skillBackupRoot/$skillName"
+                if [ -e "$skillBackup" ] || [ -L "$skillBackup" ]; then
+                  errorEcho "Cannot migrate shared skill: backup already exists at $skillBackup"
+                  exit 1
+                fi
+                skillMigrationSources+=("$skillDirectory")
+                skillMigrationBackups+=("$skillBackup")
+              fi
+            fi
+          done
+          # Every destination has passed preflight before any directory moves.
+          if [ "''${#skillMigrationSources[@]}" -gt 0 ]; then
+            run ${pkgs.coreutils}/bin/mkdir -p "$skillBackupRoot"
+            for skillIndex in "''${!skillMigrationSources[@]}"; do
+              run ${pkgs.coreutils}/bin/mv -T --no-clobber \
+                "''${skillMigrationSources[$skillIndex]}" "''${skillMigrationBackups[$skillIndex]}"
+            done
+          fi
+        fi
+      '';
+      # Seed a writable user policy once. Subsequent user choices, including
+      # an invalid policy reported by the hook runtime, are never overwritten.
+      seedCommonAgentPolicy = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        policy="''${XDG_CONFIG_HOME:-$HOME/.config}/agents/hooks-policy.json"
+        if [ -z "''${DRY_RUN_CMD:-}" ] && [ -z "''${DRY_RUN:-}" ] && [ ! -e "$policy" ] && [ ! -L "$policy" ]; then
+          mkdir -p "$(dirname "$policy")"
+          ${pkgs.coreutils}/bin/install -m 600 ${./agents/hooks-policy.json} "$policy"
+        fi
+      '';
+      # The named Antigravity definition and Copilot user hook file are merged,
+      # retaining deliberate disabling and unrelated hooks. Kiro 2.x profiles
+      # receive hooks without changing the selected agent or tool permissions.
+      wireCommonAgentHooks = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        if [ -z "''${DRY_RUN_CMD:-}" ] && [ -z "''${DRY_RUN:-}" ]; then
+          ${pkgs.python3}/bin/python3 ${./agents/hooks/wiring.py} global \
+            --templates ${
+              lib.fileset.toSource {
+                root = ./.;
+                fileset = lib.fileset.unions [
+                  ./antigravity/hooks.json
+                  ./copilot/hooks/common-agents.json
+                  ./kiro/common-hooks.json
+                ];
+              }
+            }
+        fi
+      '';
       # copied rather than symlinked: codex appends [hooks.state] and
       # [projects.*] to config.toml and cannot write to a store path
       copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
@@ -205,7 +292,23 @@ in
     file = {
       # codex skills live outside XDG, in the cross-tool ~/.agents/skills
       ".agents" = {
-        source = ./agents;
+        source = lib.fileset.toSource {
+          root = ./agents;
+          fileset =
+            lib.fileset.difference (lib.fileset.fileFilter (file: !(lib.hasSuffix ".pyc" file.name)) ./agents)
+              (
+                lib.fileset.unions [
+                  ./agents/hooks/tests
+                  ./agents/skills
+                ]
+              );
+        };
+        recursive = true;
+      };
+      # Goose's user plugin discovery reads ~/.agents/plugins independently of
+      # config.yaml; its disabledPlugins setting remains authoritative.
+      ".agents/plugins/common-agents" = {
+        source = ./goose/plugin;
         recursive = true;
       };
       # yomiyasu comes from its flake input; codex and opencode read it here
@@ -221,6 +324,13 @@ in
         recursive = true;
       };
       ".gemini/config/plugins.conf".source = ./antigravity/plugins.conf;
+      ".local/bin/agent-loop" = {
+        executable = true;
+        text = ''
+          #!${pkgs.runtimeShell}
+          exec ${pkgs.python3}/bin/python3 "$HOME/.agents/hooks/agent_loop.py" "$@"
+        '';
+      };
       ".local/bin/niri-app-toggle" = {
         executable = true;
         text = ''
@@ -237,7 +347,8 @@ in
           fi
         '';
       };
-    };
+    }
+    // sharedSkillEntries;
   };
   # xdg
   xdg = {
