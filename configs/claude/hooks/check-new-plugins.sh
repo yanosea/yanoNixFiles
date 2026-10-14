@@ -96,7 +96,7 @@ if new:
     "configs/antigravity/plugins.conf declares the same claude plugins for "
     "antigravity (imported from the claude cache): add the same line, with the "
     "same decision, there too. The change "
-    "takes effect on the next session's sync-plugins.sh run."
+    "takes effect once `make home` regenerates enabledPlugins in settings.json."
     )
 
 if gone:
@@ -110,7 +110,7 @@ if gone:
     "the user first -- the plugin is gone, so the entry cannot be acted on "
     "either way -- but report in Japanese which entries were dropped. Any of "
     "them that was `[x]` is also worth flagging: the user was relying on it. "
-    "sync-plugins.sh uninstalls the leftover files on its own."
+    "Once `make home` drops them from enabledPlugins, they no longer load."
     )
 
 print(json.dumps({

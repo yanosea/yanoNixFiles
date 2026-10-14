@@ -67,6 +67,47 @@ let
     "hypr/hypridle.conf".source = ./hypr/hypridle.conf;
     "hypr/hyprpaper.conf".source = ./hypr/hyprpaper.conf;
   };
+  # plugins.conf and plugin-marketplaces.conf, enabled at user scope: a
+  # plugin enabled per directory is missing from the first session in every
+  # new one, while claude fetches what user settings enable on its own
+  claudeConfLines =
+    file:
+    lib.filter (line: builtins.match "[[:space:]]*(#.*)?" line == null) (
+      lib.splitString "\n" (builtins.readFile file)
+    );
+  claudeMarketplaceRows = map (line: lib.filter (word: word != "") (lib.splitString " " line)) (
+    claudeConfLines ./claude/plugin-marketplaces.conf
+  );
+  claudeMarketplaceOf =
+    plugin:
+    let
+      row = lib.findFirst (row: builtins.head row == plugin) null claudeMarketplaceRows;
+    in
+    if row == null then "claude-plugins-official" else builtins.elemAt row 1;
+  claudeDeclaredPlugins = lib.concatMap (
+    line:
+    let
+      match = builtins.match "[[]x[]] +([^ ]+).*" line;
+    in
+    lib.optional (match != null) (builtins.head match)
+  ) (claudeConfLines ./claude/plugins.conf);
+  claudePluginSettings = {
+    enabledPlugins = builtins.listToAttrs (
+      map (plugin: {
+        name = "${plugin}@${claudeMarketplaceOf plugin}";
+        value = true;
+      }) claudeDeclaredPlugins
+    );
+    extraKnownMarketplaces = builtins.listToAttrs (
+      map (row: {
+        name = builtins.elemAt row 1;
+        value.source = {
+          source = "github";
+          repo = builtins.elemAt row 2;
+        };
+      }) claudeMarketplaceRows
+    );
+  };
   # claude user memory (the rest of configs/claude is deployed by the generic loop)
   claudeConfigEntries = {
     "claude/CLAUDE.md".source = ./agents/global-rules.md;
@@ -86,6 +127,7 @@ let
     # plan-mode slot and `sonnet` the execution one, whatever they resolve to
     "claude/settings.json".source = (pkgs.formats.json { }).generate "claude-settings.json" (
       lib.recursiveUpdate (builtins.fromJSON (builtins.readFile ./claude/settings.json)) {
+        inherit (claudePluginSettings) enabledPlugins extraKnownMarketplaces;
         env = {
           ANTHROPIC_DEFAULT_OPUS_MODEL = aiModels.plan;
           ANTHROPIC_DEFAULT_SONNET_MODEL = aiModels.run;
