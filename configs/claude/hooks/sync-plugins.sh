@@ -2,14 +2,17 @@
 # sync-plugins.sh - Reconcile installed Claude Code plugins to match the
 # declarative list in configs/claude/plugins.conf (SessionStart, async).
 #
-# Uses --scope local to write to .claude/settings.local.json (writable)
-# instead of --scope user which targets the Nix-managed read-only symlink.
-# Since the hook runs on every session start, plugins converge to the
-# declared state per-project over time.
+# Nix writes plugins.conf into enabledPlugins of the user settings, and
+# Claude Code fetches what they enable on its own, so a plugin loads in every
+# directory from the first session. This hook only drops the per-project
+# installs an earlier version made with --scope local, and keeps the user
+# installs updated. `claude plugin install --scope user` cannot run here,
+# since it writes the Nix-managed read-only settings.json.
 #
 # plugins.conf is the single source of truth: anything not declared `[x]`
-# there is uninstalled, whether it's explicitly excluded, newly appeared
-# in the marketplace and not yet triaged, or a stale/renamed leftover.
+# there is left out of enabledPlugins and does not load, whether it's
+# explicitly excluded, newly appeared in the marketplace and not yet
+# triaged, or a stale/renamed leftover.
 #
 # Declared plugins are also updated to their latest version. One update costs
 # ~4.5s, so a full pass over the declared set outruns this hook's timeout;
@@ -96,55 +99,25 @@ marketplace_for() {
   echo "${mp:-claude-plugins-official}"
 }
 
-# Snapshot once: `claude plugin install` costs ~2.5s even when already installed,
-# so looping it over every declared name outran this hook's 300s timeout.
 PLUGIN_LIST=$(claude plugin list --json 2>/dev/null || echo '[]')
 
-plugin_names() {
-  # $1: "any" = installed for this project, "enabled" = that subset, enabled.
+# the per-project installs an earlier version of this hook made here
+local_installs() {
   echo "$PLUGIN_LIST" | python3 -c "
 import json, sys
 try:
     data = json.load(sys.stdin)
 except Exception:
     sys.exit(0)
-cwd = '$cwd'
-want_enabled = '$1' == 'enabled'
-seen = set()
 for p in data:
-    if p.get('projectPath') != cwd:
-        continue
-    if want_enabled and not p.get('enabled'):
-        continue
-    name = p['id'].split('@', 1)[0]
-    if name not in seen:
-        seen.add(name)
-        print(name)
+    if p.get('scope') == 'local' and p.get('projectPath') == '$cwd':
+        print(p['id'])
 "
 }
 
-PRESENT=" $(plugin_names any | tr '\n' ' ') "
-ENABLED_NOW=" $(plugin_names enabled | tr '\n' ' ') "
-
-# uninstall first: it is the pass that must not be starved by a timeout.
-# Iterates PRESENT, not ENABLED_NOW: a disabled plugin is still installed, so
-# scanning only the enabled ones left every undeclared-but-disabled plugin on
-# disk forever, and the cache GC keeps whatever the manifest still pins.
-for installed_name in $PRESENT; do
-  if ! in_list "$DECLARED_X" "$installed_name"; then
-    mp=$(marketplace_for "$installed_name")
-    claude plugin uninstall "${installed_name}@${mp}" --scope local 2>/dev/null || true
-  fi
-done
-
-# install what is declared but absent, enable what is present but off
-for plugin in $DECLARED_X; do
-  mp=$(marketplace_for "$plugin")
-  if ! in_list "$PRESENT" "$plugin"; then
-    claude plugin install "${plugin}@${mp}" --scope local 2>/dev/null || true
-  elif ! in_list "$ENABLED_NOW" "$plugin"; then
-    claude plugin enable "${plugin}@${mp}" --scope local 2>/dev/null || true
-  fi
+# the user installs cover every directory, and nothing updates these any more
+for id in $(local_installs); do
+  claude plugin uninstall "$id" --scope local 2>/dev/null || true
 done
 
 # update the declared set, resuming where the last run ran out of budget. The
@@ -165,7 +138,7 @@ if [ "$UPDATE_DUE" = true ]; then
     [ "$(($(date +%s) - START_TS))" -ge "$UPDATE_BUDGET" ] && break
     plugin="${DECLARED_ARR[$cursor]}"
     mp=$(marketplace_for "$plugin")
-    claude plugin update "${plugin}@${mp}" --scope local 2>/dev/null || true
+    claude plugin update "${plugin}@${mp}" --scope user 2>/dev/null || true
     cursor=$((cursor + 1))
   done
 
