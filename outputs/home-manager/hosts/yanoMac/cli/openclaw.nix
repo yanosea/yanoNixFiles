@@ -540,12 +540,16 @@ in
               every = "0m";
               target = "none";
             };
-            # grok on the supergrok login does the turns. claude stays as the
-            # fallback, on the tier its cli drops to outside plan mode
-            # (lib/ai-models.nix); this gateway never plans
+            # grok on the supergrok login does the turns. the chatgpt login
+            # comes next; its quota is shared with codex, so only as a
+            # fallback. claude is the last resort, on the tier its cli drops
+            # to outside plan mode (lib/ai-models.nix); this gateway never plans
             model = {
               primary = "xai/grok-4.7";
-              fallbacks = [ "anthropic/${aiModels.run}" ];
+              fallbacks = [
+                "openai/gpt-6-astra"
+                "anthropic/${aiModels.run}"
+              ];
             };
           };
           # once any entry carries a heartbeat block, only the entries that
