@@ -3,16 +3,38 @@
   // nix owns the binary
   "update": "disable",
   "share": "disabled",
-  // xai's flagship on the supergrok login, left on its default effort
+  // xai's flagship on the supergrok login, left on its default effort;
+  // build runs on it
   "model": "xai/grok-4.7",
   "providers": {
-    // same model and effort as configs/codex/config.toml, on the chatgpt login
+    // same models and effort as configs/codex/config.toml, on the chatgpt login
     "openai": {
       "models": {
         "gpt-6-astra": {
           "settings": { "reasoningEffort": "high" }
+        },
+        "gpt-6.1-sol": {
+          "settings": { "reasoningEffort": "high" }
         }
       }
+    }
+  },
+  // grok does the everyday work; the chatgpt login is kept for planning
+  // and review, where grok skipped steps in the agent-trial runs
+  "agents": {
+    "plan": {
+      "model": { "providerID": "openai", "model": "gpt-6-astra" }
+    },
+    "explore": {
+      "model": { "providerID": "xai", "model": "grok-4.7-build-fast" }
+    },
+    "review": {
+      "description": "Reviews the diff once a change is done: missed requirements, edge cases such as missing directories or unsupported platforms, and claims the code does not back up",
+      "mode": "subagent",
+      "model": { "providerID": "openai", "model": "gpt-6.1-sol" },
+      "permissions": [
+        { "action": "edit", "resource": "*", "effect": "deny" }
+      ]
     }
   },
   // the other agent clis run in auto mode
