@@ -26,16 +26,6 @@ let
   # the main session is long-lived, so the prompt makes the agent load the
   # skill again each turn; otherwise it skips check-ins from stale context
   heartbeatPrompt = "Read the SKILL.md of the check-in skill named in AGENTS.md now (it may have changed), read today's thread, and send exactly one check-in with the message tool unless that skill says to stay silent. Then reply exactly NO_REPLY.";
-  # feedsArgv <workspace>: the command a feeds job runs; its config is private
-  # and sits in the workspace
-  feedsArgv =
-    workspace:
-    lib.escapeShellArg (
-      builtins.toJSON [
-        (lib.getExe openclawFeeds)
-        "${workspace}/skills/feeds/config.json"
-      ]
-    );
   secretKeys = [
     "OPENCLAW_DISCORD_BOT_TOKEN"
     "OPENCLAW_DISCORD_CHANNEL_ID"
@@ -356,22 +346,19 @@ in
             --message "Use the onee-trends skill."; then
             echo "failed to declare the trends automation" >&2
           fi
-          # the feeds jobs run openclaw-feeds with no model turn. the scheduler
-          # kills a command after 10 minutes by default, and the grok sections
-          # alone may take 20. GROK_HOME is where grok signs in, and
-          # OPENCLAW_FEEDS keeps my grok hooks out of the run. once each morning:
-          # the grok sections have to fit the plan's weekly allowance
+          # morning feeds used to shell out to grok. that spends the weekly
+          # allowance, so the turn fills X sections with x_search instead.
+          # isolated, and no delivery: the skill writes the file and stays quiet
           if ! $DRY_RUN_CMD openclaw automations add \
             --name feeds \
             --display-name "Feeds" \
             --declaration-key workspace:feeds \
             --agent main \
             --cron "0 6 * * *" --tz Asia/Tokyo --exact \
+            --session isolated \
             --no-deliver \
             --timeout-seconds 1800 \
-            --command-argv ${feedsArgv config.programs.openclaw.workspaceDir} \
-            --command-env "GROK_HOME=${config.xdg.configHome}/grok" \
-            --command-env OPENCLAW_FEEDS=1; then
+            --message "Use the feeds skill. Refresh the feeds now. Fill every X section with the x_search tool, never the grok command. Do not post to Discord. When finished, reply exactly NO_REPLY."; then
             echo "failed to declare the feeds automation" >&2
           fi
           if ! $DRY_RUN_CMD openclaw automations add \
@@ -380,11 +367,10 @@ in
             --declaration-key workspace-dev:feeds \
             --agent dev \
             --cron "30 6 * * *" --tz Asia/Tokyo --exact \
+            --session isolated \
             --no-deliver \
             --timeout-seconds 1800 \
-            --command-argv ${feedsArgv devWorkspaceDir} \
-            --command-env "GROK_HOME=${config.xdg.configHome}/grok" \
-            --command-env OPENCLAW_FEEDS=1; then
+            --message "Use the feeds skill. Refresh the dev feeds now. Fill every X section with the x_search tool, never the grok command. Do not post to Discord. When finished, reply exactly NO_REPLY."; then
             echo "failed to declare the dev-feeds automation" >&2
           fi
           # the dev jobs post with the message tool into today's thread, so
