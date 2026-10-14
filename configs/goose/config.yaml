@@ -1,7 +1,7 @@
 GOOSE_TELEMETRY_ENABLED: false
 GOOSE_THINKING_EFFORT: medium
 GOOSE_MODE: smart_approve
-active_provider: claude-acp
+active_provider: codex-acp
 providers:
   claude-acp:
     enabled: true
