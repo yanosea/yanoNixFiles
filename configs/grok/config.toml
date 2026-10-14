@@ -2,15 +2,13 @@
 auto_update = false
 
 [models]
-default = "grok-4.6"
-default_reasoning_effort = "xhigh"
+default = "grok-4.7"
 
 [memory_v2]
 enabled = true
 
 [ui]
 max_thoughts_width = 100
-fork_secondary_model = "grok-4.6"
 yolo = false
 compact_mode = false
 show_timeline = true

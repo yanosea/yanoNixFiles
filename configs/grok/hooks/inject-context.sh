@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# inject-context.sh - pass plugin triage to the model once per session; PostToolUse is the only grok event
-# whose output reaches the model.
+# inject-context.sh - pass plugin triage and model drift to the model once per
+# session; PostToolUse is the only grok event whose output reaches the model.
 
 set -uo pipefail
 
@@ -28,6 +28,8 @@ find "$STATE_DIR" -type f -mtime +7 -delete 2>/dev/null
 sections=()
 plugins=$(bash "$(dirname "$0")/check-new-plugins.sh" 2>/dev/null)
 [ -n "$plugins" ] && sections+=("$plugins")
+models=$(bash "$(dirname "$0")/check-model-drift.sh" 2>/dev/null)
+[ -n "$models" ] && sections+=("$models")
 
 [ ${#sections[@]} -eq 0 ] && exit 0
 
