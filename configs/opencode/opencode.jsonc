@@ -3,9 +3,10 @@
   // nix owns the binary
   "update": "disable",
   "share": "disabled",
-  // same model and effort as configs/codex/config.toml, on the chatgpt login
-  "model": "openai/gpt-6-astra",
+  // xai's flagship on the supergrok login, left on its default effort
+  "model": "xai/grok-4.7",
   "providers": {
+    // same model and effort as configs/codex/config.toml, on the chatgpt login
     "openai": {
       "models": {
         "gpt-6-astra": {
