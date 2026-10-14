@@ -748,6 +748,13 @@ in
           agentToAgent = {
             enabled = false;
           };
+          # off the claude cli, `web_search` is openclaw's own and needs a
+          # provider; grok's rides the same supergrok login as the turns
+          web = {
+            search = {
+              provider = "grok";
+            };
+          };
           elevated = {
             enabled = true;
             allowFrom = {
