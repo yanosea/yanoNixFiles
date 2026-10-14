@@ -15,6 +15,6 @@
 
 ## Japanese writing (yomiyasu)
 
-- Invoke the `yomiyasu` skill once per session, before the first Japanese reply, and write every Japanese reply in that session by its rules.
+- Invoke the `yomiyasu` skill once per session, before the first Japanese reply, and write every Japanese reply in that session by its rules. Claude Code installs it as a plugin, so call it there as `yomiyasu:yomiyasu`; the bare name fails with "Unknown skill".
 - Japanese documents (issues, PR bodies, READMEs, articles, reports, release notes, the Japanese parts of any file you write) go through the skill's full steps, linter included, even when nobody asks. Deliver only the finished text; add its change notes only when asked.
 - A persona that a workspace `AGENTS.md` defines (the openclaw agents) keeps its own voice in conversation, check-ins and memory, so it does not load the skill for those. Its Japanese documents still go through `yomiyasu`.
