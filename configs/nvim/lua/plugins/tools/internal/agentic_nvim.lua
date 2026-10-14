@@ -6,7 +6,8 @@ return {
 		lazy = true,
 		config = function()
 			require("agentic").setup({
-				provider = "claude-agent-acp",
+				-- grok carries the subscriptions; claude stays a switch_provider away
+				provider = "grok-acp",
 				acp_providers = {
 					-- google ships the acp server as a separate binary (nix: agy-acp-server)
 					["antigravity-acp"] = {
