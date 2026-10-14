@@ -540,10 +540,16 @@ in
               every = "0m";
               target = "none";
             };
-            # the same tier the claude cli drops to outside plan mode, from
-            # lib/ai-models.nix; this gateway never plans
+            # grok on the supergrok login does the turns. the chatgpt login
+            # comes next; its quota is shared with codex, so only as a
+            # fallback. claude is the last resort, on the tier its cli drops
+            # to outside plan mode (lib/ai-models.nix); this gateway never plans
             model = {
-              primary = "anthropic/${aiModels.run}";
+              primary = "xai/grok-4.7";
+              fallbacks = [
+                "openai/gpt-6-astra"
+                "anthropic/${aiModels.run}"
+              ];
             };
           };
           # once any entry carries a heartbeat block, only the entries that
@@ -659,6 +665,22 @@ in
                     "claude-opus-5-5"
                   ];
             };
+            # what `openclaw models auth login --provider xai --method oauth`
+            # would write here if this file were not nix-managed: the
+            # supergrok route rather than the console api. the sign-in itself
+            # sits in each agent's own auth store
+            xai = {
+              baseUrl = "https://cli-chat-proxy.grok.com/v1";
+              api = "openai-responses";
+              auth = "oauth";
+              # the bundled catalog stops at 4.6; the subscription serves 4.7
+              models = [
+                {
+                  id = "grok-4.7";
+                  name = "grok-4.7";
+                }
+              ];
+            };
           };
         };
         plugins = {
@@ -725,6 +747,13 @@ in
           # should be able to drive the other
           agentToAgent = {
             enabled = false;
+          };
+          # off the claude cli, `web_search` is openclaw's own and needs a
+          # provider; grok's rides the same supergrok login as the turns
+          web = {
+            search = {
+              provider = "grok";
+            };
           };
           elevated = {
             enabled = true;
