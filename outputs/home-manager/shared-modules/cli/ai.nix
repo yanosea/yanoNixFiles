@@ -17,6 +17,7 @@
       ((codex-acp.override { inherit (pkgs) codex; }).overrideAttrs {
         doCheck = !stdenv.hostPlatform.isDarwin;
       })
+      deja-vu
       goose-cli
       grok-build
       kiro-cli

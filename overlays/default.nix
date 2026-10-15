@@ -120,6 +120,35 @@ inputs: [
       };
     }
   )
+  ## deja-vu
+  (_final: prev: {
+    # stdlib only with cgo off, so a source build covers every platform
+    deja-vu = prev.buildGoModule {
+      pname = "deja-vu";
+      version = "0.22.1";
+      src = inputs.deja-vu;
+      vendorHash = null;
+      subPackages = [ "cmd/deja" ];
+      env.CGO_ENABLED = "0";
+      # the suite wires every agent it finds into a scratch home and still
+      # fails on the linux builders; homebrew-core skips it too, so check
+      # the built binary instead
+      doCheck = false;
+      doInstallCheck = true;
+      nativeInstallCheckInputs = [ prev.versionCheckHook ];
+      ldflags = [
+        "-s"
+        "-w"
+        "-X main.version=0.22.1"
+      ];
+      meta = {
+        description = "Local searchable memory over the session histories of coding agents";
+        homepage = "https://github.com/vshulcz/deja-vu";
+        license = prev.lib.licenses.mit;
+        mainProgram = "deja";
+      };
+    };
+  })
   ## aivisspeech-engine
   (
     _final: prev:
