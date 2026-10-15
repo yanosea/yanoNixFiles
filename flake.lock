@@ -156,6 +156,23 @@
         "type": "github"
       }
     },
+    "deja-vu": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791807497,
+        "narHash": "sha256-2EppGMSXmTLvwLO/Qu+9Fv35ddS5MKiWvkIP9jtbU+c=",
+        "owner": "vshulcz",
+        "repo": "deja-vu",
+        "rev": "0fb72c044f9c75444d270275424de29dca62e536",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vshulcz",
+        "ref": "v0.22.1",
+        "repo": "deja-vu",
+        "type": "github"
+      }
+    },
     "determinate": {
       "inputs": {
         "determinate-nixd-aarch64-darwin": "determinate-nixd-aarch64-darwin",
@@ -691,6 +708,7 @@
         "claude-history-linux": "claude-history-linux",
         "claude-history-src": "claude-history-src",
         "darwin": "darwin",
+        "deja-vu": "deja-vu",
         "determinate": "determinate",
         "fenix": "fenix",
         "home-manager": "home-manager",

@@ -99,6 +99,11 @@
       url = "github:raine/claude-history/v0.1.76";
       flake = false;
     };
+    ## deja-vu (source; nixpkgs `deja` is an unrelated zsh tool)
+    deja-vu = {
+      url = "github:vshulcz/deja-vu/v0.22.1";
+      flake = false;
+    };
     ## llm-agents (claude-code, codex, grok)
     ## no nixpkgs follows: it would miss the numtide binary cache
     llm-agents = {

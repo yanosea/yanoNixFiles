@@ -120,6 +120,35 @@ inputs: [
       };
     }
   )
+  ## deja-vu
+  (_final: prev: {
+    # stdlib only with cgo off, so a source build covers every platform
+    deja-vu = prev.buildGoModule {
+      pname = "deja-vu";
+      version = "0.22.1";
+      src = inputs.deja-vu;
+      vendorHash = null;
+      subPackages = [ "cmd/deja" ];
+      env.CGO_ENABLED = "0";
+      # the tests init git repos and source the bash completion, which the
+      # non-interactive stdenv bash lacks
+      nativeCheckInputs = [
+        prev.bashInteractive
+        prev.git
+      ];
+      ldflags = [
+        "-s"
+        "-w"
+        "-X main.version=0.22.1"
+      ];
+      meta = {
+        description = "Local searchable memory over the session histories of coding agents";
+        homepage = "https://github.com/vshulcz/deja-vu";
+        license = prev.lib.licenses.mit;
+        mainProgram = "deja";
+      };
+    };
+  })
   ## aivisspeech-engine
   (
     _final: prev:
