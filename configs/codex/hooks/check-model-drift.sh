@@ -85,8 +85,7 @@ where = (
     "configs/codex/config.toml in the yanoNixFiles repository holds these pins "
     "(`model` for the main agent, `[agents] default_subagent_model` for "
     "subagents). The same ids are repeated in configs/opencode/opencode.jsonc "
-    "(the `openai` provider block) and in the Codex delegation section of "
-    "configs/agents/global-rules.md, so move those along with them."
+    "(the `openai` provider block), so move those along with them."
 )
 
 sections = []
