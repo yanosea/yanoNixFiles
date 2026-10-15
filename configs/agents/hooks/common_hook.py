@@ -53,10 +53,13 @@ DEFAULT_POLICY = {
     "overall_timeout": 90,
 }
 REMINDER = (
-    "Before changing version-sensitive APIs, tools, pricing or best practices, "
-    "read current official source bodies. Record the source URLs, checked versions "
-    "and reasons in the existing plan or handover. Search summaries alone are not "
-    "evidence. This reminder does not prove that research happened."
+    "Before answering, designing, implementing or changing configuration, search "
+    "the web for current information and best practices. Read official source "
+    "bodies, including the feature's guide pages, and trace config keys to the "
+    "code that reads them. Record the source URLs, checked versions and reasons "
+    "in the existing plan or handover, and pass this research to any delegate. "
+    "Search summaries alone are not evidence. This reminder does not prove that "
+    "research happened."
 )
 MAX_BYTES = 32 * 1024 * 1024
 MAX_FILES = 5000

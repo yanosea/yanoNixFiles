@@ -46,14 +46,14 @@
       },
       {
         "type": "command",
-        "command": "bash ~/.config/codex/hooks/check-model-drift.sh",
-        "timeout": 10
-      },
-      {
-        "type": "command",
         "command": "bash ~/.config/codex/hooks/sync-plugins.sh",
         "async": true,
         "timeout": 300
+      },
+      {
+        "type": "command",
+        "command": "bash ~/.config/codex/hooks/check-model-drift.sh",
+        "timeout": 10
       }
     ],
     "SessionEnd": [

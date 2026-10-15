@@ -127,14 +127,16 @@ timeout = 10
 
 [[hooks.SessionStart.hooks]]
 type = "command"
-command = "bash ~/.config/codex/hooks/check-model-drift.sh"
-timeout = 10
-
-[[hooks.SessionStart.hooks]]
-type = "command"
 command = "bash ~/.config/codex/hooks/sync-plugins.sh"
 async = true
 timeout = 300
+
+[[hooks.SessionStart]]
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "bash ~/.config/codex/hooks/check-model-drift.sh"
+timeout = 10
 
 [[hooks.SessionStart]]
 
