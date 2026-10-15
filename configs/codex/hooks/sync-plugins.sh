@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # sync-plugins.sh - Reconcile installed Codex plugins to match the declarative
-# list in ~/.config/codex/plugins.conf (SessionStart, async). Codex counterpart
-# of configs/claude/hooks/sync-plugins.sh.
+# list in ~/.config/codex/plugins.conf (SessionStart, async).
 #
 # plugins.conf is the single source of truth: anything not declared `[x]` there
 # is uninstalled, whether it's explicitly excluded, newly appeared in a
