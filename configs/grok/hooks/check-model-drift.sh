@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # check-model-drift.sh - keep the default model in config.toml in step with what
 # the supergrok login serves: report a default that has disappeared from the
-# model list, and any model the list shows for the first time. Grok counterpart
-# of configs/claude/hooks/check-model-drift.sh, without its "newer release"
-# check: the list carries no release dates to tell one.
+# model list, and any model the list shows for the first time. No "newer
+# release" check: the list carries no release dates to tell one.
 # Prints plain text for inject-context.sh: grok ignores SessionStart output.
 #
 # Reads local files only, no network calls (grok itself refreshes

@@ -2,8 +2,7 @@
 # check-model-drift.sh - keep the model pins in config.toml in step with what
 # the chatgpt login serves: surface a pin the catalog marks for an upgrade, a
 # pin that has disappeared from the catalog, and any listed model the catalog
-# shows for the first time, to Codex at session start. Codex counterpart of
-# configs/claude/hooks/check-model-drift.sh.
+# shows for the first time, to Codex at session start.
 #
 # Fast/sync SessionStart hook: reads local files only, no network calls
 # (codex itself refreshes models_cache.json from the models endpoint).

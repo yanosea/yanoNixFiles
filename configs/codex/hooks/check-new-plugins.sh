@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # check-new-plugins.sh - keep plugins.conf in step with the marketplaces:
 # surface plugins not yet declared there, and declared entries whose plugin
-# has disappeared upstream, to Codex at session start. Codex counterpart of
-# configs/claude/hooks/check-new-plugins.sh.
+# has disappeared upstream, to Codex at session start.
 #
 # Fast/sync SessionStart hook: reads local files only, no network calls
 # (sync-plugins.sh keeps the marketplace snapshot fresh once a day).
