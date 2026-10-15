@@ -6,12 +6,16 @@
 - Work whose approach is not settled starts in plan mode: the change spans multiple files or commits, two or more approaches are viable, or the cause of a defect is unidentified. Skip plan mode for single-file fixes, CI triage, formatting, dependency bumps, and lookups; it can run on a model with a tighter usage limit.
 - Enter plan mode yourself where a tool exists (`EnterPlanMode` on Claude Code, `enter_plan_mode` on Grok). Codex, Antigravity and OpenCode only let the user switch, so ask before touching anything.
 
-## Codex delegation
+## Delegation
 
-- In Codex, the main agent (Astra by default) handles user dialogue, investigation, planning, task decomposition, review, and final reporting. Once implementation is authorized and Plan mode is no longer active, proactively delegate implementation, tests, and review fixes to `gpt-6.1-sol` subagents with `high` reasoning effort; do not wait for a separate request to use subagents.
-- Give each subagent the approved plan, relevant context, owned files or scope, and completion criteria. Use a fresh context with an explicit model selection when a full-history fork would inherit the parent's model. Subagents carry out their assigned work rather than recursively delegating it.
-- Parallelize independent work only; avoid concurrent edits to the same files. The main agent inspects the resulting diff and verification evidence, requests fixes from Sol as needed, and reports unresolved issues before declaring completion.
-- Respect Plan mode in both parent and child agents; do not delegate implementation to bypass it. If Sol is unavailable or the client cannot select it, report the limitation instead of silently substituting another model.
+These rules apply to Codex, Claude Code, Grok, and OpenCode. The main agent delegates without waiting for a separate request. A subagent does its assigned work itself and does not delegate further.
+
+- The main agent handles user dialogue, overall planning, investigation planning, task decomposition, evaluation of results, review, and final reporting. It does not perform investigation or implementation itself when delegation is available. Reading files and verification results for review is part of its review work.
+- The main agent delegates investigation to subagents. It first defines the question, scope, sources, and what evidence the result must contain, then evaluates the returned evidence before deciding the next step.
+- The main agent delegates implementation, tests, and fixes requested by review to subagents. It gives each one the approved plan, relevant context, owned files or scope, and completion criteria. Use a fresh context with an explicit model selection when a full-history fork would inherit the parent's model. Subagents carry out their assigned work rather than recursively delegating it.
+- Use each tool's configured subagent model and reasoning effort. Do not force another tool's model ID.
+- Parallelize independent work only; avoid concurrent edits to the same files. The main agent inspects the resulting evidence or diff, requests fixes as needed, and reports unresolved issues before declaring completion.
+- Respect Plan mode in both parent and child agents. In Plan mode, delegate investigation only; do not delegate implementation to bypass it. If the client cannot launch the required subagent, report the limitation instead of silently doing that work in the main agent.
 
 ## Japanese writing (yomiyasu)
 
