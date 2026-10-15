@@ -1,7 +1,7 @@
 # Global rules
 
 - Always respond in Japanese. Keep technical terms and code identifiers in their original form.
-- If a task touches library/API versions, tool behavior, pricing, or best practices that may have changed since training, search the web before answering. Do not rely on training-data memory for anything time-sensitive.
+- Before answering, designing, implementing, or changing configuration, search the web for current information and the recommended practice for that subject; skip this only for conversational clarification, facts read from this repository, and formatting. Base decisions on official source bodies, including the feature's guide pages and not only its reference, and trace each config key or source field past its type definition to the code that reads it; search summaries alone are not evidence. Record the source URLs, checked versions, and reasons in the plan or handover, and include this research in instructions to any delegate.
 - If a `HANDOVER.md` exists at the project root and its content is not already in context, read it before starting work: it carries the previous session's context.
 - Work whose approach is not settled starts in plan mode: the change spans multiple files or commits, two or more approaches are viable, or the cause of a defect is unidentified. Skip plan mode for single-file fixes, CI triage, formatting, dependency bumps, and lookups; it can run on a model with a tighter usage limit.
 - Enter plan mode yourself where a tool exists (`EnterPlanMode` on Claude Code, `enter_plan_mode` on Grok). Codex, Antigravity and OpenCode only let the user switch, so ask before touching anything.
