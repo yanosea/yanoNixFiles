@@ -3,6 +3,7 @@ auto_update = false
 
 [models]
 default = "grok-4.7"
+default_reasoning_effort = "medium"
 
 [memory_v2]
 enabled = true
@@ -23,6 +24,7 @@ voice_stt_language = "ja"
 combine_queued_prompts = true
 invert_scroll = false
 scroll_mode = "auto"
+fork_secondary_model = "grok-4.6"
 
 [ui.status_line]
 type = "command"
@@ -69,7 +71,7 @@ timeout = 10
 
 [[hooks.SessionStart.hooks]]
 type = "command"
-command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event SessionStart"
+command = 'python3 "$HOME/.agents/hooks/common_hook.py" --harness auto --event SessionStart'
 timeout = 30
 
 [[hooks.PostToolUse]]
@@ -83,7 +85,7 @@ timeout = 10
 
 [[hooks.PostToolUse.hooks]]
 type = "command"
-command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event PostToolUse"
+command = 'python3 "$HOME/.agents/hooks/common_hook.py" --harness auto --event PostToolUse'
 timeout = 30
 
 [[hooks.SessionEnd]]
@@ -97,26 +99,26 @@ timeout = 10
 
 [[hooks.UserPromptSubmit.hooks]]
 type = "command"
-command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event UserPromptSubmit"
+command = 'python3 "$HOME/.agents/hooks/common_hook.py" --harness auto --event UserPromptSubmit'
 timeout = 30
 
 [[hooks.PreToolUse]]
 
 [[hooks.PreToolUse.hooks]]
 type = "command"
-command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event PreToolUse"
+command = 'python3 "$HOME/.agents/hooks/common_hook.py" --harness auto --event PreToolUse'
 timeout = 30
 
 [[hooks.Stop]]
 
 [[hooks.Stop.hooks]]
 type = "command"
-command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event Stop"
+command = 'python3 "$HOME/.agents/hooks/common_hook.py" --harness auto --event Stop'
 timeout = 120
 
 [[hooks.PreCompact]]
 
 [[hooks.PreCompact.hooks]]
 type = "command"
-command = "python3 \"$HOME/.agents/hooks/common_hook.py\" --harness auto --event PreCompact"
+command = 'python3 "$HOME/.agents/hooks/common_hook.py" --harness auto --event PreCompact'
 timeout = 30
