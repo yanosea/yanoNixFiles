@@ -18,8 +18,8 @@ let
   # bundled discord plugin's dual CJS/ESM dependency resolve
   esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
   launchdLabel = config.programs.openclaw.launchd.label;
-  # the same real path as the main workspace, not the symlink
-  devWorkspaceDir = "${config.home.homeDirectory}/GoogleDrive/${username}/openclaw/workspace-dev";
+  # beside the main workspace in the same repository
+  devWorkspaceDir = "${config.home.homeDirectory}/ghq/github.com/${username}/openclaw/workspace-dev";
   # the private details live in the workspace skills AGENTS.md names, so the
   # prompt itself says nothing private. the stock one ends by asking for
   # `NO_REPLY` when nothing needs attention, which those skills contradict.
@@ -488,9 +488,9 @@ in
       # sessions, sqlite and logs; the generated config sits here too
       stateDir = "${config.xdg.stateHome}/openclaw";
       # keeps the persona files out of this public repo; `bootstrapFiles` stays
-      # unset because it would rewrite them on every activation. the real path,
-      # not the ~/google_drive symlink, which has no ordering against this
-      workspaceDir = "${config.home.homeDirectory}/GoogleDrive/${username}/openclaw/workspace";
+      # unset because it would rewrite them on every activation. activation
+      # mkdirs this, so put the repository here before the first switch
+      workspaceDir = "${config.home.homeDirectory}/ghq/github.com/${username}/openclaw/workspace";
       # the generated wrapper cats a value that names a file, unless the key
       # ends in _FILE; openclaw itself would take the path as the secret
       environment = {
