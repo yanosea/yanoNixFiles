@@ -1046,20 +1046,7 @@ def handle_event(event, policy=None, state_dir=None):
                 with locked_state(
                     location, min(deadline, time.monotonic() + 2)
                 ) as state:
-                    if identity is None and harness == "goose":
-                        # Goose 1.49 has no native prompt id. Its entry hook
-                        # fires once before model/tool work; global and project
-                        # callbacks therefore share one admission cohort. Close
-                        # it only when native work/stop happens, so another real
-                        # prompt (even identical text) gets a fresh correction.
-                        if not state.get("prompt_cohort_open"):
-                            state["prompt_sequence"] = (
-                                state.get("prompt_sequence", 0) + 1
-                            )
-                        state["prompt_cohort_open"] = True
-                        key = "goose-prompt:" + str(state["prompt_sequence"])
-                        state["current_turn"] = key
-                    elif identity is not None:
+                    if identity is not None:
                         key = (
                             str(event["turn_id"])
                             if event.get("turn_id")
@@ -1102,8 +1089,6 @@ def handle_event(event, policy=None, state_dir=None):
                 min(deadline, time.monotonic() + 2) if kind == "pre" else deadline
             )
             with locked_state(location, lock_deadline) as state:
-                if harness == "goose" and kind in {"pre", "post", "stop"}:
-                    state["prompt_cohort_open"] = False
                 try:
                     value = audit(event, policy, state, root, deadline)
                 except (HookError, OSError) as exc:

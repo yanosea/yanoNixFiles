@@ -91,7 +91,7 @@ local function adapter(kind)
 		local client = require("utils.remote_agent").new({
 			command = kind == "remote_argv" and { "sh" } or "sh",
 			label = "Test",
-			env = kind == "remote_argv" and { GOOSE_MODE = "smart_approve", ANTHROPIC_API_KEY = false } or nil,
+			env = kind == "remote_argv" and { AGENT_TEST_MODE = "1", ANTHROPIC_API_KEY = false } or nil,
 		})
 		return {
 			object = client,

@@ -20,8 +20,6 @@ require("config.opencode")
 require("config.remote_agents")
 -- kiro integration if available
 require("config.kiro")
--- toad integration if available
-require("config.toad")
 -- discordo integration if available
 require("config.discordo")
 -- zellij integration only if available

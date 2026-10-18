@@ -360,17 +360,9 @@ class WiringTests(unittest.TestCase):
                     ]
                     self.assertEqual(current, original)
 
-    def test_goose_pretool_runtime_failures_are_explicitly_blocking(self):
-        document = json.loads((ROOT / "goose/plugin/hooks/hooks.json").read_text())
-        self.assertEqual(
-            document["hooks"]["PreToolUse"][0]["hooks"][0]["on_failure"], "block"
-        )
-        self.assertNotIn("on_failure", document["hooks"]["Stop"][0]["hooks"][0])
-
     def test_native_events_and_timeouts(self):
         for harness, path in (
             ("claude", "claude/settings.json"),
-            ("goose", "goose/plugin/hooks/hooks.json"),
             ("copilot", "copilot/hooks/common-agents.json"),
         ):
             document = json.loads((ROOT / path).read_text())

@@ -18,7 +18,6 @@ let
     && name != "copilot"
     && name != "kiro"
     && name != "codex"
-    && name != "goose"
     && name != "grok"
     && name != "zsh"
   ) contents;
@@ -280,38 +279,6 @@ in
       copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
         copyWritableConfig "codex" ./codex/config.toml
       );
-      # Goose rewrites its config. Deploy the authoritative settings as a private,
-      # writable copy, retaining the initial different config outside the store.
-      copyGooseConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-        if [ -n "''${DRY_RUN_CMD:-}" ] || [ -n "''${DRY_RUN:-}" ]; then
-          echo "Would copy Goose config to ''${XDG_CONFIG_HOME:-$HOME/.config}/goose/config.yaml"
-        else
-          (
-            set -e
-            umask 077
-            configDir="''${XDG_CONFIG_HOME:-$HOME/.config}/goose"
-            configFile="$configDir/config.yaml"
-            backupFile="$configDir/config.yaml.before-nix"
-            configTmp=""
-            backupTmp=""
-            trap 'rm -f -- "$configTmp" "$backupTmp"' EXIT
-            mkdir -p "$configDir"
-            if [ -d "$configFile" ]; then
-              echo "Cannot replace Goose config directory: $configFile" >&2
-              exit 1
-            fi
-            if [ -f "$configFile" ] && ! cmp -s "$configFile" ${./goose/config.yaml} \
-              && [ ! -e "$backupFile" ] && [ ! -L "$backupFile" ]; then
-              backupTmp=$(mktemp "$configDir/.config.yaml.backup.XXXXXX")
-              ${pkgs.coreutils}/bin/install -m 600 "$configFile" "$backupTmp"
-              ln "$backupTmp" "$backupFile"
-            fi
-            configTmp=$(mktemp "$configDir/.config.yaml.XXXXXX")
-            ${pkgs.coreutils}/bin/install -m 600 ${./goose/config.yaml} "$configTmp"
-            mv -f "$configTmp" "$configFile"
-          )
-        fi
-      '';
       # copied rather than symlinked: grok writes back to config.toml
       # merged rather than replaced: agy keeps trustedWorkspaces in the same file
       mergeAntigravitySettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
@@ -345,12 +312,6 @@ in
                 ]
               );
         };
-        recursive = true;
-      };
-      # Goose's user plugin discovery reads ~/.agents/plugins independently of
-      # config.yaml; its disabledPlugins setting remains authoritative.
-      ".agents/plugins/common-agents" = {
-        source = ./goose/plugin;
         recursive = true;
       };
       # yomiyasu comes from its flake input; codex and opencode read it here

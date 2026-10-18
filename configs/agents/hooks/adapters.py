@@ -17,7 +17,6 @@ HARNESSES = (
     "claude",
     "codex",
     "grok",
-    "goose",
     "opencode",
     "antigravity",
     "antigravity-cli",
@@ -27,7 +26,7 @@ HARNESSES = (
     "copilot",
     "openclaw",
 )
-STOP_CONTROL = frozenset(("claude", "codex", "grok", "goose", "copilot"))
+STOP_CONTROL = frozenset(("claude", "codex", "grok", "copilot"))
 EVENTS = {
     "pretooluse": "pre",
     "beforetoolcall": "pre",
@@ -224,7 +223,7 @@ def normalize(harness, event, payload):
     )
     if not workspace:
         workspace = next((v for v in workspaces if isinstance(v, str)), None)
-    workspace = workspace or os.environ.get("GOOSE_WORKING_DIR") or os.getcwd()
+    workspace = workspace or os.getcwd()
     if not isinstance(workspace, str):
         raise ValueError("workspace must be a path string")  # noqa: TRY004 - JSON validation contract.
     cwd = _first(args, "Cwd", "cwd", "workdir") or workspace
@@ -447,15 +446,6 @@ def emit(harness, event, result):
             if message and kind in {"post", "start"}
             else {}
         ), 0
-    if harness == "goose":
-        if kind == "pre":
-            return {
-                "decision": "block" if action == "deny" else "allow",
-                **({"reason": message} if action == "deny" else {}),
-            }, 0
-        # Banners are native display text where the runtime collects them;
-        # observation hook output is not model-facing additionalContext.
-        return ({"banner": message} if message else {}), 0
     if kind == "pre":
         specific = {"hookEventName": "PreToolUse"}
         if action == "deny":

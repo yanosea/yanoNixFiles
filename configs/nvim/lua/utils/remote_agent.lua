@@ -1,4 +1,4 @@
--- Split terminal UI for coding clients such as Happier and Goose.
+-- Split terminal UI for coding clients such as Happier.
 local layout = require("utils.agent_layout")
 
 local M = {}
