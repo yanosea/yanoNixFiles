@@ -41,13 +41,6 @@ class AdapterContracts(unittest.TestCase):
                 "toolName": "run_terminal_command",
                 "toolInput": {"command": "git status"},
             },
-            "goose": {
-                "event": "PreToolUse",
-                "session_id": "s",
-                "working_dir": "/tmp/project",
-                "tool_name": "developer__shell",
-                "tool_input": {"command": "git status"},
-            },
             "antigravity": {
                 "conversationId": "s",
                 "workspacePaths": ["/tmp/project"],
@@ -306,10 +299,6 @@ class AdapterContracts(unittest.TestCase):
             self.assertEqual(output["hookSpecificOutput"]["permissionDecision"], "deny")
             self.assertEqual(code, 0)
         self.assertEqual(
-            self.a.emit("goose", "PreToolUse", result),
-            ({"decision": "block", "reason": "denied"}, 0),
-        )
-        self.assertEqual(
             self.a.emit("copilot", "preToolUse", result),
             ({"permissionDecision": "deny", "permissionDecisionReason": "denied"}, 0),
         )
@@ -341,12 +330,9 @@ class AdapterContracts(unittest.TestCase):
         )
         self.assertEqual(self.a.emit("antigravity", "PostToolUse", result), ({}, 0))
         self.assertEqual(self.a.emit("grok", "SessionStart", result), ({}, 0))
-        self.assertEqual(
-            self.a.emit("goose", "PostToolUse", result), ({"banner": "research"}, 0)
-        )
 
     def test_native_stop_continue_only_on_supported_harness(self):
-        for harness in ("claude", "codex", "grok", "goose", "copilot"):
+        for harness in ("claude", "codex", "grok", "copilot"):
             with self.subTest(harness=harness):
                 self.assertEqual(
                     self.a.emit(

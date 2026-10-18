@@ -75,15 +75,6 @@
       };
     };
     # packages
-    ## agy acp server (release archives; hashes live in flake.lock only)
-    agy-acp-server-darwin = {
-      url = "https://dl.google.com/agy-extensions/releases/macos/agy-acp-server-agy_acp_server_1.1.1-darwin-arm64.zip";
-      flake = false;
-    };
-    agy-acp-server-linux = {
-      url = "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-agy_acp_server_1.1.1-linux-x86_64.zip";
-      flake = false;
-    };
     ## claude-history
     ## prebuilt: its semantic search bundles onnxruntime, which cargo fetches at build time
     claude-history-darwin = {

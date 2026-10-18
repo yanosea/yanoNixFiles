@@ -18,29 +18,6 @@ return {
 					mode = "n",
 					-- ai
 					{ "<LEADER>a", group = "ai" },
-					-- ai: agentic
-					{ "<LEADER>aa", group = "agentic" },
-					{
-						"<LEADER>aaa",
-						"<CMD>lua require('agentic').add_selection_or_file_to_context()<CR>",
-						desc = "ai agentic: add to context",
-					},
-					{
-						"<LEADER>aan",
-						"<CMD>lua require('agentic').new_session()<CR>",
-						desc = "ai agentic: new session",
-					},
-					{
-						"<LEADER>aar",
-						"<CMD>lua require('agentic').restore_session()<CR>",
-						desc = "ai agentic: restore session",
-					},
-					{
-						"<LEADER>aas",
-						"<CMD>lua require('agentic').switch_provider()<CR>",
-						desc = "ai agentic: switch provider",
-					},
-					{ "<LEADER>aat", "<CMD>lua require('agentic').toggle()<CR>", desc = "ai agentic: toggle" },
 					-- ai: claude
 					{ "<LEADER>ac", group = "claude" },
 					{
@@ -57,11 +34,6 @@ return {
 						desc = "ai codex: resume",
 					},
 					{ "<LEADER>adt", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
-					-- ai: Goose
-					{ "<LEADER>ag", group = "goose" },
-					{ "<LEADER>agt", "<CMD>Goose<CR>", desc = "ai Goose: toggle selected provider" },
-					{ "<LEADER>agc", "<CMD>GooseClaude<CR>", desc = "ai Goose: toggle Claude subscription" },
-					{ "<LEADER>agd", "<CMD>GooseCodex<CR>", desc = "ai Goose: toggle Codex subscription" },
 					-- ai: Happier
 					{ "<LEADER>ah", group = "happier" },
 					{ "<LEADER>aht", "<CMD>Happier<CR>", desc = "ai Happier: toggle" },
@@ -81,9 +53,6 @@ return {
 						desc = "ai opencode: resume",
 					},
 					{ "<LEADER>aot", "<CMD>Opencode<CR>", desc = "ai opencode: toggle" },
-					-- ai: toad
-					{ "<LEADER>at", group = "toad" },
-					{ "<LEADER>att", "<CMD>Toad<CR>", desc = "ai toad: toggle" },
 					-- ai: antigravity
 					{ "<LEADER>av", group = "antigravity" },
 					{

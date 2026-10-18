@@ -13,9 +13,6 @@ inline = "autoload -Uz compinit && compinit -d $XDG_STATE_HOME/zsh/.zcompdump"
 [plugins.starship]
 inline = "eval \"$(starship init zsh)\""
 
-[plugins.fzf-init]
-inline = 'zvm_after_init() { source <(fzf --zsh); }'
-
 [plugins.zsh-vim-mode]
 github = "jeffreytse/zsh-vi-mode"
 
