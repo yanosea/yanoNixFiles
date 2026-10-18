@@ -155,6 +155,7 @@ let
     };
   };
   # grok config files (config.toml is deployed by an activation copy instead)
+  # grok reads AGENTS.md from GROK_HOME (INSTRUCTION_FILENAMES)
   grokConfigEntries = {
     "grok/AGENTS.md".source = ./agents/global-rules.md;
     "grok/plugins.conf".source = ./grok/plugins.conf;
@@ -307,6 +308,7 @@ in
             lib.fileset.difference (lib.fileset.fileFilter (file: !(lib.hasSuffix ".pyc" file.name)) ./agents)
               (
                 lib.fileset.unions [
+                  ./agents/global-rules.md
                   ./agents/hooks/tests
                   ./agents/skills
                 ]
@@ -318,6 +320,10 @@ in
       ".agents/skills/yomiyasu".source = "${inputs.yomiyasu}/skills/yomiyasu";
       # antigravity ignores XDG (settings.json and mcp_config.json are agy-managed)
       ".gemini/config/AGENTS.md".source = ./agents/global-rules.md;
+      # kiro always includes AGENTS.md from its global steering directory
+      ".kiro/steering/AGENTS.md".source = ./agents/global-rules.md;
+      # copilot cli reads its user instructions from ~/.copilot
+      ".copilot/copilot-instructions.md".source = ./agents/global-rules.md;
       ".gemini/config/skills" = {
         source = ./agents/skills;
         recursive = true;

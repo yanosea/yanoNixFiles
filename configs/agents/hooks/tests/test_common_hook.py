@@ -280,6 +280,35 @@ class CommonHookTests(unittest.TestCase):
     def test_prompt_reminds_research_without_running_unknown_commands(self):
         self.assertIn("official source", self.event("prompt")["message"])
 
+    def test_claude_prompt_keeps_full_reminder(self):
+        message = self.event("prompt", harness="claude")["message"]
+        self.assertEqual(message, self.core.REMINDER)
+
+    def test_openclaw_reminds_only_interactive_runs(self):
+        def native(name, origin, run):
+            event = self.adapters.normalize(
+                "openclaw",
+                name,
+                {
+                    "sessionId": "claw-" + origin,
+                    "workspaceDir": str(self.root),
+                    "runId": run,
+                    "origin": origin,
+                },
+            )
+            return self.core.handle_event(event, state_dir=self.state)["message"]
+
+        self.assertEqual(
+            native("UserPromptSubmit", "interactive", "run-one"),
+            self.core.OPENCLAW_REMINDER,
+        )
+        self.assertEqual(native("UserPromptSubmit", "cron", "run-one"), "")
+        self.assertEqual(native("UserPromptSubmit", "unknown", "run-one"), "")
+        self.write("HANDOVER.md", "# Actual\nCurrent context.\n")
+        started = native("before_prompt_build", "heartbeat", "run-two")
+        self.assertIn("Current context.", started)
+        self.assertNotIn("official source", started)
+
     def test_identified_prompt_advances_unknown_turn_once(self):
         self.event("start", turn_id=None)
         self.write("tracked.txt", "bad \n")

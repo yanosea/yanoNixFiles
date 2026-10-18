@@ -61,6 +61,12 @@ REMINDER = (
     "Search summaries alone are not evidence. This reminder does not prove that "
     "research happened."
 )
+# openclaw runs have no plan, handover or delegate, so they get only the research part
+OPENCLAW_REMINDER = (
+    "Before answering with facts that change, such as versions, prices or tool "
+    "behaviour, search the web and read the official source bodies. Search "
+    "summaries alone are not evidence."
+)
 MAX_BYTES = 32 * 1024 * 1024
 MAX_FILES = 5000
 MAX_INPUT = 4 * 1024 * 1024
@@ -783,6 +789,15 @@ def handover(workspace, text=None):
     return path.read_text(errors="replace")
 
 
+def reminder(event, policy):
+    """Return the research reminder for this event; openclaw gets it only interactively."""
+    if not policy["research_reminder"]:
+        return ""
+    if event.get("harness") == "openclaw":
+        return OPENCLAW_REMINDER if event.get("origin") == "interactive" else ""
+    return REMINDER
+
+
 def result(action="allow", message="", issues=None, pending=False):
     return {
         "action": action,
@@ -1062,10 +1077,10 @@ def handle_event(event, policy=None, state_dir=None):
                     state["reminder_turn"] = key
             return result(
                 "allow",
-                REMINDER if policy["research_reminder"] and deliver_reminder else "",
+                reminder(event, policy) if deliver_reminder else "",
             )
         if kind in {"reminder", "research"}:
-            return result("allow", REMINDER if policy["research_reminder"] else "")
+            return result("allow", reminder(event, policy))
         if kind not in {"start", "pre", "post", "stop"}:
             return result()
         session = event.get("session_id")
@@ -1108,7 +1123,7 @@ def handle_event(event, policy=None, state_dir=None):
                         part
                         for part in (
                             handover(workspace),
-                            REMINDER if policy["research_reminder"] else "",
+                            reminder(event, policy),
                         )
                         if part
                     )
@@ -1122,7 +1137,7 @@ def handle_event(event, policy=None, state_dir=None):
                         part
                         for part in (
                             handover(workspace),
-                            REMINDER if policy["research_reminder"] else "",
+                            reminder(event, policy),
                         )
                         if part
                     )
@@ -1141,9 +1156,7 @@ def handle_event(event, policy=None, state_dir=None):
         ):
             context = handover(workspace)
             value["message"] = "\n\n".join(
-                part
-                for part in (context, REMINDER if policy["research_reminder"] else "")
-                if part
+                part for part in (context, reminder(event, policy)) if part
             )
         return value
     except (

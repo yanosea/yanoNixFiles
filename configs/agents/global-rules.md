@@ -8,17 +8,18 @@
 
 ## Delegation
 
-These rules apply to Codex, Claude Code, Grok, and OpenCode. The main agent delegates without waiting for a separate request. A subagent does its assigned work itself and does not delegate further.
+These rules apply to tools that can launch subagents. The main agent delegates without waiting for a separate request, when delegation pays off.
 
-- The main agent handles user dialogue, overall planning, investigation planning, task decomposition, evaluation of results, review, and final reporting. It does not perform investigation or implementation itself when delegation is available. Reading files and verification results for review is part of its review work.
-- The main agent delegates investigation to subagents. It first defines the question, scope, sources, and what evidence the result must contain, then evaluates the returned evidence before deciding the next step.
-- The main agent delegates implementation, tests, and fixes requested by review to subagents. It gives each one the approved plan, relevant context, owned files or scope, and completion criteria. Use a fresh context with an explicit model selection when a full-history fork would inherit the parent's model. Subagents carry out their assigned work rather than recursively delegating it.
+- Delegate investigation that would flood the main context (searches, logs, reading many files), independent work that can run in parallel, and adversarial review of a finished change.
+- Keep small targeted changes, work with frequent back-and-forth, and phases that share context (plan, implementation, tests) in the main context.
+- Give each delegate the question or task, scope, sources, owned files, and the evidence its result must contain. Read the returned evidence or diff, request fixes as needed, and report unresolved issues before declaring completion.
+- Parallelize independent work only; never let two agents edit the same file.
 - Use each tool's configured subagent model and reasoning effort. Do not force another tool's model ID.
-- Parallelize independent work only; avoid concurrent edits to the same files. The main agent inspects the resulting evidence or diff, requests fixes as needed, and reports unresolved issues before declaring completion.
-- Respect Plan mode in both parent and child agents. In Plan mode, delegate investigation only; do not delegate implementation to bypass it. If the client cannot launch the required subagent, report the limitation instead of silently doing that work in the main agent.
+- A subagent does its assigned work itself and does not delegate further.
+- Respect plan mode in both parent and child agents: delegate investigation only, and do not delegate implementation to bypass it. If the client cannot launch the required subagent, report the limitation instead of silently doing that work in the main agent.
 
 ## Japanese writing (yomiyasu)
 
 - Invoke the `yomiyasu` skill once per session, before the first Japanese reply, and write every Japanese reply in that session by its rules. Claude Code installs it as a plugin, so call it there as `yomiyasu:yomiyasu`; the bare name fails with "Unknown skill".
 - Japanese documents (issues, PR bodies, READMEs, articles, reports, release notes, the Japanese parts of any file you write) go through the skill's full steps, linter included, even when nobody asks. Deliver only the finished text; add its change notes only when asked.
-- A persona that a workspace `AGENTS.md` defines (the openclaw agents) keeps its own voice in conversation, check-ins and memory, so it does not load the skill for those. Its Japanese documents still go through `yomiyasu`.
+- A persona that a workspace `AGENTS.md` defines (the openclaw agents and the ai workspace) keeps its own voice in conversation, check-ins and memory, so it does not load the skill for those. Its Japanese documents still go through `yomiyasu`.
