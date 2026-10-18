@@ -2,6 +2,7 @@
 {
   config,
   pkgs,
+  username,
   ...
 }:
 {
@@ -21,7 +22,7 @@
           #!/usr/bin/env bash
           set -e
           # Setup config directories
-          mkdir -p ${config.home.homeDirectory}/google_drive/ai/workflows
+          mkdir -p ${config.home.homeDirectory}/ghq/github.com/${username}/ai/workflows
           ln -sf ${config.xdg.configHome}/comfyui/extra_model_paths.yaml ${config.home.homeDirectory}/.local/share/extra_model_paths.yaml
           # Set environment
           export CUDA_VISIBLE_DEVICES=0
@@ -53,8 +54,8 @@
               # Setup custom_nodes and workflows directories
               mkdir -p custom_nodes
               mkdir -p user/default
-              # Link custom nodes from Google Drive
-              for node_dir in ${config.home.homeDirectory}/google_drive/ai/custom_nodes/*/; do
+              # Link custom nodes from the ai repository
+              for node_dir in ${config.home.homeDirectory}/ghq/github.com/${username}/ai/custom_nodes/*/; do
                 if [ -d "$node_dir" ]; then
                   node_name=$(basename "$node_dir")
                   if [ ! -e "custom_nodes/$node_name" ]; then
@@ -63,11 +64,11 @@
                   fi
                 fi
               done
-              # Setup workflows symlink to Google Drive
+              # Setup workflows symlink to the ai repository
               if [ ! -L "user/default/workflows" ]; then
                 rm -rf user/default/workflows
-                ln -sf ${config.home.homeDirectory}/google_drive/ai/workflows user/default/workflows
-                echo "Created symlink: workflows -> ~/google_drive/ai/workflows"
+                ln -sf ${config.home.homeDirectory}/ghq/github.com/${username}/ai/workflows user/default/workflows
+                echo "Created symlink: workflows -> ~/ghq/github.com/${username}/ai/workflows"
               fi
               # Link extra_model_paths.yaml
               ln -sf ${config.home.homeDirectory}/.local/share/extra_model_paths.yaml extra_model_paths.yaml
@@ -101,8 +102,8 @@
             cd ${config.home.homeDirectory}/.local/share/comfyui
             if [ -f ".comfyui-installed" ] && [ -d "venv" ]; then
               source venv/bin/activate
-              # Link custom nodes from Google Drive (check on every startup)
-              for node_dir in ${config.home.homeDirectory}/google_drive/ai/custom_nodes/*/; do
+              # Link custom nodes from the ai repository (check on every startup)
+              for node_dir in ${config.home.homeDirectory}/ghq/github.com/${username}/ai/custom_nodes/*/; do
                 if [ -d "$node_dir" ]; then
                   node_name=$(basename "$node_dir")
                   if [ ! -e "custom_nodes/$node_name" ]; then
@@ -382,8 +383,6 @@
           "d ${config.home.homeDirectory}/.local/share/ai-assets/video 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/outputs 0755 - - -"
           "d ${config.home.homeDirectory}/google_drive/ai/outputs/comfyui 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/workflows 0755 - - -"
-          "d ${config.home.homeDirectory}/google_drive/ai/custom_nodes 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/invokeai 0755 - - -"
           "d ${config.home.homeDirectory}/.local/share/invokeai/models 0755 - - -"
         ];
