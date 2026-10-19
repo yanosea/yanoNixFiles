@@ -179,6 +179,32 @@ let
   # the two apart
   agentSkillEntries =
     prefix: skillFolderEntries prefix "${inputs.agent-skills}/skills" [ "test-driven-development" ];
+  # the skill folders (skill:, skills:) and kiro steering files (steering:)
+  # that a cli without plugins links from configs/agents/plugins.conf; skill
+  # folders go under prefix by their folder name
+  sharedSkillLinks =
+    cli: prefix:
+    lib.foldl' (
+      links: value:
+      let
+        match = builtins.match "([a-z]+):(.*)" value;
+        kind = builtins.head match;
+        spec = builtins.elemAt match 1;
+        # skills:<input>/<path>!<skip>...
+        skills = lib.splitString "!" spec;
+      in
+      links
+      // (
+        if kind == "skill" then
+          { "${prefix}/${baseNameOf spec}".source = inputPath spec; }
+        else if kind == "skills" then
+          skillFolderEntries prefix (inputPath (builtins.head skills)) (builtins.tail skills)
+        else if kind == "steering" then
+          { ".kiro/steering/${baseNameOf spec}".source = inputPath spec; }
+        else
+          { }
+      )
+    ) { } (lib.concatMap (agentPackages.valuesFor cli) (agentPackages.for cli));
   # `<input>/<path>` of configs/agents/plugins.conf, inside that flake input
   inputPath =
     spec:
@@ -281,12 +307,21 @@ let
     "opencode/AGENTS.md".source = ./agents/global-rules.md;
     "opencode/plugins/common-hooks.ts".source = ./agents/hooks/bridges/opencode.ts;
     "opencode/plugins/console-budget".source = ./opencode/plugins/console-budget;
-    # packages with no opencode plugin to pin: the skill alone, kept out of
-    # ~/.agents/skills since codex installs the same packages as plugins
-    "opencode/skills/caveman".source = "${inputs.caveman}/skills/caveman";
-    "opencode/skills/taste-skill".source = "${inputs.taste-skill}/skills/taste-skill";
+    # the shared npm plugins (opencode=npm:), in a file of their own: opencode
+    # reads opencode.json and opencode.jsonc both and joins their plugins
+    "opencode/opencode.json".source = (pkgs.formats.json { }).generate "opencode.json" {
+      "$schema" = "https://opencode.ai/config.json";
+      plugins = lib.concatMap (
+        package:
+        map (lib.removePrefix "npm:") (
+          lib.filter (lib.hasPrefix "npm:") (agentPackages.valuesFor "opencode" package)
+        )
+      ) (agentPackages.for "opencode");
+    };
   }
-  // agentSkillEntries "opencode/skills";
+  # packages with no opencode plugin to pin: the skill alone, kept out of
+  # ~/.agents/skills since codex installs the same packages as plugins
+  // sharedSkillLinks "opencode" "opencode/skills";
   # the shared plugins codex installs, `<plugin>@<marketplace>`
   codexSharedPlugins = map (
     package:
