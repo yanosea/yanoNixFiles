@@ -133,6 +133,16 @@
       url = "github:nanaism/yomiyasu";
       flake = false;
     };
+    ## imozuru (a research skill every agent cli reads)
+    imozuru = {
+      url = "github:MaryCache/imozuru";
+      flake = false;
+    };
+    ## rea (the reverse-engineering skill, at the tag of the pinned mcp server)
+    rea = {
+      url = "github:morluto/rea/rea-agents-6.7.0";
+      flake = false;
+    };
   };
   outputs =
     inputs:

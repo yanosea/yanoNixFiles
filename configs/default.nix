@@ -117,6 +117,20 @@ let
       }) claudeMarketplaceRows
     );
   };
+  # graphify ships one SKILL.md per cli, each with its own references/; the
+  # `.graphify_version` stamp is left out on purpose, since graphify rewrites
+  # stamped copies in place after an upgrade and a store path cannot take that
+  graphifySkill =
+    variant: skillFile:
+    pkgs.runCommand "graphify-skill-${variant}" { } ''
+      package=$(find ${pkgs.graphify}/lib -type d -path '*/site-packages/graphify' | head -n 1)
+      mkdir -p $out
+      cp "$package/${skillFile}" $out/SKILL.md
+      cp -r "$package/skills/${variant}/references" $out/references
+    '';
+  # skills from other repositories that ship no plugin for these clis
+  imozuruSkill = "${inputs.imozuru}/skills/imozuru";
+  reaSkill = "${inputs.rea}/.agents/skills/reverse-engineer-anything";
   # claude user memory (the rest of configs/claude is deployed by the generic loop)
   claudeConfigEntries = {
     "claude/CLAUDE.md".source = ./agents/global-rules.md;
@@ -131,6 +145,9 @@ let
       source = ./agents/skills/triage-update-pr;
       recursive = true;
     };
+    "claude/skills/graphify".source = graphifySkill "claude" "skill.md";
+    "claude/skills/imozuru".source = imozuruSkill;
+    "claude/skills/reverse-engineer-anything".source = reaSkill;
     # the model ids come from lib/ai-models.nix so one tier list drives the
     # `opusplan` slots, the subagent pin and openclaw's primary. `opus` is the
     # plan-mode slot and `sonnet` the execution one, whatever they resolve to
@@ -329,6 +346,9 @@ in
       };
       # yomiyasu comes from its flake input; codex and opencode read it here
       ".agents/skills/yomiyasu".source = "${inputs.yomiyasu}/skills/yomiyasu";
+      ".agents/skills/graphify".source = graphifySkill "agents" "skill-agents.md";
+      ".agents/skills/imozuru".source = imozuruSkill;
+      ".agents/skills/reverse-engineer-anything".source = reaSkill;
       # antigravity ignores XDG (settings.json and mcp_config.json are agy-managed)
       ".gemini/config/AGENTS.md".source = ./agents/global-rules.md;
       # kiro always includes AGENTS.md from its global steering directory
@@ -339,6 +359,14 @@ in
         source = ./agents/skills;
         recursive = true;
       };
+      # graphify installs claude's variant for antigravity too
+      ".gemini/config/skills/graphify".source = graphifySkill "claude" "skill.md";
+      ".gemini/config/skills/imozuru".source = imozuruSkill;
+      ".gemini/config/skills/reverse-engineer-anything".source = reaSkill;
+      # kiro loads every skill under ~/.kiro/skills; rea stays out, since its
+      # skill drives the rea mcp server and kiro's mcp config is not managed here
+      ".kiro/skills/graphify".source = graphifySkill "kiro" "skill-kiro.md";
+      ".kiro/skills/imozuru".source = imozuruSkill;
       ".gemini/config/scripts" = {
         source = ./antigravity/scripts;
         recursive = true;

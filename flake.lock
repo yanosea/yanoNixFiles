@@ -377,6 +377,22 @@
         "type": "github"
       }
     },
+    "imozuru": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792392688,
+        "narHash": "sha256-omJksT5OHRLrup0sLpSynDCLhkJlxq5ZTMsCb/ZebWE=",
+        "owner": "MaryCache",
+        "repo": "imozuru",
+        "rev": "f2d244efacfbca5dad3541e4a1e9d06246917364",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MaryCache",
+        "repo": "imozuru",
+        "type": "github"
+      }
+    },
     "lanzaboote": {
       "inputs": {
         "crane": "crane",
@@ -674,6 +690,23 @@
         "type": "github"
       }
     },
+    "rea": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792309245,
+        "narHash": "sha256-GKgXQZdzsmr2bEffi+UaffY5TseJ7dSQvWwF1kuz2og=",
+        "owner": "morluto",
+        "repo": "rea",
+        "rev": "27dc42d10249f0410904a75c0997842eb03b931c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "morluto",
+        "ref": "rea-agents-6.7.0",
+        "repo": "rea",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "claude-history-darwin": "claude-history-darwin",
@@ -684,12 +717,14 @@
         "determinate": "determinate",
         "fenix": "fenix",
         "home-manager": "home-manager",
+        "imozuru": "imozuru",
         "lanzaboote": "lanzaboote",
         "llm-agents": "llm-agents",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_4",
         "openclaw": "openclaw",
+        "rea": "rea",
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix_2",
         "yomiyasu": "yomiyasu"

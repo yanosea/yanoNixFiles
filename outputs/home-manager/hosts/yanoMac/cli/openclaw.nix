@@ -543,6 +543,8 @@ in
         pkgs.claude-code
         pkgs.gh
         pkgs.gnupg
+        # the graphify skill calls its cli
+        pkgs.graphify
         pkgs.grok-build
         # yomiyasu's linter
         pkgs.python3

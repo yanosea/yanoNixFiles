@@ -103,6 +103,14 @@ args = [
   "invokeai_mcp_server",
 ]
 
+# rea (reverse engineering): the reverse-engineer-anything skill drives it.
+# Pinned to the release the skill is linked from; rea's own setup gives
+# codex a 30 second startup timeout.
+[mcp_servers.rea]
+command = "npx"
+args = ["-y", "rea-agents@6.7.0", "mcp"]
+startup_timeout_sec = 30
+
 [[hooks.SessionEnd]]
 
 [[hooks.SessionEnd.hooks]]

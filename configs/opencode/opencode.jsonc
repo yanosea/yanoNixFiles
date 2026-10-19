@@ -62,6 +62,10 @@
           "-m",
           "invokeai_mcp_server"
         ]
+      },
+      "rea": {
+        "type": "local",
+        "command": ["npx", "-y", "rea-agents@6.7.0", "mcp"]
       }
     }
   }
