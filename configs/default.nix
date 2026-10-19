@@ -53,13 +53,19 @@ let
       };
     };
   };
-  # opencode skips a plugin directory whose files are symlinks, so console-budget
-  # leaves the recursive link and is linked whole in opencodeConfigEntries
+  # opencode skips a plugin directory whose files are symlinks, so these leave the
+  # recursive link and are linked whole in opencodeConfigEntries
+  opencodePluginDirs = [
+    "console-budget"
+    "paid-guard"
+  ];
   opencodeOverride = {
     "opencode" = configFiles."opencode" // {
       source = lib.fileset.toSource {
         root = ./opencode;
-        fileset = lib.fileset.difference ./opencode ./opencode/plugins/console-budget;
+        fileset = lib.fileset.difference ./opencode (
+          lib.fileset.unions (map (name: ./opencode/plugins + "/${name}") opencodePluginDirs)
+        );
       };
     };
   };
@@ -330,25 +336,33 @@ let
   // sharedSkillLinks "grok" "grok/skills";
   # opencode user rules (the rest of configs/opencode is deployed by the generic loop,
   # since opencode never rewrites its config)
-  opencodeConfigEntries = {
-    "opencode/AGENTS.md".source = ./agents/global-rules.md;
-    "opencode/plugins/common-hooks.ts".source = ./agents/hooks/bridges/opencode.ts;
-    "opencode/plugins/console-budget".source = ./opencode/plugins/console-budget;
-    # the shared npm plugins (opencode=npm:), in a file of their own: opencode
-    # reads opencode.json and opencode.jsonc both and joins their plugins
-    "opencode/opencode.json".source = (pkgs.formats.json { }).generate "opencode.json" {
-      "$schema" = "https://opencode.ai/config.json";
-      plugins = lib.concatMap (
-        package:
-        map (lib.removePrefix "npm:") (
-          lib.filter (lib.hasPrefix "npm:") (agentPackages.valuesFor "opencode" package)
-        )
-      ) (agentPackages.for "opencode");
-    };
-  }
-  # packages with no opencode plugin to pin: the skill alone, kept out of
-  # ~/.agents/skills since codex installs the same packages as plugins
-  // sharedSkillLinks "opencode" "opencode/skills";
+  opencodeConfigEntries =
+    lib.listToAttrs (
+      map (name: {
+        name = "opencode/plugins/${name}";
+        value = {
+          source = ./opencode/plugins + "/${name}";
+        };
+      }) opencodePluginDirs
+    )
+    // {
+      "opencode/AGENTS.md".source = ./agents/global-rules.md;
+      "opencode/plugins/common-hooks.ts".source = ./agents/hooks/bridges/opencode.ts;
+      # the shared npm plugins (opencode=npm:), in a file of their own: opencode
+      # reads opencode.json and opencode.jsonc both and joins their plugins
+      "opencode/opencode.json".source = (pkgs.formats.json { }).generate "opencode.json" {
+        "$schema" = "https://opencode.ai/config.json";
+        plugins = lib.concatMap (
+          package:
+          map (lib.removePrefix "npm:") (
+            lib.filter (lib.hasPrefix "npm:") (agentPackages.valuesFor "opencode" package)
+          )
+        ) (agentPackages.for "opencode");
+      };
+    }
+    # packages with no opencode plugin to pin: the skill alone, kept out of
+    # ~/.agents/skills since codex installs the same packages as plugins
+    // sharedSkillLinks "opencode" "opencode/skills";
   # the shared plugins codex installs, `<plugin>@<marketplace>`
   codexSharedPlugins = map (
     package:
