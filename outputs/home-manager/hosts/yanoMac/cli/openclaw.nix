@@ -1,5 +1,6 @@
 # home openclaw module
 {
+  agentPackages,
   aiModels,
   config,
   hostname,
@@ -40,15 +41,11 @@ let
     }
   );
   # the agents share my claude config, so they would load every plugin
-  # settings.json enables. these ones run hooks on every session and prompt,
-  # which the agents should not get; ids are `<plugin>@<marketplace>` from
-  # configs/claude/plugin-marketplaces.conf
-  openclawExcludedClaudePlugins = [
-    "caveman@caveman"
-    "ecc@ecc"
-    "ponytail@ponytail"
-    "superpowers@superpowers-marketplace"
-  ];
+  # settings.json enables. the ones marked `-openclaw` in
+  # configs/agents/plugins.conf run hooks on every session and prompt, which
+  # the agents should not get. grok has no such switch, so the list keeps
+  # those packages out of grok altogether
+  openclawExcludedClaudePlugins = agentPackages.openclawExcluded;
   # the claude on the gateway PATH, with a `--settings` file that turns those
   # plugins off above the user settings. a later `--settings` replaces this
   # one instead of merging with it, and openclaw's own one (on the runs it
