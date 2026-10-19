@@ -35,12 +35,25 @@ if [ -f "$MARKETPLACE_CACHE" ]; then
   [ "$age" -lt "$CACHE_TTL" ] && FETCH_NEEDED=false
 fi
 
+DECLARED=" $(sed -nE 's/^\[x\] +([^ ]+).*/\1/p' "$PLUGINS_CONF" | tr '\n' ' ') "
+
+# a marketplace newly declared in config.toml is not cloned until the next
+# upgrade, so a declared plugin missing from the snapshot forces one now
+if [ "$FETCH_NEEDED" = false ]; then
+  for id in $DECLARED; do
+    if ! jq -e --arg id "$id" 'any((.available // []) + (.installed // []) | .[]; .pluginId == $id)' \
+      "$MARKETPLACE_CACHE" >/dev/null 2>&1; then
+      FETCH_NEEDED=true
+      break
+    fi
+  done
+fi
+
 if [ "$FETCH_NEEDED" = true ]; then
   codex plugin marketplace upgrade >/dev/null 2>&1 || true
   codex plugin list --available --json >"$MARKETPLACE_CACHE" 2>/dev/null || true
 fi
 
-DECLARED=" $(sed -nE 's/^\[x\] +([^ ]+).*/\1/p' "$PLUGINS_CONF" | tr '\n' ' ') "
 INSTALLED_JSON=$(codex plugin list --json 2>/dev/null || echo '{}')
 INSTALLED=" $(echo "$INSTALLED_JSON" | jq -r '.installed[]?.pluginId' 2>/dev/null | tr '\n' ' ') "
 
