@@ -94,6 +94,8 @@ in
           ;
         # the claude model tier pins, shared by the claude and openclaw configs
         aiModels = import ./ai-models.nix;
+        # the third-party agent packages every agent cli shares
+        agentPackages = import ./agent-packages.nix { inherit (inputs.nixpkgs) lib; };
         # status messages shared with the apps
         messages = import ./messages.nix;
       };

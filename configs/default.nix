@@ -1,5 +1,6 @@
 # configs (dotfiles)
 {
+  agentPackages,
   aiModels,
   inputs,
   lib,
@@ -34,14 +35,21 @@ let
       force = true;
     };
   };
-  # settings.json is generated below rather than copied, so keep it out of the
-  # recursive link: home-manager resolves an overlap between a recursively
-  # linked directory and a single file by silently dropping the single file
+  # settings.json and the plugin lists are generated below rather than copied,
+  # so keep them out of the recursive link: home-manager resolves an overlap
+  # between a recursively linked directory and a single file by silently
+  # dropping the single file
   claudeOverride = {
     "claude" = configFiles."claude" // {
       source = lib.fileset.toSource {
         root = ./claude;
-        fileset = lib.fileset.difference ./claude ./claude/settings.json;
+        fileset = lib.fileset.difference ./claude (
+          lib.fileset.unions [
+            ./claude/plugin-marketplaces.conf
+            ./claude/plugins.conf
+            ./claude/settings.json
+          ]
+        );
       };
     };
   };
@@ -76,16 +84,55 @@ let
     "hypr/hypridle.conf".source = ./hypr/hypridle.conf;
     "hypr/hyprpaper.conf".source = ./hypr/hyprpaper.conf;
   };
+  # a per-cli plugin catalog with the packages of configs/agents/plugins.conf
+  # it gets appended as `[x]` lines, ids padded to width so the comments line
+  # up. a catalog line for one of them is dropped, so the shared list decides
+  withSharedPlugins =
+    file: width: ids:
+    withSharedPluginNotes file width (
+      map (id: {
+        inherit id;
+        note = "shared";
+      }) ids
+    );
+  # the same, with a comment of its own per plugin ({ id, note })
+  withSharedPluginNotes =
+    file: width: entries:
+    let
+      ids = map (entry: entry.id) entries;
+      shared =
+        line:
+        let
+          match = builtins.match "[[][ x][]] +([^ ]+).*" line;
+        in
+        match != null && lib.elem (builtins.head match) ids;
+      pad = id: id + lib.concatStrings (lib.genList (_: " ") (lib.max 1 (width - lib.stringLength id)));
+    in
+    lib.concatStringsSep "\n" (
+      lib.filter (line: !shared line) (lib.splitString "\n" (builtins.readFile file))
+    )
+    + lib.optionalString (entries != [ ]) (
+      "\n# shared with the other clis, declared in configs/agents/plugins.conf\n"
+      + lib.concatMapStrings (entry: "[x] ${pad entry.id}# ${entry.note}\n") entries
+    );
+  # the shared packages claude installs, as plugin-marketplaces.conf rows
+  claudeMarketplacesConf =
+    builtins.readFile ./claude/plugin-marketplaces.conf
+    + "\n# shared with the other clis, declared in configs/agents/plugins.conf\n"
+    + lib.concatMapStrings (package: "${package.name} ${package.marketplace} ${package.repository}\n") (
+      agentPackages.for "claude"
+    );
+  claudePluginsConf = withSharedPlugins ./claude/plugins.conf 41 (
+    map (package: package.name) (agentPackages.for "claude")
+  );
   # plugins.conf and plugin-marketplaces.conf, enabled at user scope: a
   # plugin enabled per directory is missing from the first session in every
   # new one, while claude fetches what user settings enable on its own
   claudeConfLines =
-    file:
-    lib.filter (line: builtins.match "[[:space:]]*(#.*)?" line == null) (
-      lib.splitString "\n" (builtins.readFile file)
-    );
+    text:
+    lib.filter (line: builtins.match "[[:space:]]*(#.*)?" line == null) (lib.splitString "\n" text);
   claudeMarketplaceRows = map (line: lib.filter (word: word != "") (lib.splitString " " line)) (
-    claudeConfLines ./claude/plugin-marketplaces.conf
+    claudeConfLines claudeMarketplacesConf
   );
   claudeMarketplaceOf =
     plugin:
@@ -99,7 +146,7 @@ let
       match = builtins.match "[[]x[]] +([^ ]+).*" line;
     in
     lib.optional (match != null) (builtins.head match)
-  ) (claudeConfLines ./claude/plugins.conf);
+  ) (claudeConfLines claudePluginsConf);
   claudePluginSettings = {
     enabledPlugins = builtins.listToAttrs (
       map (plugin: {
@@ -117,9 +164,94 @@ let
       }) claudeMarketplaceRows
     );
   };
+  # graphify ships one SKILL.md per cli, each with its own references/; the
+  # `.graphify_version` stamp is left out on purpose, since graphify rewrites
+  # stamped copies in place after an upgrade and a store path cannot take that
+  graphifySkill =
+    variant: skillFile:
+    pkgs.runCommand "graphify-skill-${variant}" { } ''
+      package=$(find ${pkgs.graphify}/lib -type d -path '*/site-packages/graphify' | head -n 1)
+      mkdir -p $out
+      cp "$package/${skillFile}" $out/SKILL.md
+      cp -r "$package/skills/${variant}/references" $out/references
+    '';
+  # every skill folder under src except skip, linked whole as prefix/<name>
+  skillFolderEntries =
+    prefix: src: skip:
+    lib.mapAttrs'
+      (name: _: {
+        name = "${prefix}/${name}";
+        value.source = "${src}/${name}";
+      })
+      (lib.filterAttrs (name: type: type == "directory" && !lib.elem name skip) (builtins.readDir src));
+  # the skill folders (skill:, skills:) and kiro steering files (steering:)
+  # that a cli without plugins links from configs/agents/plugins.conf; skill
+  # folders go under prefix by their folder name
+  sharedSkillLinks =
+    cli: prefix:
+    lib.foldl' (
+      links: value:
+      let
+        match = if value == null then null else builtins.match "([a-z]+):(.*)" value;
+        kind = if match == null then null else builtins.head match;
+        spec = builtins.elemAt match 1;
+        # skills:<input>/<path>!<skip>...
+        skills = lib.splitString "!" spec;
+      in
+      links
+      // (
+        if kind == "skill" then
+          { "${prefix}/${baseNameOf spec}".source = inputPath spec; }
+        else if kind == "skills" then
+          skillFolderEntries prefix (inputPath (builtins.head skills)) (builtins.tail skills)
+        else if kind == "steering" then
+          { ".kiro/steering/${baseNameOf spec}".source = inputPath spec; }
+        else
+          { }
+      )
+    ) { } (lib.concatMap (agentPackages.valuesFor cli) (agentPackages.for cli));
+  # `<input>/<path>` of configs/agents/plugins.conf, inside that flake input
+  inputPath =
+    spec:
+    let
+      match = builtins.match "([^/]+)/(.*)" spec;
+    in
+    "${inputs.${builtins.head match}}/${builtins.elemAt match 1}";
+  # the bare skills of configs/agents/plugins.conf (skill=) a cli gets, linked
+  # under prefix by their folder name (graphify's by the package, in the
+  # variant of the cli)
+  graphifyVariants = {
+    claude = graphifySkill "claude" "skill.md";
+    agents = graphifySkill "agents" "skill-agents.md";
+    # graphify installs claude's variant for antigravity too
+    antigravity = graphifySkill "claude" "skill.md";
+    kiro = graphifySkill "kiro" "skill-kiro.md";
+  };
+  bareSkillEntries =
+    cli: prefix:
+    builtins.listToAttrs (
+      map (
+        package:
+        let
+          spec = agentPackages.valueFor "skill" package;
+        in
+        {
+          name = "${prefix}/${if lib.hasPrefix "pkg:" spec then package.name else baseNameOf spec}";
+          value.source =
+            if spec == "pkg:graphify" then
+              graphifyVariants.${cli}
+            else if lib.hasPrefix "pkg:" spec then
+              throw "configs/agents/plugins.conf: no skill builder for ${spec}"
+            else
+              inputPath spec;
+        }
+      ) (agentPackages.skillsFor cli)
+    );
   # claude user memory (the rest of configs/claude is deployed by the generic loop)
   claudeConfigEntries = {
     "claude/CLAUDE.md".source = ./agents/global-rules.md;
+    "claude/plugins.conf".text = claudePluginsConf;
+    "claude/plugin-marketplaces.conf".text = claudeMarketplacesConf;
     "claude/commands/handover.md".source = ./agents/skills/handover/SKILL.md;
     "claude/commands/sg.md".source = ./agents/skills/sg/SKILL.md;
     "claude/commands/sj.md".source = ./agents/skills/sj/SKILL.md;
@@ -154,7 +286,7 @@ let
   # since codex writes hook-trust and project-trust state back into it)
   codexConfigEntries = {
     "codex/AGENTS.md".source = ./agents/global-rules.md;
-    "codex/plugins.conf".source = ./codex/plugins.conf;
+    "codex/plugins.conf".text = withSharedPlugins ./codex/plugins.conf 65 codexSharedPlugins;
     "codex/hooks" = {
       source = ./codex/hooks;
       recursive = true;
@@ -168,19 +300,102 @@ let
   # grok reads AGENTS.md from GROK_HOME (INSTRUCTION_FILENAMES)
   grokConfigEntries = {
     "grok/AGENTS.md".source = ./agents/global-rules.md;
-    "grok/plugins.conf".source = ./grok/plugins.conf;
+    # sync-plugins.sh installs a `# shared from <repository>` plugin from there
+    "grok/plugins.conf".text = withSharedPluginNotes ./grok/plugins.conf 41 (
+      map
+        (package: {
+          id = package.name;
+          note =
+            if agentPackages.valueFor "grok" package == "xai" then
+              "shared"
+            else
+              "shared from ${package.repository}";
+        })
+        (
+          lib.filter (
+            package:
+            lib.elem (agentPackages.valueFor "grok" package) [
+              null
+              "xai"
+            ]
+          ) (agentPackages.for "grok")
+        )
+    );
     "grok/hooks" = {
       source = ./grok/hooks;
       recursive = true;
     };
-  };
+  }
+  # grok reads skills from GROK_HOME/skills
+  // sharedSkillLinks "grok" "grok/skills";
   # opencode user rules (the rest of configs/opencode is deployed by the generic loop,
   # since opencode never rewrites its config)
   opencodeConfigEntries = {
     "opencode/AGENTS.md".source = ./agents/global-rules.md;
     "opencode/plugins/common-hooks.ts".source = ./agents/hooks/bridges/opencode.ts;
     "opencode/plugins/console-budget".source = ./opencode/plugins/console-budget;
-  };
+    # the shared npm plugins (opencode=npm:), in a file of their own: opencode
+    # reads opencode.json and opencode.jsonc both and joins their plugins
+    "opencode/opencode.json".source = (pkgs.formats.json { }).generate "opencode.json" {
+      "$schema" = "https://opencode.ai/config.json";
+      plugins = lib.concatMap (
+        package:
+        map (lib.removePrefix "npm:") (
+          lib.filter (lib.hasPrefix "npm:") (agentPackages.valuesFor "opencode" package)
+        )
+      ) (agentPackages.for "opencode");
+    };
+  }
+  # packages with no opencode plugin to pin: the skill alone, kept out of
+  # ~/.agents/skills since codex installs the same packages as plugins
+  // sharedSkillLinks "opencode" "opencode/skills";
+  # the shared plugins codex installs, `<plugin>@<marketplace>`
+  codexSharedPlugins = map (
+    package:
+    let
+      id = agentPackages.valueFor "codex" package;
+    in
+    if id == null then agentPackages.claudeId package else id
+  ) (agentPackages.for "codex");
+  # config.toml with a marketplace table for each of them, but the built-in one
+  codexConfig = pkgs.writeText "codex-config.toml" (
+    builtins.readFile ./codex/config.toml
+    + lib.concatStrings (
+      lib.unique (
+        lib.zipListsWith (
+          id: package:
+          let
+            marketplace = lib.last (lib.splitString "@" id);
+          in
+          lib.optionalString (marketplace != "openai-curated-remote") ''
+
+            [marketplaces.${marketplace}]
+            source_type = "git"
+            source = "https://github.com/${package.repository}.git"
+          ''
+        ) codexSharedPlugins (agentPackages.for "codex")
+      )
+    )
+  );
+  # the shared plugins copilot installs, with their marketplaces, as the
+  # settings.json keys for declarative install
+  copilotSettings = pkgs.writeText "copilot-settings.json" (
+    builtins.toJSON {
+      enabledPlugins = lib.genAttrs (map agentPackages.claudeId (agentPackages.for "copilot")) (_: true);
+      extraKnownMarketplaces = lib.listToAttrs (
+        map (package: {
+          name = package.marketplace;
+          value = {
+            source = {
+              source = "github";
+              repo = package.repository;
+            };
+            autoUpdate = true;
+          };
+        }) (agentPackages.for "copilot")
+      );
+    }
+  );
   # config.local.toml goes first so its top-level keys precede every table,
   # which keeps unpublishable settings out of this repository
   copyWritableConfig = dir: src: ''
@@ -201,6 +416,9 @@ let
       recursive = type == "directory";
     };
   }) zshContents;
+  # kiro installs no plugins, so it gets the skill folders and steering files
+  # of the shared packages
+  kiroSkillEntries = sharedSkillLinks "kiro" ".kiro/skills";
   # Codex discovers directory symlinks, but skips symlinked SKILL.md files.
   sharedSkillEntries =
     lib.mapAttrs'
@@ -289,7 +507,7 @@ in
       # copied rather than symlinked: codex appends [hooks.state] and
       # [projects.*] to config.toml and cannot write to a store path
       copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-        copyWritableConfig "codex" ./codex/config.toml
+        copyWritableConfig "codex" codexConfig
       );
       # copied rather than symlinked: grok writes back to config.toml
       # merged rather than replaced: agy keeps trustedWorkspaces in the same file
@@ -301,6 +519,22 @@ in
           $DRY_RUN_CMD mv "$settings.tmp" "$settings"
         else
           $DRY_RUN_CMD cat ${./antigravity/settings.json} >"$settings"
+        fi
+      '';
+      # the two plugin keys replace their old values, so the shared list
+      # decides them; /settings keeps writing its other keys to the same file
+      mergeCopilotSettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        if [ -z "''${DRY_RUN_CMD:-}" ] && [ -z "''${DRY_RUN:-}" ]; then
+          settings="''${COPILOT_HOME:-$HOME/.copilot}/settings.json"
+          mkdir -p "$(dirname "$settings")"
+          if [ ! -f "$settings" ]; then
+            cat ${copilotSettings} >"$settings"
+          elif ${pkgs.jq}/bin/jq -s '.[0] + .[1]' "$settings" ${copilotSettings} >"$settings.tmp" 2>/dev/null; then
+            mv "$settings.tmp" "$settings"
+          else
+            rm -f "$settings.tmp"
+            echo "warning: $settings is not plain JSON, so the shared plugins were not merged" >&2
+          fi
         fi
       '';
       copyGrokConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
@@ -321,6 +555,7 @@ in
                 lib.fileset.unions [
                   ./agents/global-rules.md
                   ./agents/hooks/tests
+                  ./agents/plugins.conf
                   ./agents/skills
                 ]
               );
@@ -343,7 +578,9 @@ in
         source = ./antigravity/scripts;
         recursive = true;
       };
-      ".gemini/config/plugins.conf".source = ./antigravity/plugins.conf;
+      ".gemini/config/plugins.conf".text = withSharedPlugins ./antigravity/plugins.conf 41 (
+        map (package: package.name) (agentPackages.for "antigravity")
+      );
       ".local/bin/agent-loop" = {
         executable = true;
         text = ''
@@ -368,7 +605,11 @@ in
         '';
       };
     }
-    // sharedSkillEntries;
+    // sharedSkillEntries
+    // kiroSkillEntries
+    // bareSkillEntries "agents" ".agents/skills"
+    // bareSkillEntries "antigravity" ".gemini/config/skills"
+    // bareSkillEntries "kiro" ".kiro/skills";
   };
   # xdg
   xdg = {
@@ -378,6 +619,7 @@ in
       // claudeOverride
       // opencodeOverride
       // claudeConfigEntries
+      // bareSkillEntries "claude" "claude/skills"
       // claudeHistorySkill
       // codexConfigEntries
       // grokConfigEntries

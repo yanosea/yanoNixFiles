@@ -35,7 +35,9 @@
     { "action": "websearch", "resource": "*", "effect": "allow" }
   ],
   // vendor plugins matching the claude ones; opencode fetches them from npm,
-  // so versions are pinned here
+  // so versions are pinned here. the ones shared with the other clis come
+  // from configs/agents/plugins.conf into opencode.json beside this file,
+  // and opencode joins the plugins of both
   "plugins": [
     "@firecrawl/opencode@1.3.0",
     // subscription quota, with its tui line; settings in opencode-quota/
@@ -62,6 +64,10 @@
           "-m",
           "invokeai_mcp_server"
         ]
+      },
+      "rea": {
+        "type": "local",
+        "command": ["npx", "-y", "rea-agents@6.7.0", "mcp"]
       }
     }
   }

@@ -64,12 +64,17 @@ in_list() {
 
 DECLARED=" $(sed -nE 's/^\[x\] +([^ ]+).*/\1/p' "$PLUGINS_CONF" | tr '\n' ' ') "
 
+# "name owner/repo" per shared plugin installed straight from its repository:
+# grok does not resolve a plugin by name from a claude-format marketplace
+REPOS=$(sed -nE 's/^\[x\] +([^ ]+) +# shared from ([^ ]+)$/\1 \2/p' "$PLUGINS_CONF")
+
 # "catalog-name installed-name enabled" per plugin; the installed name can
 # differ (netlify -> netlify-skills), so it is mapped back by source URL
 STATE=$(
   python3 - "$GROK_DIR" \
     "$(grok plugin list --json 2>/dev/null)" \
-    "$(grok inspect --json 2>/dev/null)" <<'PYEOF'
+    "$(grok inspect --json 2>/dev/null)" \
+    "$REPOS" <<'PYEOF'
 import glob, json, os, sys
 
 grok_dir, listed, inspected = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -92,6 +97,11 @@ for path in glob.glob(os.path.join(grok_dir, 'marketplace-cache', '*', '.*-plugi
                 by_source[norm(url)] = p['name']
     except Exception:
         pass
+# a repository install has no marketplace, so its source names it
+for line in sys.argv[4].splitlines():
+    name, repo = line.split()
+    by_source[norm('https://github.com/' + repo)] = name
+    names.discard(name)
 
 try:
     installed = json.loads(listed)
@@ -122,7 +132,9 @@ while read -r catalog name enabled; do
 done <<<"$STATE"
 
 for name in $DECLARED; do
-  in_list "$INSTALLED" "$name" || grok plugin install "$name" --trust >/dev/null 2>&1 || true
+  in_list "$INSTALLED" "$name" && continue
+  source=$(awk -v name="$name" '$1 == name { print $2 }' <<<"$REPOS")
+  grok plugin install "${source:-$name}" --trust >/dev/null 2>&1 || true
 done
 
 UPDATE_DUE=true

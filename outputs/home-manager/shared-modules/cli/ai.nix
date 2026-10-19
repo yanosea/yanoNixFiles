@@ -13,6 +13,7 @@
       codex
       deja-vu
       grok-build
+      graphify
       kiro-cli
       minisign
       openclaw

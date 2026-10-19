@@ -17,12 +17,16 @@ import glob, json, os, re, sys
 
 conf_path, grok_dir = sys.argv[1], sys.argv[2]
 
-declared = set()
+# a `# shared from <repository>` plugin is installed from its repository,
+# not from a catalog, so it is never gone
+declared, from_repository = set(), set()
 with open(conf_path, encoding='utf-8') as f:
     for line in f:
-        m = re.match(r'^\[[ x]\]\s+(\S+)', line)
+        m = re.match(r'^\[[ x]\]\s+(\S+)(.*)', line)
         if m:
             declared.add(m.group(1))
+            if re.search(r'# shared from \S+\s*$', m.group(2)):
+                from_repository.add(m.group(1))
 
 # catalogs, not `grok plugin list`, which uses installed names (netlify-skills)
 plugins, complete = [], True
@@ -41,7 +45,7 @@ new = sorted(
      for p in plugins if p.get('name') not in declared},
     key=lambda x: x[0].lower(),
 )
-gone = sorted(declared - known) if complete else []
+gone = sorted(declared - known - from_repository) if complete else []
 
 sections = []
 if new:
@@ -69,7 +73,9 @@ if gone:
     "configured marketplace (removed or renamed upstream):\n"
     + "\n".join(gone)
     + "\n\nDelete those lines from configs/grok/plugins.conf and refresh the "
-    "`# total: / enabled: / excluded:` counts in the header. No need to ask "
+    "`# total: / enabled: / excluded:` counts in the header; a `# shared` "
+    "entry comes from configs/agents/plugins.conf instead, so fix it there. "
+    "No need to ask "
     "the user first, but report in Japanese which entries were dropped, "
     "flagging any that was `[x]`."
     )

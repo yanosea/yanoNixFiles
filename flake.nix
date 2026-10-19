@@ -133,6 +133,38 @@
       url = "github:nanaism/yomiyasu";
       flake = false;
     };
+    ## agent skills linked for the clis that cannot install them as plugins,
+    ## at the release tags the pinned plugins ship
+    agent-skills = {
+      url = "github:addyosmani/agent-skills/0.6.13";
+      flake = false;
+    };
+    caveman = {
+      url = "github:JuliusBrussee/caveman/v4.0.1";
+      flake = false;
+    };
+    ponytail = {
+      url = "github:DietrichGebert/ponytail/v5.3.2";
+      flake = false;
+    };
+    superpowers = {
+      url = "github:obra/superpowers/v7.0.0";
+      flake = false;
+    };
+    taste-skill = {
+      url = "github:Leonxlnx/taste-skill/v2.1.2";
+      flake = false;
+    };
+    ## imozuru (a research skill every agent cli reads)
+    imozuru = {
+      url = "github:MaryCache/imozuru";
+      flake = false;
+    };
+    ## rea (the reverse-engineering skill, at the tag of the pinned mcp server)
+    rea = {
+      url = "github:morluto/rea/rea-agents-6.7.0";
+      flake = false;
+    };
   };
   outputs =
     inputs:

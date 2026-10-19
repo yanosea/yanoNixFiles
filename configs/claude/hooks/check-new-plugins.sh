@@ -106,7 +106,9 @@ if gone:
     + "\n".join(gone)
     + "\n\nDelete those lines from configs/claude/plugins.conf (and from "
     "configs/antigravity/plugins.conf, which mirrors it) and refresh the "
-    "`# total: / enabled: / excluded:` counts in the header. No need to ask "
+    "`# total: / enabled: / excluded:` counts in the header; a `# shared` "
+    "entry comes from configs/agents/plugins.conf instead, so fix it there. "
+    "No need to ask "
     "the user first -- the plugin is gone, so the entry cannot be acted on "
     "either way -- but report in Japanese which entries were dropped. Any of "
     "them that was `[x]` is also worth flagging: the user was relying on it. "

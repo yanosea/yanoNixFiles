@@ -1,5 +1,6 @@
 # home openclaw module
 {
+  agentPackages,
   aiModels,
   config,
   hostname,
@@ -39,6 +40,31 @@ let
       meta.mainProgram = "openclaw";
     }
   );
+  # the agents share my claude config, so they would load every plugin
+  # settings.json enables. the ones marked `-openclaw` in
+  # configs/agents/plugins.conf run hooks on every session and prompt, which
+  # the agents should not get. grok has no such switch, so the list keeps
+  # those packages out of grok altogether
+  openclawExcludedClaudePlugins = agentPackages.openclawExcluded;
+  # the claude on the gateway PATH, with a `--settings` file that turns those
+  # plugins off above the user settings. a later `--settings` replaces this
+  # one instead of merging with it, and openclaw's own one (on the runs it
+  # restricts) already turns every hook off
+  openclawClaude = pkgs.symlinkJoin {
+    name = "${pkgs.claude-code.name}-openclaw";
+    paths = [ pkgs.claude-code ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      rm "$out/bin/claude"
+      makeWrapper ${pkgs.claude-code}/bin/claude "$out/bin/claude" \
+        --add-flags "--settings ${
+          (pkgs.formats.json { }).generate "openclaw-claude-settings.json" {
+            enabledPlugins = lib.genAttrs openclawExcludedClaudePlugins (_: false);
+          }
+        }"
+    '';
+    meta.mainProgram = "claude";
+  };
   launchdLabel = config.programs.openclaw.launchd.label;
   # beside the main workspace in the same repository
   devWorkspaceDir = "${config.home.homeDirectory}/ghq/github.com/${username}/openclaw/workspace-dev";
@@ -540,9 +566,11 @@ in
       # is for the dev agent's PR and CI checks: job turns get only this path
       runtimePackages = [
         openclawFeeds
-        pkgs.claude-code
+        openclawClaude
         pkgs.gh
         pkgs.gnupg
+        # the graphify skill calls its cli
+        pkgs.graphify
         pkgs.grok-build
         # yomiyasu's linter
         pkgs.python3
