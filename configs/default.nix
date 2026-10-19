@@ -35,14 +35,21 @@ let
       force = true;
     };
   };
-  # settings.json is generated below rather than copied, so keep it out of the
-  # recursive link: home-manager resolves an overlap between a recursively
-  # linked directory and a single file by silently dropping the single file
+  # settings.json and the plugin lists are generated below rather than copied,
+  # so keep them out of the recursive link: home-manager resolves an overlap
+  # between a recursively linked directory and a single file by silently
+  # dropping the single file
   claudeOverride = {
     "claude" = configFiles."claude" // {
       source = lib.fileset.toSource {
         root = ./claude;
-        fileset = lib.fileset.difference ./claude ./claude/settings.json;
+        fileset = lib.fileset.difference ./claude (
+          lib.fileset.unions [
+            ./claude/plugin-marketplaces.conf
+            ./claude/plugins.conf
+            ./claude/settings.json
+          ]
+        );
       };
     };
   };
@@ -77,16 +84,45 @@ let
     "hypr/hypridle.conf".source = ./hypr/hypridle.conf;
     "hypr/hyprpaper.conf".source = ./hypr/hyprpaper.conf;
   };
+  # a per-cli plugin catalog with the packages of configs/agents/plugins.conf
+  # it gets appended as `[x]` lines, ids padded to width so the comments line
+  # up. a catalog line for one of them is dropped, so the shared list decides
+  withSharedPlugins =
+    file: width: ids:
+    let
+      shared =
+        line:
+        let
+          match = builtins.match "[[][ x][]] +([^ ]+).*" line;
+        in
+        match != null && lib.elem (builtins.head match) ids;
+      pad = id: id + lib.concatStrings (lib.genList (_: " ") (lib.max 1 (width - lib.stringLength id)));
+    in
+    lib.concatStringsSep "\n" (
+      lib.filter (line: !shared line) (lib.splitString "\n" (builtins.readFile file))
+    )
+    + lib.optionalString (ids != [ ]) (
+      "\n# shared with the other clis, declared in configs/agents/plugins.conf\n"
+      + lib.concatMapStrings (id: "[x] ${pad id}# shared\n") ids
+    );
+  # the shared packages claude installs, as plugin-marketplaces.conf rows
+  claudeMarketplacesConf =
+    builtins.readFile ./claude/plugin-marketplaces.conf
+    + "\n# shared with the other clis, declared in configs/agents/plugins.conf\n"
+    + lib.concatMapStrings (package: "${package.name} ${package.marketplace} ${package.repository}\n") (
+      agentPackages.for "claude"
+    );
+  claudePluginsConf = withSharedPlugins ./claude/plugins.conf 41 (
+    map (package: package.name) (agentPackages.for "claude")
+  );
   # plugins.conf and plugin-marketplaces.conf, enabled at user scope: a
   # plugin enabled per directory is missing from the first session in every
   # new one, while claude fetches what user settings enable on its own
   claudeConfLines =
-    file:
-    lib.filter (line: builtins.match "[[:space:]]*(#.*)?" line == null) (
-      lib.splitString "\n" (builtins.readFile file)
-    );
+    text:
+    lib.filter (line: builtins.match "[[:space:]]*(#.*)?" line == null) (lib.splitString "\n" text);
   claudeMarketplaceRows = map (line: lib.filter (word: word != "") (lib.splitString " " line)) (
-    claudeConfLines ./claude/plugin-marketplaces.conf
+    claudeConfLines claudeMarketplacesConf
   );
   claudeMarketplaceOf =
     plugin:
@@ -100,7 +136,7 @@ let
       match = builtins.match "[[]x[]] +([^ ]+).*" line;
     in
     lib.optional (match != null) (builtins.head match)
-  ) (claudeConfLines ./claude/plugins.conf);
+  ) (claudeConfLines claudePluginsConf);
   claudePluginSettings = {
     enabledPlugins = builtins.listToAttrs (
       map (plugin: {
@@ -183,6 +219,8 @@ let
   # claude user memory (the rest of configs/claude is deployed by the generic loop)
   claudeConfigEntries = {
     "claude/CLAUDE.md".source = ./agents/global-rules.md;
+    "claude/plugins.conf".text = claudePluginsConf;
+    "claude/plugin-marketplaces.conf".text = claudeMarketplacesConf;
     "claude/commands/handover.md".source = ./agents/skills/handover/SKILL.md;
     "claude/commands/sg.md".source = ./agents/skills/sg/SKILL.md;
     "claude/commands/sj.md".source = ./agents/skills/sj/SKILL.md;
