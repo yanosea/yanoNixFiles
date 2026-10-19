@@ -128,6 +128,20 @@ let
       cp "$package/${skillFile}" $out/SKILL.md
       cp -r "$package/skills/${variant}/references" $out/references
     '';
+  # every skill folder under src except skip, linked whole as prefix/<name>
+  skillFolderEntries =
+    prefix: src: skip:
+    lib.mapAttrs'
+      (name: _: {
+        name = "${prefix}/${name}";
+        value.source = "${src}/${name}";
+      })
+      (lib.filterAttrs (name: type: type == "directory" && !lib.elem name skip) (builtins.readDir src));
+  # superpowers ships test-driven-development under the same name, and the
+  # clis that load these as bare skills have no plugin namespace to tell
+  # the two apart
+  agentSkillEntries =
+    prefix: skillFolderEntries prefix "${inputs.agent-skills}/skills" [ "test-driven-development" ];
   # skills from other repositories that ship no plugin for these clis
   imozuruSkill = "${inputs.imozuru}/skills/imozuru";
   reaSkill = "${inputs.rea}/.agents/skills/reverse-engineer-anything";
@@ -197,7 +211,12 @@ let
     "opencode/AGENTS.md".source = ./agents/global-rules.md;
     "opencode/plugins/common-hooks.ts".source = ./agents/hooks/bridges/opencode.ts;
     "opencode/plugins/console-budget".source = ./opencode/plugins/console-budget;
-  };
+    # packages with no opencode plugin to pin: the skill alone, kept out of
+    # ~/.agents/skills since codex installs the same packages as plugins
+    "opencode/skills/caveman".source = "${inputs.caveman}/skills/caveman";
+    "opencode/skills/taste-skill".source = "${inputs.taste-skill}/skills/taste-skill";
+  }
+  // agentSkillEntries "opencode/skills";
   # config.local.toml goes first so its top-level keys precede every table,
   # which keeps unpublishable settings out of this repository
   copyWritableConfig = dir: src: ''
