@@ -367,6 +367,7 @@ in
                 lib.fileset.unions [
                   ./agents/global-rules.md
                   ./agents/hooks/tests
+                  ./agents/plugins.conf
                   ./agents/skills
                 ]
               );
