@@ -2,7 +2,7 @@ import { afterAll, describe, expect, test } from "bun:test"
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
-import { fetchBudget, formatBudget, parsePolicies, resetDate } from "../../../opencode/plugins/console-budget/budget.ts"
+import { fetchBudget, formatBudget, parseModels, parsePolicies, parseSummary, resetDate } from "../../../opencode/plugins/console-budget/budget.ts"
 
 const root = join(import.meta.dir, "../../../opencode/plugins/console-budget")
 const policy = (mode: string, spent: number, limit: number, extra = {}) => ({
@@ -34,6 +34,19 @@ describe("parsePolicies", () => {
   })
 })
 
+describe("usage routes", () => {
+  test("summary without web search counts zero searches", () => {
+    expect(parseSummary({ totalRequests: "5", totalCostMicroCents: "100000000", services: [] }))
+      .toEqual({ count: 5, cost: 1, search: { count: 0, cost: 0 } })
+  })
+  test("shape changes are undefined, never thrown", () => {
+    for (const body of [null, "x", [], {}, { totalRequests: 5, totalCostMicroCents: "1" }, { totalRequests: "-1", totalCostMicroCents: "1" }])
+      expect(parseSummary(body)).toBeUndefined()
+    for (const body of [null, {}, { items: {} }]) expect(parseModels(body)).toBeUndefined()
+    expect(parseModels({ items: [null, { model: "m", totalRequests: "x" }] })).toEqual([])
+  })
+})
+
 describe("resetDate", () => {
   test("is the next 1st at 00:00 UTC", () => {
     expect(resetDate(now).toISOString()).toBe("2026-11-01T00:00:00.000Z")
@@ -46,14 +59,33 @@ describe("resetDate", () => {
 
 describe("formatBudget", () => {
   test("rows fit the sidebar", () => {
-    const lines = formatBudget({ state: "ok", service: { spent: 0.14, limit: 20 }, workspace: { spent: 123.456, limit: 1000 } }, now)
+    const models = [
+      { model: "claude-opus-5-5", count: 3, cost: 0.1396 },
+      { model: "claude-haiku-5-5", count: 2, cost: 0.0005 },
+      { model: "a-model-name-longer-than-the-column", count: 1234, cost: 1234.5 },
+      { model: "fourth", count: 1, cost: 0 },
+    ]
+    const lines = formatBudget({ state: "ok", service: { spent: 0.14, limit: 20 }, workspace: { spent: 123.456, limit: 1000 },
+      calls: { count: 1239, cost: 1234.64, models }, search: { count: 16, cost: 0.16 } }, now)
     expect(lines).toEqual([
       "[Premium (service account)]",
       "Budget    $0.14 / $20.00 (0.7%)",
+      "Calls     1239 ($1234.64)",
+      "  opus-5-5         3 $0.14",
+      "  haiku-5-5        2 $0.00",
+      "  a-model-name-lon 1234 $1234.50",
       "Resets    Nov 1 (UTC)",
       "Workspace $123.46 / $1000.00 (12.3%)",
+      "",
+      "[Hosted Web Search]",
+      "Searches  16 ($0.16)",
     ])
     for (const line of lines) expect(line.length).toBeLessThanOrEqual(38)
+  })
+  test("missing usage shows unavailable rows", () => {
+    const lines = formatBudget({ state: "ok", service: { spent: 0, limit: 20 } }, now)
+    expect(lines).toContain("Calls     unavailable")
+    expect(lines).toContain("Searches  unavailable")
   })
   test("unavailable shows the reason", () => {
     expect(formatBudget({ state: "unavailable", reason: "HTTP 403" }, now)).toEqual(["[Premium (service account)]", "unavailable (HTTP 403)"])
@@ -65,12 +97,42 @@ describe("fetchBudget", () => {
   test("sends the console headers and parses the body", async () => {
     let seen: any
     const fake = (async (url: string, init: any) => {
-      seen = { url, headers: init.headers }
+      seen ??= { url, headers: init.headers }
       return new Response(JSON.stringify({ policies: [policy("all-service-accounts", 2, 20)] }))
     }) as any
     expect(await fetchBudget(credential, fake)).toEqual({ state: "ok", service: { spent: 2, limit: 20 } })
     expect(seen).toEqual({ url: "https://opencode.ai/console/api/policies", headers: {
       Authorization: "Bearer secret-token", Accept: "application/json", "User-Agent": "opencode", "x-org-id": "org_1" } })
+  })
+  test("adds the month's service-account calls and web searches", async () => {
+    const urls: string[] = []
+    const fake = (async (url: string) => {
+      urls.push(url)
+      const path = url.replace("https://opencode.ai/console/api/", "")
+      if (path === "policies") return new Response(JSON.stringify({ policies: [policy("all-service-accounts", 0.14, 20)],
+        serviceAccounts: [{ serviceAccountID: "svcacct_1", name: "opencode-premium" }] }))
+      if (path.startsWith("usage/models")) return new Response(JSON.stringify({ items: [
+        { provider: "opencode", model: "claude-opus-5-5", totalRequests: "3", totalCostMicroCents: "13961360" },
+        { provider: "opencode", model: 1, totalRequests: "1", totalCostMicroCents: "1" }] }))
+      if (path.includes("serviceAccountId")) return new Response(JSON.stringify({ totalRequests: "5", totalCostMicroCents: "14009774", services: [] }))
+      return new Response(JSON.stringify({ totalRequests: "1258", totalCostMicroCents: "2578266423",
+        services: [{ service: "web-search", totalRequests: "16", totalCostMicroCents: "16000000" }] }))
+    }) as any
+    expect(await fetchBudget(credential, fake, now)).toEqual({ state: "ok", service: { spent: 0.14, limit: 20 },
+      calls: { count: 5, cost: 0.14009774, models: [{ model: "claude-opus-5-5", count: 3, cost: 0.1396136 }] },
+      search: { count: 16, cost: 0.16 } })
+    const since = "range=30d&since=2026-10-01T00%3A00%3A00.000Z"
+    expect(urls.slice(1).sort()).toEqual([
+      `https://opencode.ai/console/api/usage/models?${since}&page=1&pageSize=10&costOrder=desc&serviceAccountId=svcacct_1`,
+      `https://opencode.ai/console/api/usage/summary?${since}`,
+      `https://opencode.ai/console/api/usage/summary?${since}&serviceAccountId=svcacct_1`,
+    ])
+  })
+  test("usage failures keep the budget", async () => {
+    const fake = (async (url: string) => url.endsWith("/policies")
+      ? new Response(JSON.stringify({ policies: [policy("all-service-accounts", 1, 20)], serviceAccounts: [{ serviceAccountID: "svcacct_1" }] }))
+      : new Response("no", { status: 400 })) as any
+    expect(await fetchBudget(credential, fake, now)).toEqual({ state: "ok", service: { spent: 1, limit: 20 } })
   })
   test("uses the login's server", async () => {
     let url = ""

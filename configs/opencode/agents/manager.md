@@ -1,7 +1,7 @@
 ---
 description: Owns the conversation, plans the work, routes it to subagents and integrates the results
 mode: primary
-model: opencode-go/kimi-k3
+model: opencode-go/claude-haiku-5-5
 permissions:
   - { action: subagent, resource: "*", effect: deny }
   - { action: subagent, resource: explore, effect: allow }

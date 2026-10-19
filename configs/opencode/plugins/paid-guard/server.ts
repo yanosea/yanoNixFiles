@@ -93,7 +93,10 @@ export default Plugin.define({
       for (const resource of event.resources) {
         const agent = (yield* ctx.agent.get({ agentID: resource })).data
         // Without its own model a new child runs on the parent's, a resumed one keeps its own.
-        const resumed = typeof call?.sessionID === "string" && call.sessionID !== "" ? yield* model(call.sessionID) : undefined
+        // A sessionID that does not resolve resumes nothing, so it cannot carry a paid model.
+        const resumed = typeof call?.sessionID === "string" && call.sessionID !== ""
+          ? yield* model(call.sessionID).pipe(Effect.catchCause(() => Effect.succeed(undefined)))
+          : undefined
         const ref = (agent.model as Ref | undefined) ?? resumed ?? (yield* model(event.sessionID))
         if (!PREMIUM_AGENTS.has(agent.id) && ref?.providerID !== PREMIUM && resumed?.providerID !== PREMIUM) continue
         asked.add(`${event.sessionID}:${agent.id}`)
@@ -105,7 +108,7 @@ export default Plugin.define({
         ...paid,
         "Billing: Console pay-as-you-go, charged to the service account",
         `Reason: ${clip([call?.description, call?.prompt].filter((x) => typeof x === "string").join(" - "), 300) || "not given"}`,
-        "Monthly cap USD 20 enforced by Console",
+        "Monthly cap enforced by Console; the sidebar shows what is left",
       ].join("\n")
     })
     yield* ctx.permission.hook("evaluate", (event) => {
