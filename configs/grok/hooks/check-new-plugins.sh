@@ -32,6 +32,15 @@ for path in manifests:
         plugins += json.load(open(path, encoding='utf-8')).get('plugins', [])
     except Exception:
         complete = False
+# a source just added to config.toml has no catalog until sync-plugins.sh
+# fetches it, and its plugins are not gone
+try:
+    with open(os.path.join(grok_dir, 'config.toml'), encoding='utf-8') as f:
+        sources = sum(1 for line in f if line.strip() == '[[marketplace.sources]]')
+except OSError:
+    sources = 0
+if len(manifests) < sources:
+    complete = False
 if not plugins:
     sys.exit(0)
 
@@ -69,7 +78,9 @@ if gone:
     "configured marketplace (removed or renamed upstream):\n"
     + "\n".join(gone)
     + "\n\nDelete those lines from configs/grok/plugins.conf and refresh the "
-    "`# total: / enabled: / excluded:` counts in the header. No need to ask "
+    "`# total: / enabled: / excluded:` counts in the header; a `# shared` "
+    "entry comes from configs/agents/plugins.conf instead, so fix it there. "
+    "No need to ask "
     "the user first, but report in Japanese which entries were dropped, "
     "flagging any that was `[x]`."
     )

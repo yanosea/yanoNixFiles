@@ -290,7 +290,9 @@ let
   # grok reads AGENTS.md from GROK_HOME (INSTRUCTION_FILENAMES)
   grokConfigEntries = {
     "grok/AGENTS.md".source = ./agents/global-rules.md;
-    "grok/plugins.conf".source = ./grok/plugins.conf;
+    "grok/plugins.conf".text = withSharedPlugins ./grok/plugins.conf 41 (
+      map (package: package.name) (agentPackages.for "grok")
+    );
     "grok/hooks" = {
       source = ./grok/hooks;
       recursive = true;
@@ -344,6 +346,24 @@ let
         ) codexSharedPlugins (agentPackages.for "codex")
       )
     )
+  );
+  # config.toml with a marketplace source for each shared plugin grok does not
+  # take from xAI Official
+  grokConfig = pkgs.writeText "grok-config.toml" (
+    builtins.readFile ./grok/config.toml
+    +
+      lib.concatMapStrings
+        (package: ''
+
+          [[marketplace.sources]]
+          name = "${package.marketplace}"
+          git = "https://github.com/${package.repository}.git"
+        '')
+        (
+          lib.unique (
+            lib.filter (package: agentPackages.valueFor "grok" package != "xai") (agentPackages.for "grok")
+          )
+        )
   );
   # config.local.toml goes first so its top-level keys precede every table,
   # which keeps unpublishable settings out of this repository
@@ -471,7 +491,7 @@ in
         fi
       '';
       copyGrokConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-        copyWritableConfig "grok" ./grok/config.toml
+        copyWritableConfig "grok" grokConfig
         + ''
           $DRY_RUN_CMD cat ${./grok/pager.toml} >"$configDir/pager.toml"
         ''
