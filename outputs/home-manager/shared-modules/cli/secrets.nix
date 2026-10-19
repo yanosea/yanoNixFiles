@@ -76,6 +76,9 @@ in
       OPENAI_API_KEY = {
         path = "${config.xdg.dataHome}/sops/OPENAI_API_KEY";
       };
+      OPENCODE_PREMIUM_API_KEY = {
+        path = "${config.xdg.dataHome}/sops/OPENCODE_PREMIUM_API_KEY";
+      };
       OPENCLAW_GATEWAY_TOKEN = {
         path = "${config.xdg.dataHome}/sops/OPENCLAW_GATEWAY_TOKEN";
       };
