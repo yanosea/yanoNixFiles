@@ -48,49 +48,33 @@ fi
 mkdir "$LOCK_DIR" 2>/dev/null || exit 0
 trap 'rmdir "$LOCK_DIR" 2>/dev/null' EXIT
 
-in_list() {
-  case "$1" in *" $2 "*) return 0 ;; *) return 1 ;; esac
-}
-
-DECLARED=" $(sed -nE 's/^\[x\] +([^ ]+).*/\1/p' "$PLUGINS_CONF" | tr '\n' ' ') "
-
 FETCH_STAMP="${CACHE_DIR}/fetch.stamp"
 FETCH_NEEDED=true
 if [ -f "$FETCH_STAMP" ]; then
   [ "$(stamp_age "$FETCH_STAMP")" -lt "$CACHE_TTL" ] && FETCH_NEEDED=false
 fi
 
-# a marketplace added to config.toml is not fetched until the next update, so
-# a shared plugin (configs/agents/plugins.conf) missing from every fetched
-# catalog forces one
-SHARED=$(sed -nE 's/^\[x\] +([^ ]+) +# shared$/\1/p' "$PLUGINS_CONF")
-if [ "$FETCH_NEEDED" = false ] && [ -n "$SHARED" ]; then
-  KNOWN=" $(
-    python3 - "$GROK_DIR" <<'PYEOF' | tr '\n' ' '
-import glob, json, os, sys
-for path in glob.glob(os.path.join(sys.argv[1], 'marketplace-cache', '*', '.*-plugin', 'marketplace.json')):
-    try:
-        for p in json.load(open(path, encoding='utf-8')).get('plugins', []):
-            print(p['name'])
-    except Exception:
-        pass
-PYEOF
-  ) "
-  for name in $SHARED; do
-    in_list "$KNOWN" "$name" || FETCH_NEEDED=true
-  done
-fi
-
 if [ "$FETCH_NEEDED" = true ]; then
   grok plugin marketplace update >/dev/null 2>&1 && touch "$FETCH_STAMP"
 fi
+
+in_list() {
+  case "$1" in *" $2 "*) return 0 ;; *) return 1 ;; esac
+}
+
+DECLARED=" $(sed -nE 's/^\[x\] +([^ ]+).*/\1/p' "$PLUGINS_CONF" | tr '\n' ' ') "
+
+# "name owner/repo" per shared plugin installed straight from its repository:
+# grok does not resolve a plugin by name from a claude-format marketplace
+REPOS=$(sed -nE 's/^\[x\] +([^ ]+) +# shared from ([^ ]+)$/\1 \2/p' "$PLUGINS_CONF")
 
 # "catalog-name installed-name enabled" per plugin; the installed name can
 # differ (netlify -> netlify-skills), so it is mapped back by source URL
 STATE=$(
   python3 - "$GROK_DIR" \
     "$(grok plugin list --json 2>/dev/null)" \
-    "$(grok inspect --json 2>/dev/null)" <<'PYEOF'
+    "$(grok inspect --json 2>/dev/null)" \
+    "$REPOS" <<'PYEOF'
 import glob, json, os, sys
 
 grok_dir, listed, inspected = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -113,6 +97,11 @@ for path in glob.glob(os.path.join(grok_dir, 'marketplace-cache', '*', '.*-plugi
                 by_source[norm(url)] = p['name']
     except Exception:
         pass
+# a repository install has no marketplace, so its source names it
+for line in sys.argv[4].splitlines():
+    name, repo = line.split()
+    by_source[norm('https://github.com/' + repo)] = name
+    names.discard(name)
 
 try:
     installed = json.loads(listed)
@@ -143,7 +132,9 @@ while read -r catalog name enabled; do
 done <<<"$STATE"
 
 for name in $DECLARED; do
-  in_list "$INSTALLED" "$name" || grok plugin install "$name" --trust >/dev/null 2>&1 || true
+  in_list "$INSTALLED" "$name" && continue
+  source=$(awk -v name="$name" '$1 == name { print $2 }' <<<"$REPOS")
+  grok plugin install "${source:-$name}" --trust >/dev/null 2>&1 || true
 done
 
 UPDATE_DUE=true

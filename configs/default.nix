@@ -89,7 +89,17 @@ let
   # up. a catalog line for one of them is dropped, so the shared list decides
   withSharedPlugins =
     file: width: ids:
+    withSharedPluginNotes file width (
+      map (id: {
+        inherit id;
+        note = "shared";
+      }) ids
+    );
+  # the same, with a comment of its own per plugin ({ id, note })
+  withSharedPluginNotes =
+    file: width: entries:
     let
+      ids = map (entry: entry.id) entries;
       shared =
         line:
         let
@@ -101,9 +111,9 @@ let
     lib.concatStringsSep "\n" (
       lib.filter (line: !shared line) (lib.splitString "\n" (builtins.readFile file))
     )
-    + lib.optionalString (ids != [ ]) (
+    + lib.optionalString (entries != [ ]) (
       "\n# shared with the other clis, declared in configs/agents/plugins.conf\n"
-      + lib.concatMapStrings (id: "[x] ${pad id}# shared\n") ids
+      + lib.concatMapStrings (entry: "[x] ${pad entry.id}# ${entry.note}\n") entries
     );
   # the shared packages claude installs, as plugin-marketplaces.conf rows
   claudeMarketplacesConf =
@@ -182,8 +192,8 @@ let
     lib.foldl' (
       links: value:
       let
-        match = builtins.match "([a-z]+):(.*)" value;
-        kind = builtins.head match;
+        match = if value == null then null else builtins.match "([a-z]+):(.*)" value;
+        kind = if match == null then null else builtins.head match;
         spec = builtins.elemAt match 1;
         # skills:<input>/<path>!<skip>...
         skills = lib.splitString "!" spec;
@@ -290,14 +300,34 @@ let
   # grok reads AGENTS.md from GROK_HOME (INSTRUCTION_FILENAMES)
   grokConfigEntries = {
     "grok/AGENTS.md".source = ./agents/global-rules.md;
-    "grok/plugins.conf".text = withSharedPlugins ./grok/plugins.conf 41 (
-      map (package: package.name) (agentPackages.for "grok")
+    # sync-plugins.sh installs a `# shared from <repository>` plugin from there
+    "grok/plugins.conf".text = withSharedPluginNotes ./grok/plugins.conf 41 (
+      map
+        (package: {
+          id = package.name;
+          note =
+            if agentPackages.valueFor "grok" package == "xai" then
+              "shared"
+            else
+              "shared from ${package.repository}";
+        })
+        (
+          lib.filter (
+            package:
+            lib.elem (agentPackages.valueFor "grok" package) [
+              null
+              "xai"
+            ]
+          ) (agentPackages.for "grok")
+        )
     );
     "grok/hooks" = {
       source = ./grok/hooks;
       recursive = true;
     };
-  };
+  }
+  # grok reads skills from GROK_HOME/skills
+  // sharedSkillLinks "grok" "grok/skills";
   # opencode user rules (the rest of configs/opencode is deployed by the generic loop,
   # since opencode never rewrites its config)
   opencodeConfigEntries = {
@@ -346,24 +376,6 @@ let
         ) codexSharedPlugins (agentPackages.for "codex")
       )
     )
-  );
-  # config.toml with a marketplace source for each shared plugin grok does not
-  # take from xAI Official
-  grokConfig = pkgs.writeText "grok-config.toml" (
-    builtins.readFile ./grok/config.toml
-    +
-      lib.concatMapStrings
-        (package: ''
-
-          [[marketplace.sources]]
-          name = "${package.marketplace}"
-          git = "https://github.com/${package.repository}.git"
-        '')
-        (
-          lib.unique (
-            lib.filter (package: agentPackages.valueFor "grok" package != "xai") (agentPackages.for "grok")
-          )
-        )
   );
   # the shared plugins copilot installs, with their marketplaces, as the
   # settings.json keys for declarative install
@@ -526,7 +538,7 @@ in
         fi
       '';
       copyGrokConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-        copyWritableConfig "grok" grokConfig
+        copyWritableConfig "grok" ./grok/config.toml
         + ''
           $DRY_RUN_CMD cat ${./grok/pager.toml} >"$configDir/pager.toml"
         ''

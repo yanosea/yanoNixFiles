@@ -17,12 +17,16 @@ import glob, json, os, re, sys
 
 conf_path, grok_dir = sys.argv[1], sys.argv[2]
 
-declared = set()
+# a `# shared from <repository>` plugin is installed from its repository,
+# not from a catalog, so it is never gone
+declared, from_repository = set(), set()
 with open(conf_path, encoding='utf-8') as f:
     for line in f:
-        m = re.match(r'^\[[ x]\]\s+(\S+)', line)
+        m = re.match(r'^\[[ x]\]\s+(\S+)(.*)', line)
         if m:
             declared.add(m.group(1))
+            if re.search(r'# shared from \S+\s*$', m.group(2)):
+                from_repository.add(m.group(1))
 
 # catalogs, not `grok plugin list`, which uses installed names (netlify-skills)
 plugins, complete = [], True
@@ -32,15 +36,6 @@ for path in manifests:
         plugins += json.load(open(path, encoding='utf-8')).get('plugins', [])
     except Exception:
         complete = False
-# a source just added to config.toml has no catalog until sync-plugins.sh
-# fetches it, and its plugins are not gone
-try:
-    with open(os.path.join(grok_dir, 'config.toml'), encoding='utf-8') as f:
-        sources = sum(1 for line in f if line.strip() == '[[marketplace.sources]]')
-except OSError:
-    sources = 0
-if len(manifests) < sources:
-    complete = False
 if not plugins:
     sys.exit(0)
 
@@ -50,7 +45,7 @@ new = sorted(
      for p in plugins if p.get('name') not in declared},
     key=lambda x: x[0].lower(),
 )
-gone = sorted(declared - known) if complete else []
+gone = sorted(declared - known - from_repository) if complete else []
 
 sections = []
 if new:
