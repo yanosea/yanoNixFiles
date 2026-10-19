@@ -237,6 +237,16 @@ let
       recursive = type == "directory";
     };
   }) zshContents;
+  # kiro installs no plugins, so it gets the packages' skill folders and,
+  # for ponytail, the steering file its install guide gives kiro
+  kiroSkillEntries =
+    agentSkillEntries ".kiro/skills"
+    // skillFolderEntries ".kiro/skills" "${inputs.superpowers}/skills" [ ]
+    // {
+      ".kiro/skills/caveman".source = "${inputs.caveman}/skills/caveman";
+      ".kiro/skills/taste-skill".source = "${inputs.taste-skill}/skills/taste-skill";
+      ".kiro/steering/ponytail.md".source = "${inputs.ponytail}/.kiro/steering/ponytail.md";
+    };
   # Codex discovers directory symlinks, but skips symlinked SKILL.md files.
   sharedSkillEntries =
     lib.mapAttrs'
@@ -415,7 +425,8 @@ in
         '';
       };
     }
-    // sharedSkillEntries;
+    // sharedSkillEntries
+    // kiroSkillEntries;
   };
   # xdg
   xdg = {

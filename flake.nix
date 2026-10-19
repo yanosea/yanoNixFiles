@@ -143,6 +143,14 @@
       url = "github:JuliusBrussee/caveman/v4.0.1";
       flake = false;
     };
+    ponytail = {
+      url = "github:DietrichGebert/ponytail/v5.3.2";
+      flake = false;
+    };
+    superpowers = {
+      url = "github:obra/superpowers/v7.0.0";
+      flake = false;
+    };
     taste-skill = {
       url = "github:Leonxlnx/taste-skill/v2.1.2";
       flake = false;
