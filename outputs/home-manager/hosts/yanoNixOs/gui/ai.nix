@@ -353,17 +353,19 @@
         opencode = {
           Unit = {
             Description = "OpenCode background service";
+            # the keys below are read once at start, so wait for their decryption
+            After = [ "sops-nix.service" ];
           };
           Service = {
             # a login shell for the same PATH and XDG dirs as a terminal; the
-            # tavily plugin's key is otherwise only exported by interactive zsh.
+            # tavily and premium keys are otherwise only exported by interactive zsh.
             # $$ keeps systemd from expanding the variables itself. the store
             # path changes the unit on every opencode bump, so switch restarts
             # it; via PATH an old server lingers and the new cli, on a version
             # mismatch, stops it and respawns one outside the unit.
             # `serve --service` stays in the foreground, hence exec
             Type = "exec";
-            ExecStart = "${pkgs.zsh}/bin/zsh -lc 'export TAVILY_API_KEY=\"$$(cat \"$$XDG_DATA_HOME/sops/TAVILY_API_KEY\" 2>/dev/null)\"; exec ${pkgs.opencode}/bin/opencode serve --service'";
+            ExecStart = "${pkgs.zsh}/bin/zsh -lc 'export TAVILY_API_KEY=\"$$(cat \"$$XDG_DATA_HOME/sops/TAVILY_API_KEY\" 2>/dev/null)\" OPENCODE_PREMIUM_API_KEY=\"$$(cat \"$$XDG_DATA_HOME/sops/OPENCODE_PREMIUM_API_KEY\" 2>/dev/null)\"; exec ${pkgs.opencode}/bin/opencode serve --service'";
             Restart = "on-failure";
             RestartSec = 10;
           };
