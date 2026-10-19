@@ -60,6 +60,16 @@ args = [
     "invokeai_mcp_server",
 ]
 
+# rea (reverse engineering): the reverse-engineer-anything skill drives it.
+# Pinned to the release the skill is linked from (the `rea` flake input)
+[mcp_servers.rea]
+command = "npx"
+args = [
+    "-y",
+    "rea-agents@6.7.0",
+    "mcp",
+]
+
 [[hooks.SessionStart]]
 
 [[hooks.SessionStart.hooks]]
