@@ -53,7 +53,7 @@ function BudgetView(props: { context: Plugin.Context; sessionID: string }) {
   })
   const box = createElement("box")
   setProp(box, "flexDirection", "column")
-  insert(box, () => lines().map((line, index) => text(context, line, index === 0)))
+  insert(box, () => lines().map((line) => text(context, line, line.startsWith("["))))
   return box
 }
 
