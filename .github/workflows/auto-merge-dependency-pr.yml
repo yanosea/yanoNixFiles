@@ -2,8 +2,8 @@ name: Auto Merge Dependency PR
 # workflow_run is required here: this has to run after "Update Nix Flake
 # Dependencies" finishes. It never checks out or executes PR-controlled code,
 # so the usual workflow_run escalation path does not apply.
-on: # zizmor: ignore[dangerous-triggers]
-  workflow_run:
+on:
+  workflow_run: # zizmor: ignore[dangerous-triggers]
     workflows: ["Update Nix Flake Dependencies"]
     types: [completed]
 permissions: {}
