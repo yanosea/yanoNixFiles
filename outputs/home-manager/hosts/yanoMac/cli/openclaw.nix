@@ -14,9 +14,31 @@
 let
   # the gateway listens here; the control ui is served off the same port
   gatewayPort = 18789;
-  # any --import brings node's ESM loader up first, which is what makes the
-  # bundled discord plugin's dual CJS/ESM dependency resolve
+  # openclaw 2026.9.5 resolves every relative `.js` import under `dist/` as
+  # ESM, and nix-openclaw copies the discord plugin's node_modules in there,
+  # so the CJS `discord-api-types/v10.js` fails to load. the hook stands down
+  # when NODE_OPTIONS carries an `--import` (openclaw#128663), so import this
+  # empty file. drop it once a release ships openclaw#169543, which removes
+  # the hook
   esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
+  # the cli on PATH, the gateway wrapper, activation and the jobs all exec
+  # this one, so each gets the shim. `--prefix` keeps a NODE_OPTIONS of my
+  # own and never adds the shim twice; it splits on the separator, hence the
+  # single `--import=` token. hiPrio wins `bin/openclaw` over the plain
+  # package ai.nix installs
+  openclawPackage = lib.hiPrio (
+    pkgs.symlinkJoin {
+      name = "${pkgs.openclaw.name}-esm-loader-shim";
+      paths = [ pkgs.openclaw ];
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        rm "$out/bin/openclaw"
+        makeWrapper ${pkgs.openclaw}/bin/openclaw "$out/bin/openclaw" \
+          --prefix NODE_OPTIONS " " "--import=file://${esmLoaderShim}"
+      '';
+      meta.mainProgram = "openclaw";
+    }
+  );
   launchdLabel = config.programs.openclaw.launchd.label;
   # beside the main workspace in the same repository
   devWorkspaceDir = "${config.home.homeDirectory}/ghq/github.com/${username}/openclaw/workspace-dev";
@@ -479,6 +501,7 @@ in
   programs = {
     openclaw = {
       enable = true;
+      package = openclawPackage;
       # the mac app ships as a bundle of ~80k files, and upstream places it
       # through `home.file` with `recursive = true`, so every rebuild relinked
       # all of them one at a time — 99% of this generation's links and most of
@@ -506,7 +529,6 @@ in
         # launchd sets no locale, and the agents count characters: with none,
         # `wc -m` counts bytes
         LANG = "ja_JP.UTF-8";
-        NODE_OPTIONS = "--import file://${esmLoaderShim}";
         # the agents ask grok about x; it signs in from here, and my grok hooks
         # skip when this is set instead of editing the dotfiles repository
         GROK_HOME = "${config.xdg.configHome}/grok";
