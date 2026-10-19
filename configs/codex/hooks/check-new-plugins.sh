@@ -81,7 +81,9 @@ if gone:
     + "\n".join(gone)
     + "\n\nDelete those lines from configs/codex/plugins.conf in the "
     "yanoNixFiles repository and refresh the "
-    "`# total: / enabled: / excluded:` counts in the header. No need to ask "
+    "`# total: / enabled: / excluded:` counts in the header; a `# shared` "
+    "entry comes from configs/agents/plugins.conf instead, so fix it there. "
+    "No need to ask "
     "the user first, but report in Japanese which entries were dropped, "
     "flagging any that was `[x]`. sync-plugins.sh uninstalls the leftovers."
     )

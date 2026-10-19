@@ -255,7 +255,7 @@ let
   # since codex writes hook-trust and project-trust state back into it)
   codexConfigEntries = {
     "codex/AGENTS.md".source = ./agents/global-rules.md;
-    "codex/plugins.conf".source = ./codex/plugins.conf;
+    "codex/plugins.conf".text = withSharedPlugins ./codex/plugins.conf 65 codexSharedPlugins;
     "codex/hooks" = {
       source = ./codex/hooks;
       recursive = true;
@@ -287,6 +287,34 @@ let
     "opencode/skills/taste-skill".source = "${inputs.taste-skill}/skills/taste-skill";
   }
   // agentSkillEntries "opencode/skills";
+  # the shared plugins codex installs, `<plugin>@<marketplace>`
+  codexSharedPlugins = map (
+    package:
+    let
+      id = agentPackages.valueFor "codex" package;
+    in
+    if id == null then agentPackages.claudeId package else id
+  ) (agentPackages.for "codex");
+  # config.toml with a marketplace table for each of them, but the built-in one
+  codexConfig = pkgs.writeText "codex-config.toml" (
+    builtins.readFile ./codex/config.toml
+    + lib.concatStrings (
+      lib.unique (
+        lib.zipListsWith (
+          id: package:
+          let
+            marketplace = lib.last (lib.splitString "@" id);
+          in
+          lib.optionalString (marketplace != "openai-curated-remote") ''
+
+            [marketplaces.${marketplace}]
+            source_type = "git"
+            source = "https://github.com/${package.repository}.git"
+          ''
+        ) codexSharedPlugins (agentPackages.for "codex")
+      )
+    )
+  );
   # config.local.toml goes first so its top-level keys precede every table,
   # which keeps unpublishable settings out of this repository
   copyWritableConfig = dir: src: ''
@@ -405,7 +433,7 @@ in
       # copied rather than symlinked: codex appends [hooks.state] and
       # [projects.*] to config.toml and cannot write to a store path
       copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-        copyWritableConfig "codex" ./codex/config.toml
+        copyWritableConfig "codex" codexConfig
       );
       # copied rather than symlinked: grok writes back to config.toml
       # merged rather than replaced: agy keeps trustedWorkspaces in the same file
