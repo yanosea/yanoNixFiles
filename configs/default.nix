@@ -488,7 +488,9 @@ in
         source = ./antigravity/scripts;
         recursive = true;
       };
-      ".gemini/config/plugins.conf".source = ./antigravity/plugins.conf;
+      ".gemini/config/plugins.conf".text = withSharedPlugins ./antigravity/plugins.conf 41 (
+        map (package: package.name) (agentPackages.for "antigravity")
+      );
       ".local/bin/agent-loop" = {
         executable = true;
         text = ''
