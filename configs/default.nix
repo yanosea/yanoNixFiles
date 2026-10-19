@@ -365,6 +365,25 @@ let
           )
         )
   );
+  # the shared plugins copilot installs, with their marketplaces, as the
+  # settings.json keys for declarative install
+  copilotSettings = pkgs.writeText "copilot-settings.json" (
+    builtins.toJSON {
+      enabledPlugins = lib.genAttrs (map agentPackages.claudeId (agentPackages.for "copilot")) (_: true);
+      extraKnownMarketplaces = lib.listToAttrs (
+        map (package: {
+          name = package.marketplace;
+          value = {
+            source = {
+              source = "github";
+              repo = package.repository;
+            };
+            autoUpdate = true;
+          };
+        }) (agentPackages.for "copilot")
+      );
+    }
+  );
   # config.local.toml goes first so its top-level keys precede every table,
   # which keeps unpublishable settings out of this repository
   copyWritableConfig = dir: src: ''
@@ -488,6 +507,22 @@ in
           $DRY_RUN_CMD mv "$settings.tmp" "$settings"
         else
           $DRY_RUN_CMD cat ${./antigravity/settings.json} >"$settings"
+        fi
+      '';
+      # the two plugin keys replace their old values, so the shared list
+      # decides them; /settings keeps writing its other keys to the same file
+      mergeCopilotSettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        if [ -z "''${DRY_RUN_CMD:-}" ] && [ -z "''${DRY_RUN:-}" ]; then
+          settings="''${COPILOT_HOME:-$HOME/.copilot}/settings.json"
+          mkdir -p "$(dirname "$settings")"
+          if [ ! -f "$settings" ]; then
+            cat ${copilotSettings} >"$settings"
+          elif ${pkgs.jq}/bin/jq -s '.[0] + .[1]' "$settings" ${copilotSettings} >"$settings.tmp" 2>/dev/null; then
+            mv "$settings.tmp" "$settings"
+          else
+            rm -f "$settings.tmp"
+            echo "warning: $settings is not plain JSON, so the shared plugins were not merged" >&2
+          fi
         fi
       '';
       copyGrokConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
