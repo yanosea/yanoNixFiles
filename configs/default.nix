@@ -45,6 +45,16 @@ let
       };
     };
   };
+  # opencode skips a plugin directory whose files are symlinks, so console-budget
+  # leaves the recursive link and is linked whole in opencodeConfigEntries
+  opencodeOverride = {
+    "opencode" = configFiles."opencode" // {
+      source = lib.fileset.toSource {
+        root = ./opencode;
+        fileset = lib.fileset.difference ./opencode ./opencode/plugins/console-budget;
+      };
+    };
+  };
   # hypr config files with custom onChange hook for hyprland.conf
   hyprConfigEntries = {
     "hypr/hyprland.conf" = {
@@ -169,6 +179,7 @@ let
   opencodeConfigEntries = {
     "opencode/AGENTS.md".source = ./agents/global-rules.md;
     "opencode/plugins/common-hooks.ts".source = ./agents/hooks/bridges/opencode.ts;
+    "opencode/plugins/console-budget".source = ./opencode/plugins/console-budget;
   };
   # config.local.toml goes first so its top-level keys precede every table,
   # which keeps unpublishable settings out of this repository
@@ -365,6 +376,7 @@ in
       configFiles
       // quickshellOverride
       // claudeOverride
+      // opencodeOverride
       // claudeConfigEntries
       // claudeHistorySkill
       // codexConfigEntries
