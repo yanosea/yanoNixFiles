@@ -1,7 +1,7 @@
 ---
 description: Implements an isolated change with a clear contract (task, owned files, expected evidence)
 mode: subagent
-model: opencode-go/gpt-6-luna
+model: opencode-go/claude-haiku-5-5
 permissions:
   - { action: subagent, resource: "*", effect: deny }
 ---

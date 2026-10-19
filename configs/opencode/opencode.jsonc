@@ -5,9 +5,12 @@
   "share": "disabled",
   // fallback for sessions with no agent model; keep it on go so the catalog
   // never falls back to a pay-as-you-go model
-  "model": "opencode-go/kimi-k3",
+  "model": "opencode-go/claude-haiku-5-5",
   // manager routes work to the agents in agents/
   "default_agent": "manager",
+  // the personal console sign-in keeps a member budget for go extra usage, so
+  // its pay-as-you-go models are hidden; paid work goes through opencode-premium
+  "policies": [{ "action": "provider.use", "resource": "opencode", "effect": "deny" }],
   "providers": {
     // console pay-as-you-go through a service-account key from sops, exported
     // by zsh (configs/zsh/rc/credentials.zsh) and the background service

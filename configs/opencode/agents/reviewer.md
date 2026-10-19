@@ -1,7 +1,7 @@
 ---
 description: Reviews a finished change independently; never edits
 mode: subagent
-model: opencode-go/deepseek-v4-pro
+model: opencode-go/qwen3.8-max
 permissions:
   - { action: edit, resource: "*", effect: deny }
   - { action: subagent, resource: "*", effect: deny }

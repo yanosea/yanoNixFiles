@@ -1,7 +1,7 @@
 ---
 description: Searches and reads code, docs and the web, and reports findings with file paths; never edits
 mode: subagent
-model: opencode-go/mimo-v2.6-flash
+model: opencode-go/claude-haiku-5-5
 permissions:
   - { action: edit, resource: "*", effect: deny }
   - { action: subagent, resource: "*", effect: deny }
