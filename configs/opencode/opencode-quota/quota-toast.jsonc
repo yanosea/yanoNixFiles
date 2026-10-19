@@ -14,5 +14,7 @@
   // the collapsed panel shows go's five-hour row
   "tuiSidebarPanel": { "enabled": true, "opencodeGoPreferredWindow": "rolling" },
   "enableToast": false,
+  // the tui writes $XDG_CACHE_HOME/opencode/quota-export.json for plugins to read
+  "export": { "enabled": true },
   "maintainerAnnouncements": { "enabled": false }
 }

@@ -3,35 +3,29 @@
   // nix owns the binary
   "update": "disable",
   "share": "disabled",
-  // build runs on sol, the implementation model codex delegates to, on
-  // the chatgpt login
-  "model": "openai/gpt-6.1-sol",
+  // fallback for sessions with no agent model; keep it on go so the catalog
+  // never falls back to a pay-as-you-go model
+  "model": "opencode-go/kimi-k3",
+  // manager routes work to the agents in agents/
+  "default_agent": "manager",
   "providers": {
-    // same models and effort as configs/codex/config.toml, on the chatgpt login
-    "openai": {
-      "models": {
-        "gpt-6-astra": {
-          "settings": { "reasoningEffort": "high" }
-        },
-        "gpt-6.1-sol": {
-          "settings": { "reasoningEffort": "high" }
-        }
-      }
+    // console pay-as-you-go through a service-account key from sops, exported
+    // by zsh (configs/zsh/rc/credentials.zsh) and the background service
+    "opencode-premium": {
+      "name": "OpenCode Premium",
+      "env": ["OPENCODE_PREMIUM_API_KEY"],
+      "canonical": "opencode",
+      "package": "@opencode/ai/providers/anthropic",
+      "settings": { "baseURL": "https://opencode.ai/inference/anthropic/v1" },
+      "models": { "claude-opus-5-5": {}, "claude-fable-5-1": {} }
     }
   },
-  // astra plans and sol reviews, the same split as codex
+  // the built-ins would bypass manager's routing: general runs on the parent's
+  // model with no subagent rules, build and plan skip manager entirely
   "agents": {
-    "plan": {
-      "model": { "providerID": "openai", "model": "gpt-6-astra" }
-    },
-    "review": {
-      "description": "Reviews the diff once a change is done: missed requirements, edge cases such as missing directories or unsupported platforms, and claims the code does not back up",
-      "mode": "subagent",
-      "model": { "providerID": "openai", "model": "gpt-6.1-sol" },
-      "permissions": [
-        { "action": "edit", "resource": "*", "effect": "deny" }
-      ]
-    }
+    "build": { "disabled": true },
+    "plan": { "disabled": true },
+    "general": { "disabled": true }
   },
   // the other agent clis run in auto mode
   "permissions": [
