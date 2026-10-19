@@ -1,5 +1,6 @@
 # configs (dotfiles)
 {
+  agentPackages,
   aiModels,
   inputs,
   lib,
@@ -142,9 +143,43 @@ let
   # the two apart
   agentSkillEntries =
     prefix: skillFolderEntries prefix "${inputs.agent-skills}/skills" [ "test-driven-development" ];
-  # skills from other repositories that ship no plugin for these clis
-  imozuruSkill = "${inputs.imozuru}/skills/imozuru";
-  reaSkill = "${inputs.rea}/.agents/skills/reverse-engineer-anything";
+  # `<input>/<path>` of configs/agents/plugins.conf, inside that flake input
+  inputPath =
+    spec:
+    let
+      match = builtins.match "([^/]+)/(.*)" spec;
+    in
+    "${inputs.${builtins.head match}}/${builtins.elemAt match 1}";
+  # the bare skills of configs/agents/plugins.conf (skill=) a cli gets, linked
+  # under prefix by their folder name (graphify's by the package, in the
+  # variant of the cli)
+  graphifyVariants = {
+    claude = graphifySkill "claude" "skill.md";
+    agents = graphifySkill "agents" "skill-agents.md";
+    # graphify installs claude's variant for antigravity too
+    antigravity = graphifySkill "claude" "skill.md";
+    kiro = graphifySkill "kiro" "skill-kiro.md";
+  };
+  bareSkillEntries =
+    cli: prefix:
+    builtins.listToAttrs (
+      map (
+        package:
+        let
+          spec = agentPackages.valueFor "skill" package;
+        in
+        {
+          name = "${prefix}/${if lib.hasPrefix "pkg:" spec then package.name else baseNameOf spec}";
+          value.source =
+            if spec == "pkg:graphify" then
+              graphifyVariants.${cli}
+            else if lib.hasPrefix "pkg:" spec then
+              throw "configs/agents/plugins.conf: no skill builder for ${spec}"
+            else
+              inputPath spec;
+        }
+      ) (agentPackages.skillsFor cli)
+    );
   # claude user memory (the rest of configs/claude is deployed by the generic loop)
   claudeConfigEntries = {
     "claude/CLAUDE.md".source = ./agents/global-rules.md;
@@ -159,9 +194,6 @@ let
       source = ./agents/skills/triage-update-pr;
       recursive = true;
     };
-    "claude/skills/graphify".source = graphifySkill "claude" "skill.md";
-    "claude/skills/imozuru".source = imozuruSkill;
-    "claude/skills/reverse-engineer-anything".source = reaSkill;
     # the model ids come from lib/ai-models.nix so one tier list drives the
     # `opusplan` slots, the subagent pin and openclaw's primary. `opus` is the
     # plan-mode slot and `sonnet` the execution one, whatever they resolve to
@@ -376,9 +408,6 @@ in
       };
       # yomiyasu comes from its flake input; codex and opencode read it here
       ".agents/skills/yomiyasu".source = "${inputs.yomiyasu}/skills/yomiyasu";
-      ".agents/skills/graphify".source = graphifySkill "agents" "skill-agents.md";
-      ".agents/skills/imozuru".source = imozuruSkill;
-      ".agents/skills/reverse-engineer-anything".source = reaSkill;
       # antigravity ignores XDG (settings.json and mcp_config.json are agy-managed)
       ".gemini/config/AGENTS.md".source = ./agents/global-rules.md;
       # kiro always includes AGENTS.md from its global steering directory
@@ -389,14 +418,6 @@ in
         source = ./agents/skills;
         recursive = true;
       };
-      # graphify installs claude's variant for antigravity too
-      ".gemini/config/skills/graphify".source = graphifySkill "claude" "skill.md";
-      ".gemini/config/skills/imozuru".source = imozuruSkill;
-      ".gemini/config/skills/reverse-engineer-anything".source = reaSkill;
-      # kiro loads every skill under ~/.kiro/skills; rea stays out, since its
-      # skill drives the rea mcp server and kiro's mcp config is not managed here
-      ".kiro/skills/graphify".source = graphifySkill "kiro" "skill-kiro.md";
-      ".kiro/skills/imozuru".source = imozuruSkill;
       ".gemini/config/scripts" = {
         source = ./antigravity/scripts;
         recursive = true;
@@ -427,7 +448,10 @@ in
       };
     }
     // sharedSkillEntries
-    // kiroSkillEntries;
+    // kiroSkillEntries
+    // bareSkillEntries "agents" ".agents/skills"
+    // bareSkillEntries "antigravity" ".gemini/config/skills"
+    // bareSkillEntries "kiro" ".kiro/skills";
   };
   # xdg
   xdg = {
@@ -437,6 +461,7 @@ in
       // claudeOverride
       // opencodeOverride
       // claudeConfigEntries
+      // bareSkillEntries "claude" "claude/skills"
       // claudeHistorySkill
       // codexConfigEntries
       // grokConfigEntries
