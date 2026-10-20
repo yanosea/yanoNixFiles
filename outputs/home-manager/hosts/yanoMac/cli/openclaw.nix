@@ -796,17 +796,20 @@ in
           providers = {
             # the bundled opencode-go provider (OPENCODE_API_KEY) has no haiku
             # in its catalog, so the row is declared here. haiku speaks
-            # anthropic messages at go's documented endpoint (console/go), so
-            # the row carries its own api and url rather than the provider's,
-            # which the bundled openai-compatible models keep
+            # anthropic messages, so the row carries its own api and url
+            # rather than the provider's, which the bundled openai-compatible
+            # models keep. the url is the bundled one: go rejects a request
+            # without x-opencode-session, which openclaw sends only there
             opencode-go = {
               models = [
                 {
                   id = "claude-haiku-5-5";
                   name = "Claude Haiku 5.5";
                   api = "anthropic-messages";
-                  baseUrl = "https://opencode.ai/inference/go/anthropic";
-                  reasoning = true;
+                  baseUrl = "https://opencode.ai/zen/go";
+                  # 2026.9.5 predates haiku 5.5 and asks for budget thinking,
+                  # which it rejects; 2026.10.4 knows its adaptive thinking
+                  reasoning = false;
                   input = [
                     "text"
                     "image"
@@ -834,6 +837,10 @@ in
                 source = "env";
                 provider = "default";
                 id = "OPENCODE_PREMIUM_API_KEY";
+              };
+              # openclaw adds this header only for its bundled opencode urls
+              headers = {
+                x-opencode-session = "openclaw-premium";
               };
               models = [
                 {
