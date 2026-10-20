@@ -1,0 +1,10 @@
+{
+  "id": "paid-guard",
+  "name": "Paid guard",
+  "description": "Asks for approval before a pay-as-you-go helper agent runs and refuses model overrides.",
+  "configSchema": {
+    "type": "object",
+    "properties": {},
+    "additionalProperties": false
+  }
+}
