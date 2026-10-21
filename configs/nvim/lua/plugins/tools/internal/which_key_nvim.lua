@@ -26,6 +26,7 @@ return {
 						desc = "ai claude: resume",
 					},
 					{ "<LEADER>act", "<CMD>ClaudeCode<CR>", desc = "ai claude: toggle" },
+					{ "<LEADER>acf", "<CMD>ClaudeCodeFull<CR>", desc = "ai claude: fullscreen" },
 					-- ai: codex
 					{ "<LEADER>ad", group = "codex" },
 					{
@@ -34,9 +35,11 @@ return {
 						desc = "ai codex: resume",
 					},
 					{ "<LEADER>adt", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
+					{ "<LEADER>adf", "<CMD>CodexFull<CR>", desc = "ai codex: fullscreen" },
 					-- ai: Happier
 					{ "<LEADER>ah", group = "happier" },
 					{ "<LEADER>aht", "<CMD>Happier<CR>", desc = "ai Happier: toggle" },
+					{ "<LEADER>ahf", "<CMD>HappierFull<CR>", desc = "ai Happier: fullscreen" },
 					-- ai: kiro
 					{ "<LEADER>ak", group = "kiro" },
 					{
@@ -45,6 +48,7 @@ return {
 						desc = "ai kiro: resume",
 					},
 					{ "<LEADER>akt", "<CMD>Kiro<CR>", desc = "ai kiro: toggle" },
+					{ "<LEADER>akf", "<CMD>KiroFull<CR>", desc = "ai kiro: fullscreen" },
 					-- ai: opencode
 					{ "<LEADER>ao", group = "opencode" },
 					{
@@ -53,6 +57,7 @@ return {
 						desc = "ai opencode: resume",
 					},
 					{ "<LEADER>aot", "<CMD>Opencode<CR>", desc = "ai opencode: toggle" },
+					{ "<LEADER>aof", "<CMD>OpencodeFull<CR>", desc = "ai opencode: fullscreen" },
 					-- ai: antigravity
 					{ "<LEADER>av", group = "antigravity" },
 					{
@@ -61,6 +66,7 @@ return {
 						desc = "ai antigravity: resume",
 					},
 					{ "<LEADER>avt", "<CMD>Antigravity<CR>", desc = "ai antigravity: toggle" },
+					{ "<LEADER>avf", "<CMD>AntigravityFull<CR>", desc = "ai antigravity: fullscreen" },
 					-- ai: grok
 					{ "<LEADER>ax", group = "grok" },
 					{
@@ -69,6 +75,7 @@ return {
 						desc = "ai grok: resume",
 					},
 					{ "<LEADER>axt", "<CMD>Grok<CR>", desc = "ai grok: toggle" },
+					{ "<LEADER>axf", "<CMD>GrokFull<CR>", desc = "ai grok: fullscreen" },
 					-- discordo
 					{ "<LEADER>D", "<CMD>Discordo<CR>", desc = "discordo" },
 					-- buffers

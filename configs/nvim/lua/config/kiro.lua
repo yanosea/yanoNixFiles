@@ -28,6 +28,19 @@ M._windows = {
 }
 M._is_open = false
 
+local function is_active(windows, job_id, terminal_win, prompt_win)
+	return M._windows == windows
+		and M._is_open
+		and windows.kiro_job_id == job_id
+		and job_id ~= nil
+		and windows.terminal_win == terminal_win
+		and windows.prompt_win == prompt_win
+		and terminal_win ~= nil
+		and prompt_win ~= nil
+		and vim.api.nvim_win_is_valid(terminal_win)
+		and vim.api.nvim_win_is_valid(prompt_win)
+end
+
 -- create vertical split layout with terminal and prompt
 -- @return table - layout with buffer and window references
 function M._create_split_layout()
@@ -98,6 +111,8 @@ end
 
 -- close windows but keep buffers and process
 function M._close_windows()
+	-- leave a fullscreen tab that is the last one through an empty tab
+	config.before_close(M._windows)
 	-- keep a manual resize for the next open
 	config.remember(M._windows.terminal_win, M._windows.prompt_win)
 	-- close prompt window
@@ -184,17 +199,24 @@ function M._start_kiro_terminal(terminal_buf, terminal_win, command)
 	-- construct kiro command
 	local kiro_cmd = command and string.format("kiro-cli %s", command) or "kiro-cli"
 	-- start terminal
+	local windows = M._windows
 	local job_id = vim.fn.termopen(kiro_cmd, {
 		buffer = terminal_buf,
-		on_exit = function()
+		on_exit = function(exited_job)
+			if M._windows ~= windows or windows.kiro_job_id ~= exited_job then
+				return
+			end
+			windows.kiro_job_id = nil
 			vim.notify("Kiro terminal closed", vim.log.levels.INFO)
 			vim.defer_fn(function()
-				M.close_layout()
+				if M._windows == windows and windows.kiro_job_id == nil then
+					M.close_layout()
+				end
 			end, 100)
 		end,
 	})
 
-	if job_id == 0 then
+	if job_id <= 0 then
 		vim.notify("Failed to start kiro-cli", vim.log.levels.ERROR)
 		return false
 	end
@@ -207,6 +229,9 @@ end
 -- send prompt from buffer to kiro terminal
 -- @param prompt_buf: number - prompt buffer number
 function M._send_prompt_from_buffer(prompt_buf)
+	if M._windows.prompt_buf ~= prompt_buf or not vim.api.nvim_buf_is_valid(prompt_buf) then
+		return
+	end
 	local lines = vim.api.nvim_buf_get_lines(prompt_buf, 0, -1, false)
 	-- collect non-empty lines
 	local prompt_lines = {}
@@ -225,20 +250,34 @@ end
 -- send prompt to kiro terminal
 -- @param prompt: string - prompt text
 function M._send_to_kiro_terminal(prompt)
-	if not M._windows.kiro_job_id then
+	local windows = M._windows
+	local job_id = windows.kiro_job_id
+	local terminal_win, prompt_win = windows.terminal_win, windows.prompt_win
+	if not is_active(windows, job_id, terminal_win, prompt_win) then
 		vim.notify("Kiro terminal not started", vim.log.levels.ERROR)
 		return
 	end
+	local function active()
+		return is_active(windows, job_id, terminal_win, prompt_win) and vim.api.nvim_get_current_win() == terminal_win
+	end
 	-- send prompt to terminal
-	vim.fn.chansend(M._windows.kiro_job_id, prompt)
+	vim.fn.chansend(job_id, prompt)
 	-- switch to terminal and press enter to submit
-	vim.api.nvim_set_current_win(M._windows.terminal_win)
+	vim.api.nvim_set_current_win(terminal_win)
 	vim.defer_fn(function()
+		if not active() then
+			return
+		end
 		vim.cmd("startinsert")
 		vim.defer_fn(function()
+			if not active() then
+				return
+			end
 			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "i", false)
 			vim.defer_fn(function()
-				vim.api.nvim_set_current_win(M._windows.prompt_win)
+				if active() then
+					vim.api.nvim_set_current_win(prompt_win)
+				end
 			end, 50)
 		end, 50)
 	end, 50)
@@ -266,12 +305,21 @@ end
 
 -- completely close the layout and terminate kiro process
 function M.close_layout()
+	local windows = M._windows
+	local job_id = windows.kiro_job_id
+	windows.kiro_job_id = nil
+	M._is_open = false
 	-- terminate kiro process
-	if M._windows.kiro_job_id then
-		vim.fn.jobstop(M._windows.kiro_job_id)
+	if job_id then
+		vim.fn.jobstop(job_id)
 		vim.notify("Kiro process terminated", vim.log.levels.INFO)
 	end
 	M._close_windows()
+	for _, buf in ipairs({ windows.terminal_buf, windows.prompt_buf }) do
+		if vim.api.nvim_buf_is_valid(buf) then
+			vim.api.nvim_buf_delete(buf, { force = true })
+		end
+	end
 	-- reset all references
 	M._windows = {
 		main_win = nil,
@@ -313,9 +361,7 @@ end
 -- resume kiro session with --resume-picker (interactive session picker) flag
 function M.resume_session()
 	-- close existing layout
-	if M._is_open then
-		M.close_layout()
-	end
+	M.close_layout()
 	local layout = M._create_split_layout()
 	-- start with --resume-picker flag
 	if not M._start_kiro_terminal(layout.terminal_buf, layout.terminal_win, "--resume-picker") then
@@ -326,16 +372,28 @@ function M.resume_session()
 	M._setup_prompt_buffer(layout.prompt_buf, layout.prompt_win)
 	M._is_open = true
 	-- switch to terminal and enter insert mode
+	local windows, job_id = M._windows, M._windows.kiro_job_id
 	vim.defer_fn(function()
+		if not is_active(windows, job_id, layout.terminal_win, layout.prompt_win) then
+			return
+		end
 		vim.api.nvim_set_current_win(layout.terminal_win)
 		vim.cmd("startinsert")
 	end, 100)
+end
+
+-- toggle fullscreen: terminal covers the editor, prompt keeps its height
+function M.toggle_full()
+	config.toggle_full(M, M.toggle_layout)
 end
 
 -- setup commands
 function M.setup()
 	vim.api.nvim_create_user_command("Kiro", M.toggle_layout, {
 		desc = "Toggle Kiro terminal and prompt layout",
+	})
+	vim.api.nvim_create_user_command("KiroFull", M.toggle_full, {
+		desc = "Toggle Kiro fullscreen",
 	})
 end
 

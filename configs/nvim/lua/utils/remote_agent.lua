@@ -88,6 +88,7 @@ function M.new(options)
 	end
 
 	function client._close_windows()
+		layout.before_close(client._windows)
 		layout.remember(client._windows.terminal_win, client._windows.prompt_win)
 		if client._windows.prompt_win and vim.api.nvim_win_is_valid(client._windows.prompt_win) then
 			vim.api.nvim_win_close(client._windows.prompt_win, true)
@@ -269,7 +270,9 @@ function M.new(options)
 	end
 
 	function client.open()
-		local env = environment(options.env)
+		local env = environment(
+			client._full_renderer and vim.tbl_extend("force", options.env or {}, options.full_env or {}) or options.env
+		)
 		if options.before_open and not options.before_open(env) then
 			return
 		end
@@ -283,14 +286,22 @@ function M.new(options)
 		client._is_open = true
 	end
 
-	function client.toggle()
+	-- @param full: boolean|nil - a start from closed adds options.full_env
+	function client.toggle(full)
 		if client._is_open then
 			client.hide()
 		elseif client._windows.terminal_buf and client._windows.prompt_buf then
 			client.show()
 		else
+			client._full_renderer = full == true
 			client.open()
 		end
+	end
+
+	function client.toggle_full()
+		layout.toggle_full(client, function()
+			client.toggle(true)
+		end)
 	end
 
 	return client

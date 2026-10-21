@@ -34,6 +34,8 @@ local function drain()
 end
 local function clean()
 	vim.cmd("stopinsert")
+	vim.cmd("silent! tabnew")
+	vim.cmd("silent! tabonly!")
 	vim.cmd("silent! only!")
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 		if vim.api.nvim_buf_is_valid(buf) and buf ~= vim.api.nvim_get_current_buf() then
@@ -84,6 +86,10 @@ end
 local tuis = {
 	opencode = { user_command = "Opencode", resume = "opencode mini --continue" },
 	grok = { user_command = "Grok", resume = "grok --no-alt-screen /resume" },
+	antigravity = { user_command = "Antigravity", job = "antigravity_job_id", resume = "agy -i /resume" },
+	kiro = { user_command = "Kiro", job = "kiro_job_id", resume = "kiro-cli --resume-picker" },
+	claude_code = { user_command = "ClaudeCode", job = "claude_job_id" },
+	codex = { user_command = "Codex", job = "codex_job_id" },
 }
 local function adapter(kind)
 	if kind == "remote" or kind == "remote_argv" then
@@ -92,6 +98,7 @@ local function adapter(kind)
 			command = kind == "remote_argv" and { "sh" } or "sh",
 			label = "Test",
 			env = kind == "remote_argv" and { AGENT_TEST_MODE = "1", ANTHROPIC_API_KEY = false } or nil,
+			full_env = { AGENT_FULL_RENDERER = "1" },
 		})
 		return {
 			object = client,
@@ -99,12 +106,14 @@ local function adapter(kind)
 			close = client.close,
 			hide = client.hide,
 			show = client.show,
+			full = client.toggle_full,
 			job = function()
 				return client._windows.job_id
 			end,
 		}
 	end
 	local tui = tuis[kind]
+	local job_key = tui.job or kind .. "_job_id"
 	package.loaded["config." .. kind] = nil
 	pcall(vim.api.nvim_del_user_command, tui.user_command)
 	local client = require("config." .. kind)
@@ -115,8 +124,9 @@ local function adapter(kind)
 		hide = client.hide_layout,
 		show = client.show_layout,
 		resume = client.resume_session,
+		full = client.toggle_full,
 		job = function()
-			return client._windows[kind .. "_job_id"]
+			return client._windows[job_key]
 		end,
 	}
 end
@@ -139,7 +149,7 @@ local cases = {}
 local function case(name, callback)
 	cases[#cases + 1] = { name = name, callback = callback }
 end
-for _, kind in ipairs({ "remote", "remote_argv", "opencode", "grok" }) do
+for _, kind in ipairs({ "remote", "remote_argv", "antigravity", "kiro", "opencode", "grok" }) do
 	case(kind .. " stale exit cannot close a reopened job", function()
 		local c = adapter(kind)
 		c.open()
@@ -289,7 +299,7 @@ case("remote argv thrown spawn failure cleans resources", function()
 	equal(#vim.api.nvim_list_wins(), 1, "failed layout windows removed")
 	equal(#vim.api.nvim_list_bufs(), before, "failed layout buffers removed")
 end)
-for _, kind in ipairs({ "opencode", "grok" }) do
+for _, kind in ipairs({ "antigravity", "kiro", "opencode", "grok" }) do
 	case(kind .. " resume stops the hidden old job", function()
 		local c = adapter(kind)
 		c.open()
@@ -332,6 +342,211 @@ for _, kind in ipairs({ "opencode", "grok" }) do
 			equal(vim.api.nvim_get_current_win(), focus, "resume does not refocus an old window")
 		end)
 	end
+end
+-- fullscreen: every CLI wrapper and the Happier client share the same behavior
+local layout = require("utils.agent_layout")
+-- the command and the env key of each kind's split and fullscreen renderers
+local classic, no_flicker = "CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN", "CLAUDE_CODE_NO_FLICKER"
+local renderers = {
+	remote = { split = "sh", full = "sh", full_env = "AGENT_FULL_RENDERER" },
+	remote_argv = { split = '{ "sh" }', full = '{ "sh" }', full_env = "AGENT_FULL_RENDERER" },
+	claude_code = { split = "claude", full = "claude", split_env = classic, full_env = no_flicker },
+	codex = { split = "codex --no-alt-screen", full = "codex" },
+	antigravity = { split = "agy", full = "agy" },
+	kiro = { split = "kiro-cli", full = "kiro-cli" },
+	opencode = { split = "opencode mini", full = "opencode" },
+	grok = { split = "grok --no-alt-screen", full = "grok" },
+}
+local function launched(c)
+	local job = jobs[c.job()]
+	return type(job.command) == "table" and vim.inspect(job.command) or job.command, job.opts.env or {}
+end
+-- in its own tab page that holds exactly the terminal and the prompt
+local function full_windows(c)
+	local windows = c.object._windows
+	if not (layout.is_full(windows.terminal_win) and layout.is_full(windows.prompt_win)) then
+		return false
+	end
+	local wins = vim.api.nvim_tabpage_list_wins(vim.api.nvim_win_get_tabpage(windows.terminal_win))
+	return #wins == 2 and vim.tbl_contains(wins, windows.terminal_win) and vim.tbl_contains(wins, windows.prompt_win)
+end
+for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "codex", "antigravity", "kiro", "opencode", "grok" }) do
+	case(kind .. " fullscreen covers the editor and keeps the prompt", function()
+		local c = adapter(kind)
+		c.open()
+		local windows = c.object._windows
+		local prompt_height = vim.api.nvim_win_get_height(windows.prompt_win)
+		local prompt_buf = windows.prompt_buf
+		c.full()
+		equal(full_windows(c), true, "a tab with only the terminal and the prompt")
+		equal(#vim.api.nvim_tabpage_list_wins(0), 2, "no covered window in the current tab")
+		equal(vim.api.nvim_win_get_width(windows.terminal_win), vim.o.columns, "terminal spans the editor width")
+		equal(vim.api.nvim_win_get_height(windows.prompt_win), layout.full_prompt_height, "prompt is thin")
+		equal(
+			vim.api.nvim_win_get_position(windows.terminal_win)[1]
+				< vim.api.nvim_win_get_position(windows.prompt_win)[1],
+			true,
+			"terminal above the prompt"
+		)
+		equal(vim.api.nvim_get_current_win(), windows.prompt_win, "fullscreen prompt has focus")
+		c.full()
+		equal(#vim.api.nvim_list_tabpages(), 1, "leaving closes the fullscreen tab")
+		equal(vim.api.nvim_win_get_height(windows.prompt_win), prompt_height, "split prompt height comes back")
+		equal(vim.api.nvim_get_current_win(), windows.prompt_win, "prompt has focus for input")
+		equal(vim.api.nvim_win_get_buf(windows.prompt_win), prompt_buf, "prompt buffer is kept")
+		equal(c.job() ~= nil, true, "process keeps running")
+	end)
+	case(kind .. " fullscreen round trip restores the split and the process", function()
+		local c = adapter(kind)
+		c.open()
+		local old = c.job()
+		local terminal_width = vim.api.nvim_win_get_width(c.object._windows.terminal_win)
+		c.full()
+		c.full()
+		equal(full_windows(c), false, "back to the split layout")
+		equal(c.object._is_open, true, "layout stays open")
+		equal(c.job(), old, "same process")
+		equal(stopped[old], nil, "process not stopped")
+		equal(vim.api.nvim_win_get_width(c.object._windows.terminal_win), terminal_width, "split width kept")
+	end)
+	case(kind .. " fullscreen hide then show returns to the split", function()
+		local c = adapter(kind)
+		c.open()
+		c.full()
+		c.hide()
+		equal(c.object._is_open, false, "hidden from fullscreen")
+		c.show()
+		equal(full_windows(c), false, "show restores the split, not fullscreen")
+	end)
+	case(kind .. " fullscreen close terminates the process", function()
+		local c = adapter(kind)
+		c.open()
+		local old = c.job()
+		c.full()
+		c.close()
+		equal(stopped[old], true, "process stopped from fullscreen")
+		equal(#vim.api.nvim_list_wins(), 1, "floats removed")
+	end)
+	case(kind .. " split start launches the split renderer", function()
+		local c = adapter(kind)
+		c.open()
+		local command, env = launched(c)
+		local renderer = renderers[kind]
+		equal(command, renderer.split, "split command")
+		if renderer.split_env then
+			equal(env[renderer.split_env], "1", "split env")
+		end
+		if renderer.full_env then
+			equal(env[renderer.full_env], nil, "no fullscreen env")
+		end
+		c.full()
+		equal(c.job() ~= nil and launched(c), renderer.split, "toggling keeps the running renderer")
+	end)
+	case(kind .. " full start launches the fullscreen renderer, kept by toggles and resume", function()
+		local c = adapter(kind)
+		c.full()
+		local command, env = launched(c)
+		local renderer = renderers[kind]
+		equal(command, renderer.full, "fullscreen command")
+		if renderer.full_env then
+			equal(env[renderer.full_env], "1", "fullscreen env")
+		end
+		if renderer.split_env then
+			equal(env[renderer.split_env], nil, "no split env")
+		end
+		local job = c.job()
+		c.full()
+		c.full()
+		equal(c.job(), job, "toggles keep the process")
+		if c.resume then
+			c.resume()
+			local resumed, resumed_env = launched(c)
+			equal(vim.startswith(resumed, renderer.full), true, "resume keeps the fullscreen command")
+			if renderer.split ~= renderer.full then
+				equal(vim.startswith(resumed, renderer.split), false, "resume is not the split command")
+			end
+			if renderer.full_env then
+				equal(resumed_env[renderer.full_env], "1", "resume keeps the fullscreen env")
+			end
+		end
+	end)
+	case(kind .. " fullscreen from closed starts the tool fullscreen", function()
+		local c = adapter(kind)
+		c.full()
+		local windows = c.object._windows
+		equal(c.object._is_open, true, "layout opened")
+		equal(c.job() ~= nil, true, "process started")
+		equal(full_windows(c), true, "opened fullscreen")
+		equal(vim.api.nvim_win_get_width(windows.terminal_win), vim.o.columns, "terminal spans the editor width")
+		equal(
+			vim.api.nvim_win_get_position(windows.prompt_win)[1]
+				> vim.api.nvim_win_get_position(windows.terminal_win)[1],
+			true,
+			"prompt sits below the terminal"
+		)
+		equal(#vim.api.nvim_tabpage_list_wins(0), 2, "only the terminal and the prompt in the tab")
+		equal(vim.api.nvim_get_current_win(), windows.prompt_win, "prompt has focus for input")
+		c.full()
+		equal(full_windows(c), false, "second toggle returns to the split")
+	end)
+	case(kind .. " fullscreen from hidden reuses the process", function()
+		local c = adapter(kind)
+		c.open()
+		local old = c.job()
+		local terminal_buf = c.object._windows.terminal_buf
+		c.hide()
+		c.full()
+		equal(c.object._is_open, true, "shown again")
+		equal(full_windows(c), true, "shown fullscreen")
+		equal(c.job(), old, "same process")
+		equal(c.object._windows.terminal_buf, terminal_buf, "same terminal buffer")
+		equal(stopped[old], nil, "process not stopped")
+	end)
+	case(kind .. " fullscreen prompt stays thin when windows are equalized", function()
+		local c = adapter(kind)
+		c.open()
+		c.full()
+		local windows = c.object._windows
+		-- nvim lays out the tab's splits on resize itself; winfixheight keeps the prompt
+		vim.cmd("wincmd =")
+		equal(vim.api.nvim_win_get_height(windows.prompt_win), layout.full_prompt_height, "prompt stays thin")
+		equal(vim.api.nvim_win_get_width(windows.terminal_win), vim.o.columns, "terminal keeps the full width")
+	end)
+	case(kind .. " fullscreen from another tab returns to its own tab", function()
+		local c = adapter(kind)
+		c.full()
+		local tab = vim.api.nvim_get_current_tabpage()
+		vim.cmd("tabnew")
+		local tabs = #vim.api.nvim_list_tabpages()
+		c.full()
+		equal(vim.api.nvim_get_current_tabpage(), tab, "back in the fullscreen tab")
+		equal(#vim.api.nvim_list_tabpages(), tabs, "no second fullscreen tab")
+		equal(full_windows(c), true, "still fullscreen")
+	end)
+	case(kind .. " hide, close and natural exit leave no fullscreen tab", function()
+		local c = adapter(kind)
+		c.full()
+		c.hide()
+		equal(#vim.api.nvim_list_tabpages(), 1, "hide closes the fullscreen tab")
+		c.full()
+		local job = c.job()
+		c.close()
+		equal(#vim.api.nvim_list_tabpages(), 1, "close closes the fullscreen tab")
+		equal(stopped[job], true, "close stops the process")
+		c.full()
+		jobs[c.job()].opts.on_exit(c.job(), 0, "exit")
+		drain()
+		equal(#vim.api.nvim_list_tabpages(), 1, "natural exit closes the fullscreen tab")
+		equal(#vim.api.nvim_list_wins(), 1, "no window left behind")
+	end)
+	case(kind .. " fullscreen tab left as the last tab still hides", function()
+		local c = adapter(kind)
+		c.full()
+		vim.cmd("tabonly")
+		c.hide()
+		equal(c.object._is_open, false, "hidden")
+		equal(#vim.api.nvim_tabpage_list_wins(0), 1, "an empty tab remains")
+	end)
 end
 local failures = 0
 for _, test in ipairs(cases) do
