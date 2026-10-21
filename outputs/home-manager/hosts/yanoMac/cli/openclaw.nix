@@ -614,6 +614,10 @@ in
         pkgs.grok-build
         # yomiyasu's linter
         pkgs.python3
+        # go-limits: opencode go usage before heavy work (the turns do not see ~/.local/bin)
+        (pkgs.writeShellScriptBin "go-limits" ''
+          exec ${pkgs.python3}/bin/python3 "$HOME/.agents/go-limits/go_limits.py" "$@"
+        '')
       ];
       config = {
         agents = {
