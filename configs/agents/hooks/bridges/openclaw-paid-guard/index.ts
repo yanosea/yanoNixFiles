@@ -35,6 +35,9 @@ export function decide(event: Event) {
     const role = Object.keys(PAID).sort((a, b) => b.length - a.length).find((key) => agent.endsWith(`-${key}`))
     if (!role) return undefined
     return {
+      // A child inherits the caller's thinking, and haiku runs with none; opus
+      // 5.5 and fable 5.1 reject disabled thinking, so a paid child thinks high.
+      params: { ...params, thinking: params.thinking || "high" },
       requireApproval: {
         title: clip(`Paid agent: ${agent}`, 80),
         description: clip([

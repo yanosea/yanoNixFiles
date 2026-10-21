@@ -15,6 +15,10 @@ describe("OpenClaw paid guard", () => {
       expect(result.requireApproval.allowedDecisions).toEqual(["allow-once", "deny"])
       expect(result.requireApproval.severity).toBe("critical")
     }
+    const thinking: any = decide({ toolName: "sessions_spawn", params: { agentId: "dev-paid-opus", task: "t" } })
+    expect(thinking.params).toEqual({ agentId: "dev-paid-opus", task: "t", thinking: "high" })
+    const kept: any = decide({ toolName: "sessions_spawn", params: { agentId: "dev-paid-opus", thinking: "max" } })
+    expect(kept.params.thinking).toBe("max")
     const heavy: any = decide({ toolName: "sessions_spawn", params: { agentId: "main-paid-opus-heavy" } })
     expect(heavy.requireApproval.description).toContain("heavy implementation")
     expect(heavy.requireApproval.description).toContain("Reason: not given")
