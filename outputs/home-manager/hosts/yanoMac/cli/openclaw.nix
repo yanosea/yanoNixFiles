@@ -625,6 +625,9 @@ in
       environment = {
         OPENCODE_API_KEY = secretPath "OPENCODE_API_KEY";
         OPENCODE_PREMIUM_API_KEY = secretPath "OPENCODE_PREMIUM_API_KEY";
+        # temporary: logs/anthropic-payload.jsonl while the premium route is
+        # checked; remove before this branch merges
+        OPENCLAW_ANTHROPIC_PAYLOAD_LOG = "1";
         OPENCLAW_DISCORD_BOT_TOKEN = secretPath "OPENCLAW_DISCORD_BOT_TOKEN";
         OPENCLAW_DISCORD_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_CHANNEL_ID";
         OPENCLAW_DISCORD_DEV_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_DEV_CHANNEL_ID";
@@ -855,6 +858,13 @@ in
                   # the model's 128k
                   contextWindow = 1000000;
                   maxTokens = 128000;
+                  # strict tools need additionalProperties = false on every
+                  # object, which not all of openclaw's schemas carry, and the
+                  # console rejects the request then; the bundled go rows turn
+                  # it off too
+                  compat = {
+                    supportsStrictMode = false;
+                  };
                   cost = {
                     input = 4;
                     output = 20;
@@ -870,6 +880,9 @@ in
                   ];
                   contextWindow = 1000000;
                   maxTokens = 128000;
+                  compat = {
+                    supportsStrictMode = false;
+                  };
                   cost = {
                     input = 10;
                     output = 50;
