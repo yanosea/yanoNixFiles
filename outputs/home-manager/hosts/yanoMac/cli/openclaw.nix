@@ -851,6 +851,14 @@ in
                     "text"
                     "image"
                   ];
+                  # the console rejects a request without max_tokens or above
+                  # the model's 128k
+                  contextWindow = 1000000;
+                  maxTokens = 128000;
+                  cost = {
+                    input = 4;
+                    output = 20;
+                  };
                 }
                 {
                   id = "claude-fable-5-1";
@@ -860,6 +868,12 @@ in
                     "text"
                     "image"
                   ];
+                  contextWindow = 1000000;
+                  maxTokens = 128000;
+                  cost = {
+                    input = 10;
+                    output = 50;
+                  };
                 }
               ];
             };
