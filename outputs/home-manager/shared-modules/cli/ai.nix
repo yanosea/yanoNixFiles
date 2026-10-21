@@ -10,7 +10,6 @@
       claude-code
       claude-history
       claude-powerline
-      codex
       deja-vu
       grok-build
       graphify

@@ -95,7 +95,7 @@
       url = "github:vshulcz/deja-vu/v0.22.1";
       flake = false;
     };
-    ## llm-agents (claude-code, codex, grok)
+    ## llm-agents (claude-code, grok)
     ## no nixpkgs follows: it would miss the numtide binary cache
     llm-agents = {
       url = "github:numtide/llm-agents.nix";

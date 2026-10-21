@@ -27,13 +27,6 @@ class AdapterContracts(unittest.TestCase):
                 "tool_name": "Bash",
                 "tool_input": {"command": "git status"},
             },
-            "codex": {
-                "session_id": "s",
-                "cwd": "/tmp/project",
-                "turn_id": "t",
-                "tool_name": "exec_command",
-                "tool_input": {"cmd": "git status"},
-            },
             "grok": {
                 "sessionId": "s",
                 "cwd": "/tmp/project",
@@ -99,16 +92,6 @@ class AdapterContracts(unittest.TestCase):
         self.assertEqual(event["paths"], ["doc.md"])
         self.assertEqual(event["tool_name"], "Write")
 
-    def test_codex_raw_patch_is_not_misparsed_as_json(self):
-        patch = "*** Begin Patch\n*** Add File: doc.md\n+content\n*** End Patch"
-        event = self.a.normalize(
-            "codex",
-            "PreToolUse",
-            {"cwd": "/tmp/p", "tool_name": "apply_patch", "tool_input": patch},
-        )
-        self.assertEqual(event["patch"], patch)
-        self.assertEqual(event["paths"], ["doc.md"])
-
     def test_patch_move_and_nested_edit_paths_preserved(self):
         patch = "*** Update File: a.md\n*** Move to: b.md\n"
         event = self.a.normalize(
@@ -121,23 +104,6 @@ class AdapterContracts(unittest.TestCase):
         )
         self.assertCountEqual(event["paths"], ["a.md", "b.md", "c.md"])
 
-    def test_argv_command_and_execution_directory_preserved(self):
-        event = self.a.normalize(
-            "codex",
-            "PreToolUse",
-            {
-                "cwd": "/tmp/project",
-                "tool_name": "shell",
-                "tool_input": {
-                    "command": ["git", "commit", "-m", "two words"],
-                    "workdir": "/tmp/other",
-                },
-            },
-        )
-        self.assertEqual(event["workspace"], "/tmp/project")
-        self.assertEqual(event["cwd"], "/tmp/other")
-        self.assertEqual(event["command"], "git commit -m 'two words'")
-
     def test_unknown_session_and_turn_stay_unknown(self):
         event = self.a.normalize("claude", "Stop", {"cwd": "/tmp/p"})
         self.assertIsNone(event["session_id"])
@@ -145,12 +111,14 @@ class AdapterContracts(unittest.TestCase):
 
     def test_relative_tool_directory_resolves_from_session_workspace(self):
         event = self.a.normalize(
-            "codex",
+            "antigravity",
             "PreToolUse",
             {
-                "cwd": "/tmp/project",
-                "tool_name": "exec_command",
-                "tool_input": {"cmd": "git status", "workdir": "child"},
+                "workspacePaths": ["/tmp/project"],
+                "toolCall": {
+                    "name": "run_command",
+                    "args": {"CommandLine": "git status", "Cwd": "child"},
+                },
             },
         )
         self.assertEqual(event["workspace"], "/tmp/project")
@@ -283,7 +251,6 @@ class AdapterContracts(unittest.TestCase):
     def test_native_stop_reentry_is_preserved(self):
         for harness, flag in (
             ("claude", "stop_hook_active"),
-            ("codex", "stop_hook_active"),
             ("grok", "stopHookActive"),
             ("copilot", "stop_hook_active"),
         ):
@@ -294,7 +261,7 @@ class AdapterContracts(unittest.TestCase):
 
     def test_pre_denials_use_native_protocols(self):
         result = {"action": "deny", "message": "denied"}
-        for harness in ("claude", "codex", "grok"):
+        for harness in ("claude", "grok"):
             output, code = self.a.emit(harness, "PreToolUse", result)
             self.assertEqual(output["hookSpecificOutput"]["permissionDecision"], "deny")
             self.assertEqual(code, 0)
@@ -313,7 +280,7 @@ class AdapterContracts(unittest.TestCase):
 
     def test_native_context_is_delivered_only_where_consumed(self):
         result = {"action": "allow", "message": "research"}
-        for harness in ("claude", "codex", "grok"):
+        for harness in ("claude", "grok"):
             output, code = self.a.emit(harness, "PreToolUse", result)
             self.assertEqual(code, 0)
             self.assertEqual(
@@ -332,7 +299,7 @@ class AdapterContracts(unittest.TestCase):
         self.assertEqual(self.a.emit("grok", "SessionStart", result), ({}, 0))
 
     def test_native_stop_continue_only_on_supported_harness(self):
-        for harness in ("claude", "codex", "grok", "copilot"):
+        for harness in ("claude", "grok", "copilot"):
             with self.subTest(harness=harness):
                 self.assertEqual(
                     self.a.emit(
@@ -430,9 +397,6 @@ class AdapterContracts(unittest.TestCase):
         self.assertTrue(
             self.a.normalize("openclaw", "agent_end", {})["observation_only"]
         )
-        interrupted = self.a.normalize("codex", "Interrupt", {})
-        self.assertEqual(interrupted["kind"], "end")
-        self.assertEqual(interrupted["stop_reason"], "abort")
 
     def test_bridge_private_results_keep_durable_request(self):
         value = {

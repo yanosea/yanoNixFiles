@@ -18,7 +18,6 @@ let
     && name != "antigravity"
     && name != "copilot"
     && name != "kiro"
-    && name != "codex"
     && name != "grok"
     && name != "zsh"
   ) contents;
@@ -288,20 +287,6 @@ let
     "claude/skills/claude-history".source =
       "${pkgs.claude-history}/share/claude-history/skills/claude-history";
   };
-  # codex config files (config.toml is deployed by an activation copy instead,
-  # since codex writes hook-trust and project-trust state back into it)
-  codexConfigEntries = {
-    "codex/AGENTS.md".source = ./agents/global-rules.md;
-    "codex/plugins.conf".text = withSharedPlugins ./codex/plugins.conf 65 codexSharedPlugins;
-    "codex/hooks" = {
-      source = ./codex/hooks;
-      recursive = true;
-    };
-    "codex/themes" = {
-      source = ./codex/themes;
-      recursive = true;
-    };
-  };
   # grok config files (config.toml is deployed by an activation copy instead)
   # grok reads AGENTS.md from GROK_HOME (INSTRUCTION_FILENAMES)
   grokConfigEntries = {
@@ -361,36 +346,8 @@ let
       };
     }
     # packages with no opencode plugin to pin: the skill alone, kept out of
-    # ~/.agents/skills since codex installs the same packages as plugins
+    # ~/.agents/skills since copilot and grok install the same packages as plugins
     // sharedSkillLinks "opencode" "opencode/skills";
-  # the shared plugins codex installs, `<plugin>@<marketplace>`
-  codexSharedPlugins = map (
-    package:
-    let
-      id = agentPackages.valueFor "codex" package;
-    in
-    if id == null then agentPackages.claudeId package else id
-  ) (agentPackages.for "codex");
-  # config.toml with a marketplace table for each of them, but the built-in one
-  codexConfig = pkgs.writeText "codex-config.toml" (
-    builtins.readFile ./codex/config.toml
-    + lib.concatStrings (
-      lib.unique (
-        lib.zipListsWith (
-          id: package:
-          let
-            marketplace = lib.last (lib.splitString "@" id);
-          in
-          lib.optionalString (marketplace != "openai-curated-remote") ''
-
-            [marketplaces.${marketplace}]
-            source_type = "git"
-            source = "https://github.com/${package.repository}.git"
-          ''
-        ) codexSharedPlugins (agentPackages.for "codex")
-      )
-    )
-  );
   # the shared plugins copilot installs, with their marketplaces, as the
   # settings.json keys for declarative install
   copilotSettings = pkgs.writeText "copilot-settings.json" (
@@ -433,7 +390,7 @@ let
   # kiro installs no plugins, so it gets the skill folders and steering files
   # of the shared packages
   kiroSkillEntries = sharedSkillLinks "kiro" ".kiro/skills";
-  # Codex discovers directory symlinks, but skips symlinked SKILL.md files.
+  # each skill is one directory symlink, not a tree of per-file links
   sharedSkillEntries =
     lib.mapAttrs'
       (name: _: {
@@ -518,11 +475,6 @@ in
             }
         fi
       '';
-      # copied rather than symlinked: codex appends [hooks.state] and
-      # [projects.*] to config.toml and cannot write to a store path
-      copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-        copyWritableConfig "codex" codexConfig
-      );
       # copied rather than symlinked: grok writes back to config.toml
       # merged rather than replaced: agy keeps trustedWorkspaces in the same file
       mergeAntigravitySettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
@@ -559,7 +511,7 @@ in
       );
     };
     file = {
-      # codex skills live outside XDG, in the cross-tool ~/.agents/skills
+      # the cross-tool ~/.agents/skills lives outside XDG
       ".agents" = {
         source = lib.fileset.toSource {
           root = ./agents;
@@ -576,7 +528,7 @@ in
         };
         recursive = true;
       };
-      # yomiyasu comes from its flake input; codex and opencode read it here
+      # yomiyasu comes from its flake input; opencode, grok and copilot read it here
       ".agents/skills/yomiyasu".source = "${inputs.yomiyasu}/skills/yomiyasu";
       # antigravity ignores XDG (settings.json and mcp_config.json are agy-managed)
       ".gemini/config/AGENTS.md".source = ./agents/global-rules.md;
@@ -635,7 +587,6 @@ in
       // claudeConfigEntries
       // bareSkillEntries "claude" "claude/skills"
       // claudeHistorySkill
-      // codexConfigEntries
       // grokConfigEntries
       // opencodeConfigEntries
       // hyprConfigEntries

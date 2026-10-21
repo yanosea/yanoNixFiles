@@ -89,7 +89,6 @@ local tuis = {
 	antigravity = { user_command = "Antigravity", job = "antigravity_job_id", resume = "agy -i /resume" },
 	kiro = { user_command = "Kiro", job = "kiro_job_id", resume = "kiro-cli --resume-picker" },
 	claude_code = { user_command = "ClaudeCode", job = "claude_job_id" },
-	codex = { user_command = "Codex", job = "codex_job_id" },
 }
 local function adapter(kind)
 	if kind == "remote" or kind == "remote_argv" then
@@ -351,7 +350,6 @@ local renderers = {
 	remote = { split = "sh", full = "sh", full_env = "AGENT_FULL_RENDERER" },
 	remote_argv = { split = '{ "sh" }', full = '{ "sh" }', full_env = "AGENT_FULL_RENDERER" },
 	claude_code = { split = "claude", full = "claude", split_env = classic, full_env = no_flicker },
-	codex = { split = "codex --no-alt-screen", full = "codex" },
 	antigravity = { split = "agy", full = "agy" },
 	kiro = { split = "kiro-cli", full = "kiro-cli" },
 	opencode = { split = "opencode mini", full = "opencode" },
@@ -370,7 +368,7 @@ local function full_windows(c)
 	local wins = vim.api.nvim_tabpage_list_wins(vim.api.nvim_win_get_tabpage(windows.terminal_win))
 	return #wins == 2 and vim.tbl_contains(wins, windows.terminal_win) and vim.tbl_contains(wins, windows.prompt_win)
 end
-for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "codex", "antigravity", "kiro", "opencode", "grok" }) do
+for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "antigravity", "kiro", "opencode", "grok" }) do
 	case(kind .. " fullscreen covers the editor and keeps the prompt", function()
 		local c = adapter(kind)
 		c.open()

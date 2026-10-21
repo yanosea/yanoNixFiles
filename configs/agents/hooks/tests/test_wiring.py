@@ -138,7 +138,7 @@ class WiringTests(unittest.TestCase):
         }
         desired = {
             "model": "declared",
-            "hooks": {"PreToolUse": [hook("PreToolUse", "codex")]},
+            "hooks": {"PreToolUse": [hook("PreToolUse", "grok")]},
         }
         result = wiring.merge_toml(current, desired)
         self.assertEqual(result["hooks"]["state"], current["hooks"]["state"])
@@ -163,32 +163,8 @@ class WiringTests(unittest.TestCase):
         self.assertIn("[hooks.state]", result)
         self.assertEqual(wiring.merge_toml_text(result, desired), result)
 
-    def test_old_deployed_codex_save_does_not_overwrite_unapplied_migration(self):
-        with tempfile.TemporaryDirectory() as directory:
-            directory = Path(directory)
-            live = directory / "old-live.toml"
-            destination = directory / "new-source.toml"
-            live.write_text('# codex cli configuration\nmodel = "old"\n')
-            expected = (ROOT / "codex/config.toml").read_text()
-            destination.write_text(expected)
-            script = (
-                (ROOT / "codex/hooks/save-config.sh")
-                .read_text()
-                .split("<<'PYEOF'\n", 1)[1]
-                .split("\nPYEOF", 1)[0]
-            )
-            run = subprocess.run(
-                [sys.executable, "-", str(live), str(destination)],
-                check=False,
-                input=script,
-                text=True,
-                capture_output=True,
-            )
-            self.assertEqual(run.returncode, 0, run.stderr)
-            self.assertEqual(destination.read_text(), expected)
-
     def test_existing_save_scripts_keep_public_comments_and_hide_private_state(self):
-        for harness in ("codex", "grok"):
+        for harness in ("grok",):
             with (
                 self.subTest(harness=harness),
                 tempfile.TemporaryDirectory() as directory,
@@ -196,11 +172,7 @@ class WiringTests(unittest.TestCase):
                 directory = Path(directory)
                 base = (ROOT / harness / "config.toml").read_text()
                 local_text = 'private_api_token = "SECRET-DO-NOT-EXPORT"\n'
-                machine = (
-                    '\n[hooks.state]\ntrusted_hooks = ["MACHINE-TRUST"]\n[projects."/private"]\ntrust_level = "untrusted"\n'
-                    if harness == "codex"
-                    else '\n[plugins]\nprivate = "MACHINE-TRUST"\n[privacy]\nprivate = true\n'
-                )
+                machine = '\n[plugins]\nprivate = "MACHINE-TRUST"\n[privacy]\nprivate = true\n'
                 live = directory / "live.toml"
                 destination = directory / "repo.toml"
                 local = directory / "config.local.toml"
@@ -231,7 +203,7 @@ class WiringTests(unittest.TestCase):
                 self.assertEqual(saved, base)
 
     def test_all_toml_templates_parse_and_merge_idempotently(self):
-        for harness in ("codex", "grok"):
+        for harness in ("grok",):
             with self.subTest(harness=harness):
                 desired = tomllib.loads((ROOT / harness / "config.toml").read_text())
                 result = wiring.merge_toml({}, desired)

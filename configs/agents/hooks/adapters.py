@@ -15,7 +15,6 @@ from pathlib import Path
 
 HARNESSES = (
     "claude",
-    "codex",
     "grok",
     "opencode",
     "antigravity",
@@ -26,7 +25,7 @@ HARNESSES = (
     "copilot",
     "openclaw",
 )
-STOP_CONTROL = frozenset(("claude", "codex", "grok", "copilot"))
+STOP_CONTROL = frozenset(("claude", "grok", "copilot"))
 EVENTS = {
     "pretooluse": "pre",
     "beforetoolcall": "pre",
@@ -73,7 +72,7 @@ def command_harness(argv):
     program = Path(argv[0]).name.removeprefix(".").removesuffix("-wrapped")
     if program in {"copilot", "copilot-runtime"}:
         return "copilot"
-    if program in {"claude", "grok", "codex"}:
+    if program in {"claude", "grok"}:
         return program
     if program in {"node", "bun"} and len(argv) > 1:
         script = Path(argv[1])

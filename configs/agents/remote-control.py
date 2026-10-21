@@ -140,7 +140,6 @@ def main():
     defaults = {
         "HAPPIER_HOME_DIR": data / "happier",
         "CLAUDE_CONFIG_DIR": config / "claude",
-        "CODEX_HOME": config / "codex",
     }
     for name, value in defaults.items():
         os.environ.setdefault(name, str(value))

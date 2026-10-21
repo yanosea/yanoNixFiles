@@ -37,33 +37,6 @@
       }
     ]
   },
-  "codex": {
-    "SessionStart": [
-      {
-        "type": "command",
-        "command": "bash ~/.config/codex/hooks/check-new-plugins.sh",
-        "timeout": 10
-      },
-      {
-        "type": "command",
-        "command": "bash ~/.config/codex/hooks/sync-plugins.sh",
-        "async": true,
-        "timeout": 300
-      },
-      {
-        "type": "command",
-        "command": "bash ~/.config/codex/hooks/check-model-drift.sh",
-        "timeout": 10
-      }
-    ],
-    "SessionEnd": [
-      {
-        "type": "command",
-        "command": "bash ~/.config/codex/hooks/save-config.sh",
-        "timeout": 3
-      }
-    ]
-  },
   "grok": {
     "SessionStart": [
       {

@@ -192,7 +192,6 @@ inputs: [
       inherit (llm-agents) chatgpt;
       inherit (llm-agents) claude-code;
       inherit (llm-agents) claude-desktop;
-      inherit (llm-agents) codex;
       grok-build = llm-agents.grok;
       # opencode 2; llm-agents names the binary opencode2 so it can sit beside
       # v1, and nothing here keeps v1. the shell exports api keys for other

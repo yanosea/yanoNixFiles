@@ -27,15 +27,6 @@ return {
 					},
 					{ "<LEADER>act", "<CMD>ClaudeCode<CR>", desc = "ai claude: toggle" },
 					{ "<LEADER>acf", "<CMD>ClaudeCodeFull<CR>", desc = "ai claude: fullscreen" },
-					-- ai: codex
-					{ "<LEADER>ad", group = "codex" },
-					{
-						"<LEADER>adr",
-						"<CMD>lua require('config.codex').resume_session()<CR>",
-						desc = "ai codex: resume",
-					},
-					{ "<LEADER>adt", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
-					{ "<LEADER>adf", "<CMD>CodexFull<CR>", desc = "ai codex: fullscreen" },
 					-- ai: Happier
 					{ "<LEADER>ah", group = "happier" },
 					{ "<LEADER>aht", "<CMD>Happier<CR>", desc = "ai Happier: toggle" },
