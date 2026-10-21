@@ -9,6 +9,8 @@ export OPENAI_API_KEY=$(cat $XDG_DATA_HOME/sops/OPENAI_API_KEY 2>/dev/null || ec
 # openclaw gateway (the cli needs the same token the gateway is started with,
 # and sops-nix decrypts onto a ram disk, so fall back to the gateway's own copy)
 export OPENCLAW_GATEWAY_TOKEN=$(cat $XDG_DATA_HOME/sops/OPENCLAW_GATEWAY_TOKEN 2>/dev/null || cat $XDG_STATE_HOME/openclaw/secrets/OPENCLAW_GATEWAY_TOKEN 2>/dev/null || echo "")
+# opencode console personal key (calls models as me, so go's allowance applies)
+export OPENCODE_API_KEY=$(cat $XDG_DATA_HOME/sops/OPENCODE_API_KEY 2>/dev/null || echo "")
 # opencode console pay-as-you-go (service account behind the premium agents)
 export OPENCODE_PREMIUM_API_KEY=$(cat $XDG_DATA_HOME/sops/OPENCODE_PREMIUM_API_KEY 2>/dev/null || echo "")
 # spotify api

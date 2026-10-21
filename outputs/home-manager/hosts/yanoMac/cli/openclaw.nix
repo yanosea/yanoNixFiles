@@ -1,7 +1,6 @@
 # home openclaw module
 {
   agentPackages,
-  aiModels,
   config,
   hostname,
   inputs,
@@ -84,7 +83,88 @@ let
         "${workspace}/skills/feeds/config.json"
       ]
     );
+  # main and dev each name theirs, so one can move without the other
+  goModel = "opencode-go/claude-haiku-5-5";
+  # the opencode roles (configs/opencode/agents), as agents main and dev spawn
+  # across agents: a child of the same agent keeps the parent's tools, so
+  # only a separate agent can be read-only. each reads the AGENTS.md in its
+  # workspace, which the openclaw repository keeps under helpers/
+  readOnly = [
+    "write"
+    "edit"
+    "apply_patch"
+    "exec"
+    "process"
+    "code_execution"
+  ];
+  helperRoles = {
+    explore = {
+      name = "read-only research";
+      model = goModel;
+      deny = readOnly;
+    };
+    worker = {
+      name = "isolated implementation";
+      model = goModel;
+      deny = [ ];
+    };
+    smart = {
+      name = "hard design and debugging";
+      model = "opencode-go/kimi-k3";
+      deny = [ ];
+    };
+    # another family than the manager, so it does not favour its own output
+    reviewer = {
+      name = "independent read-only review";
+      model = "opencode-go/qwen3.8-max";
+      deny = readOnly;
+    };
+    # pay-as-you-go on the service account, behind a fresh discord approval
+    # each time (configs/agents/hooks/bridges/openclaw-paid-guard keys on
+    # these names)
+    paid-opus = {
+      name = "pay-as-you-go planning and review";
+      model = "opencode-premium/claude-opus-5-5";
+      deny = readOnly;
+    };
+    paid-opus-heavy = {
+      name = "pay-as-you-go heavy implementation";
+      model = "opencode-premium/claude-opus-5-5";
+      deny = [ ];
+    };
+    paid-fable-architect = {
+      name = "pay-as-you-go design decisions";
+      model = "opencode-premium/claude-fable-5-1";
+      deny = readOnly;
+    };
+  };
+  helperIds = owner: map (role: "${owner}-${role}") (builtins.attrNames helperRoles);
+  # each helper may run its own model only, so neither `/model` nor a spawn
+  # override moves it
+  helpers =
+    owner:
+    lib.mapAttrs' (
+      role: spec:
+      lib.nameValuePair "${owner}-${role}" {
+        name = "${owner}-${role}: ${spec.name}";
+        workspace = "${config.home.homeDirectory}/ghq/github.com/${username}/openclaw/helpers/${owner}-${role}";
+        inherit (spec) model;
+        modelPolicy = {
+          allow = [ spec.model ];
+        };
+        tools = lib.optionalAttrs (spec.deny != [ ]) { inherit (spec) deny; };
+      }
+    ) helperRoles;
+  # main and dev stay on go, like opencode's manager; fallbacks would skip
+  # this policy, so none are set
+  goOnly = {
+    allow = [ "opencode-go/*" ];
+  };
   secretKeys = [
+    # a personal console key: it calls models as me, so go's allowance applies
+    "OPENCODE_API_KEY"
+    # the service account behind the paid helpers, capped in the console
+    "OPENCODE_PREMIUM_API_KEY"
     "OPENCLAW_DISCORD_BOT_TOKEN"
     "OPENCLAW_DISCORD_CHANNEL_ID"
     # keeps the channel id out of this public repository
@@ -543,6 +623,8 @@ in
       # the generated wrapper cats a value that names a file, unless the key
       # ends in _FILE; openclaw itself would take the path as the secret
       environment = {
+        OPENCODE_API_KEY = secretPath "OPENCODE_API_KEY";
+        OPENCODE_PREMIUM_API_KEY = secretPath "OPENCODE_PREMIUM_API_KEY";
         OPENCLAW_DISCORD_BOT_TOKEN = secretPath "OPENCLAW_DISCORD_BOT_TOKEN";
         OPENCLAW_DISCORD_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_CHANNEL_ID";
         OPENCLAW_DISCORD_DEV_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_DEV_CHANNEL_ID";
@@ -590,29 +672,53 @@ in
               every = "0m";
               target = "none";
             };
-            # the same tier the claude cli drops to outside plan mode, from
-            # lib/ai-models.nix; this gateway never plans
             model = {
-              primary = "anthropic/${aiModels.run}";
+              primary = goModel;
+            };
+            modelPolicy = goOnly;
+            # children are leaves, like opencode's subagents; a run has no
+            # time limit by default
+            subagents = {
+              maxSpawnDepth = 1;
+              maxConcurrent = 2;
+              maxChildrenPerAgent = 3;
+              runTimeoutSeconds = 900;
             };
           };
           # once any entry carries a heartbeat block, only the entries that
-          # carry one run heartbeats, so main needs its own as well
+          # carry one run heartbeats, so main needs its own as well. the
+          # helpers carry none and no binding, so neither cron nor discord
+          # reaches them
           entries = {
             main = {
               default = true;
               workspace = config.programs.openclaw.workspaceDir;
+              model = goModel;
+              modelPolicy = goOnly;
               heartbeat = {
                 prompt = heartbeatPrompt;
+              };
+              # requireAgentId keeps it from spawning copies of itself
+              subagents = {
+                allowAgents = helperIds "main";
+                requireAgentId = true;
               };
             };
             dev = {
               workspace = devWorkspaceDir;
+              model = goModel;
+              modelPolicy = goOnly;
               heartbeat = {
                 prompt = heartbeatPrompt;
               };
+              subagents = {
+                allowAgents = helperIds "dev";
+                requireAgentId = true;
+              };
             };
-          };
+          }
+          // helpers "main"
+          // helpers "dev";
         };
         # the dev channel and its threads go to the dev agent; everything
         # else falls to main
@@ -687,34 +793,109 @@ in
           };
         };
         models = {
-          # pinning the runtime per model strands `/model`: anything else would
-          # fall to the api key route, which this gateway has no key for
           providers = {
-            anthropic = {
-              agentRuntime = {
-                id = "claude-cli";
-              };
-              # the claude cli only compacts near the 1M window by default;
-              # this budget becomes its CLAUDE_CODE_AUTO_COMPACT_WINDOW.
-              # both ids are listed because the run resolves either
-              models =
-                map
-                  (id: {
-                    inherit id;
-                    name = id;
-                    contextTokens = 300000;
-                  })
-                  [
-                    "claude-opus-5"
-                    "claude-opus-5-5"
+            # the bundled opencode-go provider (OPENCODE_API_KEY) has no haiku
+            # in its catalog, so the row is declared here. haiku speaks
+            # anthropic messages, so the row carries its own api and url
+            # rather than the provider's, which the bundled openai-compatible
+            # models keep. the url is the bundled one: go rejects a request
+            # without x-opencode-session, which openclaw sends only there
+            opencode-go = {
+              models = [
+                {
+                  id = "claude-haiku-5-5";
+                  name = "Claude Haiku 5.5";
+                  api = "anthropic-messages";
+                  baseUrl = "https://opencode.ai/zen/go";
+                  # 2026.9.5 predates haiku 5.5 and asks for budget thinking,
+                  # which it rejects; 2026.10.4 knows its adaptive thinking
+                  reasoning = false;
+                  input = [
+                    "text"
+                    "image"
                   ];
+                  contextWindow = 1000000;
+                  # past 100K tokens the price is five times higher, so the
+                  # sessions compact before that
+                  contextTokens = 100000;
+                  maxTokens = 128000;
+                  cost = {
+                    input = 0.1;
+                    output = 0.5;
+                    cacheRead = 0.01;
+                    cacheWrite = 0.125;
+                  };
+                }
+              ];
+            };
+            # console pay-as-you-go on the service-account key, the same route
+            # as opencode's premium provider; only the paid helpers may run it
+            opencode-premium = {
+              api = "anthropic-messages";
+              baseUrl = "https://opencode.ai/inference/anthropic";
+              apiKey = {
+                source = "env";
+                provider = "default";
+                id = "OPENCODE_PREMIUM_API_KEY";
+              };
+              # openclaw adds this header only for its bundled opencode urls
+              headers = {
+                x-opencode-session = "openclaw-premium";
+              };
+              models = [
+                {
+                  id = "claude-opus-5-5";
+                  name = "Claude Opus 5.5";
+                  reasoning = true;
+                  input = [
+                    "text"
+                    "image"
+                  ];
+                  # the console rejects a request without max_tokens or above
+                  # the model's 128k
+                  contextWindow = 1000000;
+                  maxTokens = 128000;
+                  # strict tools need additionalProperties = false on every
+                  # object, which not all of openclaw's schemas carry, and the
+                  # console rejects the request then; the bundled go rows turn
+                  # it off too
+                  compat = {
+                    supportsStrictMode = false;
+                  };
+                  cost = {
+                    input = 4;
+                    output = 20;
+                  };
+                }
+                {
+                  id = "claude-fable-5-1";
+                  name = "Claude Fable 5.1";
+                  reasoning = true;
+                  input = [
+                    "text"
+                    "image"
+                  ];
+                  contextWindow = 1000000;
+                  maxTokens = 128000;
+                  compat = {
+                    supportsStrictMode = false;
+                  };
+                  cost = {
+                    input = 10;
+                    output = 50;
+                  };
+                }
+              ];
             };
           };
         };
         plugins = {
           # Use the complete source directory: per-file Home Manager symlinks
           # escape the plugin root and fail OpenClaw's path-safety validation.
-          load.paths = [ "${../../../../../configs/agents/hooks/bridges/openclaw}" ];
+          load.paths = [
+            "${../../../../../configs/agents/hooks/bridges/openclaw}"
+            "${../../../../../configs/agents/hooks/bridges/openclaw-paid-guard}"
+          ];
           # bundled but off until named here
           entries = {
             "common-hooks" = {
@@ -722,6 +903,14 @@ in
               hooks = {
                 allowConversationAccess = true;
               };
+            };
+            "paid-guard" = {
+              enabled = true;
+            };
+            # the zen provider would bill the personal key without an
+            # approval; go and the service account keep their own providers
+            "opencode" = {
+              enabled = false;
             };
             "active-memory" = {
               enabled = true;
@@ -793,6 +982,13 @@ in
               "\${OPENCLAW_DISCORD_USER_ID}"
             ];
             dmPolicy = "allowlist";
+            # brings paid-guard's approvals to discord as buttons, in the
+            # channel the request came from rather than a dm; the approvers
+            # are commands.ownerAllowFrom
+            execApprovals = {
+              enabled = true;
+              target = "channel";
+            };
             # with streaming off, text the model writes between tool calls ends
             # up in the reply. progress mode files it as the headline of a
             # temporary status message, deleted once the reply lands. no
