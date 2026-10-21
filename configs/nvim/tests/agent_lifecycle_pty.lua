@@ -8,7 +8,7 @@ local fixture = vim.fn.tempname()
 vim.fn.mkdir(fixture, "p")
 local command = fixture .. "/opencode"
 -- the tui wrappers find the same fixture under each cli's name
-for _, name in ipairs({ "opencode", "grok", "claude", "kiro-cli", "agy" }) do
+for _, name in ipairs({ "opencode", "grok", "kiro-cli", "agy" }) do
 	vim.fn.writefile({
 		"#!/bin/sh",
 		'if test -n "$NVIM_AGENT_PTY_ARGS"; then printf "%s|%s%s%s\\n" "$*" "${CLAUDE_CODE_NO_FLICKER:+F}" "${CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN:+S}" "${AGENT_FULL_RENDERER:+F}" >"$NVIM_AGENT_PTY_ARGS"; fi',
@@ -59,7 +59,6 @@ local function adapter(kind)
 		}
 	end
 	local c = require("config." .. kind)
-	local job_key = ({ claude_code = "claude_job_id" })[kind] or kind .. "_job_id"
 	return {
 		object = c,
 		open = c.open_layout,
@@ -70,7 +69,7 @@ local function adapter(kind)
 		full = c.toggle_full,
 		toggle = c.toggle_layout,
 		job = function()
-			return c._windows[job_key]
+			return c._windows[kind .. "_job_id"]
 		end,
 	}
 end
@@ -90,7 +89,7 @@ local function in_full_tab(win)
 	return layout.is_full(win) and #vim.api.nvim_tabpage_list_wins(vim.api.nvim_win_get_tabpage(win)) == 2
 end
 -- fullscreen on a real PTY: same job and buffers, prompt input still reaches it
-for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "kiro", "antigravity", "opencode", "grok" }) do
+for _, kind in ipairs({ "remote", "remote_argv", "kiro", "antigravity", "opencode", "grok" }) do
 	cases[#cases + 1] = {
 		name = kind .. " PTY fullscreen prompt reaches the job",
 		run = function()
@@ -149,7 +148,6 @@ for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "kiro", "antigra
 			local expected = ({
 				remote = { "|", "|F" },
 				remote_argv = { "|", "|F" },
-				claude_code = { "|S", "|F" },
 				kiro = { "|", "|" },
 				antigravity = { "|", "|" },
 				opencode = { "mini|", "|" },

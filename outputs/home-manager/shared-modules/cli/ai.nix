@@ -7,9 +7,6 @@
       agentsview
       anthy
       antigravity-cli
-      claude-code
-      claude-history
-      claude-powerline
       deja-vu
       grok-build
       graphify

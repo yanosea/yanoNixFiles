@@ -280,8 +280,8 @@ class CommonHookTests(unittest.TestCase):
     def test_prompt_reminds_research_without_running_unknown_commands(self):
         self.assertIn("official source", self.event("prompt")["message"])
 
-    def test_claude_prompt_keeps_full_reminder(self):
-        message = self.event("prompt", harness="claude")["message"]
+    def test_prompt_keeps_full_reminder(self):
+        message = self.event("prompt", harness="grok")["message"]
         self.assertEqual(message, self.core.REMINDER)
 
     def test_openclaw_reminds_only_interactive_runs(self):
@@ -410,7 +410,7 @@ class CommonHookTests(unittest.TestCase):
 
     def test_cli_stdin_is_bounded_even_if_sender_never_closes_pipe(self):
         process = subprocess.Popen(
-            ["python3", str(HOOK), "--harness", "claude", "--event", "PreToolUse"],
+            ["python3", str(HOOK), "--harness", "grok", "--event", "PreToolUse"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

@@ -88,7 +88,6 @@ local tuis = {
 	grok = { user_command = "Grok", resume = "grok --no-alt-screen /resume" },
 	antigravity = { user_command = "Antigravity", job = "antigravity_job_id", resume = "agy -i /resume" },
 	kiro = { user_command = "Kiro", job = "kiro_job_id", resume = "kiro-cli --resume-picker" },
-	claude_code = { user_command = "ClaudeCode", job = "claude_job_id" },
 }
 local function adapter(kind)
 	if kind == "remote" or kind == "remote_argv" then
@@ -345,11 +344,9 @@ end
 -- fullscreen: every CLI wrapper and the Happier client share the same behavior
 local layout = require("utils.agent_layout")
 -- the command and the env key of each kind's split and fullscreen renderers
-local classic, no_flicker = "CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN", "CLAUDE_CODE_NO_FLICKER"
 local renderers = {
 	remote = { split = "sh", full = "sh", full_env = "AGENT_FULL_RENDERER" },
 	remote_argv = { split = '{ "sh" }', full = '{ "sh" }', full_env = "AGENT_FULL_RENDERER" },
-	claude_code = { split = "claude", full = "claude", split_env = classic, full_env = no_flicker },
 	antigravity = { split = "agy", full = "agy" },
 	kiro = { split = "kiro-cli", full = "kiro-cli" },
 	opencode = { split = "opencode mini", full = "opencode" },
@@ -368,7 +365,7 @@ local function full_windows(c)
 	local wins = vim.api.nvim_tabpage_list_wins(vim.api.nvim_win_get_tabpage(windows.terminal_win))
 	return #wins == 2 and vim.tbl_contains(wins, windows.terminal_win) and vim.tbl_contains(wins, windows.prompt_win)
 end
-for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "antigravity", "kiro", "opencode", "grok" }) do
+for _, kind in ipairs({ "remote", "remote_argv", "antigravity", "kiro", "opencode", "grok" }) do
 	case(kind .. " fullscreen covers the editor and keeps the prompt", function()
 		local c = adapter(kind)
 		c.open()

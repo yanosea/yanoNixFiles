@@ -14,7 +14,6 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 HARNESSES = (
-    "claude",
     "grok",
     "opencode",
     "antigravity",
@@ -25,7 +24,7 @@ HARNESSES = (
     "copilot",
     "openclaw",
 )
-STOP_CONTROL = frozenset(("claude", "grok", "copilot"))
+STOP_CONTROL = frozenset(("grok", "copilot"))
 EVENTS = {
     "pretooluse": "pre",
     "beforetoolcall": "pre",
@@ -72,7 +71,7 @@ def command_harness(argv):
     program = Path(argv[0]).name.removeprefix(".").removesuffix("-wrapped")
     if program in {"copilot", "copilot-runtime"}:
         return "copilot"
-    if program in {"claude", "grok"}:
+    if program == "grok":
         return program
     if program in {"node", "bun"} and len(argv) > 1:
         script = Path(argv[1])
@@ -81,8 +80,6 @@ def command_harness(argv):
             or ("@github" in script.parts and "copilot" in script.parts)
         ):
             return "copilot"
-        if script.name == "cli.js" and "claude-code" in script.parts:
-            return "claude"
     return None
 
 
@@ -90,7 +87,8 @@ def ancestor_harness():
     """Bounded auto-only discovery. No argv is logged, persisted or emitted.
 
     Permission failures/timeouts return unknown. Ambiguous snake-case payloads
-    then use the Claude contract; explicit --harness bypasses this probe.
+    then go to copilot, the only auto caller that sends them (its
+    Claude-compatible project hooks); explicit --harness bypasses this probe.
     """
     pid = os.getppid()
     for _ in range(8):
@@ -143,7 +141,7 @@ def detect_harness(payload):
         return "grok"
     if "toolArgs" in payload or ("sessionId" in payload and "timestamp" in payload):
         return "copilot"
-    return ancestor_harness() or "claude"
+    return ancestor_harness() or "copilot"
 
 
 def canonical_harness(harness):

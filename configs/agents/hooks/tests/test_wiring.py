@@ -21,7 +21,7 @@ wiring = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(wiring)
 
 
-def hook(event, harness="claude", home="$HOME"):
+def hook(event, harness="auto", home="$HOME"):
     return {
         "hooks": [
             {
@@ -280,31 +280,6 @@ class WiringTests(unittest.TestCase):
             self.assertFalse(destination.is_symlink())
             self.assertEqual(destination.read_text(), "new mutable config")
 
-    def test_claude_grok_common_handlers_are_identical_for_native_dedup(self):
-        claude = json.loads((ROOT / "claude/settings.json").read_text())["hooks"]
-        grok = tomllib.loads((ROOT / "grok/config.toml").read_text())["hooks"]
-        for event in (
-            "SessionStart",
-            "UserPromptSubmit",
-            "PreToolUse",
-            "PostToolUse",
-            "Stop",
-            "PreCompact",
-        ):
-            with self.subTest(event=event):
-                claude_owned = [
-                    group
-                    for group in claude[event]
-                    if any(wiring.managed(item) for item in group["hooks"])
-                ]
-                grok_owned = [
-                    group
-                    for group in grok[event]
-                    if any(wiring.managed(item) for item in group["hooks"])
-                ]
-                self.assertEqual(claude_owned, grok_owned)
-                self.assertEqual(len(claude_owned), 1)
-
     def test_all_original_unrelated_native_handlers_are_preserved(self):
         fixtures = json.loads(
             (
@@ -312,16 +287,7 @@ class WiringTests(unittest.TestCase):
             ).read_text()
         )
         for harness, events in fixtures.items():
-            path = (
-                ROOT
-                / harness
-                / ("settings.json" if harness == "claude" else "config.toml")
-            )
-            document = (
-                json.loads(path.read_text())
-                if harness == "claude"
-                else tomllib.loads(path.read_text())
-            )
+            document = tomllib.loads((ROOT / harness / "config.toml").read_text())
             for event, original in events.items():
                 with self.subTest(harness=harness, event=event):
                     current = [
@@ -333,10 +299,7 @@ class WiringTests(unittest.TestCase):
                     self.assertEqual(current, original)
 
     def test_native_events_and_timeouts(self):
-        for harness, path in (
-            ("claude", "claude/settings.json"),
-            ("copilot", "copilot/hooks/common-agents.json"),
-        ):
+        for harness, path in (("copilot", "copilot/hooks/common-agents.json"),):
             document = json.loads((ROOT / path).read_text())
             commands = []
             for groups in document["hooks"].values():
@@ -346,7 +309,7 @@ class WiringTests(unittest.TestCase):
             self.assertTrue(owned)
             for entry in owned:
                 self.assertIn(
-                    f"--harness {'auto' if harness in ('claude', 'copilot') else harness}",
+                    f"--harness {'auto' if harness == 'copilot' else harness}",
                     entry.get("command", entry.get("bash", "")),
                 )
                 self.assertGreaterEqual(

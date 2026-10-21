@@ -6,8 +6,6 @@ require("config.autocmds")
 if vim.env.WSL_DISTRO_NAME ~= nil then
 	require("config.wsl")
 end
--- claude code integration if available
-require("config.claude_code")
 -- antigravity integration if available
 require("config.antigravity")
 -- grok integration if available

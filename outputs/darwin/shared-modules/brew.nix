@@ -29,7 +29,6 @@
       "blackhole-16ch"
       "blender"
       "chrome-remote-desktop-host"
-      "claude"
       "contexts"
       "coteditor"
       "daisydisk"

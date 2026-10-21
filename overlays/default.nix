@@ -10,59 +10,6 @@ inputs: [
     inputs.fenix.overlays.default pkgs pkgs
   )
   # packages
-  ## claude-history
-  (
-    _final: prev:
-    let
-      # release archives pinned as non-flake inputs; hashes tracked in flake.lock
-      srcs = {
-        aarch64-darwin = inputs.claude-history-darwin;
-        x86_64-linux = inputs.claude-history-linux;
-      };
-      system = prev.stdenv.hostPlatform.system;
-    in
-    prev.lib.optionalAttrs (srcs ? ${system}) {
-      claude-history = prev.stdenv.mkDerivation {
-        pname = "claude-history";
-        version = "0.1.76";
-        src = srcs.${system};
-        nativeBuildInputs = [
-          prev.makeWrapper
-        ]
-        ++ prev.lib.optionals prev.stdenv.hostPlatform.isLinux [
-          prev.autoPatchelfHook
-        ];
-        buildInputs = prev.lib.optionals prev.stdenv.hostPlatform.isLinux [
-          prev.stdenv.cc.cc.lib
-        ];
-        dontConfigure = true;
-        dontBuild = true;
-        # prebuilt binary; stripping would break the vendored runtime
-        dontStrip = true;
-        # semantic search loads onnxruntime from lib/ next to the running
-        # executable, so keep the pair together and wrap instead of linking
-        installPhase = ''
-          runHook preInstall
-          mkdir -p $out/bin $out/libexec/claude-history $out/share/claude-history
-          install -m555 claude-history $out/libexec/claude-history/claude-history
-          cp -RP lib $out/libexec/claude-history/lib
-          makeWrapper $out/libexec/claude-history/claude-history $out/bin/claude-history
-          cp -r ${inputs.claude-history-src}/skills $out/share/claude-history/skills
-          runHook postInstall
-        '';
-        meta = {
-          description = "Fuzzy-search Claude Code conversation history from the terminal";
-          homepage = "https://github.com/raine/claude-history";
-          license = prev.lib.licenses.mit;
-          mainProgram = "claude-history";
-          platforms = [
-            "aarch64-darwin"
-            "x86_64-linux"
-          ];
-        };
-      };
-    }
-  )
   ## deja-vu
   (_final: prev: {
     # stdlib only with cgo off, so a source build covers every platform
@@ -189,13 +136,12 @@ inputs: [
     in
     {
       inherit (llm-agents) agentsview;
-      inherit (llm-agents) claude-code;
-      inherit (llm-agents) claude-desktop;
       grok-build = llm-agents.grok;
       # opencode 2; llm-agents names the binary opencode2 so it can sit beside
       # v1, and nothing here keeps v1. the shell exports api keys for other
       # tools; dropped here, opencode (and the service it spawns) stays on the
-      # subscription logins instead of billing the api
+      # subscription logins instead of billing the api. opencode is the main cli,
+      # so its fallbacks to the claude code CLAUDE.md and .claude/skills are off
       opencode =
         prev.runCommand "opencode-${llm-agents.opencode2.version}"
           {
@@ -208,7 +154,8 @@ inputs: [
               --unset ANTHROPIC_AUTH_TOKEN \
               --unset ANTHROPIC_BASE_URL \
               --unset OPENAI_API_KEY \
-              --unset OPENAI_BASE_URL
+              --unset OPENAI_BASE_URL \
+              --set OPENCODE_DISABLE_CLAUDE_CODE 1
           '';
     }
   )

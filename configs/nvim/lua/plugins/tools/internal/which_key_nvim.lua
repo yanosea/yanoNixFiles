@@ -18,15 +18,6 @@ return {
 					mode = "n",
 					-- ai
 					{ "<LEADER>a", group = "ai" },
-					-- ai: claude
-					{ "<LEADER>ac", group = "claude" },
-					{
-						"<LEADER>acr",
-						"<CMD>lua require('config.claude_code').resume_session()<CR>",
-						desc = "ai claude: resume",
-					},
-					{ "<LEADER>act", "<CMD>ClaudeCode<CR>", desc = "ai claude: toggle" },
-					{ "<LEADER>acf", "<CMD>ClaudeCodeFull<CR>", desc = "ai claude: fullscreen" },
 					-- ai: Happier
 					{ "<LEADER>ah", group = "happier" },
 					{ "<LEADER>aht", "<CMD>Happier<CR>", desc = "ai Happier: toggle" },

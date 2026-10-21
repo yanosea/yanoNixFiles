@@ -21,12 +21,6 @@ class AdapterContracts(unittest.TestCase):
 
     def test_native_tool_payloads_keep_workspace_session_and_input(self):
         fixtures = {
-            "claude": {
-                "session_id": "s",
-                "cwd": "/tmp/project",
-                "tool_name": "Bash",
-                "tool_input": {"command": "git status"},
-            },
             "grok": {
                 "sessionId": "s",
                 "cwd": "/tmp/project",
@@ -95,7 +89,7 @@ class AdapterContracts(unittest.TestCase):
     def test_patch_move_and_nested_edit_paths_preserved(self):
         patch = "*** Update File: a.md\n*** Move to: b.md\n"
         event = self.a.normalize(
-            "claude",
+            "kiro",
             "PreToolUse",
             {
                 "tool_name": "apply_patch",
@@ -105,7 +99,7 @@ class AdapterContracts(unittest.TestCase):
         self.assertCountEqual(event["paths"], ["a.md", "b.md", "c.md"])
 
     def test_unknown_session_and_turn_stay_unknown(self):
-        event = self.a.normalize("claude", "Stop", {"cwd": "/tmp/p"})
+        event = self.a.normalize("kiro", "Stop", {"cwd": "/tmp/p"})
         self.assertIsNone(event["session_id"])
         self.assertIsNone(event["turn_id"])
 
@@ -158,14 +152,14 @@ class AdapterContracts(unittest.TestCase):
                 self.a.normalize("auto", "PreToolUse", payload)["harness"], "copilot"
             )
             self.assertEqual(
-                self.a.normalize("claude", "PreToolUse", payload)["harness"], "claude"
+                self.a.normalize("kiro", "PreToolUse", payload)["harness"], "kiro"
             )
 
     def test_auto_ancestor_failure_defaults_without_inventing_harness(self):
         with mock.patch.object(self.a, "ancestor_harness", return_value=None):
             self.assertEqual(
                 self.a.normalize("auto", "Stop", {"session_id": "s"})["harness"],
-                "claude",
+                "copilot",
             )
 
     def test_ancestor_classification_only_matches_program_or_script(self):
@@ -185,7 +179,7 @@ class AdapterContracts(unittest.TestCase):
 
     def test_transcript_and_prompt_identity_forwarded_for_unknown_turns(self):
         event = self.a.normalize(
-            "claude",
+            "kiro",
             "UserPromptSubmit",
             {
                 "transcript_path": "/tmp/transcript",
@@ -250,7 +244,6 @@ class AdapterContracts(unittest.TestCase):
 
     def test_native_stop_reentry_is_preserved(self):
         for harness, flag in (
-            ("claude", "stop_hook_active"),
             ("grok", "stopHookActive"),
             ("copilot", "stop_hook_active"),
         ):
@@ -261,7 +254,7 @@ class AdapterContracts(unittest.TestCase):
 
     def test_pre_denials_use_native_protocols(self):
         result = {"action": "deny", "message": "denied"}
-        for harness in ("claude", "grok"):
+        for harness in ("grok",):
             output, code = self.a.emit(harness, "PreToolUse", result)
             self.assertEqual(output["hookSpecificOutput"]["permissionDecision"], "deny")
             self.assertEqual(code, 0)
@@ -280,7 +273,7 @@ class AdapterContracts(unittest.TestCase):
 
     def test_native_context_is_delivered_only_where_consumed(self):
         result = {"action": "allow", "message": "research"}
-        for harness in ("claude", "grok"):
+        for harness in ("grok",):
             output, code = self.a.emit(harness, "PreToolUse", result)
             self.assertEqual(code, 0)
             self.assertEqual(
@@ -299,7 +292,7 @@ class AdapterContracts(unittest.TestCase):
         self.assertEqual(self.a.emit("grok", "SessionStart", result), ({}, 0))
 
     def test_native_stop_continue_only_on_supported_harness(self):
-        for harness in ("claude", "grok", "copilot"):
+        for harness in ("grok", "copilot"):
             with self.subTest(harness=harness):
                 self.assertEqual(
                     self.a.emit(
@@ -318,11 +311,11 @@ class AdapterContracts(unittest.TestCase):
             ("UserPromptSubmit", "prompt"),
         ):
             self.assertEqual(
-                self.a.normalize("claude", event, {"handover_text": "saved"})["kind"],
+                self.a.normalize("kiro", event, {"handover_text": "saved"})["kind"],
                 kind,
             )
         self.assertEqual(
-            self.a.normalize("claude", "PreCompact", {"handover_text": "saved"})[
+            self.a.normalize("kiro", "PreCompact", {"handover_text": "saved"})[
                 "handover_text"
             ],
             "saved",
@@ -421,13 +414,13 @@ class AdapterContracts(unittest.TestCase):
     def test_bad_payload_rejected(self):
         for value in ([], None, "text"):
             with self.assertRaises(ValueError):
-                self.a.normalize("claude", "PreToolUse", value)
+                self.a.normalize("kiro", "PreToolUse", value)
         with self.assertRaises(ValueError):
-            self.a.normalize("claude", "PreToolUse", {"tool_input": "not json"})
+            self.a.normalize("kiro", "PreToolUse", {"tool_input": "not json"})
         with self.assertRaises(ValueError):
-            self.a.normalize("claude", "PreToolUse", {"tool_input": []})
+            self.a.normalize("kiro", "PreToolUse", {"tool_input": []})
         with self.assertRaises(ValueError):
-            self.a.normalize("claude", "UnknownEvent", {})
+            self.a.normalize("kiro", "UnknownEvent", {})
 
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@ extend-exclude = [
 [default.extend-words]
 # bosnia country code in keyboard layouts
 ba = "ba"
-# canva plugin name in configs/claude/plugins.conf, not a typo of "canvas"
+# canva plugin name in configs/antigravity/plugins.conf, not a typo of "canvas"
 canva = "canva"
 # yazi file state name
 cpy = "cpy"

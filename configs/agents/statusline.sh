@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
-# statusline.sh - claude-powerline look for grok and antigravity, whose payloads
-# lack the transcript and rate-limit fields claude-powerline reads. Colours come
-# from the shared claude-powerline configuration.
+# statusline.sh - powerline-style status line for grok and antigravity, in the
+# everforest palette.
 
 set -uo pipefail
 
 input=$(cat)
-config="${XDG_CONFIG_HOME:-$HOME/.config}/claude-powerline/config.json"
 SEP=$'\xee\x82\xb0' # U+E0B0, as bytes so it needs no UTF-8 locale
 
 j() { echo "$input" | jq -r "$1 // empty" 2>/dev/null; }
@@ -20,13 +18,20 @@ hex() {
   printf '%d;%d;%d' "0x${h:0:2}" "0x${h:2:2}" "0x${h:4:2}"
 }
 
-# "bg fg bold" of a claude-powerline colour key
+# "bg fg bold" of a segment key
 colour() {
-  local value
-  value=$(jq -r --arg k "$1" '.colors.custom[$k] | "\(.bg) \(.fg) \(.bold // false)"' "$config" 2>/dev/null || true)
-  case "$value" in
-  "" | "null null false") printf '#3b4252 #d8dee9 false\n' ;;
-  *) printf '%s\n' "$value" ;;
+  case "$1" in
+  directory) echo '#a7c080 #2d353b true' ;;
+  git) echo '#3d484d #d3c6aa false' ;;
+  session) echo '#7fbbb3 #2d353b true' ;;
+  context) echo '#3d484d #7fbbb3 false' ;;
+  contextWarning) echo '#e69875 #2d353b false' ;;
+  contextCritical) echo '#e67e80 #2d353b false' ;;
+  weekly) echo '#475258 #d3c6aa false' ;;
+  model) echo '#83c092 #2d353b true' ;;
+  thinking) echo '#3d484d #d699b6 false' ;;
+  version) echo '#2d353b #859289 false' ;;
+  *) echo '#3b4252 #d8dee9 false' ;;
   esac
 }
 

@@ -27,7 +27,6 @@ let
       systemConfig = "yanoNixOs";
       homeConfig = "yanosea@yanoNixOs";
       preHomeCommands = ''
-        rm -fr "$HOME/.config/claude/CLAUDE.md"
         rm -fr "$HOME/.config/fcitx5/config"
         rm -fr "$HOME/.config/fcitx5/profile"
       '';
@@ -38,9 +37,7 @@ let
       osType = "nixos";
       systemConfig = "yanoNixOsWsl";
       homeConfig = "yanosea@yanoNixOsWsl";
-      preHomeCommands = ''
-        rm -fr "$HOME/.config/claude/CLAUDE.md"
-      '';
+      preHomeCommands = "";
     };
     # mac
     yanoMac = {
@@ -51,7 +48,6 @@ let
       preHomeCommands = ''
         rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
         rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
-        rm -fr "$HOME/.config/claude/CLAUDE.md"
       '';
     };
     # mac book
@@ -63,7 +59,6 @@ let
       preHomeCommands = ''
         rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
         rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
-        rm -fr "$HOME/.config/claude/CLAUDE.md"
       '';
     };
   };
