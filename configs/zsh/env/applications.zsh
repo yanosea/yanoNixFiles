@@ -13,8 +13,6 @@ export YAZI_CONFIG_HOME=$XDG_CONFIG_HOME/yazi-alt
 # per-directory-history
 export HISTORY_BASE=$XDG_STATE_HOME/zsh/per-directory-history
 export PER_DIRECTORY_HISTORY_TOGGLE="^h"
-# happier remote coding client
-export HAPPIER_HOME_DIR=$XDG_DATA_HOME/happier
 # xai grok build
 export GROK_HOME=$XDG_CONFIG_HOME/grok
 # google antigravity / gemini

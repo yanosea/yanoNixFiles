@@ -18,10 +18,6 @@ return {
 					mode = "n",
 					-- ai
 					{ "<LEADER>a", group = "ai" },
-					-- ai: Happier
-					{ "<LEADER>ah", group = "happier" },
-					{ "<LEADER>aht", "<CMD>Happier<CR>", desc = "ai Happier: toggle" },
-					{ "<LEADER>ahf", "<CMD>HappierFull<CR>", desc = "ai Happier: fullscreen" },
 					-- ai: kiro
 					{ "<LEADER>ak", group = "kiro" },
 					{
