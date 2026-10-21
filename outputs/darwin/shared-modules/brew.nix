@@ -28,7 +28,6 @@
       "bitwig-studio"
       "blackhole-16ch"
       "blender"
-      "chatgpt"
       "chrome-remote-desktop-host"
       "claude"
       "contexts"
