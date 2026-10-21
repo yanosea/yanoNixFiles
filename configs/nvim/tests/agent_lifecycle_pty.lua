@@ -203,7 +203,7 @@ for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "codex", "kiro",
 		end,
 	}
 end
-for _, kind in ipairs({ "remote", "remote_argv", "opencode", "grok" }) do
+for _, kind in ipairs({ "remote", "remote_argv", "antigravity", "kiro", "opencode", "grok" }) do
 	for _, hidden in ipairs({ false, true }) do
 		cases[#cases + 1] = {
 			name = kind .. " PTY multiline and " .. (hidden and "hidden" or "visible") .. " natural exit",
@@ -268,7 +268,7 @@ for _, kind in ipairs({ "remote", "remote_argv", "opencode", "grok" }) do
 		end,
 	}
 end
-for _, kind in ipairs({ "opencode", "grok" }) do
+for _, kind in ipairs({ "antigravity", "kiro", "opencode", "grok" }) do
 	cases[#cases + 1] = {
 		name = kind .. " PTY hidden resume terminates old process",
 		run = function()

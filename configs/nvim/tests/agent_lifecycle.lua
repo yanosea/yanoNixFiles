@@ -86,8 +86,8 @@ end
 local tuis = {
 	opencode = { user_command = "Opencode", resume = "opencode mini --continue" },
 	grok = { user_command = "Grok", resume = "grok --no-alt-screen /resume" },
-	antigravity = { user_command = "Antigravity", job = "antigravity_job_id" },
-	kiro = { user_command = "Kiro", job = "kiro_job_id" },
+	antigravity = { user_command = "Antigravity", job = "antigravity_job_id", resume = "agy -i /resume" },
+	kiro = { user_command = "Kiro", job = "kiro_job_id", resume = "kiro-cli --resume-picker" },
 	claude_code = { user_command = "ClaudeCode", job = "claude_job_id" },
 	codex = { user_command = "Codex", job = "codex_job_id" },
 }
@@ -149,7 +149,7 @@ local cases = {}
 local function case(name, callback)
 	cases[#cases + 1] = { name = name, callback = callback }
 end
-for _, kind in ipairs({ "remote", "remote_argv", "opencode", "grok" }) do
+for _, kind in ipairs({ "remote", "remote_argv", "antigravity", "kiro", "opencode", "grok" }) do
 	case(kind .. " stale exit cannot close a reopened job", function()
 		local c = adapter(kind)
 		c.open()
@@ -299,7 +299,7 @@ case("remote argv thrown spawn failure cleans resources", function()
 	equal(#vim.api.nvim_list_wins(), 1, "failed layout windows removed")
 	equal(#vim.api.nvim_list_bufs(), before, "failed layout buffers removed")
 end)
-for _, kind in ipairs({ "opencode", "grok" }) do
+for _, kind in ipairs({ "antigravity", "kiro", "opencode", "grok" }) do
 	case(kind .. " resume stops the hidden old job", function()
 		local c = adapter(kind)
 		c.open()
