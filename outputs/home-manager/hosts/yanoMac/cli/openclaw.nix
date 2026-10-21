@@ -972,10 +972,12 @@ in
               "\${OPENCLAW_DISCORD_USER_ID}"
             ];
             dmPolicy = "allowlist";
-            # brings paid-guard's approvals to discord as buttons; the
-            # approvers are commands.ownerAllowFrom
+            # brings paid-guard's approvals to discord as buttons, in the
+            # channel the request came from rather than a dm; the approvers
+            # are commands.ownerAllowFrom
             execApprovals = {
               enabled = true;
+              target = "channel";
             };
             # with streaming off, text the model writes between tool calls ends
             # up in the reply. progress mode files it as the headline of a
