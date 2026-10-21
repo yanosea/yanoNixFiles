@@ -111,6 +111,8 @@ end
 
 -- close windows but keep buffers and process
 function M._close_windows()
+	-- leave a fullscreen tab that is the last one through an empty tab
+	config.before_close(M._windows)
 	-- keep a manual resize for the next open
 	config.remember(M._windows.terminal_win, M._windows.prompt_win)
 	-- close prompt window
@@ -195,8 +197,10 @@ end
 function M._start_grok_terminal(terminal_buf, terminal_win, command)
 	vim.api.nvim_set_current_win(terminal_win)
 	-- construct grok command
-	-- inline mode keeps the output in the terminal buffer's scrollback
-	local grok_cmd = command and string.format("grok --no-alt-screen %s", command) or "grok --no-alt-screen"
+	-- inline mode keeps the output in the terminal buffer's scrollback; a start
+	-- from fullscreen keeps grok's alternate screen
+	local grok = M._full_renderer and "grok" or "grok --no-alt-screen"
+	local grok_cmd = command and string.format("%s %s", grok, command) or grok
 	-- start terminal
 	local windows = M._windows
 	local job_id = vim.fn.termopen(grok_cmd, {
@@ -344,7 +348,9 @@ function M.open_layout()
 end
 
 -- toggle layout visibility
-function M.toggle_layout()
+-- @param full: boolean|nil - a start from closed uses the CLI's own fullscreen renderer,
+-- kept by the process (and a resume) until the next start
+function M.toggle_layout(full)
 	if M._is_open then
 		M.hide_layout()
 	else
@@ -352,6 +358,7 @@ function M.toggle_layout()
 		if M._windows.terminal_buf and M._windows.prompt_buf then
 			M.show_layout()
 		else
+			M._full_renderer = full == true
 			M.open_layout()
 		end
 	end
@@ -381,10 +388,20 @@ function M.resume_session()
 	end, 100)
 end
 
+-- toggle fullscreen: terminal covers the editor, prompt keeps its height
+function M.toggle_full()
+	config.toggle_full(M, function()
+		M.toggle_layout(true)
+	end)
+end
+
 -- setup commands
 function M.setup()
 	vim.api.nvim_create_user_command("Grok", M.toggle_layout, {
 		desc = "Toggle Grok terminal and prompt layout",
+	})
+	vim.api.nvim_create_user_command("GrokFull", M.toggle_full, {
+		desc = "Toggle Grok fullscreen",
 	})
 end
 

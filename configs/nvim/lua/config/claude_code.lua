@@ -98,6 +98,8 @@ end
 
 -- close windows but keep buffers and process
 function M._close_windows()
+	-- leave a fullscreen tab that is the last one through an empty tab
+	config.before_close(M._windows)
 	-- keep a manual resize for the next open
 	config.remember(M._windows.terminal_win, M._windows.prompt_win)
 	-- close prompt window
@@ -186,8 +188,9 @@ function M._start_claude_terminal(terminal_buf, terminal_win, command)
 	-- start terminal
 	local job_id = vim.fn.termopen(claude_cmd, {
 		buffer = terminal_buf,
-		-- classic renderer: fullscreen keeps the conversation out of the terminal buffer's scrollback
-		env = { CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN = "1" },
+		-- the classic renderer keeps the conversation in the terminal buffer's scrollback;
+		-- a start from fullscreen gets claude's own fullscreen renderer instead
+		env = M._full_renderer and { CLAUDE_CODE_NO_FLICKER = "1" } or { CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN = "1" },
 		on_exit = function()
 			vim.notify("Claude terminal closed", vim.log.levels.INFO)
 			vim.defer_fn(function()
@@ -299,7 +302,9 @@ function M.open_layout()
 end
 
 -- toggle layout visibility
-function M.toggle_layout()
+-- @param full: boolean|nil - a start from closed uses the CLI's own fullscreen renderer,
+-- kept by the process (and a resume) until the next start
+function M.toggle_layout(full)
 	if M._is_open then
 		M.hide_layout()
 	else
@@ -307,6 +312,7 @@ function M.toggle_layout()
 		if M._windows.terminal_buf and M._windows.prompt_buf then
 			M.show_layout()
 		else
+			M._full_renderer = full == true
 			M.open_layout()
 		end
 	end
@@ -334,10 +340,20 @@ function M.resume_session()
 	end, 100)
 end
 
+-- toggle fullscreen: terminal covers the editor, prompt keeps its height
+function M.toggle_full()
+	config.toggle_full(M, function()
+		M.toggle_layout(true)
+	end)
+end
+
 -- setup commands
 function M.setup()
 	vim.api.nvim_create_user_command("ClaudeCode", M.toggle_layout, {
 		desc = "Toggle Claude Code terminal and prompt layout",
+	})
+	vim.api.nvim_create_user_command("ClaudeCodeFull", M.toggle_full, {
+		desc = "Toggle Claude Code fullscreen",
 	})
 end
 

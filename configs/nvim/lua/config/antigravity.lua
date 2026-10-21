@@ -98,6 +98,8 @@ end
 
 -- close windows but keep buffers and process
 function M._close_windows()
+	-- leave a fullscreen tab that is the last one through an empty tab
+	config.before_close(M._windows)
 	-- keep a manual resize for the next open
 	config.remember(M._windows.terminal_win, M._windows.prompt_win)
 	-- close prompt window
@@ -332,10 +334,18 @@ function M.resume_session()
 	end, 100)
 end
 
+-- toggle fullscreen: terminal covers the editor, prompt keeps its height
+function M.toggle_full()
+	config.toggle_full(M, M.toggle_layout)
+end
+
 -- setup commands
 function M.setup()
 	vim.api.nvim_create_user_command("Antigravity", M.toggle_layout, {
 		desc = "Toggle Antigravity terminal and prompt layout",
+	})
+	vim.api.nvim_create_user_command("AntigravityFull", M.toggle_full, {
+		desc = "Toggle Antigravity fullscreen",
 	})
 end
 
