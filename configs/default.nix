@@ -712,6 +712,14 @@ in
           exec ${pkgs.python3}/bin/python3 "$HOME/.agents/hooks/agent_loop.py" "$@"
         '';
       };
+      # opencode go usage, read by paid-guard's go_quota and the openclaw check-ins
+      ".local/bin/go-limits" = {
+        executable = true;
+        text = ''
+          #!${pkgs.runtimeShell}
+          exec ${pkgs.python3}/bin/python3 "$HOME/.agents/go-limits/go_limits.py" "$@"
+        '';
+      };
       ".local/bin/niri-app-toggle" = {
         executable = true;
         text = ''
