@@ -85,6 +85,13 @@ let
     );
   # main and dev each name theirs, so one can move without the other
   goModel = "opencode-go/claude-haiku-5-5";
+  # haiku did not keep main's long japanese persona rules, and qwen answered
+  # the intimate roleplay turns with http 400. grok runs on the supergrok
+  # login (models.providers.xai), which the grok cli and the feeds share
+  mainModel = "xai/grok-4.7";
+  # when the supergrok weekly allowance runs out (402) or the login is gone,
+  # the same model on go answers instead
+  mainFallback = "opencode-go/grok-4.7";
   # the opencode roles (configs/opencode/agents), as agents main and dev spawn
   # across agents: a child of the same agent keeps the parent's tools, so
   # only a separate agent can be read-only. each reads the AGENTS.md in its
@@ -155,8 +162,8 @@ let
         tools = lib.optionalAttrs (spec.deny != [ ]) { inherit (spec) deny; };
       }
     ) helperRoles;
-  # main and dev stay on go, like opencode's manager; fallbacks would skip
-  # this policy, so none are set
+  # dev stays on go, like opencode's manager, and main falls back to it;
+  # fallbacks skip this policy, so main's one fallback stays on go
   goOnly = {
     allow = [ "opencode-go/*" ];
   };
@@ -693,8 +700,25 @@ in
             main = {
               default = true;
               workspace = config.programs.openclaw.workspaceDir;
-              model = goModel;
-              modelPolicy = goOnly;
+              # a string model is strict; only the object form takes
+              # fallbacks, which skip modelPolicy
+              model = {
+                primary = mainModel;
+                fallbacks = [ mainFallback ];
+              };
+              # go plus this one grok, so `/model` cannot reach other xai rows
+              modelPolicy = {
+                allow = goOnly.allow ++ [ mainModel ];
+              };
+              # the xai login also turns these on, and they call api.x.ai,
+              # the separately billed console, rather than the supergrok proxy.
+              # web_search stays: tools.web.search pins it to parallel-free
+              tools = {
+                deny = [
+                  "x_search"
+                  "code_execution"
+                ];
+              };
               heartbeat = {
                 prompt = heartbeatPrompt;
               };
@@ -826,6 +850,79 @@ in
                     cacheWrite = 0.125;
                   };
                 }
+                # main's fallback, the row openclaw projects from
+                # models.opencode.ai: go serves grok on the responses api.
+                # openclaw sends no x-opencode-session to this url, and go
+                # answered those requests without it. on that same route the
+                # catalog's compat wins over this one, so it repeats the
+                # catalog's for when the catalog is offline
+                {
+                  id = "grok-4.7";
+                  name = "Grok 4.7";
+                  api = "openai-responses";
+                  baseUrl = "https://opencode.ai/inference/go/openai/v1";
+                  reasoning = true;
+                  input = [
+                    "text"
+                    "image"
+                  ];
+                  contextWindow = 500000;
+                  # past 200K tokens the price doubles, so the sessions compact
+                  # before that
+                  contextTokens = 200000;
+                  maxTokens = 500000;
+                  compat = {
+                    supportsUsageInStreaming = true;
+                    maxTokensField = "max_tokens";
+                    supportsTools = true;
+                    # grok cannot turn reasoning off
+                    supportsReasoningEffort = true;
+                    supportedReasoningEfforts = [
+                      "low"
+                      "medium"
+                      "high"
+                      "xhigh"
+                    ];
+                  };
+                  cost = {
+                    input = 2;
+                    output = 6;
+                    cacheRead = 0.5;
+                    cacheWrite = 0;
+                  };
+                }
+              ];
+            };
+            # what `openclaw models auth login --provider xai --method oauth`
+            # would write here if this file were not nix-managed: the
+            # supergrok route rather than the console api (api.x.ai). the
+            # sign-in sits in main's own auth store; openclaw does not read
+            # the grok cli's. the bundled catalog stops at 4.6
+            xai = {
+              baseUrl = "https://cli-chat-proxy.grok.com/v1";
+              api = "openai-responses";
+              auth = "oauth";
+              models = [
+                {
+                  id = "grok-4.7";
+                  name = "Grok 4.7";
+                  reasoning = true;
+                  input = [
+                    "text"
+                    "image"
+                  ];
+                  # the window the grok cli's catalog lists for this route
+                  contextWindow = 256000;
+                  maxTokens = 64000;
+                  # list prices, the same as go's row; the turns draw on the
+                  # weekly allowance the feeds share
+                  cost = {
+                    input = 2;
+                    output = 6;
+                    cacheRead = 0.5;
+                    cacheWrite = 0;
+                  };
+                }
               ];
             };
             # console pay-as-you-go on the service-account key, the same route
@@ -895,6 +992,10 @@ in
           load.paths = [
             "${../../../../../configs/agents/hooks/bridges/openclaw}"
             "${../../../../../configs/agents/hooks/bridges/openclaw-paid-guard}"
+            # the external parallel plugin, for the key-free web search.
+            # `programs.openclaw.runtimePlugins` refuses to sit beside the raw
+            # paths above, so its package goes in here directly
+            "${pkgs.openclawRuntimePlugins.parallel}"
           ];
           # bundled but off until named here
           entries = {
@@ -905,6 +1006,11 @@ in
               };
             };
             "paid-guard" = {
+              enabled = true;
+            };
+            # carries parallel-free, which needs no key; no apiKey here, so
+            # its paid `parallel` provider stays unusable
+            "parallel" = {
               enabled = true;
             };
             # the zen provider would bill the personal key without an
@@ -964,6 +1070,17 @@ in
           # should be able to drive the other
           agentToAgent = {
             enabled = false;
+          };
+          # parallel's free search mcp, no key and no bill. a key-free
+          # provider never wins auto-detection, so it has to be named, and a
+          # named one gets no fallback: a failed search fails rather than
+          # moving on. the pin also keeps the xai login (or a key added
+          # later) from routing searches to a billed provider such as grok
+          web = {
+            search = {
+              enabled = true;
+              provider = "parallel-free";
+            };
           };
           elevated = {
             enabled = true;
