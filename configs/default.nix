@@ -1,7 +1,6 @@
 # configs (dotfiles)
 {
   agentPackages,
-  aiModels,
   inputs,
   lib,
   pkgs,
@@ -18,7 +17,6 @@ let
     && name != "antigravity"
     && name != "copilot"
     && name != "kiro"
-    && name != "codex"
     && name != "grok"
     && name != "zsh"
   ) contents;
@@ -33,24 +31,6 @@ let
   quickshellOverride = {
     "quickshell" = configFiles."quickshell" // {
       force = true;
-    };
-  };
-  # settings.json and the plugin lists are generated below rather than copied,
-  # so keep them out of the recursive link: home-manager resolves an overlap
-  # between a recursively linked directory and a single file by silently
-  # dropping the single file
-  claudeOverride = {
-    "claude" = configFiles."claude" // {
-      source = lib.fileset.toSource {
-        root = ./claude;
-        fileset = lib.fileset.difference ./claude (
-          lib.fileset.unions [
-            ./claude/plugin-marketplaces.conf
-            ./claude/plugins.conf
-            ./claude/settings.json
-          ]
-        );
-      };
     };
   };
   # opencode skips a plugin directory whose files are symlinks, so these leave the
@@ -121,55 +101,6 @@ let
       "\n# shared with the other clis, declared in configs/agents/plugins.conf\n"
       + lib.concatMapStrings (entry: "[x] ${pad entry.id}# ${entry.note}\n") entries
     );
-  # the shared packages claude installs, as plugin-marketplaces.conf rows
-  claudeMarketplacesConf =
-    builtins.readFile ./claude/plugin-marketplaces.conf
-    + "\n# shared with the other clis, declared in configs/agents/plugins.conf\n"
-    + lib.concatMapStrings (package: "${package.name} ${package.marketplace} ${package.repository}\n") (
-      agentPackages.for "claude"
-    );
-  claudePluginsConf = withSharedPlugins ./claude/plugins.conf 41 (
-    map (package: package.name) (agentPackages.for "claude")
-  );
-  # plugins.conf and plugin-marketplaces.conf, enabled at user scope: a
-  # plugin enabled per directory is missing from the first session in every
-  # new one, while claude fetches what user settings enable on its own
-  claudeConfLines =
-    text:
-    lib.filter (line: builtins.match "[[:space:]]*(#.*)?" line == null) (lib.splitString "\n" text);
-  claudeMarketplaceRows = map (line: lib.filter (word: word != "") (lib.splitString " " line)) (
-    claudeConfLines claudeMarketplacesConf
-  );
-  claudeMarketplaceOf =
-    plugin:
-    let
-      row = lib.findFirst (row: builtins.head row == plugin) null claudeMarketplaceRows;
-    in
-    if row == null then "claude-plugins-official" else builtins.elemAt row 1;
-  claudeDeclaredPlugins = lib.concatMap (
-    line:
-    let
-      match = builtins.match "[[]x[]] +([^ ]+).*" line;
-    in
-    lib.optional (match != null) (builtins.head match)
-  ) (claudeConfLines claudePluginsConf);
-  claudePluginSettings = {
-    enabledPlugins = builtins.listToAttrs (
-      map (plugin: {
-        name = "${plugin}@${claudeMarketplaceOf plugin}";
-        value = true;
-      }) claudeDeclaredPlugins
-    );
-    extraKnownMarketplaces = builtins.listToAttrs (
-      map (row: {
-        name = builtins.elemAt row 1;
-        value.source = {
-          source = "github";
-          repo = builtins.elemAt row 2;
-        };
-      }) claudeMarketplaceRows
-    );
-  };
   # graphify ships one SKILL.md per cli, each with its own references/; the
   # `.graphify_version` stamp is left out on purpose, since graphify rewrites
   # stamped copies in place after an upgrade and a store path cannot take that
@@ -227,7 +158,6 @@ let
   # under prefix by their folder name (graphify's by the package, in the
   # variant of the cli)
   graphifyVariants = {
-    claude = graphifySkill "claude" "skill.md";
     agents = graphifySkill "agents" "skill-agents.md";
     # graphify installs claude's variant for antigravity too
     antigravity = graphifySkill "claude" "skill.md";
@@ -253,55 +183,6 @@ let
         }
       ) (agentPackages.skillsFor cli)
     );
-  # claude user memory (the rest of configs/claude is deployed by the generic loop)
-  claudeConfigEntries = {
-    "claude/CLAUDE.md".source = ./agents/global-rules.md;
-    "claude/plugins.conf".text = claudePluginsConf;
-    "claude/plugin-marketplaces.conf".text = claudeMarketplacesConf;
-    "claude/commands/handover.md".source = ./agents/skills/handover/SKILL.md;
-    "claude/commands/sg.md".source = ./agents/skills/sg/SKILL.md;
-    "claude/commands/sj.md".source = ./agents/skills/sj/SKILL.md;
-    "claude/skills/agent-loop" = {
-      source = ./agents/skills/agent-loop;
-      recursive = true;
-    };
-    "claude/skills/triage-update-pr" = {
-      source = ./agents/skills/triage-update-pr;
-      recursive = true;
-    };
-    # the model ids come from lib/ai-models.nix so one tier list drives the
-    # `opusplan` slots, the subagent pin and openclaw's primary. `opus` is the
-    # plan-mode slot and `sonnet` the execution one, whatever they resolve to
-    "claude/settings.json".source = (pkgs.formats.json { }).generate "claude-settings.json" (
-      lib.recursiveUpdate (builtins.fromJSON (builtins.readFile ./claude/settings.json)) {
-        inherit (claudePluginSettings) enabledPlugins extraKnownMarketplaces;
-        env = {
-          ANTHROPIC_DEFAULT_OPUS_MODEL = aiModels.plan;
-          ANTHROPIC_DEFAULT_SONNET_MODEL = aiModels.run;
-          CLAUDE_CODE_SUBAGENT_MODEL = aiModels.run;
-        };
-      }
-    );
-  };
-  # the skill that lets claude search its own history through claude-history
-  claudeHistorySkill = lib.optionalAttrs (pkgs ? claude-history) {
-    "claude/skills/claude-history".source =
-      "${pkgs.claude-history}/share/claude-history/skills/claude-history";
-  };
-  # codex config files (config.toml is deployed by an activation copy instead,
-  # since codex writes hook-trust and project-trust state back into it)
-  codexConfigEntries = {
-    "codex/AGENTS.md".source = ./agents/global-rules.md;
-    "codex/plugins.conf".text = withSharedPlugins ./codex/plugins.conf 65 codexSharedPlugins;
-    "codex/hooks" = {
-      source = ./codex/hooks;
-      recursive = true;
-    };
-    "codex/themes" = {
-      source = ./codex/themes;
-      recursive = true;
-    };
-  };
   # grok config files (config.toml is deployed by an activation copy instead)
   # grok reads AGENTS.md from GROK_HOME (INSTRUCTION_FILENAMES)
   grokConfigEntries = {
@@ -348,8 +229,9 @@ let
     // {
       "opencode/AGENTS.md".source = ./agents/global-rules.md;
       "opencode/plugins/common-hooks.ts".source = ./agents/hooks/bridges/opencode.ts;
-      # the shared npm plugins (opencode=npm:), in a file of their own: opencode
-      # reads opencode.json and opencode.jsonc both and joins their plugins
+      # the shared npm plugins (opencode=npm:) and the mcp servers, in a file of
+      # their own: opencode reads opencode.json and opencode.jsonc both, joins
+      # their plugins and merges their servers by name
       "opencode/opencode.json".source = (pkgs.formats.json { }).generate "opencode.json" {
         "$schema" = "https://opencode.ai/config.json";
         plugins = lib.concatMap (
@@ -358,44 +240,118 @@ let
             lib.filter (lib.hasPrefix "npm:") (agentPackages.valuesFor "opencode" package)
           )
         ) (agentPackages.for "opencode");
+        mcp = {
+          servers = mcpServers;
+        };
       };
     }
     # packages with no opencode plugin to pin: the skill alone, kept out of
-    # ~/.agents/skills since codex installs the same packages as plugins
+    # ~/.agents/skills since copilot and grok install the same packages as plugins
     // sharedSkillLinks "opencode" "opencode/skills";
-  # the shared plugins codex installs, `<plugin>@<marketplace>`
-  codexSharedPlugins = map (
-    package:
-    let
-      id = agentPackages.valueFor "codex" package;
-    in
-    if id == null then agentPackages.claudeId package else id
-  ) (agentPackages.for "codex");
-  # config.toml with a marketplace table for each of them, but the built-in one
-  codexConfig = pkgs.writeText "codex-config.toml" (
-    builtins.readFile ./codex/config.toml
-    + lib.concatStrings (
-      lib.unique (
-        lib.zipListsWith (
-          id: package:
-          let
-            marketplace = lib.last (lib.splitString "@" id);
-          in
-          lib.optionalString (marketplace != "openai-curated-remote") ''
-
-            [marketplaces.${marketplace}]
-            source_type = "git"
-            source = "https://github.com/${package.repository}.git"
-          ''
-        ) codexSharedPlugins (agentPackages.for "codex")
+  # configs/agents/mcp-servers.conf as opencode servers, read the way
+  # configs/antigravity/scripts/sync-mcp-servers.sh reads it: a `#` starts a
+  # comment, and a row is `<name> [options] -- <command> [args...]` or
+  # `<name> -t http|sse <url>`. options: -e/--env KEY=VALUE, -t/--transport
+  mcpServers = lib.listToAttrs (
+    map
+      (
+        line:
+        let
+          words = lib.filter (word: word != "") (lib.splitString " " line);
+          rest = lib.tail words;
+          split = lib.lists.findFirstIndex (word: word == "--") null rest;
+          flagged = rest != [ ] && lib.hasPrefix "-" (lib.head rest);
+          options =
+            if split != null then
+              lib.take split rest
+            else if flagged then
+              lib.init rest
+            else
+              [ ];
+          target =
+            if split != null then
+              lib.drop (split + 1) rest
+            else if flagged then
+              [ (lib.last rest) ]
+            else
+              rest;
+          fail = throw "configs/agents/mcp-servers.conf: cannot read `${line}`";
+          pairs =
+            if lib.mod (builtins.length options) 2 != 0 then
+              fail
+            else
+              lib.genList (i: {
+                flag = builtins.elemAt options (2 * i);
+                value = builtins.elemAt options (2 * i + 1);
+              }) (builtins.length options / 2);
+          valuesOf = flags: map (pair: pair.value) (lib.filter (pair: lib.elem pair.flag flags) pairs);
+          transports = valuesOf [
+            "-t"
+            "--transport"
+          ];
+          transport = if transports == [ ] then "stdio" else lib.last transports;
+          environment = lib.listToAttrs (
+            map
+              (
+                value:
+                let
+                  parts = lib.splitString "=" value;
+                in
+                lib.nameValuePair (lib.head parts) (lib.concatStringsSep "=" (lib.tail parts))
+              )
+              (valuesOf [
+                "-e"
+                "--env"
+              ])
+          );
+          unknown = lib.filter (
+            pair:
+            !lib.elem pair.flag [
+              "-e"
+              "--env"
+              "-t"
+              "--transport"
+            ]
+          ) pairs;
+        in
+        if words == [ ] || target == [ ] || unknown != [ ] then
+          fail
+        else if transport == "stdio" then
+          lib.nameValuePair (lib.head words) (
+            {
+              type = "local";
+              command = target;
+            }
+            // lib.optionalAttrs (environment != { }) { inherit environment; }
+          )
+        else if
+          lib.elem transport [
+            "http"
+            "sse"
+          ]
+          && environment == { }
+          && builtins.length target == 1
+        then
+          lib.nameValuePair (lib.head words) {
+            type = "remote";
+            url = lib.head target;
+          }
+        else
+          fail
       )
-    )
+      (
+        lib.filter (line: builtins.match "[[:space:]]*" line == null) (
+          map (line: lib.head (lib.splitString "#" line)) (
+            lib.splitString "\n" (builtins.readFile ./agents/mcp-servers.conf)
+          )
+        )
+      )
   );
   # the shared plugins copilot installs, with their marketplaces, as the
   # settings.json keys for declarative install
   copilotSettings = pkgs.writeText "copilot-settings.json" (
     builtins.toJSON {
-      enabledPlugins = lib.genAttrs (map agentPackages.claudeId (agentPackages.for "copilot")) (_: true);
+      enabledPlugins = lib.genAttrs (map agentPackages.pluginId (agentPackages.for "copilot")) (_: true);
       extraKnownMarketplaces = lib.listToAttrs (
         map (package: {
           name = package.marketplace;
@@ -433,7 +389,7 @@ let
   # kiro installs no plugins, so it gets the skill folders and steering files
   # of the shared packages
   kiroSkillEntries = sharedSkillLinks "kiro" ".kiro/skills";
-  # Codex discovers directory symlinks, but skips symlinked SKILL.md files.
+  # each skill is one directory symlink, not a tree of per-file links
   sharedSkillEntries =
     lib.mapAttrs'
       (name: _: {
@@ -518,11 +474,6 @@ in
             }
         fi
       '';
-      # copied rather than symlinked: codex appends [hooks.state] and
-      # [projects.*] to config.toml and cannot write to a store path
-      copyCodexConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-        copyWritableConfig "codex" codexConfig
-      );
       # copied rather than symlinked: grok writes back to config.toml
       # merged rather than replaced: agy keeps trustedWorkspaces in the same file
       mergeAntigravitySettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
@@ -559,7 +510,7 @@ in
       );
     };
     file = {
-      # codex skills live outside XDG, in the cross-tool ~/.agents/skills
+      # the cross-tool ~/.agents/skills lives outside XDG
       ".agents" = {
         source = lib.fileset.toSource {
           root = ./agents;
@@ -576,7 +527,7 @@ in
         };
         recursive = true;
       };
-      # yomiyasu comes from its flake input; codex and opencode read it here
+      # yomiyasu comes from its flake input; opencode, grok and copilot read it here
       ".agents/skills/yomiyasu".source = "${inputs.yomiyasu}/skills/yomiyasu";
       # antigravity ignores XDG (settings.json and mcp_config.json are agy-managed)
       ".gemini/config/AGENTS.md".source = ./agents/global-rules.md;
@@ -595,11 +546,26 @@ in
       ".gemini/config/plugins.conf".text = withSharedPlugins ./antigravity/plugins.conf 41 (
         map (package: package.name) (agentPackages.for "antigravity")
       );
+      # where sync-plugins.sh fetches each plugin from
+      ".gemini/config/plugin-marketplaces.conf".text =
+        builtins.readFile ./antigravity/plugin-marketplaces.conf
+        + "\n# shared with the other clis, declared in configs/agents/plugins.conf\n"
+        + lib.concatMapStrings (package: "${package.name} ${package.marketplace} ${package.repository}\n") (
+          agentPackages.for "antigravity"
+        );
       ".local/bin/agent-loop" = {
         executable = true;
         text = ''
           #!${pkgs.runtimeShell}
           exec ${pkgs.python3}/bin/python3 "$HOME/.agents/hooks/agent_loop.py" "$@"
+        '';
+      };
+      # opencode go usage, read by paid-guard's go_quota and the openclaw check-ins
+      ".local/bin/go-limits" = {
+        executable = true;
+        text = ''
+          #!${pkgs.runtimeShell}
+          exec ${pkgs.python3}/bin/python3 "$HOME/.agents/go-limits/go_limits.py" "$@"
         '';
       };
       ".local/bin/niri-app-toggle" = {
@@ -630,12 +596,7 @@ in
     configFile =
       configFiles
       // quickshellOverride
-      // claudeOverride
       // opencodeOverride
-      // claudeConfigEntries
-      // bareSkillEntries "claude" "claude/skills"
-      // claudeHistorySkill
-      // codexConfigEntries
       // grokConfigEntries
       // opencodeConfigEntries
       // hyprConfigEntries

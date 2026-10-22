@@ -21,7 +21,7 @@ wiring = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(wiring)
 
 
-def hook(event, harness="claude", home="$HOME"):
+def hook(event, harness="auto", home="$HOME"):
     return {
         "hooks": [
             {
@@ -36,7 +36,9 @@ def hook(event, harness="claude", home="$HOME"):
 class WiringTests(unittest.TestCase):
     def test_json_preserves_settings_control_plane_and_disable(self):
         desired = {"hooks": {"SessionStart": [hook("SessionStart")]}}
-        control = {"hooks": [{"type": "command", "command": "happier-session-control"}]}
+        control = {
+            "hooks": [{"type": "command", "command": "external-session-control"}]
+        }
         current = {
             "model": "custom",
             "disableAllHooks": True,
@@ -138,7 +140,7 @@ class WiringTests(unittest.TestCase):
         }
         desired = {
             "model": "declared",
-            "hooks": {"PreToolUse": [hook("PreToolUse", "codex")]},
+            "hooks": {"PreToolUse": [hook("PreToolUse", "grok")]},
         }
         result = wiring.merge_toml(current, desired)
         self.assertEqual(result["hooks"]["state"], current["hooks"]["state"])
@@ -163,32 +165,8 @@ class WiringTests(unittest.TestCase):
         self.assertIn("[hooks.state]", result)
         self.assertEqual(wiring.merge_toml_text(result, desired), result)
 
-    def test_old_deployed_codex_save_does_not_overwrite_unapplied_migration(self):
-        with tempfile.TemporaryDirectory() as directory:
-            directory = Path(directory)
-            live = directory / "old-live.toml"
-            destination = directory / "new-source.toml"
-            live.write_text('# codex cli configuration\nmodel = "old"\n')
-            expected = (ROOT / "codex/config.toml").read_text()
-            destination.write_text(expected)
-            script = (
-                (ROOT / "codex/hooks/save-config.sh")
-                .read_text()
-                .split("<<'PYEOF'\n", 1)[1]
-                .split("\nPYEOF", 1)[0]
-            )
-            run = subprocess.run(
-                [sys.executable, "-", str(live), str(destination)],
-                check=False,
-                input=script,
-                text=True,
-                capture_output=True,
-            )
-            self.assertEqual(run.returncode, 0, run.stderr)
-            self.assertEqual(destination.read_text(), expected)
-
     def test_existing_save_scripts_keep_public_comments_and_hide_private_state(self):
-        for harness in ("codex", "grok"):
+        for harness in ("grok",):
             with (
                 self.subTest(harness=harness),
                 tempfile.TemporaryDirectory() as directory,
@@ -196,11 +174,7 @@ class WiringTests(unittest.TestCase):
                 directory = Path(directory)
                 base = (ROOT / harness / "config.toml").read_text()
                 local_text = 'private_api_token = "SECRET-DO-NOT-EXPORT"\n'
-                machine = (
-                    '\n[hooks.state]\ntrusted_hooks = ["MACHINE-TRUST"]\n[projects."/private"]\ntrust_level = "untrusted"\n'
-                    if harness == "codex"
-                    else '\n[plugins]\nprivate = "MACHINE-TRUST"\n[privacy]\nprivate = true\n'
-                )
+                machine = '\n[plugins]\nprivate = "MACHINE-TRUST"\n[privacy]\nprivate = true\n'
                 live = directory / "live.toml"
                 destination = directory / "repo.toml"
                 local = directory / "config.local.toml"
@@ -231,7 +205,7 @@ class WiringTests(unittest.TestCase):
                 self.assertEqual(saved, base)
 
     def test_all_toml_templates_parse_and_merge_idempotently(self):
-        for harness in ("codex", "grok"):
+        for harness in ("grok",):
             with self.subTest(harness=harness):
                 desired = tomllib.loads((ROOT / harness / "config.toml").read_text())
                 result = wiring.merge_toml({}, desired)
@@ -308,31 +282,6 @@ class WiringTests(unittest.TestCase):
             self.assertFalse(destination.is_symlink())
             self.assertEqual(destination.read_text(), "new mutable config")
 
-    def test_claude_grok_common_handlers_are_identical_for_native_dedup(self):
-        claude = json.loads((ROOT / "claude/settings.json").read_text())["hooks"]
-        grok = tomllib.loads((ROOT / "grok/config.toml").read_text())["hooks"]
-        for event in (
-            "SessionStart",
-            "UserPromptSubmit",
-            "PreToolUse",
-            "PostToolUse",
-            "Stop",
-            "PreCompact",
-        ):
-            with self.subTest(event=event):
-                claude_owned = [
-                    group
-                    for group in claude[event]
-                    if any(wiring.managed(item) for item in group["hooks"])
-                ]
-                grok_owned = [
-                    group
-                    for group in grok[event]
-                    if any(wiring.managed(item) for item in group["hooks"])
-                ]
-                self.assertEqual(claude_owned, grok_owned)
-                self.assertEqual(len(claude_owned), 1)
-
     def test_all_original_unrelated_native_handlers_are_preserved(self):
         fixtures = json.loads(
             (
@@ -340,16 +289,7 @@ class WiringTests(unittest.TestCase):
             ).read_text()
         )
         for harness, events in fixtures.items():
-            path = (
-                ROOT
-                / harness
-                / ("settings.json" if harness == "claude" else "config.toml")
-            )
-            document = (
-                json.loads(path.read_text())
-                if harness == "claude"
-                else tomllib.loads(path.read_text())
-            )
+            document = tomllib.loads((ROOT / harness / "config.toml").read_text())
             for event, original in events.items():
                 with self.subTest(harness=harness, event=event):
                     current = [
@@ -361,10 +301,7 @@ class WiringTests(unittest.TestCase):
                     self.assertEqual(current, original)
 
     def test_native_events_and_timeouts(self):
-        for harness, path in (
-            ("claude", "claude/settings.json"),
-            ("copilot", "copilot/hooks/common-agents.json"),
-        ):
+        for harness, path in (("copilot", "copilot/hooks/common-agents.json"),):
             document = json.loads((ROOT / path).read_text())
             commands = []
             for groups in document["hooks"].values():
@@ -374,7 +311,7 @@ class WiringTests(unittest.TestCase):
             self.assertTrue(owned)
             for entry in owned:
                 self.assertIn(
-                    f"--harness {'auto' if harness in ('claude', 'copilot') else harness}",
+                    f"--harness {'auto' if harness == 'copilot' else harness}",
                     entry.get("command", entry.get("bash", "")),
                 )
                 self.assertGreaterEqual(

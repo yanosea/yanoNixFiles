@@ -75,27 +75,12 @@
       };
     };
     # packages
-    ## claude-history
-    ## prebuilt: its semantic search bundles onnxruntime, which cargo fetches at build time
-    claude-history-darwin = {
-      url = "https://github.com/raine/claude-history/releases/download/v0.1.76/claude-history-darwin-arm64.tar.gz";
-      flake = false;
-    };
-    claude-history-linux = {
-      url = "https://github.com/raine/claude-history/releases/download/v0.1.76/claude-history-linux-amd64.tar.gz";
-      flake = false;
-    };
-    ## the companion skill, at the same tag as the binaries
-    claude-history-src = {
-      url = "github:raine/claude-history/v0.1.76";
-      flake = false;
-    };
     ## deja-vu (source; nixpkgs `deja` is an unrelated zsh tool)
     deja-vu = {
       url = "github:vshulcz/deja-vu/v0.22.1";
       flake = false;
     };
-    ## llm-agents (claude-code, codex, grok)
+    ## llm-agents (agentsview, grok, opencode)
     ## no nixpkgs follows: it would miss the numtide binary cache
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
@@ -128,7 +113,7 @@
         };
       };
     };
-    ## yomiyasu (the skill every agent cli reads; claude installs it as a plugin)
+    ## yomiyasu (the skill every agent cli reads)
     yomiyasu = {
       url = "github:nanaism/yomiyasu";
       flake = false;

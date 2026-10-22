@@ -17,7 +17,7 @@ local real = {
 	feedkeys = vim.api.nvim_feedkeys,
 	popen = io.popen,
 }
-local jobs, stopped, pending, sent, fed, spawn_result, spawn_error, sequence
+local jobs, stopped, pending, sent, fed, spawn_result, sequence
 local function equal(actual, expected, message)
 	assert(actual == expected, message .. ": expected " .. tostring(expected) .. ", got " .. tostring(actual))
 end
@@ -47,11 +47,7 @@ local function reset()
 	clean()
 	jobs, stopped, pending, sent, fed, sequence = {}, {}, {}, {}, {}, 0
 	spawn_result = nil
-	spawn_error = false
 	vim.fn.termopen = function(command, opts)
-		if spawn_error then
-			error("fixture executable missing")
-		end
 		sequence = sequence + 1
 		local result = spawn_result or sequence
 		jobs[result] = { command = command, opts = opts, buf = vim.api.nvim_get_current_buf() }
@@ -88,30 +84,8 @@ local tuis = {
 	grok = { user_command = "Grok", resume = "grok --no-alt-screen /resume" },
 	antigravity = { user_command = "Antigravity", job = "antigravity_job_id", resume = "agy -i /resume" },
 	kiro = { user_command = "Kiro", job = "kiro_job_id", resume = "kiro-cli --resume-picker" },
-	claude_code = { user_command = "ClaudeCode", job = "claude_job_id" },
-	codex = { user_command = "Codex", job = "codex_job_id" },
 }
 local function adapter(kind)
-	if kind == "remote" or kind == "remote_argv" then
-		package.loaded["utils.remote_agent"] = nil
-		local client = require("utils.remote_agent").new({
-			command = kind == "remote_argv" and { "sh" } or "sh",
-			label = "Test",
-			env = kind == "remote_argv" and { AGENT_TEST_MODE = "1", ANTHROPIC_API_KEY = false } or nil,
-			full_env = { AGENT_FULL_RENDERER = "1" },
-		})
-		return {
-			object = client,
-			open = client.open,
-			close = client.close,
-			hide = client.hide,
-			show = client.show,
-			full = client.toggle_full,
-			job = function()
-				return client._windows.job_id
-			end,
-		}
-	end
 	local tui = tuis[kind]
 	local job_key = tui.job or kind .. "_job_id"
 	package.loaded["config." .. kind] = nil
@@ -149,7 +123,7 @@ local cases = {}
 local function case(name, callback)
 	cases[#cases + 1] = { name = name, callback = callback }
 end
-for _, kind in ipairs({ "remote", "remote_argv", "antigravity", "kiro", "opencode", "grok" }) do
+for _, kind in ipairs({ "antigravity", "kiro", "opencode", "grok" }) do
 	case(kind .. " stale exit cannot close a reopened job", function()
 		local c = adapter(kind)
 		c.open()
@@ -289,16 +263,6 @@ for _, kind in ipairs({ "remote", "remote_argv", "antigravity", "kiro", "opencod
 		end
 	end
 end
-case("remote argv thrown spawn failure cleans resources", function()
-	local c = adapter("remote_argv")
-	local before = #vim.api.nvim_list_bufs()
-	spawn_error = true
-	c.open()
-	equal(c.job(), nil, "failed job not retained")
-	equal(c.object._is_open, false, "failed layout not open")
-	equal(#vim.api.nvim_list_wins(), 1, "failed layout windows removed")
-	equal(#vim.api.nvim_list_bufs(), before, "failed layout buffers removed")
-end)
 for _, kind in ipairs({ "antigravity", "kiro", "opencode", "grok" }) do
 	case(kind .. " resume stops the hidden old job", function()
 		local c = adapter(kind)
@@ -343,15 +307,10 @@ for _, kind in ipairs({ "antigravity", "kiro", "opencode", "grok" }) do
 		end)
 	end
 end
--- fullscreen: every CLI wrapper and the Happier client share the same behavior
+-- fullscreen: every CLI wrapper shares the same behavior
 local layout = require("utils.agent_layout")
 -- the command and the env key of each kind's split and fullscreen renderers
-local classic, no_flicker = "CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN", "CLAUDE_CODE_NO_FLICKER"
 local renderers = {
-	remote = { split = "sh", full = "sh", full_env = "AGENT_FULL_RENDERER" },
-	remote_argv = { split = '{ "sh" }', full = '{ "sh" }', full_env = "AGENT_FULL_RENDERER" },
-	claude_code = { split = "claude", full = "claude", split_env = classic, full_env = no_flicker },
-	codex = { split = "codex --no-alt-screen", full = "codex" },
 	antigravity = { split = "agy", full = "agy" },
 	kiro = { split = "kiro-cli", full = "kiro-cli" },
 	opencode = { split = "opencode mini", full = "opencode" },
@@ -370,7 +329,7 @@ local function full_windows(c)
 	local wins = vim.api.nvim_tabpage_list_wins(vim.api.nvim_win_get_tabpage(windows.terminal_win))
 	return #wins == 2 and vim.tbl_contains(wins, windows.terminal_win) and vim.tbl_contains(wins, windows.prompt_win)
 end
-for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "codex", "antigravity", "kiro", "opencode", "grok" }) do
+for _, kind in ipairs({ "antigravity", "kiro", "opencode", "grok" }) do
 	case(kind .. " fullscreen covers the editor and keeps the prompt", function()
 		local c = adapter(kind)
 		c.open()

@@ -4,6 +4,7 @@ import { Plugin } from "@opencode/plugin/effect"
 // The host exposes @opencode/plugin and effect, not @opencode/schema.
 import { Error as ToolError } from "@opencode/plugin/promise/tool"
 import { Effect } from "effect"
+import { execFile } from "node:child_process"
 import { readFile } from "node:fs/promises"
 import { homedir } from "node:os"
 import { join } from "node:path"
@@ -42,7 +43,16 @@ function screen(input: unknown): Call | string {
   }
 }
 
-export async function goQuota(path = join(process.env.XDG_CACHE_HOME || join(homedir(), ".cache"), "opencode/quota-export.json")) {
+// go-limits reads Go usage live (configs/agents/go-limits); the export is the
+// fallback when it is not on PATH. Its exit 1 and 2 still print a line.
+export function goQuota(command = "go-limits", path?: string) {
+  return new Promise<string>((resolve) => execFile(command, [], { timeout: 20_000 }, (error, stdout) => {
+    const line = String(stdout ?? "").trim()
+    resolve(line && (!error || typeof (error as any).code === "number") ? line : exportQuota(path))
+  }))
+}
+
+export async function exportQuota(path = join(process.env.XDG_CACHE_HOME || join(homedir(), ".cache"), "opencode/quota-export.json")) {
   try {
     const go = JSON.parse(await readFile(path, "utf8"))?.providers?.["opencode-go"]
     if (!go || !Array.isArray(go.entries)) return `quota unknown (opencode-go ${go?.status || "missing"})`
@@ -132,7 +142,7 @@ export default Plugin.define({
 
     yield* ctx.tool.transform((editor) => editor.add({
       name: "go_quota",
-      description: "Used percent and reset time of each OpenCode Go window (five-hour, weekly, monthly), from the opencode-quota export. Read-only.",
+      description: "Used percent and reset time of each OpenCode Go window (five-hour, weekly, monthly), from go-limits or the opencode-quota export. Read-only.",
       input: { type: "object", properties: {} },
       options: { codemode: false },
       execute: () => Effect.promise(() => goQuota()).pipe(Effect.map((content) => ({ content }))),

@@ -6,12 +6,11 @@ vim.o.columns = 160
 vim.notify = function() end
 local fixture = vim.fn.tempname()
 vim.fn.mkdir(fixture, "p")
-local command = fixture .. "/opencode"
 -- the tui wrappers find the same fixture under each cli's name
-for _, name in ipairs({ "opencode", "grok", "claude", "codex", "kiro-cli", "agy" }) do
+for _, name in ipairs({ "opencode", "grok", "kiro-cli", "agy" }) do
 	vim.fn.writefile({
 		"#!/bin/sh",
-		'if test -n "$NVIM_AGENT_PTY_ARGS"; then printf "%s|%s%s%s\\n" "$*" "${CLAUDE_CODE_NO_FLICKER:+F}" "${CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN:+S}" "${AGENT_FULL_RENDERER:+F}" >"$NVIM_AGENT_PTY_ARGS"; fi',
+		'if test -n "$NVIM_AGENT_PTY_ARGS"; then printf "%s|\\n" "$*" >"$NVIM_AGENT_PTY_ARGS"; fi',
 		'if test "$NVIM_AGENT_PTY_BYTES" = ""; then exec cat; fi',
 		"stty -echo -icanon min 1 time 0",
 		"printf READY",
@@ -38,28 +37,7 @@ local function read_output()
 	return content
 end
 local function adapter(kind)
-	if kind == "remote" or kind == "remote_argv" then
-		local c = require("utils.remote_agent").new({
-			command = kind == "remote_argv" and { command } or command,
-			label = "PTY",
-			env = kind == "remote_argv" and { AGENT_TEST_MODE = "1", ANTHROPIC_API_KEY = false } or nil,
-			full_env = { AGENT_FULL_RENDERER = "1" },
-		})
-		return {
-			object = c,
-			open = c.open,
-			close = c.close,
-			hide = c.hide,
-			show = c.show,
-			full = c.toggle_full,
-			toggle = c.toggle,
-			job = function()
-				return c._windows.job_id
-			end,
-		}
-	end
 	local c = require("config." .. kind)
-	local job_key = ({ claude_code = "claude_job_id" })[kind] or kind .. "_job_id"
 	return {
 		object = c,
 		open = c.open_layout,
@@ -70,7 +48,7 @@ local function adapter(kind)
 		full = c.toggle_full,
 		toggle = c.toggle_layout,
 		job = function()
-			return c._windows[job_key]
+			return c._windows[kind .. "_job_id"]
 		end,
 	}
 end
@@ -90,7 +68,7 @@ local function in_full_tab(win)
 	return layout.is_full(win) and #vim.api.nvim_tabpage_list_wins(vim.api.nvim_win_get_tabpage(win)) == 2
 end
 -- fullscreen on a real PTY: same job and buffers, prompt input still reaches it
-for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "codex", "kiro", "antigravity", "opencode", "grok" }) do
+for _, kind in ipairs({ "kiro", "antigravity", "opencode", "grok" }) do
 	cases[#cases + 1] = {
 		name = kind .. " PTY fullscreen prompt reaches the job",
 		run = function()
@@ -147,18 +125,11 @@ for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "codex", "kiro",
 		run = function()
 			-- "<args>|<renderer env>" as the real PTY child sees them
 			local expected = ({
-				remote = { "|", "|F" },
-				remote_argv = { "|", "|F" },
-				claude_code = { "|S", "|F" },
-				codex = { "--no-alt-screen|", "|" },
 				kiro = { "|", "|" },
 				antigravity = { "|", "|" },
 				opencode = { "mini|", "|" },
 				grok = { "--no-alt-screen|", "|" },
 			})[kind]
-			-- only the wrapper may set these, not the shell running the tests
-			vim.env.CLAUDE_CODE_NO_FLICKER = nil
-			vim.env.CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN = nil
 			for index, start in ipairs({ "toggle", "full" }) do
 				vim.env.NVIM_AGENT_PTY_BYTES = ""
 				vim.env.NVIM_AGENT_PTY_ARGS = fixture .. "/" .. kind .. "-args-" .. start
@@ -203,7 +174,7 @@ for _, kind in ipairs({ "remote", "remote_argv", "claude_code", "codex", "kiro",
 		end,
 	}
 end
-for _, kind in ipairs({ "remote", "remote_argv", "antigravity", "kiro", "opencode", "grok" }) do
+for _, kind in ipairs({ "antigravity", "kiro", "opencode", "grok" }) do
 	for _, hidden in ipairs({ false, true }) do
 		cases[#cases + 1] = {
 			name = kind .. " PTY multiline and " .. (hidden and "hidden" or "visible") .. " natural exit",

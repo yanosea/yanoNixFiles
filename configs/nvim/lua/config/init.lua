@@ -6,18 +6,12 @@ require("config.autocmds")
 if vim.env.WSL_DISTRO_NAME ~= nil then
 	require("config.wsl")
 end
--- claude code integration if available
-require("config.claude_code")
--- codex integration if available
-require("config.codex")
 -- antigravity integration if available
 require("config.antigravity")
 -- grok integration if available
 require("config.grok")
 -- opencode integration if available
 require("config.opencode")
--- Happier remote coding client if available
-require("config.remote_agents")
 -- kiro integration if available
 require("config.kiro")
 -- discordo integration if available

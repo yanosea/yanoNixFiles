@@ -3,7 +3,6 @@ specs/
 .agents/
 .antigravitycli/
 .claude/
-.codex/
 .serena/
 .specify/
 # IGNORE FILE

@@ -163,12 +163,23 @@ describe("paid guard", () => {
     expect(logs.at(-1)).toContain("could not check")
   })
 
-  test("go_quota reports opencode-go windows or quota unknown", async () => {
+  test("go_quota prints the go-limits line, even on its exit 1 and 2", async () => {
+    const { goQuota } = await import(join(dir, "paid-guard.ts"))
+    const bin = join(dir, "go-limits")
+    writeFileSync(bin, "#!/bin/sh\necho 'opencode-go via key (live): 5h 4% used'\nexit 1\n", { mode: 0o755 })
+    expect(await goQuota(bin)).toBe("opencode-go via key (live): 5h 4% used")
+    writeFileSync(bin, "#!/bin/sh\nexit 2\n", { mode: 0o755 })
+    expect(await goQuota(bin, join(dir, "none.json"))).toBe("quota unknown")
+  })
+
+  test("go_quota falls back to the opencode-go export without go-limits", async () => {
     const { tools } = await load()
     const tool = tools.find((x) => x.name === "go_quota")
     expect(tool.options).toEqual({ codemode: false })
     const previous = process.env.XDG_CACHE_HOME
+    const path = process.env.PATH
     process.env.XDG_CACHE_HOME = dir
+    process.env.PATH = join(dir, "empty")
     try {
       expect((await run(tool.execute({}, {}))).content).toBe("quota unknown")
       const now = Math.floor(Date.now() / 1000)
@@ -186,6 +197,7 @@ describe("paid guard", () => {
     } finally {
       if (previous === undefined) delete process.env.XDG_CACHE_HOME
       else process.env.XDG_CACHE_HOME = previous
+      process.env.PATH = path
     }
   })
 })

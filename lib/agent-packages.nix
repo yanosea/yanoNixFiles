@@ -1,5 +1,5 @@
 # the third-party agent packages of configs/agents/plugins.conf, parsed once
-# for the clis' configs and openclaw's
+# for the clis' configs
 { lib }:
 let
   # comments and blank lines dropped; an indented line continues the row above
@@ -51,17 +51,14 @@ let
   for = cli: lib.filter (package: package.clis ? ${cli}) packages;
   # the one value of cli, or null when the token is bare
   valueFor = cli: package: builtins.head package.clis.${cli};
-  claudeId = package: "${package.name}@${package.marketplace}";
+  # `<package>@<marketplace>`, the plugin id in a claude-format marketplace
+  pluginId = package: "${package.name}@${package.marketplace}";
 in
 {
-  inherit packages claudeId valueFor;
+  inherit packages pluginId valueFor;
   # the packages a cli gets, and every value each one gives it
   inherit for;
   valuesFor = cli: package: package.clis.${cli};
-  # the plugins of the openclaw agents' claude to turn off
-  openclawExcluded = map claudeId (
-    lib.filter (package: package.clis ? claude && lib.elem "openclaw" package.without) packages
-  );
   # the bare skills a cli gets (skill= packages not left out with -<cli>)
   skillsFor =
     cli: lib.filter (package: package.clis ? skill && !lib.elem cli package.without) packages;

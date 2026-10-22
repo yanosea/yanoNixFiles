@@ -1,6 +1,5 @@
 # home openclaw module
 {
-  agentPackages,
   config,
   hostname,
   inputs,
@@ -39,31 +38,6 @@ let
       meta.mainProgram = "openclaw";
     }
   );
-  # the agents share my claude config, so they would load every plugin
-  # settings.json enables. the ones marked `-openclaw` in
-  # configs/agents/plugins.conf run hooks on every session and prompt, which
-  # the agents should not get. grok has no such switch, so the list keeps
-  # those packages out of grok altogether
-  openclawExcludedClaudePlugins = agentPackages.openclawExcluded;
-  # the claude on the gateway PATH, with a `--settings` file that turns those
-  # plugins off above the user settings. a later `--settings` replaces this
-  # one instead of merging with it, and openclaw's own one (on the runs it
-  # restricts) already turns every hook off
-  openclawClaude = pkgs.symlinkJoin {
-    name = "${pkgs.claude-code.name}-openclaw";
-    paths = [ pkgs.claude-code ];
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      rm "$out/bin/claude"
-      makeWrapper ${pkgs.claude-code}/bin/claude "$out/bin/claude" \
-        --add-flags "--settings ${
-          (pkgs.formats.json { }).generate "openclaw-claude-settings.json" {
-            enabledPlugins = lib.genAttrs openclawExcludedClaudePlugins (_: false);
-          }
-        }"
-    '';
-    meta.mainProgram = "claude";
-  };
   launchdLabel = config.programs.openclaw.launchd.label;
   # beside the main workspace in the same repository
   devWorkspaceDir = "${config.home.homeDirectory}/ghq/github.com/${username}/openclaw/workspace-dev";
@@ -361,18 +335,6 @@ in
               "${config.sops.defaultSopsFile}" >"$dst"
             $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 600 "$dst"
           '';
-      # openclaw hardcodes `.claude/projects` and never reads CLAUDE_CONFIG_DIR,
-      # so it found no transcript and resumed no claude-cli session
-      openclawClaudeProjects = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        link="${config.home.homeDirectory}/.claude/projects"
-        $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "${config.xdg.configHome}/claude/projects" \
-          "${config.home.homeDirectory}/.claude"
-        # `ln` would nest the link inside a real directory left here
-        if [ -d "$link" ] && [ ! -L "$link" ]; then
-          $DRY_RUN_CMD ${pkgs.coreutils}/bin/mv "$link" "$link.$(${pkgs.coreutils}/bin/date +%s).bak"
-        fi
-        $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln -sfn "${config.xdg.configHome}/claude/projects" "$link"
-      '';
       # sops-nix decrypts onto a ram disk on darwin, so at login nothing it
       # places exists yet and launchd hands the gateway these paths verbatim
       openclawSecrets =
@@ -636,9 +598,6 @@ in
         OPENCLAW_DISCORD_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_CHANNEL_ID";
         OPENCLAW_DISCORD_DEV_CHANNEL_ID = secretPath "OPENCLAW_DISCORD_DEV_CHANNEL_ID";
         OPENCLAW_DISCORD_USER_ID = secretPath "OPENCLAW_DISCORD_USER_ID";
-        # launchd inherits no login shell, and the claude cli keeps its
-        # credentials here rather than in its default ~/.claude
-        CLAUDE_CONFIG_DIR = "${config.xdg.configHome}/claude";
         # without a fixed token every paired client drops on restart
         OPENCLAW_GATEWAY_TOKEN = secretPath "OPENCLAW_GATEWAY_TOKEN";
         # launchd sets no locale, and the agents count characters: with none,
@@ -649,13 +608,12 @@ in
         GROK_HOME = "${config.xdg.configHome}/grok";
         OPENCLAW_FEEDS = "1";
       };
-      # the subscription route delegates to the claude cli. gpg lets the dev
-      # agent sign its commits as me: branch protection rejects unsigned ones.
-      # openclaw-feeds is there for an agent to refresh its feeds by hand. gh
-      # is for the dev agent's PR and CI checks: job turns get only this path
+      # gpg lets the dev agent sign its commits as me: branch protection
+      # rejects unsigned ones. openclaw-feeds is there for an agent to refresh
+      # its feeds by hand. gh is for the dev agent's PR and CI checks: job
+      # turns get only this path
       runtimePackages = [
         openclawFeeds
-        openclawClaude
         pkgs.gh
         pkgs.gnupg
         # the graphify skill calls its cli
@@ -663,6 +621,10 @@ in
         pkgs.grok-build
         # yomiyasu's linter
         pkgs.python3
+        # go-limits: opencode go usage before heavy work (the turns do not see ~/.local/bin)
+        (pkgs.writeShellScriptBin "go-limits" ''
+          exec ${pkgs.python3}/bin/python3 "$HOME/.agents/go-limits/go_limits.py" "$@"
+        '')
       ];
       config = {
         agents = {
@@ -1034,9 +996,6 @@ in
               enabled = true;
             };
             "memory-wiki" = {
-              enabled = true;
-            };
-            "migrate-claude" = {
               enabled = true;
             };
             "oc-path" = {

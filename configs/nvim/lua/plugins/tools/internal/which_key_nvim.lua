@@ -18,28 +18,6 @@ return {
 					mode = "n",
 					-- ai
 					{ "<LEADER>a", group = "ai" },
-					-- ai: claude
-					{ "<LEADER>ac", group = "claude" },
-					{
-						"<LEADER>acr",
-						"<CMD>lua require('config.claude_code').resume_session()<CR>",
-						desc = "ai claude: resume",
-					},
-					{ "<LEADER>act", "<CMD>ClaudeCode<CR>", desc = "ai claude: toggle" },
-					{ "<LEADER>acf", "<CMD>ClaudeCodeFull<CR>", desc = "ai claude: fullscreen" },
-					-- ai: codex
-					{ "<LEADER>ad", group = "codex" },
-					{
-						"<LEADER>adr",
-						"<CMD>lua require('config.codex').resume_session()<CR>",
-						desc = "ai codex: resume",
-					},
-					{ "<LEADER>adt", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
-					{ "<LEADER>adf", "<CMD>CodexFull<CR>", desc = "ai codex: fullscreen" },
-					-- ai: Happier
-					{ "<LEADER>ah", group = "happier" },
-					{ "<LEADER>aht", "<CMD>Happier<CR>", desc = "ai Happier: toggle" },
-					{ "<LEADER>ahf", "<CMD>HappierFull<CR>", desc = "ai Happier: fullscreen" },
 					-- ai: kiro
 					{ "<LEADER>ak", group = "kiro" },
 					{

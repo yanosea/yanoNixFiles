@@ -37,7 +37,7 @@
     { "action": "webfetch", "resource": "*", "effect": "allow" },
     { "action": "websearch", "resource": "*", "effect": "allow" }
   ],
-  // vendor plugins matching the claude ones; opencode fetches them from npm,
+  // opencode's own vendor plugins; opencode fetches them from npm,
   // so versions are pinned here. the ones shared with the other clis come
   // from configs/agents/plugins.conf into opencode.json beside this file,
   // and opencode joins the plugins of both
@@ -46,32 +46,6 @@
     // subscription quota, with its tui line; settings in opencode-quota/
     "@slkiser/opencode-quota@5.0.3",
     "opencode-tavily@1.0.0"
-  ],
-  // same servers as configs/agents/mcp-servers.conf
-  "mcp": {
-    "servers": {
-      "comfyui": {
-        "type": "local",
-        "command": ["npx", "-y", "comfyui-mcp"],
-        "environment": { "COMFYUI_URL": "http://127.0.0.1:8188" }
-      },
-      "invokeai": {
-        "type": "local",
-        "command": [
-          "uvx",
-          "--from",
-          "invokeai-mcp-server",
-          "--with",
-          "mcp<2",
-          "python",
-          "-m",
-          "invokeai_mcp_server"
-        ]
-      },
-      "rea": {
-        "type": "local",
-        "command": ["npx", "-y", "rea-agents@6.7.0", "mcp"]
-      }
-    }
-  }
+  ]
+  // the mcp servers come from configs/agents/mcp-servers.conf, into opencode.json
 }

@@ -67,14 +67,8 @@ in
     };
     defaultSopsFile = inputs.self + "/ops/sops/credentials.enc.yaml";
     secrets = {
-      ANTHROPIC_API_KEY = {
-        path = "${config.xdg.dataHome}/sops/ANTHROPIC_API_KEY";
-      };
       GPG_PRIVATE_KEY = {
         path = "${config.xdg.dataHome}/sops/GPG_PRIVATE_KEY";
-      };
-      OPENAI_API_KEY = {
-        path = "${config.xdg.dataHome}/sops/OPENAI_API_KEY";
       };
       OPENCODE_API_KEY = {
         path = "${config.xdg.dataHome}/sops/OPENCODE_API_KEY";
