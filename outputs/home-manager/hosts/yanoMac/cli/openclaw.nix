@@ -120,6 +120,12 @@ let
       model = "opencode-go/kimi-k3";
       deny = [ ];
     };
+    # the opencode planner: reads and plans before any edit, never edits
+    planner = {
+      name = "read-only planning";
+      model = "opencode-go/kimi-k3";
+      deny = readOnly;
+    };
     # another family than the manager, so it does not favour its own output
     reviewer = {
       name = "independent read-only review";
