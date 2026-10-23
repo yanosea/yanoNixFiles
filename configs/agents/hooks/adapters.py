@@ -10,7 +10,7 @@ import re
 import shlex
 import subprocess
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 HARNESSES = (
@@ -310,7 +310,7 @@ def normalize(harness, event, payload):
                 instant = datetime.fromisoformat(timestamp)
                 if instant.tzinfo is not None:
                     timestamp = (
-                        instant - datetime(1970, 1, 1, tzinfo=timezone.utc)
+                        instant - datetime(1970, 1, 1, tzinfo=UTC)
                     ) // timedelta(milliseconds=1)
             except ValueError:
                 pass

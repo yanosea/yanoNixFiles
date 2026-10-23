@@ -6,7 +6,7 @@ gi.require_version("ECal", "2.0")
 import json
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime, timezone
 
 from gi.repository import ECal, EDataServer, GLib
 
@@ -39,7 +39,7 @@ def safe_get_time(ical_time):
         minute = ical_time.get_minute()
         second = ical_time.get_second()
 
-        dt = datetime(year, month, day, hour, minute, second, tzinfo=timezone.utc)
+        dt = datetime(year, month, day, hour, minute, second, tzinfo=UTC)
         return int(dt.timestamp())
     except (ValueError, OverflowError, TypeError, GLib.Error):
         return None
@@ -69,8 +69,8 @@ for source in sources:
         )
         print(f"  Connected to {calendar_name}", file=sys.stderr)
 
-        start_dt = datetime.fromtimestamp(start_time, tz=timezone.utc)
-        end_dt = datetime.fromtimestamp(end_time, tz=timezone.utc)
+        start_dt = datetime.fromtimestamp(start_time, tz=UTC)
+        end_dt = datetime.fromtimestamp(end_time, tz=UTC)
 
         start_str = start_dt.strftime("%Y%m%dT%H%M%SZ")
         end_str = end_dt.strftime("%Y%m%dT%H%M%SZ")
