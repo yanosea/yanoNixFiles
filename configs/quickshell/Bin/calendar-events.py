@@ -6,7 +6,7 @@ gi.require_version("ECal", "2.0")
 import json
 import sys
 import time
-from datetime import UTC, datetime, timezone
+from datetime import UTC, datetime
 
 from gi.repository import ECal, EDataServer, GLib
 
