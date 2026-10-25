@@ -44,6 +44,19 @@ describe("OpenClaw native plugin", () => {
   })
 })
 
+test("OpenClaw runs the hook with the python in COMMON_HOOK_PYTHON_DIR", async () => {
+  const { default: plugin } = await import("../bridges/openclaw/index.ts")
+  const handlers = new Map<string, Function>()
+  plugin.register({ on(name: string, fn: Function) { handlers.set(name, fn) }, logger: { warn() {} } } as any)
+  const bin = mkdtempSync(join(dir, "bin-"))
+  writeFileSync(join(bin, "python3"), "#!/bin/sh\ncat >/dev/null\necho '{\"block\":true,\"blockReason\":\"pinned python\"}'\n", { mode: 0o755 })
+  process.env.COMMON_HOOK_PYTHON_DIR = bin
+  try {
+    expect(await handlers.get("before_tool_call")!({ toolName: "exec", params: {} }, { sessionId: "py", workspaceDir: dir }))
+      .toEqual({ block: true, blockReason: "pinned python" })
+  } finally { delete process.env.COMMON_HOOK_PYTHON_DIR }
+})
+
 test("OpenClaw revises only external user development loops and never agent_end", async () => {
   const { default: plugin } = await import("../bridges/openclaw/index.ts")
   const handlers = new Map<string, Function>()
