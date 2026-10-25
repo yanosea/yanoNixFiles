@@ -348,8 +348,9 @@ let
     // {
       "opencode/AGENTS.md".source = ./agents/global-rules.md;
       "opencode/plugins/common-hooks.ts".source = ./agents/hooks/bridges/opencode.ts;
-      # the shared npm plugins (opencode=npm:), in a file of their own: opencode
-      # reads opencode.json and opencode.jsonc both and joins their plugins
+      # the shared npm plugins (opencode=npm:) and the mcp servers, in a file of
+      # their own: opencode reads opencode.json and opencode.jsonc both, joins
+      # their plugins and merges their servers by name
       "opencode/opencode.json".source = (pkgs.formats.json { }).generate "opencode.json" {
         "$schema" = "https://opencode.ai/config.json";
         plugins = lib.concatMap (
@@ -358,6 +359,9 @@ let
             lib.filter (lib.hasPrefix "npm:") (agentPackages.valuesFor "opencode" package)
           )
         ) (agentPackages.for "opencode");
+        mcp = {
+          servers = mcpServers;
+        };
       };
     }
     # packages with no opencode plugin to pin: the skill alone, kept out of
@@ -390,6 +394,105 @@ let
         ) codexSharedPlugins (agentPackages.for "codex")
       )
     )
+  );
+  # configs/agents/mcp-servers.conf as opencode servers, read the way
+  # configs/antigravity/scripts/sync-mcp-servers.sh reads it: a `#` starts a
+  # comment, and a row is `<name> [options] -- <command> [args...]` or
+  # `<name> -t http|sse <url>`. options: -e/--env KEY=VALUE, -t/--transport
+  mcpServers = lib.listToAttrs (
+    map
+      (
+        line:
+        let
+          words = lib.filter (word: word != "") (lib.splitString " " line);
+          rest = lib.tail words;
+          split = lib.lists.findFirstIndex (word: word == "--") null rest;
+          flagged = rest != [ ] && lib.hasPrefix "-" (lib.head rest);
+          options =
+            if split != null then
+              lib.take split rest
+            else if flagged then
+              lib.init rest
+            else
+              [ ];
+          target =
+            if split != null then
+              lib.drop (split + 1) rest
+            else if flagged then
+              [ (lib.last rest) ]
+            else
+              rest;
+          fail = throw "configs/agents/mcp-servers.conf: cannot read `${line}`";
+          pairs =
+            if lib.mod (builtins.length options) 2 != 0 then
+              fail
+            else
+              lib.genList (i: {
+                flag = builtins.elemAt options (2 * i);
+                value = builtins.elemAt options (2 * i + 1);
+              }) (builtins.length options / 2);
+          valuesOf = flags: map (pair: pair.value) (lib.filter (pair: lib.elem pair.flag flags) pairs);
+          transports = valuesOf [
+            "-t"
+            "--transport"
+          ];
+          transport = if transports == [ ] then "stdio" else lib.last transports;
+          environment = lib.listToAttrs (
+            map
+              (
+                value:
+                let
+                  parts = lib.splitString "=" value;
+                in
+                lib.nameValuePair (lib.head parts) (lib.concatStringsSep "=" (lib.tail parts))
+              )
+              (valuesOf [
+                "-e"
+                "--env"
+              ])
+          );
+          unknown = lib.filter (
+            pair:
+            !lib.elem pair.flag [
+              "-e"
+              "--env"
+              "-t"
+              "--transport"
+            ]
+          ) pairs;
+        in
+        if words == [ ] || target == [ ] || unknown != [ ] then
+          fail
+        else if transport == "stdio" then
+          lib.nameValuePair (lib.head words) (
+            {
+              type = "local";
+              command = target;
+            }
+            // lib.optionalAttrs (environment != { }) { inherit environment; }
+          )
+        else if
+          lib.elem transport [
+            "http"
+            "sse"
+          ]
+          && environment == { }
+          && builtins.length target == 1
+        then
+          lib.nameValuePair (lib.head words) {
+            type = "remote";
+            url = lib.head target;
+          }
+        else
+          fail
+      )
+      (
+        lib.filter (line: builtins.match "[[:space:]]*" line == null) (
+          map (line: lib.head (lib.splitString "#" line)) (
+            lib.splitString "\n" (builtins.readFile ./agents/mcp-servers.conf)
+          )
+        )
+      )
   );
   # the shared plugins copilot installs, with their marketplaces, as the
   # settings.json keys for declarative install
@@ -595,11 +698,26 @@ in
       ".gemini/config/plugins.conf".text = withSharedPlugins ./antigravity/plugins.conf 41 (
         map (package: package.name) (agentPackages.for "antigravity")
       );
+      # where sync-plugins.sh fetches each plugin from
+      ".gemini/config/plugin-marketplaces.conf".text =
+        builtins.readFile ./antigravity/plugin-marketplaces.conf
+        + "\n# shared with the other clis, declared in configs/agents/plugins.conf\n"
+        + lib.concatMapStrings (package: "${package.name} ${package.marketplace} ${package.repository}\n") (
+          agentPackages.for "antigravity"
+        );
       ".local/bin/agent-loop" = {
         executable = true;
         text = ''
           #!${pkgs.runtimeShell}
           exec ${pkgs.python3}/bin/python3 "$HOME/.agents/hooks/agent_loop.py" "$@"
+        '';
+      };
+      # opencode go usage, read by paid-guard's go_quota and the openclaw check-ins
+      ".local/bin/go-limits" = {
+        executable = true;
+        text = ''
+          #!${pkgs.runtimeShell}
+          exec ${pkgs.python3}/bin/python3 "$HOME/.agents/go-limits/go_limits.py" "$@"
         '';
       };
       ".local/bin/niri-app-toggle" = {

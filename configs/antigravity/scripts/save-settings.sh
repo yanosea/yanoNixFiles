@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # save-settings.sh - write agy's settings.json back into the repo, minus the
-# machine-local trustedWorkspaces. Run from the claude SessionStart hook: agy
-# has no session-end event.
+# machine-local trustedWorkspaces. Run from the opencode agent-sync plugin:
+# agy has no session-end event.
 
 set -uo pipefail
 

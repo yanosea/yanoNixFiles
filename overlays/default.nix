@@ -197,7 +197,8 @@ inputs: [
       # opencode 2; llm-agents names the binary opencode2 so it can sit beside
       # v1, and nothing here keeps v1. the shell exports api keys for other
       # tools; dropped here, opencode (and the service it spawns) stays on the
-      # subscription logins instead of billing the api
+      # subscription logins instead of billing the api. opencode is the main cli,
+      # so its fallbacks to the claude code CLAUDE.md and .claude/skills are off
       opencode =
         prev.runCommand "opencode-${llm-agents.opencode2.version}"
           {
@@ -210,7 +211,8 @@ inputs: [
               --unset ANTHROPIC_AUTH_TOKEN \
               --unset ANTHROPIC_BASE_URL \
               --unset OPENAI_API_KEY \
-              --unset OPENAI_BASE_URL
+              --unset OPENAI_BASE_URL \
+              --set OPENCODE_DISABLE_CLAUDE_CODE 1
           '';
     }
   )

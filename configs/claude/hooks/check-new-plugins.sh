@@ -94,7 +94,7 @@ if new:
     "name so `#` lands on column 46 like the surrounding lines, and refresh "
     "the `# total: / enabled: / excluded:` counts in the header. "
     "configs/antigravity/plugins.conf declares the same claude plugins for "
-    "antigravity (imported from the claude cache): add the same line, with the "
+    "antigravity (fetched from plugin-marketplaces.conf): add the same line, with the "
     "same decision, there too. The change "
     "takes effect once `make home` regenerates enabledPlugins in settings.json."
     )
