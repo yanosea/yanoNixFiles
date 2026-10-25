@@ -5,7 +5,7 @@
   "share": "disabled",
   // fallback for sessions with no agent model; keep it on go so the catalog
   // never falls back to a pay-as-you-go model
-  "model": "opencode-go/claude-haiku-5-5",
+  "model": "opencode-go/glm-5.3",
   // manager routes work to the agents in agents/
   "default_agent": "manager",
   // the personal console sign-in keeps a member budget for go extra usage, so

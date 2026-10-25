@@ -83,7 +83,10 @@ let
         "${workspace}/skills/feeds/config.json"
       ]
     );
-  # main and dev each name theirs, so one can move without the other
+  # main and dev each name theirs, so one can move without the other. dev
+  # runs the same model as opencode's manager
+  devModel = "opencode-go/glm-5.3";
+  # explore and worker
   goModel = "opencode-go/claude-haiku-5-5";
   # haiku did not keep main's long japanese persona rules, and qwen answered
   # the intimate roleplay turns with http 400. grok runs on the supergrok
@@ -117,13 +120,13 @@ let
     };
     smart = {
       name = "hard design and debugging";
-      model = "opencode-go/kimi-k3";
+      model = "opencode-go/kimi-k3.1-pro";
       deny = [ ];
     };
     # the opencode planner: reads and plans before any edit, never edits
     planner = {
       name = "read-only planning";
-      model = "opencode-go/kimi-k3";
+      model = "opencode-go/kimi-k3.1-pro";
       deny = readOnly;
     };
     # another family than the manager, so it does not favour its own output
@@ -686,7 +689,7 @@ in
               target = "none";
             };
             model = {
-              primary = goModel;
+              primary = devModel;
             };
             modelPolicy = goOnly;
             # children are leaves, like opencode's subagents; a run has no
@@ -736,7 +739,7 @@ in
             };
             dev = {
               workspace = devWorkspaceDir;
-              model = goModel;
+              model = devModel;
               modelPolicy = goOnly;
               heartbeat = {
                 prompt = heartbeatPrompt;

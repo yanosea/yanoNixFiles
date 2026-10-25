@@ -1,7 +1,7 @@
 ---
 description: Handles hard design and debugging that needs deeper reasoning
 mode: subagent
-model: opencode-go/kimi-k3
+model: opencode-go/kimi-k3.1-pro
 permissions:
   - { action: subagent, resource: "*", effect: deny }
 ---
