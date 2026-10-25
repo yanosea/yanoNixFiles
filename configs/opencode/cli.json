@@ -3,5 +3,44 @@
   "theme": {
     "name": "everforest",
     "mode": "system"
+  },
+  "animations": true,
+  "session": {
+    "scrollbar": true,
+    "markdown": "rendered",
+    "verbosity": "high",
+    "new_location": "launch",
+    "permissions": "autoaccept"
+  },
+  "tabs": {
+    "mode": "on",
+    "scope": "global",
+    "layout": "horizontal",
+    "indicators": "status"
+  },
+  "diffs": {
+    "view": "split",
+    "wrap": "word"
+  },
+  "attention": {
+    "sound": true,
+    "notifications": true,
+    "volume": 0.5
+  },
+  "prompt": {
+    "paste": "full",
+    "image_preview": true
+  },
+  "scroll": {
+    "acceleration": true
+  },
+  "terminal": {
+    "copy": "select"
+  },
+  "keybinds": {
+    "session.first": "ctrl+g,alt+home,ctrl+home",
+    "session.last": "ctrl+alt+g,ctrl+end",
+    "input.line.home": "ctrl+a,home",
+    "input.line.end": "ctrl+e,end"
   }
 }
