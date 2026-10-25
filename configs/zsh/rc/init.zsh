@@ -22,14 +22,5 @@ source "$ZSHRC_DIR/abbreviations.zsh"
 # credentials (interactive-only)
 source "$ZSHRC_DIR/credentials.zsh"
 
-# Preserve the login session environment (including the macOS keychain).
-if [[ -z "${REMOTE_AGENTS_STARTED:-}" && -f "$HOME/.agents/remote-control.py" ]]; then
-  export REMOTE_AGENTS_STARTED=1
-  (
-    mkdir -p "$XDG_CACHE_HOME/agents"
-    python3 "$HOME/.agents/remote-control.py" start >>"$XDG_CACHE_HOME/agents/remote-control.log" 2>&1
-  ) &|
-fi
-
 # zellij configuration
 source "$ZSHRC_DIR/zellij.zsh"

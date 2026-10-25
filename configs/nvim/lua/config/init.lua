@@ -16,8 +16,6 @@ require("config.antigravity")
 require("config.grok")
 -- opencode integration if available
 require("config.opencode")
--- Happier remote coding client if available
-require("config.remote_agents")
 -- kiro integration if available
 require("config.kiro")
 -- discordo integration if available

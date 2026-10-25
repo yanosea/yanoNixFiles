@@ -36,10 +36,6 @@ return {
 					},
 					{ "<LEADER>adt", "<CMD>Codex<CR>", desc = "ai codex: toggle" },
 					{ "<LEADER>adf", "<CMD>CodexFull<CR>", desc = "ai codex: fullscreen" },
-					-- ai: Happier
-					{ "<LEADER>ah", group = "happier" },
-					{ "<LEADER>aht", "<CMD>Happier<CR>", desc = "ai Happier: toggle" },
-					{ "<LEADER>ahf", "<CMD>HappierFull<CR>", desc = "ai Happier: fullscreen" },
 					-- ai: kiro
 					{ "<LEADER>ak", group = "kiro" },
 					{

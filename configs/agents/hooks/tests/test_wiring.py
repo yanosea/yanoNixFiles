@@ -36,7 +36,9 @@ def hook(event, harness="claude", home="$HOME"):
 class WiringTests(unittest.TestCase):
     def test_json_preserves_settings_control_plane_and_disable(self):
         desired = {"hooks": {"SessionStart": [hook("SessionStart")]}}
-        control = {"hooks": [{"type": "command", "command": "happier-session-control"}]}
+        control = {
+            "hooks": [{"type": "command", "command": "external-session-control"}]
+        }
         current = {
             "model": "custom",
             "disableAllHooks": True,
