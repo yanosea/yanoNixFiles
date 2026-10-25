@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # sync-mcp-servers.sh - reconcile agy MCP servers with configs/agents/mcp-servers.conf.
-# Run from the claude hook: agy skips its own hooks once ~30 plugins are loaded.
+# Run from the opencode agent-sync plugin: agy skips its own hooks once ~30
+# plugins are loaded.
 
 set -uo pipefail
 # keep `mcp<2` unglobbed

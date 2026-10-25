@@ -8,6 +8,16 @@ default_reasoning_effort = "medium"
 [memory_v2]
 enabled = true
 
+# grok reads claude code's skills, rules, CLAUDE.md, mcp servers, hooks and
+# sessions by default; opencode is the main cli, so they stay apart
+[compat.claude]
+skills = false
+rules = false
+agents = false
+mcps = false
+hooks = false
+sessions = false
+
 [ui]
 max_thoughts_width = 100
 yolo = false
