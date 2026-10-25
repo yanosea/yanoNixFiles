@@ -657,6 +657,10 @@ in
         # skip when this is set instead of editing the dotfiles repository
         GROK_HOME = "${config.xdg.configHome}/grok";
         OPENCLAW_FEEDS = "1";
+        # the common hooks need python 3.11 or later, and openclaw puts
+        # /usr/bin first in PATH. a directory, because the wrapper would cat a
+        # file path into the value
+        COMMON_HOOK_PYTHON_DIR = "${pkgs.python3}/bin";
       };
       # the subscription route delegates to the claude cli. gpg lets the dev
       # agent sign its commits as me: branch protection rejects unsigned ones.

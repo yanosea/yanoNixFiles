@@ -13,7 +13,9 @@ type API = {
 function invoke(event: string, payload: object): Promise<HookResult> {
   return new Promise((resolve) => {
     const path = process.env.COMMON_HOOK_ENTRY || join(homedir(), ".agents/hooks/common_hook.py")
-    const child = execFile("python3", [path, "--harness", "openclaw", "--event", event], {
+    // OpenClaw puts /usr/bin first in PATH at startup, and macOS python3 there is too old
+    const python = process.env.COMMON_HOOK_PYTHON_DIR ? join(process.env.COMMON_HOOK_PYTHON_DIR, "python3") : "python3"
+    const child = execFile(python, [path, "--harness", "openclaw", "--event", event], {
       encoding: "utf8", timeout: 120_000, maxBuffer: 1024 * 1024,
     }, (error, stdout) => {
       try {
