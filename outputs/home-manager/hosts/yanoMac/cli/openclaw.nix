@@ -85,7 +85,7 @@ let
     );
   # main and dev each name theirs, so one can move without the other. dev
   # runs the same model as opencode's manager
-  devModel = "opencode-go/glm-5.3";
+  devModel = "opencode-go/deepseek-v4.1-flash";
   # explore and worker
   goModel = "opencode-go/claude-haiku-5-5";
   # haiku did not keep main's long japanese persona rules, and qwen answered
