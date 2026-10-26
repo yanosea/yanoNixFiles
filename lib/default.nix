@@ -4,51 +4,35 @@ let
   # import system and constant configurations
   systems = import ./systems.nix;
   constants = import ./constants.nix;
+  # the nixosSystem wiring both linux hosts share; each prepends its host module
+  mkNixOsSystemWith =
+    hostModule:
+    {
+      homePath,
+      hostname,
+      modules,
+      system,
+      username,
+    }:
+    inputs.nixpkgs.lib.nixosSystem {
+      inherit system;
+      modules = [ hostModule ] ++ modules;
+      specialArgs = {
+        inherit
+          homePath
+          hostname
+          inputs
+          username
+          ;
+      };
+    };
 in
 {
   # export system and constant configurations
   inherit (systems) supportedSystems getSystemConfig;
   inherit (constants) username;
-  mkNixOsSystem =
-    {
-      homePath,
-      hostname,
-      modules,
-      system,
-      username,
-    }:
-    inputs.nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [ inputs.lanzaboote.nixosModules.lanzaboote ] ++ modules;
-      specialArgs = {
-        inherit
-          homePath
-          hostname
-          inputs
-          username
-          ;
-      };
-    };
-  mkNixOsWslSystem =
-    {
-      homePath,
-      hostname,
-      modules,
-      system,
-      username,
-    }:
-    inputs.nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [ inputs.nixos-wsl.nixosModules.wsl ] ++ modules;
-      specialArgs = {
-        inherit
-          homePath
-          hostname
-          inputs
-          username
-          ;
-      };
-    };
+  mkNixOsSystem = mkNixOsSystemWith inputs.lanzaboote.nixosModules.lanzaboote;
+  mkNixOsWslSystem = mkNixOsSystemWith inputs.nixos-wsl.nixosModules.wsl;
   mkDarwinSystem =
     {
       homePath,
