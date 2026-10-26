@@ -287,14 +287,12 @@ quit_wallpaper() {
 }
 
 #
-# launch wallpaper with specific id on all monitors
-# handles process management and error checking
+# detect the compositor and its monitors
+# exports HYPRLAND_INSTANCE_SIGNATURE and NIRI_SOCKET from wezterm's
+# environment when unset, fills the global monitors array (hyprctl first,
+# niri fallback), and returns 1 when no compositor answers
 #
-launch_wallpaper_with_id() {
-  local wallpaper_id="$1"
-  local is_random_mode="${2:-false}"
-  # get available monitors based on current compositor
-  # auto-detect compositor environment variables from wezterm if not set
+detect_monitors() {
   local wezterm_pid
   wezterm_pid=$(pgrep -x wezterm-gui | head -1)
   if [ -n "$wezterm_pid" ]; then
@@ -316,6 +314,16 @@ launch_wallpaper_with_id() {
     echo -e "${RED}❌ Error: Could not detect compositor or no monitors found${NC}"
     return 1
   fi
+}
+
+#
+# launch wallpaper with specific id on all monitors
+# handles process management and error checking
+#
+launch_wallpaper_with_id() {
+  local wallpaper_id="$1"
+  local is_random_mode="${2:-false}"
+  detect_monitors || return 1
   # terminate existing wallpapers
   local existing_pids=()
   for monitor in "${monitors[@]}"; do
@@ -423,29 +431,7 @@ launch_wallpaper() {
   selected_wallpaper="${wallpaper_map["$selected_wallpaper_option"]}"
   echo -e "${GREEN}✅ Selected wallpaper: ${CYAN}$selected_wallpaper${NC}"
   echo
-  # get available monitors based on current compositor
-  # auto-detect compositor environment variables from wezterm if not set
-  local wezterm_pid
-  wezterm_pid=$(pgrep -x wezterm-gui | head -1)
-  if [ -n "$wezterm_pid" ]; then
-    if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-      HYPRLAND_INSTANCE_SIGNATURE=$(cat /proc/"$wezterm_pid"/environ 2>/dev/null | tr '\0' '\n' | grep '^HYPRLAND_INSTANCE_SIGNATURE=' | cut -d'=' -f2)
-      export HYPRLAND_INSTANCE_SIGNATURE
-    fi
-    if [ -z "$NIRI_SOCKET" ]; then
-      NIRI_SOCKET=$(cat /proc/"$wezterm_pid"/environ 2>/dev/null | tr '\0' '\n' | grep '^NIRI_SOCKET=' | cut -d'=' -f2)
-      export NIRI_SOCKET
-    fi
-  fi
-  # try hyprctl first, fallback to niri
-  mapfile -t monitors < <(hyprctl monitors 2>/dev/null | grep -E '^Monitor ' | awk '{print $2}' | sort)
-  if [ ${#monitors[@]} -eq 0 ]; then
-    mapfile -t monitors < <(niri msg outputs 2>/dev/null | grep '^Output' | grep -oP '\([^)]+\)$' | tr -d '()' | sort)
-  fi
-  if [ ${#monitors[@]} -eq 0 ]; then
-    echo -e "${RED}❌ Error: Could not detect compositor or no monitors found${NC}"
-    return 1
-  fi
+  detect_monitors || return 1
   echo -e "${BLUE}🖥️  Applying to all monitors: ${CYAN}${monitors[*]}${NC}"
   echo
   # check for existing wallpaper processes
