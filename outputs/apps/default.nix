@@ -2,7 +2,7 @@
 inputs:
 let
   lib = import ../../lib inputs;
-  inherit (lib) supportedSystems;
+  inherit (lib) supportedSystems username;
   pkgs = system: import inputs.nixpkgs { inherit system; };
   # status messages: the palette and the blank-line rule live in lib/messages.nix
   messages = import ../../lib/messages.nix;
@@ -25,7 +25,7 @@ let
       system = "x86_64-linux";
       osType = "nixos";
       systemConfig = "yanoNixOs";
-      homeConfig = "yanosea@yanoNixOs";
+      homeConfig = "${username}@yanoNixOs";
       preHomeCommands = ''
         rm -fr "$HOME/.config/claude/CLAUDE.md"
         rm -fr "$HOME/.config/fcitx5/config"
@@ -37,7 +37,7 @@ let
       system = "x86_64-linux";
       osType = "nixos";
       systemConfig = "yanoNixOsWsl";
-      homeConfig = "yanosea@yanoNixOsWsl";
+      homeConfig = "${username}@yanoNixOsWsl";
       preHomeCommands = ''
         rm -fr "$HOME/.config/claude/CLAUDE.md"
       '';
@@ -47,7 +47,7 @@ let
       system = "aarch64-darwin";
       osType = "darwin";
       systemConfig = "yanoMac";
-      homeConfig = "yanosea@yanoMac";
+      homeConfig = "${username}@yanoMac";
       preHomeCommands = ''
         rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
         rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
@@ -59,7 +59,7 @@ let
       system = "aarch64-darwin";
       osType = "darwin";
       systemConfig = "yanoMacBook";
-      homeConfig = "yanosea@yanoMacBook";
+      homeConfig = "${username}@yanoMacBook";
       preHomeCommands = ''
         rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
         rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
