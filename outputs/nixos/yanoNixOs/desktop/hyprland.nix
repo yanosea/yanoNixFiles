@@ -32,8 +32,10 @@ in
         };
       };
       enable = true;
+      # `programs.hyprland.portalPackage` already puts the patched portal in
+      # this list; adding it again links the same user unit twice and the build
+      # fails with `ln: File exists`.
       extraPortals = [
-        xdgDesktopPortalHyprland
         pkgs.xdg-desktop-portal-gtk
       ];
 
