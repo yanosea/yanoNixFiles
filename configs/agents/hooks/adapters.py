@@ -129,7 +129,7 @@ def ancestor_harness():
                 pid = int(parent)
             else:
                 break
-        except OSError, ValueError, subprocess.TimeoutExpired:
+        except (OSError, ValueError, subprocess.TimeoutExpired):
             break
     return None
 
