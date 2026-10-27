@@ -1,0 +1,3 @@
+# ruff version bumps must not reformat the tree:
+# pin the syntax level the agents actually run (python3.14 in nixpkgs)
+target-version = "py314"

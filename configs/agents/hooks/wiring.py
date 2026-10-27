@@ -14,9 +14,8 @@ import shlex
 import stat
 import sys
 import tempfile
-from pathlib import Path
-
 import tomllib
+from pathlib import Path
 
 LEGACY = {"load-handover.sh", "remind-websearch.sh", "generate-handover.sh"}
 
