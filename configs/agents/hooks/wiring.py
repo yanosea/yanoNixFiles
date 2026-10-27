@@ -1,3 +1,4 @@
+# isort: skip_file
 """Merge common hook registrations without changing user trust or selections.
 
 This installer never executes repository commands or grants hook trust. Native
