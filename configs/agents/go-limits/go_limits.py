@@ -72,7 +72,7 @@ def _window(name, used, resets, status):
         raise RouteError(f"bad {name} percent")
     if isinstance(resets, str):
         try:
-            resets = datetime.fromisoformat(resets.replace("Z", "+00:00")).timestamp()
+            resets = datetime.fromisoformat(resets).timestamp()
         except ValueError:
             raise RouteError(f"bad {name} reset") from None
     exhausted = status == "rate-limited"
