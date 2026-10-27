@@ -328,7 +328,7 @@ def is_metadata(value, cwd, metadata):
             any(target == root or root in target.parents for root in metadata)
             or ".git" in target.parts
         )
-    except (OSError, ValueError, TypeError):
+    except OSError, ValueError, TypeError:
         return False
 
 
