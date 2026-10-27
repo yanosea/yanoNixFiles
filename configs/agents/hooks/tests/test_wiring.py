@@ -1,4 +1,3 @@
-# isort: skip_file
 """Wiring regressions: preservation, relocation and malformed-input safety."""
 
 import copy
