@@ -1,4 +1,4 @@
-# `tomllib` is stdlib from 3.11 but ruff 0.16 and 0.17 split it differently:
-# say it out loud so both sort the import block the same way
+target-version = "py313"
+
 [lint.isort]
 extra-standard-library = ["tomllib"]

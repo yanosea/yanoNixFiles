@@ -96,7 +96,7 @@ def from_key(key):
                     and payload.get("error", {}).get("type") == "EntitlementError"
                 ):
                     raise NotSubscribed from None
-            except ValueError, AttributeError:
+            except (ValueError, AttributeError):
                 pass
         raise
     usage = body.get("usage") if isinstance(body, dict) else None
@@ -125,7 +125,7 @@ def console_credential():
             timeout=TIMEOUT,
             check=False,
         )
-    except OSError, subprocess.TimeoutExpired:
+    except (OSError, subprocess.TimeoutExpired):
         raise RouteError("opencode auth export failed") from None
     try:
         rows = json.loads(out.stdout) if out.returncode == 0 else None
@@ -173,7 +173,7 @@ def from_console():
                 float(meter["limitMicroCents"]),
                 float(meter["usedMicroCents"]),
             )
-        except KeyError, TypeError, ValueError:
+        except (KeyError, TypeError, ValueError):
             raise RouteError(f"bad {name} meter") from None
         percent = (
             (100 if used > 0 else 0)
@@ -194,7 +194,7 @@ def from_console():
 def from_export(path):
     try:
         go = json.loads(Path(path).read_text()).get("providers", {}).get("opencode-go")
-    except OSError, ValueError, AttributeError:
+    except (OSError, ValueError, AttributeError):
         raise RouteError("no export") from None
     if not isinstance(go, dict) or not isinstance(go.get("entries"), list):
         raise RouteError(f"export opencode-go {(go or {}).get('status', 'missing')}")

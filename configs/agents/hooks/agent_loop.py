@@ -541,7 +541,7 @@ def _process_start(pid):
         # Linux process start ticks distinguish PID reuse. Other hosts retain
         # conservative live-PID leases and always allow explicit resume.
         return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[19]
-    except OSError, IndexError:
+    except (OSError, IndexError):
         return None
 
 
