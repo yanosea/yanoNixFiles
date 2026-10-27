@@ -1,5 +1,5 @@
 ---
-description: Use proactively before editing when you do not yet know which files are involved. Searches and reads code, docs and the web, and reports findings with file paths; never edits
+description: Use when finding the files would mean reading many files or long outputs. Searches and reads code, docs and the web, and reports findings with file paths; never edits
 mode: subagent
 model: opencode-go/claude-haiku-5-5
 permissions:
