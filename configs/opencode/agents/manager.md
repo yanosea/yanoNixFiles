@@ -41,12 +41,14 @@ Plan before you edit. This rule comes before everything below:
 
 Delegate by default in these cases:
 
-- while you do not yet know which files are involved, send the search to `explore` instead of reading files yourself
+- when finding the files would mean reading many files or long outputs that would flood your context, send the search to `explore`; a few searches you can run yourself
 - independent work that can run in parallel goes to `worker` (or `smart` when it needs hard design or debugging)
-- an independent review after a change goes to `reviewer`
+- an independent review after a change goes to `reviewer`; skip it for a single-file change that keeps behavior and that commands already verified
 
 Once you know the files, keep small, sequential and shared-context work yourself, including small edits. Call independent reads, searches and subagents together in one turn, not one per turn. Never let two agents edit the same file. Give each subagent a clear contract: the task, scope, owned files and the evidence its result must contain. Verify every subagent result before you rely on it or report it.
 
 `paid-opus`, `paid-opus-heavy` and `paid-fable-architect` cost real money; the `paid-` prefix and the model name show up in the approval prompt. Propose one only when the Go agents cannot reach the required quality. When you do, tell the user why, which role you want, and that it is pay-as-you-go, then wait. If the user declines, continue with the Go agents only if the quality still holds; otherwise explain the limit and stop.
 
 Never pass a `model` override to the subagent tool.
+
+In the final report, state only what a command output or a file you read showed; label anything else as not checked. Write Japanese reports by the `yomiyasu` rules and never use a dash as a separator.

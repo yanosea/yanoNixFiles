@@ -34,6 +34,19 @@
           exec ${pkgs.comfyui}/bin/comfyui ${pkgs.writeShellScript "comfyui-inner" ''
             set -e
             cd ${config.home.homeDirectory}/.local/share
+            # Link the custom nodes shared from the ai repository. Called from
+            # inside the ComfyUI checkout, so custom_nodes is relative.
+            link_custom_nodes() {
+              for node_dir in ${config.home.homeDirectory}/ghq/github.com/${username}/ai/custom_nodes/*/; do
+                if [ -d "$node_dir" ]; then
+                  node_name=$(basename "$node_dir")
+                  if [ ! -e "custom_nodes/$node_name" ]; then
+                    ln -sf "$node_dir" "custom_nodes/$node_name"
+                    echo "Linked custom node: $node_name"
+                  fi
+                fi
+              done
+            }
             # Initial setup if needed
             if [ ! -f "comfyui/.comfyui-installed" ]; then
               # Check if ComfyUI is actually cloned (not just an empty directory)
@@ -55,15 +68,7 @@
               mkdir -p custom_nodes
               mkdir -p user/default
               # Link custom nodes from the ai repository
-              for node_dir in ${config.home.homeDirectory}/ghq/github.com/${username}/ai/custom_nodes/*/; do
-                if [ -d "$node_dir" ]; then
-                  node_name=$(basename "$node_dir")
-                  if [ ! -e "custom_nodes/$node_name" ]; then
-                    ln -sf "$node_dir" "custom_nodes/$node_name"
-                    echo "Linked custom node: $node_name"
-                  fi
-                fi
-              done
+              link_custom_nodes
               # Setup workflows symlink to the ai repository
               if [ ! -L "user/default/workflows" ]; then
                 rm -rf user/default/workflows
@@ -103,15 +108,7 @@
             if [ -f ".comfyui-installed" ] && [ -d "venv" ]; then
               source venv/bin/activate
               # Link custom nodes from the ai repository (check on every startup)
-              for node_dir in ${config.home.homeDirectory}/ghq/github.com/${username}/ai/custom_nodes/*/; do
-                if [ -d "$node_dir" ]; then
-                  node_name=$(basename "$node_dir")
-                  if [ ! -e "custom_nodes/$node_name" ]; then
-                    ln -sf "$node_dir" "custom_nodes/$node_name"
-                    echo "Linked custom node: $node_name"
-                  fi
-                fi
-              done
+              link_custom_nodes
               # Check if custom node dependencies need to be installed
               deps_hash=$(find custom_nodes -name "requirements.txt" -exec cat {} \; 2>/dev/null | md5sum | cut -d' ' -f1)
               if [ ! -f ".deps_hash" ] || [ "$(cat .deps_hash 2>/dev/null)" != "$deps_hash" ]; then
