@@ -1,4 +1,2 @@
-target-version = "py313"
-
 [lint.isort]
 extra-standard-library = ["tomllib"]

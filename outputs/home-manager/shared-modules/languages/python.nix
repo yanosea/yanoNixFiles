@@ -5,9 +5,9 @@
   home = {
     packages = with pkgs; [
       pyenv
-      python313
-      python313Packages.pydbus
-      python313Packages.psutil
+      python314
+      python314Packages.pydbus
+      python314Packages.psutil
       uv
     ];
   };
