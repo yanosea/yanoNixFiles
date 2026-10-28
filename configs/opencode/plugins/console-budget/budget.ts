@@ -68,6 +68,8 @@ export function resetDate(now: Date) {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1))
 }
 
+export const SEARCH_TITLE = "[Hosted Web Search]"
+
 // The sidebar is 42 columns with padding, so rows stay under 38.
 export function formatBudget(budget: Budget, now: Date) {
   const title = "[Premium (service account)]"
@@ -84,7 +86,7 @@ export function formatBudget(budget: Budget, now: Date) {
     `${"Resets".padEnd(10)}${MONTHS[reset.getUTCMonth()]} ${reset.getUTCDate()} (UTC)`,
     ...(budget.workspace ? [row("Workspace", budget.workspace)] : []),
     "",
-    "[Hosted Web Search]",
+    SEARCH_TITLE,
     `${"Searches".padEnd(10)}${spend(budget.search)}`,
   ]
 }
