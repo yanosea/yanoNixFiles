@@ -65,9 +65,14 @@ jobs:
             --show-trace
       - name: build NixOS configuration - ${{ matrix.configuration }}
         run: |
+          set -o pipefail
           # actually build so compile/link failures are caught
-          nix build .#nixosConfigurations.${{ matrix.configuration }}.config.system.build.toplevel \
-            --show-trace
+          build() {
+            nix build .#nixosConfigurations.${{ matrix.configuration }}.config.system.build.toplevel \
+              --show-trace "$@" 2>&1 | tee -a build.log
+          }
+          # cache.numtide.com drops http/2 streams; retry over http/1.1 only for that error
+          build || { grep -q "HTTP/2 framing layer" build.log && build --option http2 false; }
   test-home-manager-builds:
     runs-on: ubuntu-latest
     strategy:
@@ -105,9 +110,14 @@ jobs:
             --show-trace
       - name: build Home Manager configuration - ${{ matrix.configuration }}
         run: |
+          set -o pipefail
           # actually build so compile/link failures are caught
-          nix build .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage \
-            --show-trace
+          build() {
+            nix build .#homeConfigurations.\"${{ matrix.configuration }}\".activationPackage \
+              --show-trace "$@" 2>&1 | tee -a build.log
+          }
+          # cache.numtide.com drops http/2 streams; retry over http/1.1 only for that error
+          build || { grep -q "HTTP/2 framing layer" build.log && build --option http2 false; }
   report-status:
     runs-on: ubuntu-latest
     needs:
