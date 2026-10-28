@@ -1,7 +1,7 @@
 ---
 description: Reads the code and designs an implementation plan before any edit; never edits
 mode: subagent
-model: opencode-go/glm-5.3
+model: opencode-go/deepseek-v4-pro
 permissions:
   - { action: edit, resource: "*", effect: deny }
   - { action: subagent, resource: "*", effect: deny }
