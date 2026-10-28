@@ -18,55 +18,54 @@ let
     SUDO_KEEPALIVE_PID=$!
     trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null' EXIT
   '';
-  # host configurations
-  hosts = {
-    # nixos
-    yanoNixOs = {
-      system = "x86_64-linux";
-      osType = "nixos";
-      systemConfig = "yanoNixOs";
-      homeConfig = "${username}@yanoNixOs";
-      preHomeCommands = ''
-        rm -fr "$HOME/.config/claude/CLAUDE.md"
-        rm -fr "$HOME/.config/fcitx5/config"
-        rm -fr "$HOME/.config/fcitx5/profile"
-      '';
-    };
-    # nixos (wsl)
-    yanoNixOsWsl = {
-      system = "x86_64-linux";
-      osType = "nixos";
-      systemConfig = "yanoNixOsWsl";
-      homeConfig = "${username}@yanoNixOsWsl";
-      preHomeCommands = ''
-        rm -fr "$HOME/.config/claude/CLAUDE.md"
-      '';
-    };
-    # mac
-    yanoMac = {
-      system = "aarch64-darwin";
-      osType = "darwin";
-      systemConfig = "yanoMac";
-      homeConfig = "${username}@yanoMac";
-      preHomeCommands = ''
-        rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
-        rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
-        rm -fr "$HOME/.config/claude/CLAUDE.md"
-      '';
-    };
-    # mac book
-    yanoMacBook = {
-      system = "aarch64-darwin";
-      osType = "darwin";
-      systemConfig = "yanoMacBook";
-      homeConfig = "${username}@yanoMacBook";
-      preHomeCommands = ''
-        rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
-        rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
-        rm -fr "$HOME/.config/claude/CLAUDE.md"
-      '';
-    };
-  };
+  # files that home manager cannot replace on its own, removed before activation
+  rmClaudeMd = ''
+    rm -fr "$HOME/.config/claude/CLAUDE.md"
+  '';
+  rmAquaSkk = ''
+    rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
+    rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
+  '';
+  # host configurations; the attribute name is the hostname
+  hosts =
+    builtins.mapAttrs
+      (
+        name: host:
+        host
+        // {
+          systemConfig = name;
+          homeConfig = "${username}@${name}";
+        }
+      )
+      {
+        # nixos
+        yanoNixOs = {
+          system = "x86_64-linux";
+          osType = "nixos";
+          preHomeCommands = rmClaudeMd + ''
+            rm -fr "$HOME/.config/fcitx5/config"
+            rm -fr "$HOME/.config/fcitx5/profile"
+          '';
+        };
+        # nixos (wsl)
+        yanoNixOsWsl = {
+          system = "x86_64-linux";
+          osType = "nixos";
+          preHomeCommands = rmClaudeMd;
+        };
+        # mac
+        yanoMac = {
+          system = "aarch64-darwin";
+          osType = "darwin";
+          preHomeCommands = rmAquaSkk + rmClaudeMd;
+        };
+        # mac book
+        yanoMacBook = {
+          system = "aarch64-darwin";
+          osType = "darwin";
+          preHomeCommands = rmAquaSkk + rmClaudeMd;
+        };
+      };
   # helper to create system command
   mkSystemCommand =
     host:
@@ -239,63 +238,61 @@ let
       '';
     };
   };
-  # create host-specific app
-  mkHostApp =
-    p: hostname: target:
+  # every app is a shell script that runs from the repository root
+  mkApp =
+    p: name: body:
     let
-      host = hosts.${hostname};
-      repoRoot = "$(${p.git}/bin/git rev-parse --show-toplevel)";
-      commands = hostCommands hostname host;
-      script = p.writeShellScript "${hostname}-${target}" ''
+      script = p.writeShellScript name ''
         set -euo pipefail
-        cd "${repoRoot}"
-        # verify hostname matches
-        CURRENT_HOST="$(hostname)"
-        if [[ "$CURRENT_HOST" != "${hostname}" ]]; then
-          ${messages.error "error: hostname mismatch"}
-          echo -e "  expected: ${hostname}"
-          echo -e "  actual:   $CURRENT_HOST"
-          ${messages.blank}
-          echo -e "use ${colors.hint}nix run .#$CURRENT_HOST-${target}${colors.reset} or ${colors.hint}nix run .#${target}${colors.reset} instead"
-          exit 1
-        fi
-        # execute target action
-        ${messages.blank}
-        ${commands.${target} or "${messages.error "unsupported target: ${target}"}"}
-      '';
+        cd "$(${p.git}/bin/git rev-parse --show-toplevel)"
+        ${body}'';
     in
     {
       type = "app";
       program = "${script}";
     };
+  # create host-specific app
+  mkHostApp =
+    p: hostname: target:
+    let
+      commands = hostCommands hostname hosts.${hostname};
+    in
+    mkApp p "${hostname}-${target}" ''
+      # verify hostname matches
+      CURRENT_HOST="$(hostname)"
+      if [[ "$CURRENT_HOST" != "${hostname}" ]]; then
+        ${messages.error "error: hostname mismatch"}
+        echo -e "  expected: ${hostname}"
+        echo -e "  actual:   $CURRENT_HOST"
+        ${messages.blank}
+        echo -e "use ${colors.hint}nix run .#$CURRENT_HOST-${target}${colors.reset} or ${colors.hint}nix run .#${target}${colors.reset} instead"
+        exit 1
+      fi
+      # execute target action
+      ${messages.blank}
+      ${commands.${target} or "${messages.error "unsupported target: ${target}"}"}
+    '';
   # create auto-detect app (detects hostname at runtime)
   mkAutoDetectApp =
     p: target:
     let
       hostNames = builtins.attrNames hosts;
-      repoRoot = "$(${p.git}/bin/git rev-parse --show-toplevel)";
-      script = p.writeShellScript "auto-${target}" ''
-        set -euo pipefail
-        cd "${repoRoot}"
-        HOSTNAME="$(hostname)"
-        case "$HOSTNAME" in
-          ${builtins.concatStringsSep "\n      " (
-            map (hostname: ''
-              ${hostname})
-                  nix run .#${hostname}-${target}
-                  ;;'') hostNames
-          )}
-          *)
-            ${messages.error "unsupported hostname: $HOSTNAME"}
-            exit 1
-            ;;
-        esac
-      '';
     in
-    {
-      type = "app";
-      program = "${script}";
-    };
+    mkApp p "auto-${target}" ''
+      HOSTNAME="$(hostname)"
+      case "$HOSTNAME" in
+        ${builtins.concatStringsSep "\n      " (
+          map (hostname: ''
+            ${hostname})
+                nix run .#${hostname}-${target}
+                ;;'') hostNames
+        )}
+        *)
+          ${messages.error "unsupported hostname: $HOSTNAME"}
+          exit 1
+          ;;
+      esac
+    '';
   # gc script for system & user
   gcSystemScript = messages.titleGroup {
     start = "garbage collection (system & user)...";
@@ -368,19 +365,10 @@ let
   # create common utility app (format, gc, clean)
   mkUtilityApp =
     p: target:
-    let
-      repoRoot = "$(${p.git}/bin/git rev-parse --show-toplevel)";
-      script = p.writeShellScript "util-${target}" ''
-        set -euo pipefail
-        cd "${repoRoot}"
-        ${messages.blank}
-        ${utilityCommands.${target} or "${messages.error "unsupported target: ${target}"}"}
-      '';
-    in
-    {
-      type = "app";
-      program = "${script}";
-    };
+    mkApp p "util-${target}" ''
+      ${messages.blank}
+      ${utilityCommands.${target} or "${messages.error "unsupported target: ${target}"}"}
+    '';
   # host-specific targets
   hostTargets = [
     "update"

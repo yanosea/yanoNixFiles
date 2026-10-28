@@ -126,7 +126,7 @@ let
     # the opencode planner: reads and plans before any edit, never edits
     planner = {
       name = "read-only planning";
-      model = "opencode-go/glm-5.3";
+      model = "opencode-go/deepseek-v4-pro";
       deny = readOnly;
     };
     # another family than the manager, so it does not favour its own output

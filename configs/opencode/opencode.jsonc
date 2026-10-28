@@ -34,9 +34,17 @@
   "permissions": [
     { "action": "edit", "resource": "*", "effect": "allow" },
     { "action": "shell", "resource": "*", "effect": "allow" },
+    // the firecrawl plugin injects install.md, whose init and setup write skills
+    // into every detected editor, nix-managed ones included; the last match wins
+    { "action": "shell", "resource": "firecrawl init *", "effect": "deny" },
+    { "action": "shell", "resource": "firecrawl setup *", "effect": "deny" },
+    { "action": "shell", "resource": "npx *firecrawl-cli*", "effect": "deny" },
     { "action": "webfetch", "resource": "*", "effect": "allow" },
     { "action": "websearch", "resource": "*", "effect": "allow" }
   ],
+  // ambient instruction files, joined into every session with AGENTS.md; the
+  // leading ~ expands to the host home, so the path is valid on every host
+  "instructions": ["~/.config/opencode/instructions/websearch.md"],
   // opencode's own vendor plugins; opencode fetches them from npm,
   // so versions are pinned here. the ones shared with the other clis come
   // from configs/agents/plugins.conf into opencode.json beside this file,

@@ -1,18 +1,20 @@
 # IGNORE DIRECTORY
-specs/
 .agents/
 .antigravitycli/
 .claude/
 .codex/
+.firecrawl/
 .serena/
 .specify/
+.tavily/
+specs/
 # IGNORE FILE
-desktop.ini
+*.log
+.DS_Store
+.wakatime-project
 AGENTS.md
 AGENTS.override.md
 CLAUDE.md
+desktop.ini
 HANDOVER.md
 HANDOVER.md.bak
-.DS_Store
-.wakatime-project
-*.log

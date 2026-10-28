@@ -9,12 +9,15 @@ description: Triage a failing daily flake.lock auto-update PR (branch auto-updat
 
 ```bash
 gh pr list --state open --json number,title,headRefName,createdAt
+# with a number from the list, or the one the user named:
+gh pr view <n> --json state,mergedAt
 gh pr checks <n>
 gh run list --branch auto-update/flake-lock/<date> --json databaseId,name,status,conclusion,event
 ```
 
+- `state` is `OPEN`, `CLOSED`, or `MERGED`, and it decides what you may advise. Read it first: `gh pr checks` and `gh run view` also answer for closed PRs and deleted branches, so a `pending` check does not mean the PR is alive. A closed PR may have no branch left, and cannot be merged.
 - The updater opens the PR with a GitHub App token, so the PR's own `pull_request` runs are the real ones. `Auto Approve Owner's PR` is expected to be `skipped` there, because the author is the app, not the owner.
-- `Auto Merge Dependency PR` runs on `workflow_run` and is listed under `main`, not the branch. If all three test workflows passed and only that one failed, it is the 10800 s (3 h) wait timing out, not a breakage: say so and offer `gh pr merge <n> --merge`.
+- `Auto Merge Dependency PR` runs on `workflow_run` and is listed under `main`, not the branch. If all three test workflows passed and only that one failed, it is the 10800 s (3 h) wait timing out, not a breakage: say so and offer `gh pr merge <n> --merge` (only while the state is `OPEN`).
 
 ## 2. Extract the error
 
@@ -25,6 +28,7 @@ gh run view <run-id> --log-failed | sed 's/.*UNKNOWN STEP\t[^ ]* //' | grep -E -
 
 - Note the failing derivation name and its `/nix/store/<hash>-...drv` path.
 - Check whether every host fails on the same derivation.
+- If the failure looks transient (a cache or network error), rerun it and stay attached: `gh run rerun <id> --failed`, then watch it in the background with `gh run watch <id> --compact -i 30 --exit-status` and report the conclusion and any new failure. Do not reply `pending` and stop.
 
 ## 3. Decide whether it is upstream
 
@@ -60,4 +64,4 @@ Past examples: #1640, #1643, #1646, #1717.
 
 ## 5. Report
 
-Reply in Japanese with the cause, the upstream links, and the closed PR.
+Reply in Japanese with the cause, the upstream links, and the closed PR. If you reran a job, include its conclusion.

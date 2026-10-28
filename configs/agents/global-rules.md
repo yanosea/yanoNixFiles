@@ -5,6 +5,10 @@
 - If a `HANDOVER.md` exists at the project root and its content is not already in context, read it before starting work: it carries the previous session's context.
 - Work whose approach is not settled starts in plan mode: the change spans multiple files or commits, two or more approaches are viable, or the cause of a defect is unidentified. Skip plan mode for single-file fixes, CI triage, formatting, dependency bumps, and lookups; it can run on a model with a tighter usage limit.
 - Enter plan mode yourself where a tool exists (`EnterPlanMode` on Claude Code, `enter_plan_mode` on Grok). On OpenCode the manager has `planner` draft the plan and waits for the user's approval before editing. Codex and Antigravity only let the user switch, so ask before touching anything.
+- Sort lists alphabetically by default, in every file and every language: ignore files, packages, plugins, imports, keys, and anything a reader scans. Keep an order that carries meaning (steps, priority, dependencies) as it is.
+- Never assert or advise on the state of an external object (PR, branch, CI run, issue, subscription plan, ...) without reading that state first: a command can succeed and still describe a closed or deleted object (`gh pr checks` answers for a closed PR), and a price or limit applies only to the plan the user is on.
+- Long-running work you start (a CI rerun, a build, a watch, a review by another CLI such as `claude -p`) is yours until it reports a conclusion. Use your runtime's background execution when it recalls you on completion (OpenCode's `shell` can run in the background and wakes you when it finishes), and start in the background from the outset anything that can outlast the tool's timeout; when it has none, keep the command in the foreground until it finishes. If you cannot stay attached, say so in the reply and give the command that checks it. Report the conclusion and any failure, not every intermediate step.
+- When a later result contradicts something you said earlier (a prediction, a cause, a number), say so in that report and correct the earlier statement; do not let the new result silently replace it.
 
 ## Delegation
 
