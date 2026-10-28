@@ -4,6 +4,8 @@
 
 # anthropic api
 export ANTHROPIC_API_KEY=$(cat $XDG_DATA_HOME/sops/ANTHROPIC_API_KEY 2>/dev/null || echo "")
+# firecrawl api
+export FIRECRAWL_API_KEY=$(cat $XDG_DATA_HOME/sops/FIRECRAWL_API_KEY 2>/dev/null || echo "")
 # openai api
 export OPENAI_API_KEY=$(cat $XDG_DATA_HOME/sops/OPENAI_API_KEY 2>/dev/null || echo "")
 # openclaw gateway (the cli needs the same token the gateway is started with,
