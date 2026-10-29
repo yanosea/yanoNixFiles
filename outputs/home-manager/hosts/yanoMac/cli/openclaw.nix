@@ -132,7 +132,7 @@ let
     # another family than the manager, so it does not favour its own output
     reviewer = {
       name = "independent read-only review";
-      model = "opencode-go/qwen3.8-max";
+      model = "opencode-go/glm-5.3";
       deny = readOnly;
     };
     # pay-as-you-go on the service account, behind a fresh discord approval
