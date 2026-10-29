@@ -49,6 +49,7 @@ export function createPlugin(options: { entry?: string; id?: string; timeoutMs?:
       const boundaries = new Map<string, number>()
       const pending = new Map<string, { request: string; epoch: number; loop: Result["loop"] }>()
       const sessionContexts = new Map<string, string>()
+      const deferredContexts = new Map<string, string>()
       const stops = new Map<string, string>()
       // Stop results otherwise reach only the journal; the next dispatch carries the latest one.
       const keepStop = (sessionID: string, result: Result) => {
@@ -100,15 +101,23 @@ export function createPlugin(options: { entry?: string; id?: string; timeoutMs?:
         })
         if (texts.some((text) => text.startsWith("CRITICAL - MAXIMUM STEPS REACHED\n") && text.includes("Tools are disabled until next user input."))) productLimits.add(event.sessionID)
         const first = !initialized.has(event.sessionID)
+        // The host reads event.system when this hook first suspends, so the texts
+        // already held in memory go in before the python call; that call's fresh
+        // result waits for the next dispatch instead.
+        const session = sessionContexts.get(event.sessionID)
+        const deferred = deferredContexts.get(event.sessionID)
+        const stop = stops.get(event.sessionID)
+        deferredContexts.delete(event.sessionID)
+        stops.delete(event.sessionID)
+        for (const text of [session, deferred, stop]) {
+          if (text) event.system.push({ type: "text", text })
+        }
         const result = yield* call(first ? "SessionStart" : "context", { ...event, context_only: !first })
         initialized.add(event.sessionID)
-        if (first && result.context) sessionContexts.set(event.sessionID, result.context)
-        // OpenCode rebuilds the system for every step, so the session context goes into each dispatch.
-        const session = sessionContexts.get(event.sessionID)
-        const stop = stops.get(event.sessionID)
-        stops.delete(event.sessionID)
-        for (const text of [session, result.context && !session?.includes(result.context) ? result.context : undefined, stop]) {
-          if (text) event.system.push({ type: "text", text })
+        if (first) {
+          if (result.context) sessionContexts.set(event.sessionID, result.context)
+        } else if (result.context && !session?.includes(result.context)) {
+          deferredContexts.set(event.sessionID, result.context)
         }
       }))
       yield* ctx.session.hook("compaction", Effect.fn(function* (event) {
