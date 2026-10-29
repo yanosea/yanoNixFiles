@@ -1,4 +1,4 @@
-// OpenCode 2.0.27 Effect plugin. execute.before denies via native Tool.Error.
+// OpenCode 2.0.32 Effect plugin. execute.before denies via native Tool.Error.
 import { Plugin } from "@opencode/plugin/effect"
 // The host exposes @opencode/plugin and effect, not @opencode/schema.
 // This public re-export resolves to the host's exact native Tool.Error class.
@@ -38,8 +38,9 @@ export function createPlugin(options: { entry?: string; id?: string; timeoutMs?:
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || timeoutMs > 600_000) {
     throw new Error("Hook timeoutMs must be greater than zero and at most 600000")
   }
+  const id = options.id || "common-hooks"
   return Plugin.define({
-    id: options.id || "common-hooks",
+    id,
     effect: Effect.fn(function* (ctx) {
       const initialized = new Set<string>()
       const epochs = new Map<string, number>()
@@ -47,6 +48,19 @@ export function createPlugin(options: { entry?: string; id?: string; timeoutMs?:
       const productLimits = new Set<string>()
       const boundaries = new Map<string, number>()
       const pending = new Map<string, { request: string; epoch: number; loop: Result["loop"] }>()
+      const sessionContexts = new Map<string, string>()
+      const stops = new Map<string, string>()
+      // Stop results otherwise reach only the journal; the next dispatch carries the latest one.
+      const keepStop = (sessionID: string, result: Result) => {
+        if (result.action === "allow") {
+          const passed = (result.context || "").split("\n").flatMap((line) => line.endsWith(": PASS") ? [line.slice(0, -": PASS".length)] : [])
+          // A clean stop runs no check unless the tree changed, and the hooks
+          // print no PASS line yet, so a stop without one carries no result.
+          if (passed.length) stops.set(sessionID, `Post-work checks after the previous turn (${id}): all PASS (${passed.join(", ")})`)
+        } else {
+          stops.set(sessionID, `Post-work checks after the previous turn (${id}) reported:\n` + (result.context || result.reason || "No details were returned."))
+        }
+      }
       const epoch = (id: string) => epochs.get(id) || 0
       const call = Effect.fn(function* (name: string, event: { sessionID: string } & object) {
         const session = yield* ctx.session.get({ sessionID: event.sessionID as any })
@@ -88,7 +102,14 @@ export function createPlugin(options: { entry?: string; id?: string; timeoutMs?:
         const first = !initialized.has(event.sessionID)
         const result = yield* call(first ? "SessionStart" : "context", { ...event, context_only: !first })
         initialized.add(event.sessionID)
-        if (result.context) event.system.push({ type: "text", text: result.context })
+        if (first && result.context) sessionContexts.set(event.sessionID, result.context)
+        // OpenCode rebuilds the system for every step, so the session context goes into each dispatch.
+        const session = sessionContexts.get(event.sessionID)
+        const stop = stops.get(event.sessionID)
+        stops.delete(event.sessionID)
+        for (const text of [session, result.context && !session?.includes(result.context) ? result.context : undefined, stop]) {
+          if (text) event.system.push({ type: "text", text })
+        }
       }))
       yield* ctx.session.hook("compaction", Effect.fn(function* (event) {
         yield* call("compaction", event)
@@ -146,6 +167,7 @@ export function createPlugin(options: { entry?: string; id?: string; timeoutMs?:
         if (event.type === "session.status" && event.data.status.type === "idle") {
           const result = yield* call("session.idle", { sessionID, stop_reason: "unknown" })
           if (result.context) console.error(result.context)
+          keepStop(sessionID, result)
           return
         }
         if (event.type !== "session.execution.succeeded") return
@@ -158,6 +180,7 @@ export function createPlugin(options: { entry?: string; id?: string; timeoutMs?:
           const request = result.loop?.request_id
           if (stopReason !== "natural" || result.action !== "continue" || result.loop?.state !== "running" || !request) {
             if (result.context) console.error(result.context)
+            keepStop(sessionID, result)
             return
           }
           const delivery = { sessionID, request_id: request, loop_id: result.loop.id, owner_epoch: result.loop.owner_epoch }
