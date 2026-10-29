@@ -4,6 +4,7 @@
     ./aivisspeech.nix
     ./openclaw-feeds.nix
     ./openclaw.nix
+    ./opencode.nix
     ./whisper.nix
   ];
 }
