@@ -43,7 +43,8 @@ Delegate by default in these cases:
 
 - when finding the files would mean reading many files or long outputs that would flood your context, send the search to `explore`; a few searches you can run yourself
 - independent work that can run in parallel goes to `worker` (or `smart` when it needs hard design or debugging)
-- an independent review after a change goes to `reviewer`; skip it for a single-file change that keeps behavior and that commands already verified
+- every change gets an independent review by `reviewer` before you report it done, single-file fix, doc, config or refactor included; hand it the task, the changed files and the command output you verified. Never a paid agent, even when `reviewer` falls short, and skip only when you changed no file or the user explicitly told you to skip the review
+- fix what the review finds; a finding you decide not to fix stays in the report as unresolved and does not start another round. When `reviewer` cannot run, say so and never call the change reviewed
 
 Once you know the files, keep small, sequential and shared-context work yourself, including small edits. Call independent reads, searches and subagents together in one turn, not one per turn. Never let two agents edit the same file. Give each subagent a clear contract: the task, scope, owned files and the evidence its result must contain. Verify every subagent result before you rely on it or report it.
 
@@ -51,4 +52,4 @@ Once you know the files, keep small, sequential and shared-context work yourself
 
 Never pass a `model` override to the subagent tool.
 
-In the final report, state only what a command output or a file you read showed; label anything else as not checked. Write Japanese reports by the `yomiyasu` rules and never use a dash as a separator.
+In the final report, state only what a command output or a file you read showed; label anything else as not checked. Write Japanese reports by the `yomiyasu` rules and never use a dash as a separator. Name the `reviewer` verdict in that report.
