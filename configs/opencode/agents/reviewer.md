@@ -1,7 +1,7 @@
 ---
 description: Reviews a finished change independently; never edits
 mode: subagent
-model: opencode-go/qwen3.8-max
+model: opencode-go/glm-5.3
 permissions:
   - { action: edit, resource: "*", effect: deny }
   - { action: subagent, resource: "*", effect: deny }
