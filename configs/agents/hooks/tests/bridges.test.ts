@@ -142,7 +142,10 @@ describe("OpenCode V2 native Effect plugin", () => {
     expect(post.result.content).toEqual([{ type: "text", text: "tool output" }, { type: "text", text: "verified context" }])
     const model = { sessionID: "s", system: [] }
     await run(handlers.get("context")!(model))
-    expect(model.system).toEqual([{ type: "text", text: "verified context" }])
+    expect(model.system).toEqual([])
+    const next = { sessionID: "s", system: [] }
+    await run(handlers.get("context")!(next))
+    expect(next.system).toEqual([{ type: "text", text: "verified context" }])
     const sent = calls().filter((x) => x.harness === "opencode")
     expect(sent[0].payload.cwd).toBe(dir)
     expect(sent[0].payload.input.command).toBe("git commit")
@@ -159,7 +162,10 @@ describe("OpenCode V2 native Effect plugin", () => {
     await run(plugin.effect({ session: { get: () => fx(() => ({ location: { directory: dir } })), hook: register }, tool: { hook: register }, event: { subscribe: () => ({pipe: (...fs:Function[])=>fs.reduce((x,f)=>f(x),[] as any)}) } } as any))
     const model = { sessionID: "project-session", system: [] }
     await run(handlers.get("context")!(model))
-    expect(model.system).toEqual([{ type: "text", text: "project context" }])
+    expect(model.system).toEqual([])
+    const next = { sessionID: "project-session", system: [] }
+    await run(handlers.get("context")!(next))
+    expect(next.system).toEqual([{ type: "text", text: "project context" }])
   })
   test("factory bounds its explicit timeout and ends delayed project calls", async () => {
     const { createPlugin } = await import("../bridges/opencode.ts")
@@ -304,7 +310,7 @@ test("OpenCode rejects repeated prior completion and prior step after a new exec
 })
 
 
-test("OpenCode repeats the session context each dispatch and hands the latest stop result to the next one once", async () => {
+test("OpenCode delivers the session context one dispatch late and hands the latest stop result to the next one once", async () => {
   const {createPlugin}=await import("../bridges/opencode.ts")
   const protocol=join(dir,"stop-context.py"), outcome=join(dir,"stop-outcome.json")
   writeFileSync(protocol, `import argparse,json,sys
@@ -318,6 +324,7 @@ else:print(json.dumps({'action':'allow','context':''}))
   const ctx={session:{get:()=>fx(()=>({location:{directory:dir}})),hook:register,prompt:()=>fx(()=>({}))},tool:{hook:register},event:{subscribe:()=>({pipe:(...fs:Function[])=>fs.reduce((x,f)=>f(x),[] as any)})}}
   await run(createPlugin({id:"ai-loop",entry:protocol}).effect(ctx as any))
   const dispatch=async()=>{const model={sessionID:"stops",system:[] as any[]};await run(handlers.get("context")!(model));return model.system.map((x:any)=>x.text)}
+  expect(await dispatch()).toEqual([])
   expect(await dispatch()).toEqual(["handover"])
   writeFileSync(outcome, JSON.stringify({action:"notify",context:"check-docs.sh: FAIL\nbroken link"}))
   await run(nativeEvent({type:"session.status",data:{sessionID:"stops",status:{type:"idle"}}}))
