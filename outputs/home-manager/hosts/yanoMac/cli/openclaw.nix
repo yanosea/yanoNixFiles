@@ -661,6 +661,10 @@ in
         # /usr/bin first in PATH. a directory, because the wrapper would cat a
         # file path into the value
         COMMON_HOOK_PYTHON_DIR = "${pkgs.python3}/bin";
+        # the shared planning and delegation rules, which opencode reads from
+        # `instructions`; the common-hooks bridge appends this to the prompt.
+        # `_FILE` keeps the wrapper from catting the path into the value
+        OPENCLAW_PLANNING_RULES_FILE = "${../../../../../configs/agents/planning-and-delegation.md}";
       };
       # the subscription route delegates to the claude cli. gpg lets the dev
       # agent sign its commits as me: branch protection rejects unsigned ones.
@@ -743,6 +747,10 @@ in
               subagents = {
                 allowAgents = helperIds "main";
                 requireAgentId = true;
+                # the shared rules make delegation mandatory; this widens the
+                # prefer guidance from the canonical main session to every
+                # session of this agent. It does not enforce.
+                delegationMode = "prefer";
               };
             };
             dev = {
@@ -755,6 +763,7 @@ in
               subagents = {
                 allowAgents = helperIds "dev";
                 requireAgentId = true;
+                delegationMode = "prefer";
               };
             };
           }
