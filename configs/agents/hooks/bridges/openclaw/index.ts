@@ -1,5 +1,8 @@
-// Native OpenClaw 2026.9.5 hooks. Only explicit interactive loops may revise.
+// Native OpenClaw hooks. yanoMac pins the input to 2026.9.5 (openclaw-pin-lock.sh);
+// the committed lock has 2026.10.4, and both accept the results below.
+// Only explicit interactive loops may revise.
 import { execFile } from "node:child_process"
+import { readFileSync } from "node:fs"
 import { homedir } from "node:os"
 import { join } from "node:path"
 
@@ -8,6 +11,24 @@ type HookResult = { block?: boolean; blockReason?: string; context?: string; rep
 type API = {
   on: (event: string, callback: (event: any, ctx: Context) => Promise<any>, options?: { timeoutMs: number }) => void
   logger: { warn: (message: string) => void }
+}
+
+// OpenClaw has no per-agent instruction key and injects only the workspace
+// bootstrap files, so the planning and delegation rules opencode reads from
+// `instructions` ride on the system prompt here. A helper gets the file too
+// and its last section tells it not to delegate. Re-read only when the path
+// changes, so a test can set it after the first import.
+let loaded = { path: undefined as string | undefined, text: "" }
+let warned = false
+const planningRules = () => {
+  const path = process.env.OPENCLAW_PLANNING_RULES_FILE
+  if (loaded.path === path) return loaded.text
+  let text = ""
+  if (path) {
+    try { text = readFileSync(path, "utf8").trim() } catch { text = "" }
+  }
+  loaded = { path, text }
+  return text
 }
 
 function invoke(event: string, payload: object): Promise<HookResult> {
@@ -75,7 +96,15 @@ export default {
       const output = await invoke(newUserRun ? "UserPromptSubmit" : "before_prompt_build", {
         ...input, context_only: !first && !newUserRun, prompt_event_id: ctx.runId,
       })
-      return output.context ? { prependContext: output.context } : undefined
+      const added: Record<string, string> = {}
+      if (output.context) added.prependContext = output.context
+      const rules = planningRules()
+      if (rules) added.appendSystemContext = rules
+      else if (loaded.path && !warned) {
+        warned = true
+        api.logger.warn("OPENCLAW_PLANNING_RULES_FILE could not be read; the planning rules are not in the prompt.")
+      }
+      return Object.keys(added).length ? added : undefined
     }, { timeoutMs: 150_000 })
     api.on("before_tool_call", async (event, ctx) => {
       const input = payload(event, ctx)

@@ -44,7 +44,11 @@
   ],
   // ambient instruction files, joined into every session with AGENTS.md; the
   // leading ~ expands to the host home, so the path is valid on every host
-  "instructions": ["~/.config/opencode/instructions/websearch.md"],
+  "instructions": [
+    "~/.config/opencode/instructions/websearch.md",
+    // shared with openclaw's main and dev, which read it through the bridge
+    "~/.agents/planning-and-delegation.md"
+  ],
   // opencode's own vendor plugins; opencode fetches them from npm,
   // so versions are pinned here. the ones shared with the other clis come
   // from configs/agents/plugins.conf into opencode.json beside this file,

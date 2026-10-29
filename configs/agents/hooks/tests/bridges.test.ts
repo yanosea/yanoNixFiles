@@ -42,6 +42,21 @@ describe("OpenClaw native plugin", () => {
     expect(result.block).toBe(true)
     expect(result.blockReason).toContain("workspace")
   })
+  test("appends the shared planning rules only when the file path is set", async () => {
+    const { default: plugin } = await import("../bridges/openclaw/index.ts")
+    const handlers = new Map<string, Function>()
+    plugin.register({ on(name: string, fn: Function) { handlers.set(name, fn) }, logger: { warn() {} } } as any)
+    const build = () => handlers.get("before_prompt_build")!({ messages: [], prompt: "p" }, { sessionId: "rules", runId: "r", workspaceDir: dir })
+    expect(await build()).toEqual({ prependContext: "verified context" })
+    const rules = join(dir, "planning-and-delegation.md")
+    writeFileSync(rules, "# Planning\n\nUse the agents.\n")
+    process.env.OPENCLAW_PLANNING_RULES_FILE = rules
+    try {
+      expect(await build()).toEqual({ prependContext: "verified context", appendSystemContext: "# Planning\n\nUse the agents." })
+      process.env.OPENCLAW_PLANNING_RULES_FILE = join(dir, "gone.md")
+      expect(await build()).toEqual({ prependContext: "verified context" })
+    } finally { delete process.env.OPENCLAW_PLANNING_RULES_FILE }
+  })
 })
 
 test("OpenClaw runs the hook with the python in COMMON_HOOK_PYTHON_DIR", async () => {
@@ -286,4 +301,34 @@ test("OpenCode rejects repeated prior completion and prior step after a new exec
   await run(nativeEvent({id:"evt_old_success",durable:{seq:101},type:"session.execution.succeeded",data:{sessionID:"replay"}}))
   expect(prompts).toBe(0)
   expect(calls()).toHaveLength(before)
+})
+
+
+test("OpenCode repeats the session context each dispatch and hands the latest stop result to the next one once", async () => {
+  const {createPlugin}=await import("../bridges/opencode.ts")
+  const protocol=join(dir,"stop-context.py"), outcome=join(dir,"stop-outcome.json")
+  writeFileSync(protocol, `import argparse,json,sys
+p=argparse.ArgumentParser();p.add_argument('--harness');p.add_argument('--event');a=p.parse_args();json.load(sys.stdin)
+if a.event=='SessionStart':print(json.dumps({'action':'allow','context':'handover'}))
+elif a.event in ('session.idle','session.execution.succeeded'):print(open(${JSON.stringify(outcome)}).read())
+else:print(json.dumps({'action':'allow','context':''}))
+`)
+  const handlers=new Map<string,Function>()
+  const register=(name:string,fn:Function)=>fx(()=>{handlers.set(name,fn)})
+  const ctx={session:{get:()=>fx(()=>({location:{directory:dir}})),hook:register,prompt:()=>fx(()=>({}))},tool:{hook:register},event:{subscribe:()=>({pipe:(...fs:Function[])=>fs.reduce((x,f)=>f(x),[] as any)})}}
+  await run(createPlugin({id:"ai-loop",entry:protocol}).effect(ctx as any))
+  const dispatch=async()=>{const model={sessionID:"stops",system:[] as any[]};await run(handlers.get("context")!(model));return model.system.map((x:any)=>x.text)}
+  expect(await dispatch()).toEqual(["handover"])
+  writeFileSync(outcome, JSON.stringify({action:"notify",context:"check-docs.sh: FAIL\nbroken link"}))
+  await run(nativeEvent({type:"session.status",data:{sessionID:"stops",status:{type:"idle"}}}))
+  expect(await dispatch()).toEqual(["handover","Post-work checks after the previous turn (ai-loop) reported:\ncheck-docs.sh: FAIL\nbroken link"])
+  expect(await dispatch()).toEqual(["handover"])
+  writeFileSync(outcome, JSON.stringify({action:"allow",context:"check-docs.sh: PASS\naistudio check all: PASS\nsummary"}))
+  await run(nativeEvent({type:"session.step.ended",data:{sessionID:"stops",finish:"stop"}}))
+  await run(nativeEvent({type:"session.execution.succeeded",data:{sessionID:"stops"}}))
+  expect(await dispatch()).toEqual(["handover","Post-work checks after the previous turn (ai-loop): all PASS (check-docs.sh, aistudio check all)"])
+  expect(await dispatch()).toEqual(["handover"])
+  writeFileSync(outcome, JSON.stringify({action:"allow",context:""}))
+  await run(nativeEvent({type:"session.status",data:{sessionID:"stops",status:{type:"idle"}}}))
+  expect(await dispatch()).toEqual(["handover"])
 })

@@ -414,9 +414,11 @@ def emit(harness, event, result):
             "decision": "deny" if kind == "pre" and action == "deny" else "allow",
             "context": message,
             "reason": message,
+            # The bridge tells a clean stop ("allow") from one to report.
+            "action": action,
         }
         if "loop" in result:
-            output.update(action=action, loop=result["loop"])
+            output["loop"] = result["loop"]
         return output, 0
     if kind == "stop" and action == "continue" and harness in STOP_CONTROL:
         return {"decision": "block", "reason": message}, 0
