@@ -16,7 +16,6 @@ let
   ];
 in
 {
-  inherit tiers;
   # plan mode runs on the top tier; leaving a whole session there is what burns
   # its share, so execution and subagents drop to the next one
   plan = (builtins.head tiers).id;

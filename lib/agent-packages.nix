@@ -54,7 +54,7 @@ let
   claudeId = package: "${package.name}@${package.marketplace}";
 in
 {
-  inherit packages claudeId valueFor;
+  inherit claudeId valueFor;
   # the packages a cli gets, and every value each one gives it
   inherit for;
   valuesFor = cli: package: package.clis.${cli};
