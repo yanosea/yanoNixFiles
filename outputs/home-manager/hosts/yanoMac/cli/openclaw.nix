@@ -118,10 +118,11 @@ let
       model = goModel;
       deny = [ ];
     };
+    # deliberates the way forward and the helper-usage policy; never edits
     smart = {
-      name = "hard design and debugging";
+      name = "approach deliberation";
       model = "opencode-go/kimi-k3.1-pro";
-      deny = [ ];
+      deny = readOnly;
     };
     # the opencode planner: reads and plans before any edit, never edits
     planner = {
