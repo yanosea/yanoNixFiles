@@ -43,4 +43,10 @@ When planning applies, run it on opencode as follows:
 
 Never pass a `model` override to the subagent tool.
 
+Run every subagent in the background. Call the subagent tool with `background: true` and keep the returned `sessionID`. It returns at once, so stay with the user: keep chatting, answer questions, and start other independent work. Do not sleep, poll, or check on a child; you are notified when it finishes, as a `<subagent sessionID="..." state="...">` message that carries its final output.
+
+The planning steps keep their order, not their blocking. Launch the explores together with `background: true`, tell the user you are waiting, and end your turn if nothing else is useful. As each completion arrives, keep its result against its `sessionID`; once the explores you need are back, ask the user with the `question` tool as step 2 says, then run step 3's explores the same way, launch `planner`, ask its step-5 questions if any, and write the plan when it completes. Never let a late result reorder the chain.
+
+To tell a running child something you learned, do not interrupt it: note the point, and handle it yourself when the child reports, or after that by continuing the same child with its `sessionID`. Report the child's final output, not your guess at its progress.
+
 In the final report, state only what a command output or a file you read showed; label anything else as not checked. Write Japanese reports by the `yomiyasu` rules and never use a dash as a separator. Name the `reviewer` verdict in that report.
