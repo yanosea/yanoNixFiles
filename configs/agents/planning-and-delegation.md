@@ -6,7 +6,7 @@ The primary agent (opencode's manager, openclaw's main and dev) applies these ru
 
 Planning applies whenever the change touches two or more files or commits, two or more approaches are viable, or the cause of a defect is unknown. Small files and an easy-looking task do not exempt it.
 
-Skip planning only for a single-file fix, CI triage, formatting, a dependency bump and a lookup. When planning applies, hand it to `planner` with the findings and the answers the user gave. Do not design the plan yourself.
+Skip planning only for a single-file fix, CI triage, formatting, a dependency bump and a lookup. When planning applies, consult `smart` for the way forward first, then hand the file-level design to `planner` with the findings and the answers the user gave. Do not design the plan yourself.
 
 ## Use each agent (mandatory)
 
@@ -15,7 +15,7 @@ A matching condition means use that agent. If a condition matched and you did no
 - **explore** (read-only research): a question needs three or more file reads, or a repository-wide grep or glob, or the output would flood your context. One targeted read or a search you can run yourself does not match.
 - **planner** (read-only planning): planning applies, as defined above.
 - **worker** (isolated implementation): an independent edit with a clear contract (task, owned files, expected evidence) that can run in parallel with other work, or that would flood your context.
-- **smart** (hard design and debugging): the cause of a defect is unknown, or the design needs deeper reasoning than a straight edit.
+- **smart** (read-only approach deliberation): the primary agent consults smart for the way forward on non-trivial work — the steps, which subagents (`explore`, `worker`, `planner`, `reviewer`), in what order, and the contract of each. When in doubt, use smart. smart reads what it needs and returns the policy; it never edits and never launches agents. The primary agent then executes the policy itself, launching and verifying each subagent.
 - **reviewer** (independent review): every change before you report it done, single-file fixes and doc, config and refactor changes included. Give it the task, the changed files and the command output you verified. Skip it only when you changed no file or the user told you to. Never send a review to a paid agent, even when `reviewer` falls short.
 
 Call independent reads, searches and agents together in one turn, not one per turn. Never let two agents edit the same file.
