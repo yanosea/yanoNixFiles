@@ -26,6 +26,18 @@ let
     rm -f "$HOME/.config/AquaSKK/DictionarySet.plist"
     rm -f "$HOME/.config/AquaSKK/BlacklistApps.plist"
   '';
+  # shared host shapes: the nixos hosts share system and osType and default to
+  # removing CLAUDE.md, and the mac hosts are identical
+  nixosHost = {
+    system = "x86_64-linux";
+    osType = "nixos";
+    preHomeCommands = rmClaudeMd;
+  };
+  macHost = {
+    system = "aarch64-darwin";
+    osType = "darwin";
+    preHomeCommands = rmAquaSkk + rmClaudeMd;
+  };
   # host configurations; the attribute name is the hostname
   hosts =
     builtins.mapAttrs
@@ -39,32 +51,18 @@ let
       )
       {
         # nixos
-        yanoNixOs = {
-          system = "x86_64-linux";
-          osType = "nixos";
+        yanoNixOs = nixosHost // {
           preHomeCommands = rmClaudeMd + ''
             rm -fr "$HOME/.config/fcitx5/config"
             rm -fr "$HOME/.config/fcitx5/profile"
           '';
         };
         # nixos (wsl)
-        yanoNixOsWsl = {
-          system = "x86_64-linux";
-          osType = "nixos";
-          preHomeCommands = rmClaudeMd;
-        };
+        yanoNixOsWsl = nixosHost;
         # mac
-        yanoMac = {
-          system = "aarch64-darwin";
-          osType = "darwin";
-          preHomeCommands = rmAquaSkk + rmClaudeMd;
-        };
+        yanoMac = macHost;
         # mac book
-        yanoMacBook = {
-          system = "aarch64-darwin";
-          osType = "darwin";
-          preHomeCommands = rmAquaSkk + rmClaudeMd;
-        };
+        yanoMacBook = macHost;
       };
   # helper to create system command
   mkSystemCommand =
