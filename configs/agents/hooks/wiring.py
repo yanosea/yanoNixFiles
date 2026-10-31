@@ -20,6 +20,14 @@ from pathlib import Path
 LEGACY = {"load-handover.sh", "remind-websearch.sh", "generate-handover.sh"}
 
 
+def _hook_identity(entry, handler):
+    return (
+        entry.get("matcher", ""),
+        handler.get("type", "command"),
+        handler.get("command", handler.get("bash", handler.get("exec", ""))),
+    )
+
+
 def managed(handler):
     command = handler.get("command", handler.get("bash", ""))
     if not isinstance(command, str):
@@ -77,29 +85,16 @@ def merge_hooks(current, desired):
         if disabled:
             output[event] = kept + disabled
             continue
+
         identities = set()
         for entry in kept:
             for handler in entry.get("hooks", [entry]):
-                identities.add(
-                    (
-                        entry.get("matcher", ""),
-                        handler.get("type", "command"),
-                        handler.get(
-                            "command", handler.get("bash", handler.get("exec", ""))
-                        ),
-                    )
-                )
+                identities.add(_hook_identity(entry, handler))
         for entry in copy.deepcopy(additions):
             handlers = entry.get("hooks", [entry])
             fresh = []
             for handler in handlers:
-                identity = (
-                    entry.get("matcher", ""),
-                    handler.get("type", "command"),
-                    handler.get(
-                        "command", handler.get("bash", handler.get("exec", ""))
-                    ),
-                )
+                identity = _hook_identity(entry, handler)
                 if identity not in identities:
                     fresh.append(handler)
                     identities.add(identity)
