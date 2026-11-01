@@ -505,33 +505,27 @@ def issue_key(issue):
     return json.dumps([issue["file"], issue["kind"], issue["text"]], ensure_ascii=True)
 
 
+def _issue(path, number, kind, text, source):
+    return {
+        "file": path,
+        "line": number,
+        "kind": kind,
+        "text": text,
+        "source": source,
+    }
+
+
 def line_issues(path, lines, source, checks):
     issues = []
     for number, text in lines:
         if checks["whitespace"] and (
             re.search(r"[ \t]+$", text) or re.match(r"^ * +\t", text)
         ):
-            issues.append(
-                {
-                    "file": path,
-                    "line": number,
-                    "kind": "whitespace",
-                    "text": text,
-                    "source": source,
-                }
-            )
+            issues.append(_issue(path, number, "whitespace", text, source))
         if checks["conflict_markers"] and re.match(
             r"^(?:<{7}(?: |$)|={7}$|>{7}(?: |$)|\|{7}(?: |$))", text
         ):
-            issues.append(
-                {
-                    "file": path,
-                    "line": number,
-                    "kind": "conflict_marker",
-                    "text": text,
-                    "source": source,
-                }
-            )
+            issues.append(_issue(path, number, "conflict_marker", text, source))
     return issues
 
 
@@ -630,13 +624,13 @@ def snapshot(root, policy, deadline=None):
             )
             if policy["checks"]["whitespace"] and text.endswith("\n\n"):
                 issues.append(
-                    {
-                        "file": name,
-                        "line": len(text.splitlines()),
-                        "kind": "whitespace",
-                        "text": "blank line at EOF",
-                        "source": "untracked",
-                    }
+                    _issue(
+                        name,
+                        len(text.splitlines()),
+                        "whitespace",
+                        "blank line at EOF",
+                        "untracked",
+                    )
                 )
     # File-scoped patches avoid parsing quoted filenames and cover the index
     # even when the working file has subsequently been corrected or deleted.
@@ -692,13 +686,13 @@ def snapshot(root, policy, deadline=None):
                     match = re.match(r".*:(\d+): new blank line at EOF\.$", text)
                     if match:
                         layer_issues.append(
-                            {
-                                "file": name,
-                                "line": int(match.group(1)),
-                                "kind": "whitespace",
-                                "text": "blank line at EOF",
-                                "source": "staged" if cached else "unstaged",
-                            }
+                            _issue(
+                                name,
+                                int(match.group(1)),
+                                "whitespace",
+                                "blank line at EOF",
+                                "staged" if cached else "unstaged",
+                            )
                         )
         counts = Counter(issue_key(issue) for issue in layer_issues)
         for key, count in counts.items():
