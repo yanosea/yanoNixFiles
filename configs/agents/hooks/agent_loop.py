@@ -25,6 +25,10 @@ TERMINAL = {"cancelled", "completed"}
 ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$")
 
 
+def _copy(value):
+    return json.loads(json.dumps(value))
+
+
 class LoopError(ValueError):
     pass
 
@@ -169,7 +173,7 @@ def _validate_spec(spec):
     tasks = spec.get("tasks")
     if not isinstance(tasks, list) or not tasks:
         raise LoopError("At least one ordered task required")
-    tasks = json.loads(json.dumps(tasks))
+    tasks = _copy(tasks)
     task_ids = set()
     for task in tasks:
         if (
@@ -436,7 +440,7 @@ def start(spec, harness, session, state_dir=None):
             "created_at": time.time(),
         }
         ledger["loop"] = state
-        return json.loads(json.dumps(state))
+        return _copy(state)
 
 
 def status(workspace, state_dir=None):
@@ -460,7 +464,7 @@ def status(workspace, state_dir=None):
                 "paused",
                 "Native host exited; observe a live replacement and explicitly resume",
             )
-        return json.loads(json.dumps(state))
+        return _copy(state)
 
 
 def _owner(state, event):
@@ -533,7 +537,7 @@ def control(
             state["owner_epoch"] += 1
         else:
             raise LoopError("Unknown loop control action")
-        return json.loads(json.dumps(state))
+        return _copy(state)
 
 
 def _process_start(pid):
@@ -746,7 +750,7 @@ def record(
             "fingerprint": state["fingerprint"],
             "created_at": time.time(),
         }
-        return json.loads(json.dumps(state))
+        return _copy(state)
 
 
 def confirm_human(
@@ -783,7 +787,7 @@ def confirm_human(
             "fingerprint": state["fingerprint"],
             "created_at": time.time(),
         }
-        return json.loads(json.dumps(state))
+        return _copy(state)
 
 
 def _run_check(command, workspace):
