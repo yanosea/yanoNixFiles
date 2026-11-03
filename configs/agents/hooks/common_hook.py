@@ -7,6 +7,7 @@ Adapters own native schemas and capabilities; this module owns shared state.
 
 import argparse
 import contextlib
+import copy
 import fcntl
 import hashlib
 import importlib.util
@@ -125,7 +126,7 @@ class HookError(Exception):
 
 
 def merge_policy(override=None):
-    policy = json.loads(json.dumps(DEFAULT_POLICY))
+    policy = copy.deepcopy(DEFAULT_POLICY)
     if override is None:
         return policy
     if not isinstance(override, dict):
