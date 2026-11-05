@@ -51,10 +51,8 @@ def merge_hooks(current, desired):
         raise ValueError("hooks must be an object")  # noqa: TRY004 - Config validation contract.
     output = copy.deepcopy(current)
     for event, additions in desired.items():
-        if not isinstance(additions, list):
-            raise ValueError(f"Expected hook list for {event}")  # noqa: TRY004 - Config validation contract.
         existing = output.get(event, [])
-        if not isinstance(existing, list):
+        if not isinstance(additions, list) or not isinstance(existing, list):
             raise ValueError(f"Expected hook list for {event}")  # noqa: TRY004 - Config validation contract.
         kept = []
         disabled = []
