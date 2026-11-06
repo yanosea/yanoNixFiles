@@ -64,6 +64,7 @@ EVENTS = {
     "interrupt": "end",
     "end": "end",
 }
+PATH_KEYS = {"path", "file_path", "filePath", "filename", "TargetFile", "AbsolutePath"}
 
 
 def command_harness(argv):
@@ -174,14 +175,7 @@ def _paths(value):
     paths = []
     if isinstance(value, dict):
         for key, item in value.items():
-            if key in {
-                "path",
-                "file_path",
-                "filePath",
-                "filename",
-                "TargetFile",
-                "AbsolutePath",
-            } and isinstance(item, str):
+            if key in PATH_KEYS and isinstance(item, str):
                 paths.append(item)
             elif key in {"paths", "derivedPaths"} and isinstance(item, list):
                 paths.extend(v for v in item if isinstance(v, str))
