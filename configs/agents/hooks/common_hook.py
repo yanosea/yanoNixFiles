@@ -180,8 +180,9 @@ def merge_policy(override=None):
 
 
 def load_policy(path=None):
-    explicit = path is not None or bool(os.environ.get("AGENT_HOOK_POLICY"))
-    selected = path or os.environ.get("AGENT_HOOK_POLICY")
+    env_path = os.environ.get("AGENT_HOOK_POLICY")
+    explicit = path is not None or bool(env_path)
+    selected = path or env_path
     if not selected:
         selected = (
             Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
