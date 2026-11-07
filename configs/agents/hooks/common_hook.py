@@ -87,6 +87,8 @@ WRITE_COMMANDS = {
     "rsync",
 }
 PATH_KEYS = {"path", "file_path", "filePath", "filename", "TargetFile", "AbsolutePath"}
+PATCH_FILE = re.compile(r"^\*\*\* (?:Add|Update|Delete) File: (.+)$", re.MULTILINE)
+PATCH_MOVE = re.compile(r"^\*\*\* Move to: (.+)$", re.MULTILINE)
 READ_TOOLS = {
     "read",
     "readfile",
@@ -345,12 +347,8 @@ def native_paths(value):
             elif key in {"patch", "patch_text", "input", "command"} and isinstance(
                 item, str
             ):
-                paths.extend(
-                    re.findall(
-                        r"^\*\*\* (?:Add|Update|Delete) File: (.+)$", item, re.MULTILINE
-                    )
-                )
-                paths.extend(re.findall(r"^\*\*\* Move to: (.+)$", item, re.MULTILINE))
+                paths.extend(PATCH_FILE.findall(item))
+                paths.extend(PATCH_MOVE.findall(item))
             elif isinstance(item, (list, dict)):
                 paths.extend(native_paths(item))
     elif isinstance(value, list):
