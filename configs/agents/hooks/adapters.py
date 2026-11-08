@@ -65,6 +65,8 @@ EVENTS = {
     "end": "end",
 }
 PATH_KEYS = {"path", "file_path", "filePath", "filename", "TargetFile", "AbsolutePath"}
+PATCH_FILE = re.compile(r"^\*\*\* (?:Add|Update|Delete) File: (.+)$", re.MULTILINE)
+PATCH_MOVE = re.compile(r"^\*\*\* Move to: (.+)$", re.MULTILINE)
 
 
 def command_harness(argv):
@@ -240,10 +242,8 @@ def normalize(harness, event, payload):
     if not isinstance(patch, str):
         raise ValueError("patch must be a string")  # noqa: TRY004 - JSON validation contract.
     paths = _paths(args) + _paths({"derivedPaths": payload.get("derivedPaths", [])})
-    paths.extend(
-        re.findall(r"^\*\*\* (?:Add|Update|Delete) File: (.+)$", patch, re.MULTILINE)
-    )
-    paths.extend(re.findall(r"^\*\*\* Move to: (.+)$", patch, re.MULTILINE))
+    paths.extend(PATCH_FILE.findall(patch))
+    paths.extend(PATCH_MOVE.findall(patch))
     result = {
         "kind": kind,
         "harness": harness,
