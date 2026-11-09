@@ -38,9 +38,8 @@ def managed(handler):
         raise ValueError("Malformed shell command in hook configuration") from error
     for word in words:
         normalized = word.replace("${HOME}", "$HOME")
-        if (
-            "/.agents/hooks/" in normalized or normalized.startswith("~/.agents/hooks/")
-        ) and normalized.rsplit("/", 1)[-1] in LEGACY | {"common_hook.py"}:
+        name = normalized.rsplit("/", 1)[-1]
+        if "/.agents/hooks/" in normalized and name in LEGACY | {"common_hook.py"}:
             return True
     return False
 
