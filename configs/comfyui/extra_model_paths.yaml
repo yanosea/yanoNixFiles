@@ -10,3 +10,7 @@ comfyui:
   loras: loras/
   vae: vae/
   upscale_models: upscale_models/
+  # The hands redrawn after an image is drawn: the folder names Impact Subpack
+  # (detectors) and Impact Pack (SAM) register.
+  ultralytics_bbox: ultralytics/bbox/
+  sams: sams/
