@@ -88,9 +88,8 @@ def merge_hooks(current, desired):
             for handler in entry.get("hooks", [entry]):
                 identities.add(_hook_identity(entry, handler))
         for entry in copy.deepcopy(additions):
-            handlers = entry.get("hooks", [entry])
             fresh = []
-            for handler in handlers:
+            for handler in entry.get("hooks", [entry]):
                 identity = _hook_identity(entry, handler)
                 if identity not in identities:
                     fresh.append(handler)
