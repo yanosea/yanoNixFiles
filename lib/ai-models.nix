@@ -7,7 +7,7 @@ let
   tiers = [
     {
       name = "fable";
-      id = "claude-fable-5-1";
+      id = "claude-fable-5-2";
     }
     {
       name = "opus";

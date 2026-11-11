@@ -1,7 +1,7 @@
 ---
 description: Pay-as-you-go architecture decisions; never edits
 mode: subagent
-model: opencode-premium/claude-fable-5-1
+model: opencode-premium/claude-fable-5-2
 steps: 30
 permissions:
   - { action: edit, resource: "*", effect: deny }

@@ -6,7 +6,7 @@ describe("OpenClaw paid guard", () => {
     for (const [agent, model] of [
       ["dev-paid-opus", "opencode-premium/claude-opus-5-5"],
       ["main-paid-opus-heavy", "opencode-premium/claude-opus-5-5"],
-      ["dev-paid-fable-architect", "opencode-premium/claude-fable-5-1"],
+      ["dev-paid-fable-architect", "opencode-premium/claude-fable-5-2"],
     ]) {
       const result: any = decide({ toolName: "sessions_spawn", params: { agentId: agent, task: "Review   the\nplan" } })
       expect(result.requireApproval.title).toBe(`Paid agent: ${agent}`)

@@ -151,7 +151,7 @@ let
     };
     paid-fable-architect = {
       name = "pay-as-you-go design decisions";
-      model = "opencode-premium/claude-fable-5-1";
+      model = "opencode-premium/claude-fable-5-2";
       deny = readOnly;
     };
   };
@@ -992,8 +992,8 @@ in
                   };
                 }
                 {
-                  id = "claude-fable-5-1";
-                  name = "Claude Fable 5.1";
+                  id = "claude-fable-5-2";
+                  name = "Claude Fable 5.2";
                   reasoning = true;
                   input = [
                     "text"
@@ -1005,8 +1005,8 @@ in
                     supportsStrictMode = false;
                   };
                   cost = {
-                    input = 10;
-                    output = 50;
+                    input = 8;
+                    output = 40;
                   };
                 }
               ];

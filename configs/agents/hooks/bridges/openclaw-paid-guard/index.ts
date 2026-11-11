@@ -10,7 +10,7 @@ type API = {
 export const PAID: Record<string, { model: string; role: string }> = {
   "paid-opus": { model: "opencode-premium/claude-opus-5-5", role: "planning and review, never edits" },
   "paid-opus-heavy": { model: "opencode-premium/claude-opus-5-5", role: "heavy implementation" },
-  "paid-fable-architect": { model: "opencode-premium/claude-fable-5-1", role: "design decisions, never edits" },
+  "paid-fable-architect": { model: "opencode-premium/claude-fable-5-2", role: "design decisions, never edits" },
 }
 const SHELL = new Set(["exec", "bash", "process", "code_execution"])
 // The shell inherits the premium key, so a direct call could skip the
@@ -36,7 +36,7 @@ export function decide(event: Event) {
     if (!role) return undefined
     return {
       // A child inherits the caller's thinking, and haiku runs with none; opus
-      // 5.5 and fable 5.1 reject disabled thinking, so a paid child thinks high.
+      // 5.5 and fable 5.2 reject disabled thinking, so a paid child thinks high.
       params: { ...params, thinking: params.thinking || "high" },
       requireApproval: {
         title: clip(`Paid agent: ${agent}`, 80),

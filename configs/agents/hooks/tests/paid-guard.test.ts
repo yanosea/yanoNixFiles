@@ -37,7 +37,7 @@ const agents: Record<string, any> = {
   explore: { id: "explore", description: "Reads code" },
   "paid-opus-heavy": { id: "paid-opus-heavy", description: "Hard reasoning", model: { providerID: "opencode-premium", id: "claude-opus-5-5" } },
   "paid-fable-architect": { id: "paid-fable-architect", description: "Designs", model: { providerID: "opencode-go", id: "renamed" } },
-  custom: { id: "custom", description: "Unlisted", model: { providerID: "opencode-premium", id: "claude-fable-5-1" } },
+  custom: { id: "custom", description: "Unlisted", model: { providerID: "opencode-premium", id: "claude-fable-5-2" } },
 }
 const sessions: Record<string, any> = {
   parent: { id: "parent", agent: "manager", model: { providerID: "opencode-go", id: "kimi-k3" } },
@@ -72,7 +72,7 @@ describe("paid guard", () => {
     const { before } = await load()
     for (const input of [
       { agent: "worker", description: "d", prompt: "p", model: "opencode-premium/claude-opus-5-5" },
-      JSON.stringify({ agent: "worker", description: "d", prompt: "p", model: "opencode-premium/claude-fable-5-1" }),
+      JSON.stringify({ agent: "worker", description: "d", prompt: "p", model: "opencode-premium/claude-fable-5-2" }),
       { agent: "worker", description: "d", prompt: "p", provider: "opencode-premium" },
     ]) {
       try { await before("c0", input); throw new Error("denial missing") }
