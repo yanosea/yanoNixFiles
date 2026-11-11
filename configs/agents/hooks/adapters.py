@@ -217,9 +217,11 @@ def normalize(harness, event, payload):
     workspace = _first(
         payload, "workspace", "workspaceDir", "workspaceRoot", "cwd", "working_dir"
     )
-    if not workspace:
-        workspace = next((v for v in workspaces if isinstance(v, str)), None)
-    workspace = workspace or os.getcwd()
+    workspace = (
+        workspace
+        or next((v for v in workspaces if isinstance(v, str)), None)
+        or os.getcwd()
+    )
     if not isinstance(workspace, str):
         raise ValueError("workspace must be a path string")  # noqa: TRY004 - JSON validation contract.
     cwd = _first(args, "Cwd", "cwd", "workdir") or workspace
