@@ -20,7 +20,7 @@
       "canonical": "opencode",
       "package": "@opencode/ai/providers/anthropic",
       "settings": { "baseURL": "https://opencode.ai/inference/anthropic/v1" },
-      "models": { "claude-opus-5-5": {}, "claude-fable-5-1": {} }
+      "models": { "claude-opus-5-5": {}, "claude-fable-5-2": {} }
     }
   },
   // the built-ins would bypass manager's routing: general runs on the parent's
