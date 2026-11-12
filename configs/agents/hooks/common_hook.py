@@ -184,12 +184,12 @@ def merge_policy(override=None):
 def load_policy(path=None):
     env_path = os.environ.get("AGENT_HOOK_POLICY")
     explicit = path is not None or bool(env_path)
-    selected = path or env_path
-    if not selected:
-        selected = (
-            Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
-            / "agents/hooks-policy.json"
-        )
+    selected = (
+        path
+        or env_path
+        or Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+        / "agents/hooks-policy.json"
+    )
     path = Path(selected).expanduser()
     if not path.exists():
         if explicit:
