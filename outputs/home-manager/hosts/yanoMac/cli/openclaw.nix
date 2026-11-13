@@ -713,14 +713,18 @@ in
               maxChildrenPerAgent = 3;
               runTimeoutSeconds = 900;
             };
+            # 2026.11.3 drops the `default` marker; main owns the system turns
+            systemAgent = {
+              agentId = "main";
+            };
           };
+          ownership = "explicit";
           # once any entry carries a heartbeat block, only the entries that
           # carry one run heartbeats, so main needs its own as well. the
           # helpers carry none and no binding, so neither cron nor discord
           # reaches them
           entries = {
             main = {
-              default = true;
               workspace = config.programs.openclaw.workspaceDir;
               # a string model is strict; only the object form takes
               # fallbacks, which skip modelPolicy
@@ -782,6 +786,13 @@ in
                 kind = "channel";
                 id = "\${OPENCLAW_DISCORD_DEV_CHANNEL_ID}";
               };
+            };
+          }
+          {
+            agentId = "main";
+            match = {
+              channel = "discord";
+              accountId = "*";
             };
           }
         ];
@@ -1023,6 +1034,8 @@ in
             # `programs.openclaw.runtimePlugins` refuses to sit beside the raw
             # paths above, so its package goes in here directly
             "${pkgs.openclawRuntimePlugins.parallel}"
+            # 2026.11.3 no longer bundles discord, so it loads from here too
+            "${pkgs.openclawRuntimePlugins.discord}"
           ];
           # bundled but off until named here
           entries = {
@@ -1054,8 +1067,13 @@ in
             "document-extract" = {
               enabled = true;
             };
+            # 2026.11.3 asks for these to keep the tool's model parameters
             "llm-task" = {
               enabled = true;
+              llm = {
+                allowAuthProfileOverride = true;
+                allowModelOverride = true;
+              };
             };
             "logbook" = {
               enabled = true;
@@ -1085,6 +1103,9 @@ in
         };
         session = {
           groupScope = "main";
+        };
+        talk = {
+          agentId = "main";
         };
         # a custom stateDir excludes home skill roots. use the shared source
         # directly: home-manager's per-file symlinks escape the skill root.

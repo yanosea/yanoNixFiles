@@ -6,7 +6,7 @@ let
     export DISABLE_VK_LAYER_LUNARG_core_validation=1
     export VK_INSTANCE_LAYERS=""
     export VK_DRIVER_FILES=""
-    exec ${pkgs.bitwig-studio}/bin/bitwig-studio "$@"
+    exec ${pkgs.pipewire.jack}/bin/pw-jack ${pkgs.bitwig-studio}/bin/bitwig-studio "$@"
   '';
 in
 {
