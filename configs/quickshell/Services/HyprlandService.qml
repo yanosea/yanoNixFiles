@@ -373,7 +373,7 @@ Item {
     // Public functions
     function toggleSpecialWorkspace(name) {
         try {
-            Hyprland.dispatch(`togglespecialworkspace ${name}`);
+            Hyprland.dispatch(`hl.dsp.workspace.toggle_special("${name}")`);
         } catch (e) {
             Logger.e("HyprlandService", "Failed to toggle special workspace:", e);
         }
@@ -381,7 +381,7 @@ Item {
 
     function switchToWorkspace(workspace) {
         try {
-            Hyprland.dispatch(`workspace ${workspace.idx}`);
+            Hyprland.dispatch(`hl.dsp.focus({ workspace = "${workspace.idx}" })`);
         } catch (e) {
             Logger.e("HyprlandService", "Failed to switch workspace:", e);
         }
@@ -389,7 +389,7 @@ Item {
 
     function focusWindow(window) {
         try {
-            Hyprland.dispatch(`focuswindow address:0x${window.id.toString()}`);
+            Hyprland.dispatch(`hl.dsp.focus({ window = "address:0x${window.id.toString()}" })`);
         } catch (e) {
             Logger.e("HyprlandService", "Failed to switch window:", e);
         }
@@ -397,7 +397,7 @@ Item {
 
     function closeWindow(window) {
         try {
-            Hyprland.dispatch(`killwindow address:0x${window.id}`);
+            Hyprland.dispatch(`hl.dsp.window.kill({ window = "address:0x${window.id}" })`);
         } catch (e) {
             Logger.e("HyprlandService", "Failed to close window:", e);
         }
@@ -405,7 +405,7 @@ Item {
 
     function logout() {
         try {
-            Quickshell.execDetached(["hyprctl", "dispatch", "exit"]);
+            Quickshell.execDetached(["hyprctl", "dispatch", "hl.dsp.exit()"]);
         } catch (e) {
             Logger.e("HyprlandService", "Failed to logout:", e);
         }

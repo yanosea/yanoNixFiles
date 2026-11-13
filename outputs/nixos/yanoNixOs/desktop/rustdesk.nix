@@ -24,7 +24,7 @@
         # `--service` shells out for all of these to spawn `--server` in the login
         # session, and none are on a unit's default PATH. getent is what corrects the
         # root HOME that `sudo -E` passes down; without it the server silently ends up
-        # with an empty one. also needs `rustdesk --tray` from hyprland.conf.
+        # with an empty one. also needs `rustdesk --tray` from hyprland.lua.
         path = [
           # the setuid sudo, not the raw package
           "/run/wrappers"
