@@ -11,8 +11,8 @@ RowLayout {
     property string description: ""
     property bool checked: false
     property bool hovering: false
-    property color activeColor: Color.mPrimary
-    property color activeOnColor: Color.mOnPrimary
+    property color activeColor: Colors.mPrimary
+    property color activeOnColor: Colors.mOnPrimary
     property int baseSize: Style.baseWidgetSize * 0.7
 
     signal toggled(bool checked)
@@ -38,8 +38,8 @@ RowLayout {
         implicitWidth: Math.round(root.baseSize)
         implicitHeight: Math.round(root.baseSize)
         radius: Style.radiusXS
-        color: root.checked ? root.activeColor : Color.mSurface
-        border.color: Color.mOutline
+        color: root.checked ? root.activeColor : Colors.mSurface
+        border.color: Colors.mOutline
         border.width: Style.borderS
 
         Behavior on color {

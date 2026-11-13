@@ -55,7 +55,7 @@ NPanel {
     }
 
     panelContent: Rectangle {
-        color: Color.transparent
+        color: Colors.transparent
 
         ColumnLayout {
             anchors.fill: parent
@@ -70,14 +70,14 @@ NPanel {
                 NIcon {
                     icon: "settings-audio"
                     pointSize: Style.fontSizeXXL
-                    color: Color.mPrimary
+                    color: Colors.mPrimary
                 }
 
                 NText {
                     text: I18n.tr("settings.audio.title")
                     pointSize: Style.fontSizeL
                     font.weight: Style.fontWeightBold
-                    color: Color.mOnSurface
+                    color: Colors.mOnSurface
                     Layout.fillWidth: true
                 }
 
@@ -144,7 +144,7 @@ NPanel {
                             NText {
                                 text: I18n.tr("settings.audio.devices.output-device.label")
                                 pointSize: Style.fontSizeL
-                                color: Color.mPrimary
+                                color: Colors.mPrimary
                                 Layout.preferredWidth: root.preferredWidth * 0.3
                             }
 
@@ -201,7 +201,7 @@ NPanel {
                             NText {
                                 text: I18n.tr("settings.audio.devices.input-device.label")
                                 pointSize: Style.fontSizeL
-                                color: Color.mPrimary
+                                color: Colors.mPrimary
                                 Layout.preferredWidth: root.preferredWidth * 0.3
                             }
 

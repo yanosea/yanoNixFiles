@@ -69,10 +69,10 @@ let
       };
     };
   };
-  # hypr config files with custom onChange hook for hyprland.conf
+  # hypr config files with custom onChange hook for hyprland.lua
   hyprConfigEntries = {
-    "hypr/hyprland.conf" = {
-      source = ./hypr/hyprland.conf;
+    "hypr/hyprland.lua" = {
+      source = ./hypr/hyprland.lua;
       onChange = ''
         XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
         if [[ -d "/tmp/hypr" || -d "$XDG_RUNTIME_DIR/hypr" ]]; then

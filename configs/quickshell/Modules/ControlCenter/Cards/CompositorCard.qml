@@ -16,7 +16,7 @@ NBox {
         NIcon {
             icon: "device-desktop"
             pointSize: Style.fontSizeXXL
-            color: Color.mPrimary
+            color: Colors.mPrimary
             Layout.alignment: Qt.AlignVCenter
         }
 
@@ -31,7 +31,7 @@ NBox {
             NText {
                 text: "running"
                 pointSize: Style.fontSizeXS
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
             }
         }
 
@@ -47,7 +47,7 @@ NBox {
             NText {
                 text: "Default:"
                 pointSize: Style.fontSizeXS
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
             }
 
             // Niri pill
@@ -55,7 +55,7 @@ NBox {
                 implicitWidth: niriLabel.implicitWidth + Style.marginM * 2
                 implicitHeight: Math.round(Style.baseWidgetSize * 0.6 * Style.uiScaleRatio)
                 radius: Style.radiusS
-                color: CompositorPreferenceService.preferredCompositor === "niri-session" ? Color.mPrimary : Color.mSurfaceVariant
+                color: CompositorPreferenceService.preferredCompositor === "niri-session" ? Colors.mPrimary : Colors.mSurfaceVariant
                 Behavior on color {
                     ColorAnimation {
                         duration: Style.animationFast
@@ -68,7 +68,7 @@ NBox {
                     text: "Niri"
                     pointSize: Style.fontSizeXS
                     font.weight: Style.fontWeightMedium
-                    color: CompositorPreferenceService.preferredCompositor === "niri-session" ? Color.mOnPrimary : Color.mOnSurfaceVariant
+                    color: CompositorPreferenceService.preferredCompositor === "niri-session" ? Colors.mOnPrimary : Colors.mOnSurfaceVariant
                     Behavior on color {
                         ColorAnimation {
                             duration: Style.animationFast
@@ -87,7 +87,7 @@ NBox {
                 implicitWidth: hyprLabel.implicitWidth + Style.marginM * 2
                 implicitHeight: Math.round(Style.baseWidgetSize * 0.6 * Style.uiScaleRatio)
                 radius: Style.radiusS
-                color: CompositorPreferenceService.preferredCompositor === "start-hyprland" ? Color.mPrimary : Color.mSurfaceVariant
+                color: CompositorPreferenceService.preferredCompositor === "start-hyprland" ? Colors.mPrimary : Colors.mSurfaceVariant
                 Behavior on color {
                     ColorAnimation {
                         duration: Style.animationFast
@@ -100,7 +100,7 @@ NBox {
                     text: "Hyprland"
                     pointSize: Style.fontSizeXS
                     font.weight: Style.fontWeightMedium
-                    color: CompositorPreferenceService.preferredCompositor === "start-hyprland" ? Color.mOnPrimary : Color.mOnSurfaceVariant
+                    color: CompositorPreferenceService.preferredCompositor === "start-hyprland" ? Colors.mOnPrimary : Colors.mOnSurfaceVariant
                     Behavior on color {
                         ColorAnimation {
                             duration: Style.animationFast
@@ -119,9 +119,9 @@ NBox {
                 visible: CompositorPreferenceService.currentName !== CompositorPreferenceService.preferredName
                 icon: "logout"
                 tooltipText: "Switch to " + CompositorPreferenceService.preferredName + " (logout)"
-                colorFg: Color.mError
-                colorBgHover: Color.mError
-                colorFgHover: Color.mOnError
+                colorFg: Colors.mError
+                colorBgHover: Colors.mError
+                colorFgHover: Colors.mOnError
                 onClicked: CompositorPreferenceService.switchTo(CompositorPreferenceService.preferredCompositor)
             }
         }

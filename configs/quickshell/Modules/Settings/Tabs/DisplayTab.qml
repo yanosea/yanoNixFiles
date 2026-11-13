@@ -65,8 +65,8 @@ ColumnLayout {
                 Layout.fillWidth: true
                 implicitHeight: contentCol.implicitHeight + Style.marginL * 2
                 radius: Style.radiusM
-                color: Color.mSurfaceVariant
-                border.color: Color.mOutline
+                color: Colors.mSurfaceVariant
+                border.color: Colors.mOutline
                 border.width: Style.borderS
 
                 property var brightnessMonitor: BrightnessService.getMonitorForScreen(modelData)
@@ -219,7 +219,7 @@ ColumnLayout {
             NText {
                 text: I18n.tr("settings.display.night-light.temperature.night")
                 pointSize: Style.fontSizeM
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
                 Layout.alignment: Qt.AlignVCenter
             }
 
@@ -241,7 +241,7 @@ ColumnLayout {
             NText {
                 text: I18n.tr("settings.display.night-light.temperature.day")
                 pointSize: Style.fontSizeM
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
                 Layout.alignment: Qt.AlignVCenter
             }
             NTextInput {
@@ -288,7 +288,7 @@ ColumnLayout {
             NText {
                 text: I18n.tr("settings.display.night-light.manual-schedule.sunrise")
                 pointSize: Style.fontSizeM
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
             }
 
             NComboBox {
@@ -306,7 +306,7 @@ ColumnLayout {
             NText {
                 text: I18n.tr("settings.display.night-light.manual-schedule.sunset")
                 pointSize: Style.fontSizeM
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
             }
 
             NComboBox {

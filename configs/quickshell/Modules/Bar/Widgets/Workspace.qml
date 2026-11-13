@@ -61,7 +61,7 @@ Item {
     property ListModel localWorkspaces: ListModel {}
     property real masterProgress: 0.0
     property bool effectsActive: false
-    property color effectColor: Color.mPrimary
+    property color effectColor: Colors.mPrimary
 
     property int horizontalPadding: Math.round(Style.marginS)
     property int spacingBetweenPills: Math.round(Style.marginXS)
@@ -177,7 +177,7 @@ Item {
     }
 
     function triggerUnifiedWave() {
-        effectColor = Color.mPrimary;
+        effectColor = Colors.mPrimary;
         masterAnimation.restart();
     }
 
@@ -186,7 +186,7 @@ Item {
             const ws = localWorkspaces.get(i);
             if (ws.isFocused === true) {
                 root.triggerUnifiedWave();
-                root.workspaceChanged(ws.id, Color.mPrimary);
+                root.workspaceChanged(ws.id, Colors.mPrimary);
                 break;
             }
         }
@@ -224,7 +224,7 @@ Item {
         width: isVertical ? Style.capsuleHeight : parent.width
         height: isVertical ? parent.height : Style.capsuleHeight
         radius: Style.radiusM
-        color: Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+        color: Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
@@ -311,13 +311,13 @@ Item {
                                 wrapMode: Text.Wrap
                                 color: {
                                     if (model.isFocused)
-                                        return Color.mOnPrimary;
+                                        return Colors.mOnPrimary;
                                     if (model.isUrgent)
-                                        return Color.mOnError;
+                                        return Colors.mOnError;
                                     if (model.isOccupied)
-                                        return Color.mOnSecondary;
+                                        return Colors.mOnSecondary;
 
-                                    return Color.mOnSecondary;
+                                    return Colors.mOnSecondary;
                                 }
                             }
                         }
@@ -326,13 +326,13 @@ Item {
                     radius: width * 0.5
                     color: {
                         if (model.isFocused)
-                            return Color.mPrimary;
+                            return Colors.mPrimary;
                         if (model.isUrgent)
-                            return Color.mError;
+                            return Colors.mError;
                         if (model.isOccupied)
-                            return Color.mSecondary;
+                            return Colors.mSecondary;
 
-                        return Qt.alpha(Color.mSecondary, 0.3);
+                        return Qt.alpha(Colors.mSecondary, 0.3);
                     }
                     scale: model.isActive ? 1.0 : 0.9
                     z: 0
@@ -404,7 +404,7 @@ Item {
                     width: workspacePillContainer.width + 18 * root.masterProgress * scale
                     height: workspacePillContainer.height + 18 * root.masterProgress * scale
                     radius: width / 2
-                    color: Color.transparent
+                    color: Colors.transparent
                     border.color: root.effectColor
                     border.width: Math.max(1, Math.round((2 + 6 * (1.0 - root.masterProgress))))
                     opacity: root.effectsActive && model.isFocused ? (1.0 - root.masterProgress) * 0.7 : 0
@@ -456,13 +456,13 @@ Item {
                                 wrapMode: Text.Wrap
                                 color: {
                                     if (model.isFocused)
-                                        return Color.mOnPrimary;
+                                        return Colors.mOnPrimary;
                                     if (model.isUrgent)
-                                        return Color.mOnError;
+                                        return Colors.mOnError;
                                     if (model.isOccupied)
-                                        return Color.mOnSecondary;
+                                        return Colors.mOnSecondary;
 
-                                    return Color.mOnSurface;
+                                    return Colors.mOnSurface;
                                 }
                             }
                         }
@@ -471,13 +471,13 @@ Item {
                     radius: width * 0.5
                     color: {
                         if (model.isFocused)
-                            return Color.mPrimary;
+                            return Colors.mPrimary;
                         if (model.isUrgent)
-                            return Color.mError;
+                            return Colors.mError;
                         if (model.isOccupied)
-                            return Color.mSecondary;
+                            return Colors.mSecondary;
 
-                        return Color.mOutline;
+                        return Colors.mOutline;
                     }
                     scale: model.isActive ? 1.0 : 0.9
                     z: 0
@@ -549,7 +549,7 @@ Item {
                     width: workspacePillContainerVertical.width + 18 * root.masterProgress * scale
                     height: workspacePillContainerVertical.height + 18 * root.masterProgress * scale
                     radius: width / 2
-                    color: Color.transparent
+                    color: Colors.transparent
                     border.color: root.effectColor
                     border.width: Math.max(1, Math.round((2 + 6 * (1.0 - root.masterProgress))))
                     opacity: root.effectsActive && model.isFocused ? (1.0 - root.masterProgress) * 0.7 : 0
@@ -586,7 +586,7 @@ Item {
                 return isVertical ? d * 2.2 : d;
             }
             radius: width * 0.5
-            color: Color.mTertiary
+            color: Colors.mTertiary
 
             NText {
                 anchors.centerIn: parent
@@ -596,7 +596,7 @@ Item {
                 applyUiScale: false
                 font.capitalization: Font.AllUppercase
                 font.weight: Style.fontWeightBold
-                color: Color.mOnTertiary
+                color: Colors.mOnTertiary
             }
 
             Behavior on width {

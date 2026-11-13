@@ -39,11 +39,11 @@ NIconButton {
     baseSize: Style.capsuleHeight
     applyUiScale: false
     density: Settings.data.bar.density
-    colorBg: (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
-    colorFg: Color.mOnSurface
-    colorBgHover: useDistroLogo ? Color.mSurfaceVariant : Color.mTertiary
-    colorBorder: Color.transparent
-    colorBorderHover: useDistroLogo ? Color.mTertiary : Color.transparent
+    colorBg: (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
+    colorFg: Colors.mOnSurface
+    colorBgHover: useDistroLogo ? Colors.mSurfaceVariant : Colors.mTertiary
+    colorBorder: Colors.transparent
+    colorBorderHover: useDistroLogo ? Colors.mTertiary : Colors.transparent
     onClicked: PanelService.getPanel("controlCenterPanel")?.toggle(this)
     onRightClicked: PanelService.getPanel("settingsPanel")?.toggle()
 

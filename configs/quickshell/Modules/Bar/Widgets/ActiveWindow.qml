@@ -173,7 +173,7 @@ Item {
         width: isVerticalBar ? ((!hasFocusedWindow) && hideMode === "hidden" ? 0 : calculatedVerticalDimension()) : ((!hasFocusedWindow) && (hideMode === "hidden") ? 0 : dynamicWidth)
         height: isVerticalBar ? ((!hasFocusedWindow) && hideMode === "hidden" ? 0 : calculatedVerticalDimension()) : Style.capsuleHeight
         radius: isVerticalBar ? width / 2 : Style.radiusM
-        color: Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+        color: Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
 
         // Smooth width transition
         Behavior on width {
@@ -215,7 +215,7 @@ Item {
                         // Apply dock shader to active window icon (always themed)
                         layer.enabled: widgetSettings.colorizeIcons !== false
                         layer.effect: ShaderEffect {
-                            property color targetColor: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mSurfaceVariant
+                            property color targetColor: Settings.data.colorSchemes.darkMode ? Colors.mOnSurface : Colors.mSurfaceVariant
                             property real colorizeMode: 0.0 // Dock mode (grayscale)
 
                             fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/Shaders/qsb/appicon_colorize.frag.qsb")
@@ -319,7 +319,7 @@ Item {
                                 applyUiScale: false
                                 font.weight: Style.fontWeightMedium
                                 verticalAlignment: Text.AlignVCenter
-                                color: Color.mOnSurface
+                                color: Colors.mOnSurface
                                 onTextChanged: {
                                     if (root.scrollingMode === "always") {
                                         titleContainer.isScrolling = false;
@@ -337,7 +337,7 @@ Item {
                                 pointSize: Style.fontSizeS * scaling
                                 applyUiScale: false
                                 verticalAlignment: Text.AlignVCenter
-                                color: Color.mOnSurface
+                                color: Colors.mOnSurface
                                 visible: titleContainer.needsScrolling && titleContainer.isScrolling
                             }
                         }
@@ -394,7 +394,7 @@ Item {
                         // Apply dock shader to active window icon (always themed)
                         layer.enabled: widgetSettings.colorizeIcons !== false
                         layer.effect: ShaderEffect {
-                            property color targetColor: Color.mOnSurface
+                            property color targetColor: Colors.mOnSurface
                             property real colorizeMode: 0.0 // Dock mode (grayscale)
 
                             fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/Shaders/qsb/appicon_colorize.frag.qsb")

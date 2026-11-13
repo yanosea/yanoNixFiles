@@ -47,7 +47,7 @@ Variants {
             WlrLayershell.namespace: "notifications"
             WlrLayershell.layer: (Settings.data.notifications && Settings.data.notifications.overlayLayer) ? WlrLayer.Overlay : WlrLayer.Top
 
-            color: Color.transparent
+            color: Colors.transparent
 
             readonly property string location: (Settings.data.notifications && Settings.data.notifications.location) ? Settings.data.notifications.location : "top_right"
             readonly property bool isTop: (location === "top") || (location.length >= 3 && location.substring(0, 3) === "top")
@@ -185,9 +185,9 @@ Variants {
                         Layout.maximumHeight: Layout.preferredHeight
 
                         radius: Style.radiusL
-                        border.color: Qt.alpha(Color.mOutline, Settings.data.notifications.backgroundOpacity || 1.0)
+                        border.color: Qt.alpha(Colors.mOutline, Settings.data.notifications.backgroundOpacity || 1.0)
                         border.width: Style.borderS
-                        color: Qt.alpha(Color.mSurface, Settings.data.notifications.backgroundOpacity || 1.0)
+                        color: Qt.alpha(Colors.mSurface, Settings.data.notifications.backgroundOpacity || 1.0)
 
                         // Optimized progress bar container
                         Rectangle {
@@ -196,7 +196,7 @@ Variants {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: 2
-                            color: Color.transparent
+                            color: Colors.transparent
                             visible: true
 
                             // Pre-calculate available width for the progress bar
@@ -214,11 +214,11 @@ Variants {
                                 color: {
                                     var baseColor;
                                     if (model.urgency === NotificationUrgency.Critical || model.urgency === 2)
-                                        baseColor = Color.mError;
+                                        baseColor = Colors.mError;
                                     else if (model.urgency === NotificationUrgency.Low || model.urgency === 0)
-                                        baseColor = Color.mOnSurface;
+                                        baseColor = Colors.mOnSurface;
                                     else
-                                        baseColor = Color.mPrimary;
+                                        baseColor = Colors.mPrimary;
                                     return Qt.alpha(baseColor, Settings.data.notifications.backgroundOpacity || 1.0);
                                 }
 
@@ -426,7 +426,7 @@ Variants {
                                         Layout.alignment: Qt.AlignTop
                                         Layout.topMargin: 30
                                         imagePath: model.originalImage || ""
-                                        borderColor: Color.transparent
+                                        borderColor: Colors.transparent
                                         borderWidth: 0
                                         fallbackIcon: "bell"
                                         fallbackIconSize: 24
@@ -452,18 +452,18 @@ Variants {
                                             radius: Style.radiusXS
                                             color: {
                                                 if (model.urgency === NotificationUrgency.Critical || model.urgency === 2)
-                                                    return Color.mError;
+                                                    return Colors.mError;
                                                 else if (model.urgency === NotificationUrgency.Low || model.urgency === 0)
-                                                    return Color.mOnSurface;
+                                                    return Colors.mOnSurface;
                                                 else
-                                                    return Color.mPrimary;
+                                                    return Colors.mPrimary;
                                             }
                                             Layout.alignment: Qt.AlignVCenter
                                         }
 
                                         NText {
                                             text: `${model.appName || I18n.tr("system.unknown-app")} · ${Time.formatRelativeTime(model.timestamp)}`
-                                            color: Color.mSecondary
+                                            color: Colors.mSecondary
                                             pointSize: Style.fontSizeXS
                                         }
 
@@ -476,7 +476,7 @@ Variants {
                                         text: model.summary || I18n.tr("general.no-summary")
                                         pointSize: Style.fontSizeL
                                         font.weight: Style.fontWeightMedium
-                                        color: Color.mOnSurface
+                                        color: Colors.mOnSurface
                                         textFormat: Text.PlainText
                                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                                         Layout.fillWidth: true
@@ -488,7 +488,7 @@ Variants {
                                     NText {
                                         text: model.body || ""
                                         pointSize: Style.fontSizeM
-                                        color: Color.mOnSurface
+                                        color: Colors.mOnSurface
                                         textFormat: Text.PlainText
                                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                                         Layout.fillWidth: true
@@ -537,9 +537,9 @@ Variants {
                                                     return actionText;
                                                 }
                                                 fontSize: Style.fontSizeS
-                                                backgroundColor: Color.mPrimary
-                                                textColor: hovered ? Color.mOnTertiary : Color.mOnPrimary
-                                                hoverColor: Color.mTertiary
+                                                backgroundColor: Colors.mPrimary
+                                                textColor: hovered ? Colors.mOnTertiary : Colors.mOnPrimary
+                                                hoverColor: Colors.mTertiary
                                                 outlined: false
                                                 implicitHeight: 24
                                                 onClicked: {

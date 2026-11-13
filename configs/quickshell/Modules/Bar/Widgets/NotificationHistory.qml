@@ -50,10 +50,10 @@ NIconButton {
     icon: Settings.data.notifications.doNotDisturb ? "bell-off" : "bell"
     tooltipText: Settings.data.notifications.doNotDisturb ? I18n.tr("tooltips.open-notification-history-disable-dnd") : I18n.tr("tooltips.open-notification-history-enable-dnd")
     tooltipDirection: BarService.getTooltipDirection()
-    colorBg: (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
-    colorFg: Color.mOnSurface
-    colorBorder: Color.transparent
-    colorBorderHover: Color.transparent
+    colorBg: (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
+    colorFg: Colors.mOnSurface
+    colorBorder: Colors.transparent
+    colorBorderHover: Colors.transparent
 
     onClicked: {
         var panel = PanelService.getPanel("notificationHistoryPanel");
@@ -75,8 +75,8 @@ NIconButton {
             height: 8
             width: height
             radius: height / 2
-            color: Color.mError
-            border.color: Color.mSurface
+            color: Colors.mError
+            border.color: Colors.mSurface
             border.width: 1
             visible: count > 0 || !hideWhenZero
         }

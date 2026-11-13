@@ -11,19 +11,19 @@ Rectangle {
         orientation: Gradient.Horizontal
         GradientStop {
             position: 0.0
-            color: Color.transparent
+            color: Colors.transparent
         }
         GradientStop {
             position: 0.1
-            color: Color.mOutline
+            color: Colors.mOutline
         }
         GradientStop {
             position: 0.9
-            color: Color.mOutline
+            color: Colors.mOutline
         }
         GradientStop {
             position: 1.0
-            color: Color.transparent
+            color: Colors.transparent
         }
     }
 }

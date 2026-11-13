@@ -21,7 +21,7 @@ NPanel {
     onOpened: NetworkService.scan()
 
     panelContent: Rectangle {
-        color: Color.transparent
+        color: Colors.transparent
 
         ColumnLayout {
             anchors.fill: parent
@@ -36,14 +36,14 @@ NPanel {
                 NIcon {
                     icon: Settings.data.network.wifiEnabled ? "wifi" : "wifi-off"
                     pointSize: Style.fontSizeXXL
-                    color: Settings.data.network.wifiEnabled ? Color.mPrimary : Color.mOnSurfaceVariant
+                    color: Settings.data.network.wifiEnabled ? Colors.mPrimary : Colors.mOnSurfaceVariant
                 }
 
                 NText {
                     text: I18n.tr("wifi.panel.title")
                     pointSize: Style.fontSizeL
                     font.weight: Style.fontWeightBold
-                    color: Color.mOnSurface
+                    color: Colors.mOnSurface
                     Layout.fillWidth: true
                 }
 
@@ -79,10 +79,10 @@ NPanel {
                 visible: NetworkService.lastError.length > 0
                 Layout.fillWidth: true
                 Layout.preferredHeight: errorRow.implicitHeight + (Style.marginM * 2)
-                color: Qt.alpha(Color.mError, 0.1)
+                color: Qt.alpha(Colors.mError, 0.1)
                 radius: Style.radiusS
                 border.width: Style.borderS
-                border.color: Color.mError
+                border.color: Colors.mError
 
                 RowLayout {
                     id: errorRow
@@ -93,12 +93,12 @@ NPanel {
                     NIcon {
                         icon: "warning"
                         pointSize: Style.fontSizeL
-                        color: Color.mError
+                        color: Colors.mError
                     }
 
                     NText {
                         text: NetworkService.lastError
-                        color: Color.mError
+                        color: Colors.mError
                         pointSize: Style.fontSizeS
                         wrapMode: Text.Wrap
                         Layout.fillWidth: true
@@ -116,7 +116,7 @@ NPanel {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: Color.transparent
+                color: Colors.transparent
 
                 // WiFi disabled state
                 ColumnLayout {
@@ -131,21 +131,21 @@ NPanel {
                     NIcon {
                         icon: "wifi-off"
                         pointSize: 64
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     NText {
                         text: I18n.tr("wifi.panel.disabled")
                         pointSize: Style.fontSizeL
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     NText {
                         text: I18n.tr("wifi.panel.enable-message")
                         pointSize: Style.fontSizeS
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
 
@@ -166,7 +166,7 @@ NPanel {
 
                     NBusyIndicator {
                         running: true
-                        color: Color.mPrimary
+                        color: Colors.mPrimary
                         size: Style.baseWidgetSize
                         Layout.alignment: Qt.AlignHCenter
                     }
@@ -174,7 +174,7 @@ NPanel {
                     NText {
                         text: I18n.tr("wifi.panel.searching")
                         pointSize: Style.fontSizeM
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
 
@@ -217,9 +217,9 @@ NPanel {
                                 // Add opacity for operations in progress
                                 opacity: (NetworkService.disconnectingFrom === modelData.ssid || NetworkService.forgettingNetwork === modelData.ssid) ? 0.6 : 1.0
 
-                                color: modelData.connected ? Qt.rgba(Color.mPrimary.r, Color.mPrimary.g, Color.mPrimary.b, 0.05) : Color.mSurface
+                                color: modelData.connected ? Qt.rgba(Colors.mPrimary.r, Colors.mPrimary.g, Colors.mPrimary.b, 0.05) : Colors.mSurface
                                 border.width: Style.borderS
-                                border.color: modelData.connected ? Color.mPrimary : Color.mOutline
+                                border.color: modelData.connected ? Colors.mPrimary : Colors.mOutline
 
                                 // Smooth opacity animation
                                 Behavior on opacity {
@@ -243,7 +243,7 @@ NPanel {
                                         NIcon {
                                             icon: NetworkService.signalIcon(modelData.signal)
                                             pointSize: Style.fontSizeXXL
-                                            color: modelData.connected ? Color.mPrimary : Color.mOnSurface
+                                            color: modelData.connected ? Colors.mPrimary : Colors.mOnSurface
                                         }
 
                                         ColumnLayout {
@@ -254,7 +254,7 @@ NPanel {
                                                 text: modelData.ssid
                                                 pointSize: Style.fontSizeM
                                                 font.weight: modelData.connected ? Style.fontWeightBold : Style.fontWeightMedium
-                                                color: Color.mOnSurface
+                                                color: Colors.mOnSurface
                                                 elide: Text.ElideRight
                                                 Layout.fillWidth: true
                                             }
@@ -267,19 +267,19 @@ NPanel {
                                                         "signal": modelData.signal
                                                     })
                                                     pointSize: Style.fontSizeXXS
-                                                    color: Color.mOnSurfaceVariant
+                                                    color: Colors.mOnSurfaceVariant
                                                 }
 
                                                 NText {
                                                     text: "•"
                                                     pointSize: Style.fontSizeXXS
-                                                    color: Color.mOnSurfaceVariant
+                                                    color: Colors.mOnSurfaceVariant
                                                 }
 
                                                 NText {
                                                     text: NetworkService.isSecured(modelData.security) ? modelData.security : "Open"
                                                     pointSize: Style.fontSizeXXS
-                                                    color: Color.mOnSurfaceVariant
+                                                    color: Colors.mOnSurfaceVariant
                                                 }
 
                                                 Item {
@@ -289,7 +289,7 @@ NPanel {
                                                 // Update the status badges area (around line 237)
                                                 Rectangle {
                                                     visible: modelData.connected && NetworkService.disconnectingFrom !== modelData.ssid
-                                                    color: Color.mPrimary
+                                                    color: Colors.mPrimary
                                                     radius: height * 0.5
                                                     width: connectedText.implicitWidth + (Style.marginS * 2)
                                                     height: connectedText.implicitHeight + (Style.marginXXS * 2)
@@ -299,13 +299,13 @@ NPanel {
                                                         anchors.centerIn: parent
                                                         text: I18n.tr("wifi.panel.connected")
                                                         pointSize: Style.fontSizeXXS
-                                                        color: Color.mOnPrimary
+                                                        color: Colors.mOnPrimary
                                                     }
                                                 }
 
                                                 Rectangle {
                                                     visible: NetworkService.disconnectingFrom === modelData.ssid
-                                                    color: Color.mError
+                                                    color: Colors.mError
                                                     radius: height * 0.5
                                                     width: disconnectingText.implicitWidth + (Style.marginS * 2)
                                                     height: disconnectingText.implicitHeight + (Style.marginXXS * 2)
@@ -315,13 +315,13 @@ NPanel {
                                                         anchors.centerIn: parent
                                                         text: I18n.tr("wifi.panel.disconnecting")
                                                         pointSize: Style.fontSizeXXS
-                                                        color: Color.mOnPrimary
+                                                        color: Colors.mOnPrimary
                                                     }
                                                 }
 
                                                 Rectangle {
                                                     visible: NetworkService.forgettingNetwork === modelData.ssid
-                                                    color: Color.mError
+                                                    color: Colors.mError
                                                     radius: height * 0.5
                                                     width: forgettingText.implicitWidth + (Style.marginS * 2)
                                                     height: forgettingText.implicitHeight + (Style.marginXXS * 2)
@@ -331,14 +331,14 @@ NPanel {
                                                         anchors.centerIn: parent
                                                         text: I18n.tr("wifi.panel.forgetting")
                                                         pointSize: Style.fontSizeXXS
-                                                        color: Color.mOnPrimary
+                                                        color: Colors.mOnPrimary
                                                     }
                                                 }
 
                                                 Rectangle {
                                                     visible: modelData.cached && !modelData.connected && NetworkService.forgettingNetwork !== modelData.ssid && NetworkService.disconnectingFrom !== modelData.ssid
-                                                    color: Color.transparent
-                                                    border.color: Color.mOutline
+                                                    color: Colors.transparent
+                                                    border.color: Colors.mOutline
                                                     border.width: Style.borderS
                                                     radius: height * 0.5
                                                     width: savedText.implicitWidth + (Style.marginS * 2)
@@ -349,7 +349,7 @@ NPanel {
                                                         anchors.centerIn: parent
                                                         text: I18n.tr("wifi.panel.saved")
                                                         pointSize: Style.fontSizeXXS
-                                                        color: Color.mOnSurfaceVariant
+                                                        color: Colors.mOnSurfaceVariant
                                                     }
                                                 }
                                             }
@@ -362,7 +362,7 @@ NPanel {
                                             NBusyIndicator {
                                                 visible: NetworkService.connectingTo === modelData.ssid || NetworkService.disconnectingFrom === modelData.ssid || NetworkService.forgettingNetwork === modelData.ssid
                                                 running: visible
-                                                color: Color.mPrimary
+                                                color: Colors.mPrimary
                                                 size: Style.baseWidgetSize * 0.5
                                             }
 
@@ -402,7 +402,7 @@ NPanel {
                                                 text: I18n.tr("wifi.panel.disconnect")
                                                 outlined: !hovered
                                                 fontSize: Style.fontSizeXS
-                                                backgroundColor: Color.mError
+                                                backgroundColor: Colors.mError
                                                 onClicked: NetworkService.disconnect(modelData.ssid)
                                             }
                                         }
@@ -413,8 +413,8 @@ NPanel {
                                         visible: passwordSsid === modelData.ssid && NetworkService.disconnectingFrom !== modelData.ssid && NetworkService.forgettingNetwork !== modelData.ssid
                                         Layout.fillWidth: true
                                         height: passwordRow.implicitHeight + Style.marginS * 2
-                                        color: Color.mSurfaceVariant
-                                        border.color: Color.mOutline
+                                        color: Colors.mSurfaceVariant
+                                        border.color: Colors.mOutline
                                         border.width: Style.borderS
                                         radius: Style.radiusS
 
@@ -428,8 +428,8 @@ NPanel {
                                                 Layout.fillWidth: true
                                                 Layout.fillHeight: true
                                                 radius: Style.radiusXS
-                                                color: Color.mSurface
-                                                border.color: pwdInput.activeFocus ? Color.mSecondary : Color.mOutline
+                                                color: Colors.mSurface
+                                                border.color: pwdInput.activeFocus ? Colors.mSecondary : Colors.mOutline
                                                 border.width: Style.borderS
 
                                                 TextInput {
@@ -441,7 +441,7 @@ NPanel {
                                                     text: passwordInput
                                                     font.family: Settings.data.ui.fontFixed
                                                     font.pointSize: Style.fontSizeS
-                                                    color: Color.mOnSurface
+                                                    color: Colors.mOnSurface
                                                     echoMode: TextInput.Password
                                                     selectByMouse: true
                                                     focus: visible
@@ -461,7 +461,7 @@ NPanel {
                                                         visible: parent.text.length === 0
                                                         anchors.verticalCenter: parent.verticalCenter
                                                         text: I18n.tr("wifi.panel.enter-password")
-                                                        color: Color.mOnSurfaceVariant
+                                                        color: Colors.mOnSurfaceVariant
                                                         pointSize: Style.fontSizeS
                                                     }
                                                 }
@@ -495,10 +495,10 @@ NPanel {
                                         visible: expandedSsid === modelData.ssid && NetworkService.disconnectingFrom !== modelData.ssid && NetworkService.forgettingNetwork !== modelData.ssid
                                         Layout.fillWidth: true
                                         height: forgetRow.implicitHeight + Style.marginS * 2
-                                        color: Color.mSurfaceVariant
+                                        color: Colors.mSurfaceVariant
                                         radius: Style.radiusS
                                         border.width: Style.borderS
-                                        border.color: Color.mOutline
+                                        border.color: Colors.mOutline
 
                                         RowLayout {
                                             id: forgetRow
@@ -510,13 +510,13 @@ NPanel {
                                                 NIcon {
                                                     icon: "trash"
                                                     pointSize: Style.fontSizeL
-                                                    color: Color.mError
+                                                    color: Colors.mError
                                                 }
 
                                                 NText {
                                                     text: I18n.tr("wifi.panel.forget-network")
                                                     pointSize: Style.fontSizeS
-                                                    color: Color.mError
+                                                    color: Colors.mError
                                                     Layout.fillWidth: true
                                                 }
                                             }
@@ -525,7 +525,7 @@ NPanel {
                                                 id: forgetButton
                                                 text: I18n.tr("wifi.panel.forget")
                                                 fontSize: Style.fontSizeXXS
-                                                backgroundColor: Color.mError
+                                                backgroundColor: Colors.mError
                                                 outlined: forgetButton.hovered ? false : true
                                                 onClicked: {
                                                     NetworkService.forget(modelData.ssid);
@@ -559,14 +559,14 @@ NPanel {
                     NIcon {
                         icon: "search"
                         pointSize: 64
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     NText {
                         text: I18n.tr("wifi.panel.no-networks")
                         pointSize: Style.fontSizeL
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
 

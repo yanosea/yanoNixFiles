@@ -195,7 +195,7 @@ Item {
             implicitWidth: 420
             implicitHeight: toastItem.height
 
-            color: Color.transparent
+            color: Colors.transparent
 
             WlrLayershell.layer: (Settings.data.notifications && Settings.data.notifications.overlayLayer) ? WlrLayer.Overlay : WlrLayer.Top
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.None

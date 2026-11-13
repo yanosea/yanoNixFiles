@@ -142,9 +142,9 @@ Popup {
     anchors.centerIn: Overlay.overlay
 
     background: Rectangle {
-        color: Color.mSurfaceVariant
+        color: Colors.mSurfaceVariant
         radius: Style.radiusL
-        border.color: Color.mOutline
+        border.color: Colors.mOutline
         border.width: Style.borderS
     }
 
@@ -152,7 +152,7 @@ Popup {
         id: filePickerPanel
         anchors.fill: parent
         anchors.margins: Style.marginL
-        color: Color.transparent
+        color: Colors.transparent
 
         property string filterText: ""
         property var currentSelection: []
@@ -188,14 +188,14 @@ Popup {
 
                 NIcon {
                     icon: "filepicker-folder"
-                    color: Color.mPrimary
+                    color: Colors.mPrimary
                     pointSize: Style.fontSizeXXL
                 }
                 NText {
                     text: root.title
                     pointSize: Style.fontSizeXL
                     font.weight: Style.fontWeightBold
-                    color: Color.mPrimary
+                    color: Colors.mPrimary
                     Layout.fillWidth: true
                 }
 
@@ -239,9 +239,9 @@ Popup {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 45
-                color: Color.mSurfaceVariant
+                color: Colors.mSurfaceVariant
                 radius: Style.radiusS
-                border.color: Color.mOutline
+                border.color: Colors.mOutline
                 border.width: Style.borderS
 
                 RowLayout {
@@ -366,9 +366,9 @@ Popup {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: Color.mSurface
+                color: Colors.mSurface
                 radius: Style.radiusM
-                border.color: Color.mOutline
+                border.color: Colors.mOutline
                 border.width: Style.borderS
 
                 FolderListModel {
@@ -421,7 +421,7 @@ Popup {
                             implicitWidth: 6
                             implicitHeight: 100
                             radius: Style.radiusM
-                            color: parent.pressed ? Qt.alpha(Color.mTertiary, 0.8) : parent.hovered ? Qt.alpha(Color.mTertiary, 0.8) : Qt.alpha(Color.mTertiary, 0.8)
+                            color: parent.pressed ? Qt.alpha(Colors.mTertiary, 0.8) : parent.hovered ? Qt.alpha(Colors.mTertiary, 0.8) : Qt.alpha(Colors.mTertiary, 0.8)
                             opacity: parent.policy === ScrollBar.AlwaysOn || parent.active ? 1.0 : 0.0
                             Behavior on opacity {
                                 NumberAnimation {
@@ -437,7 +437,7 @@ Popup {
                         background: Rectangle {
                             implicitWidth: 6
                             implicitHeight: 100
-                            color: Color.transparent
+                            color: Colors.transparent
                             opacity: parent.policy === ScrollBar.AlwaysOn || parent.active ? 0.3 : 0.0
                             radius: (Style.radiusM) / 2
                             Behavior on opacity {
@@ -481,16 +481,16 @@ Popup {
                         id: gridItem
                         width: gridView.itemSize
                         height: gridView.cellHeight
-                        color: Color.transparent
+                        color: Colors.transparent
                         radius: Style.radiusM
 
                         property bool isSelected: filePickerPanel.currentSelection.includes(model.filePath)
 
                         Rectangle {
                             anchors.fill: parent
-                            color: Color.transparent
+                            color: Colors.transparent
                             radius: parent.radius
-                            border.color: isSelected ? Color.mSecondary : Color.mSurface
+                            border.color: isSelected ? Colors.mSecondary : Colors.mSurface
                             border.width: Style.borderL
                             Behavior on color {
                                 ColorAnimation {
@@ -501,9 +501,9 @@ Popup {
 
                         Rectangle {
                             anchors.fill: parent
-                            color: (mouseArea.containsMouse && !isSelected) ? Color.mTertiary : Color.transparent
+                            color: (mouseArea.containsMouse && !isSelected) ? Colors.mTertiary : Colors.transparent
                             radius: parent.radius
-                            border.color: (mouseArea.containsMouse && !isSelected) ? Color.mTertiary : Color.transparent
+                            border.color: (mouseArea.containsMouse && !isSelected) ? Colors.mTertiary : Colors.transparent
                             border.width: Style.borderS
                             Behavior on color {
                                 ColorAnimation {
@@ -526,7 +526,7 @@ Popup {
                                 id: iconContainer
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: Math.round(gridView.itemSize * 0.67)
-                                color: Color.transparent
+                                color: Colors.transparent
 
                                 property bool isImage: {
                                     if (model.fileIsDir)
@@ -554,13 +554,13 @@ Popup {
 
                                     Rectangle {
                                         anchors.fill: parent
-                                        color: Color.mSurfaceVariant
+                                        color: Colors.mSurfaceVariant
                                         radius: Style.radiusS
                                         visible: thumbnail.status === Image.Loading
                                         NIcon {
                                             icon: "filepicker-photo"
                                             pointSize: Style.fontSizeL
-                                            color: Color.mOnSurfaceVariant
+                                            color: Colors.mOnSurfaceVariant
                                             anchors.centerIn: parent
                                         }
                                     }
@@ -571,11 +571,11 @@ Popup {
                                     pointSize: Style.fontSizeXXL * 2
                                     color: {
                                         if (isSelected)
-                                            return Color.mSecondary;
+                                            return Colors.mSecondary;
                                         else if (mouseArea.containsMouse)
-                                            return model.fileIsDir ? Color.mOnTertiary : Color.mOnTertiary;
+                                            return model.fileIsDir ? Colors.mOnTertiary : Colors.mOnTertiary;
                                         else
-                                            return model.fileIsDir ? Color.mPrimary : Color.mOnSurfaceVariant;
+                                            return model.fileIsDir ? Colors.mPrimary : Colors.mOnSurfaceVariant;
                                     }
                                     anchors.centerIn: parent
                                     visible: !iconContainer.isImage || thumbnail.status !== Image.Ready
@@ -588,14 +588,14 @@ Popup {
                                     width: 24
                                     height: 24
                                     radius: width / 2
-                                    color: Color.mSecondary
-                                    border.color: Color.mOutline
+                                    color: Colors.mSecondary
+                                    border.color: Colors.mOutline
                                     border.width: Style.borderS
                                     visible: isSelected
                                     NIcon {
                                         icon: "filepicker-check"
                                         pointSize: Style.fontSizeS
-                                        color: Color.mOnSecondary
+                                        color: Colors.mOnSecondary
                                         anchors.centerIn: parent
                                     }
                                 }
@@ -605,11 +605,11 @@ Popup {
                                 text: model.fileName
                                 color: {
                                     if (isSelected)
-                                        return Color.mSecondary;
+                                        return Colors.mSecondary;
                                     else if (mouseArea.containsMouse)
-                                        return Color.mOnTertiary;
+                                        return Colors.mOnTertiary;
                                     else
-                                        return Color.mOnSurfaceVariant;
+                                        return Colors.mOnSurfaceVariant;
                                 }
                                 pointSize: Style.fontSizeS
                                 font.weight: isSelected ? Style.fontWeightBold : Style.fontWeightRegular
@@ -677,10 +677,10 @@ Popup {
                         height: 40
                         color: {
                             if (filePickerPanel.currentSelection.includes(model.filePath))
-                                return Color.mSecondary;
+                                return Colors.mSecondary;
                             if (mouseArea.containsMouse)
-                                return Color.mTertiary;
-                            return Color.transparent;
+                                return Colors.mTertiary;
+                            return Colors.transparent;
                         }
                         radius: Style.radiusS
                         Behavior on color {
@@ -698,12 +698,12 @@ Popup {
                             NIcon {
                                 icon: model.fileIsDir ? "filepicker-folder" : root.getFileIcon(model.fileName)
                                 pointSize: Style.fontSizeL
-                                color: model.fileIsDir ? (filePickerPanel.currentSelection.includes(model.filePath) ? Color.mOnSecondary : Color.mPrimary) : Color.mOnSurfaceVariant
+                                color: model.fileIsDir ? (filePickerPanel.currentSelection.includes(model.filePath) ? Colors.mOnSecondary : Colors.mPrimary) : Colors.mOnSurfaceVariant
                             }
 
                             NText {
                                 text: model.fileName
-                                color: filePickerPanel.currentSelection.includes(model.filePath) ? Color.mOnSecondary : Color.mOnSurface
+                                color: filePickerPanel.currentSelection.includes(model.filePath) ? Colors.mOnSecondary : Colors.mOnSurface
                                 pointSize: Style.fontSizeM
                                 font.weight: filePickerPanel.currentSelection.includes(model.filePath) ? Style.fontWeightBold : Style.fontWeightRegular
                                 Layout.fillWidth: true
@@ -712,7 +712,7 @@ Popup {
 
                             NText {
                                 text: model.fileIsDir ? "" : root.formatFileSize(model.fileSize)
-                                color: filePickerPanel.currentSelection.includes(model.filePath) ? Color.mOnSecondary : Color.mOnSurfaceVariant
+                                color: filePickerPanel.currentSelection.includes(model.filePath) ? Colors.mOnSecondary : Colors.mOnSurfaceVariant
                                 pointSize: Style.fontSizeS
                                 visible: !model.fileIsDir
                                 Layout.preferredWidth: implicitWidth
@@ -778,7 +778,7 @@ Popup {
                             return filteredModel.count + " items";
                         }
                     }
-                    color: filePickerPanel.searchText.length > 0 ? Color.mPrimary : Color.mOnSurfaceVariant
+                    color: filePickerPanel.searchText.length > 0 ? Colors.mPrimary : Colors.mOnSurfaceVariant
                     pointSize: Style.fontSizeS
                     Layout.fillWidth: true
                 }

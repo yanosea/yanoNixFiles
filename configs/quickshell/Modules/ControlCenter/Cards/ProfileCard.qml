@@ -29,7 +29,7 @@ NBox {
             Layout.preferredHeight: Math.round(Style.baseWidgetSize * 1.25 * Style.uiScaleRatio)
             imagePath: Settings.preprocessPath(Settings.data.general.avatarImage)
             fallbackIcon: "person"
-            borderColor: Color.mPrimary
+            borderColor: Colors.mPrimary
             borderWidth: Style.borderM
         }
 
@@ -46,7 +46,7 @@ NBox {
                     "uptime": uptimeText
                 })
                 pointSize: Style.fontSizeS
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
             }
         }
 

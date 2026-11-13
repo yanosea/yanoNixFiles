@@ -16,10 +16,10 @@ NIconButton {
     density: Settings.data.bar.density
     baseSize: Style.capsuleHeight
     applyUiScale: false
-    colorBg: Settings.data.nightLight.forced ? Color.mPrimary : (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
-    colorFg: Settings.data.nightLight.forced ? Color.mOnPrimary : Color.mOnSurface
-    colorBorder: Color.transparent
-    colorBorderHover: Color.transparent
+    colorBg: Settings.data.nightLight.forced ? Colors.mPrimary : (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
+    colorFg: Settings.data.nightLight.forced ? Colors.mOnPrimary : Colors.mOnSurface
+    colorBorder: Colors.transparent
+    colorBorderHover: Colors.transparent
 
     icon: Settings.data.nightLight.enabled ? (Settings.data.nightLight.forced ? "nightlight-forced" : "nightlight-on") : "nightlight-off"
     tooltipText: Settings.data.nightLight.enabled ? (Settings.data.nightLight.forced ? I18n.tr("tooltips.night-light-forced") : I18n.tr("tooltips.night-light-enabled")) : I18n.tr("tooltips.night-light-disabled")

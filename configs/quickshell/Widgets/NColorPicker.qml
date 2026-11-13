@@ -16,8 +16,8 @@ Rectangle {
     implicitHeight: Math.round(Style.baseWidgetSize * 1.1)
 
     radius: Style.radiusM
-    color: Color.mSurface
-    border.color: Color.mOutline
+    color: Colors.mSurface
+    border.color: Colors.mOutline
     border.width: Style.borderS
 
     // Minimized Look
@@ -52,7 +52,7 @@ Rectangle {
                 Layout.preferredHeight: root.height * 0.6
                 radius: Layout.preferredWidth * 0.5
                 color: root.selectedColor
-                border.color: Color.mOutline
+                border.color: Colors.mOutline
                 border.width: Style.borderS
             }
 
@@ -65,7 +65,7 @@ Rectangle {
 
             NIcon {
                 icon: "color-picker"
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter
             }

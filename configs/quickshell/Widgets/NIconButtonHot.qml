@@ -24,16 +24,16 @@ Rectangle {
     property bool pressed: false
 
     // Color properties
-    property color colorBg: Color.mSurfaceVariant
-    property color colorFg: Color.mPrimary
-    property color colorBgHover: Color.mTertiary
-    property color colorFgHover: Color.mOnTertiary
-    property color colorBorder: Color.mOutline
-    property color colorBorderHover: Color.mOutline
+    property color colorBg: Colors.mSurfaceVariant
+    property color colorFg: Colors.mPrimary
+    property color colorBgHover: Colors.mTertiary
+    property color colorFgHover: Colors.mOnTertiary
+    property color colorBorder: Colors.mOutline
+    property color colorBorderHover: Colors.mOutline
 
     // Hot state colors
-    property color colorBgHot: Color.mPrimary
-    property color colorFgHot: Color.mOnPrimary
+    property color colorBgHot: Colors.mPrimary
+    property color colorFgHot: Colors.mOnPrimary
 
     // Signals
     signal entered

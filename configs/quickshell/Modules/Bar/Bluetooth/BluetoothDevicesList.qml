@@ -21,7 +21,7 @@ ColumnLayout {
     NText {
         text: root.label
         pointSize: Style.fontSizeL
-        color: Color.mSecondary
+        color: Colors.mSecondary
         font.weight: Style.fontWeightMedium
         Layout.fillWidth: true
         visible: root.model.length > 0
@@ -40,20 +40,20 @@ ColumnLayout {
             readonly property bool canDisconnect: BluetoothService.canDisconnect(modelData)
             readonly property bool isBusy: BluetoothService.isDeviceBusy(modelData)
 
-            function getContentColor(defaultColor = Color.mOnSurface) {
+            function getContentColor(defaultColor = Colors.mOnSurface) {
                 if (modelData.pairing || modelData.state === BluetoothDeviceState.Connecting)
-                    return Color.mPrimary;
+                    return Colors.mPrimary;
                 if (modelData.blocked)
-                    return Color.mError;
+                    return Colors.mError;
                 return defaultColor;
             }
 
             Layout.fillWidth: true
             Layout.preferredHeight: deviceLayout.implicitHeight + (Style.marginM * 2)
             radius: Style.radiusM
-            color: Color.mSurface
+            color: Colors.mSurface
             border.width: Style.borderS
-            border.color: getContentColor(Color.mOutline)
+            border.color: getContentColor(Colors.mOutline)
 
             RowLayout {
                 id: deviceLayout
@@ -66,7 +66,7 @@ ColumnLayout {
                 NIcon {
                     icon: BluetoothService.getDeviceIcon(modelData)
                     pointSize: Style.fontSizeXXL
-                    color: getContentColor(Color.mOnSurface)
+                    color: getContentColor(Colors.mOnSurface)
                     Layout.alignment: Qt.AlignVCenter
                 }
 
@@ -80,7 +80,7 @@ ColumnLayout {
                         pointSize: Style.fontSizeM
                         font.weight: Style.fontWeightMedium
                         elide: Text.ElideRight
-                        color: getContentColor(Color.mOnSurface)
+                        color: getContentColor(Colors.mOnSurface)
                         Layout.fillWidth: true
                     }
 
@@ -89,7 +89,7 @@ ColumnLayout {
                         text: BluetoothService.getStatusString(modelData)
                         visible: text !== ""
                         pointSize: Style.fontSizeXS
-                        color: getContentColor(Color.mOnSurfaceVariant)
+                        color: getContentColor(Colors.mOnSurfaceVariant)
                     }
 
                     // Signal Strength
@@ -102,21 +102,21 @@ ColumnLayout {
                         NText {
                             text: BluetoothService.getSignalStrength(modelData)
                             pointSize: Style.fontSizeXS
-                            color: getContentColor(Color.mOnSurfaceVariant)
+                            color: getContentColor(Colors.mOnSurfaceVariant)
                         }
 
                         NIcon {
                             visible: modelData.signalStrength > 0 && !modelData.pairing && !modelData.blocked
                             icon: BluetoothService.getSignalIcon(modelData)
                             pointSize: Style.fontSizeXS
-                            color: getContentColor(Color.mOnSurface)
+                            color: getContentColor(Colors.mOnSurface)
                         }
 
                         NText {
                             visible: modelData.signalStrength > 0 && !modelData.pairing && !modelData.blocked
                             text: (modelData.signalStrength !== undefined && modelData.signalStrength > 0) ? modelData.signalStrength + "%" : ""
                             pointSize: Style.fontSizeXS
-                            color: getContentColor(Color.mOnSurface)
+                            color: getContentColor(Colors.mOnSurface)
                         }
                     }
 
@@ -125,7 +125,7 @@ ColumnLayout {
                         visible: modelData.batteryAvailable
                         text: BluetoothService.getBattery(modelData)
                         pointSize: Style.fontSizeXS
-                        color: getContentColor(Color.mOnSurfaceVariant)
+                        color: getContentColor(Colors.mOnSurfaceVariant)
                     }
                 }
 
@@ -144,9 +144,9 @@ ColumnLayout {
                     fontWeight: Style.fontWeightMedium
                     backgroundColor: {
                         if (device.canDisconnect && !isBusy) {
-                            return Color.mError;
+                            return Colors.mError;
                         }
-                        return Color.mPrimary;
+                        return Colors.mPrimary;
                     }
                     tooltipText: root.tooltipText
                     text: {

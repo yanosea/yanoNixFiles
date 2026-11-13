@@ -6,10 +6,10 @@ import qs.Commons
 Item {
     id: root
 
-    property color handleColor: Qt.alpha(Color.mTertiary, 0.8)
+    property color handleColor: Qt.alpha(Colors.mTertiary, 0.8)
     property color handleHoverColor: handleColor
     property color handlePressedColor: handleColor
-    property color trackColor: Color.transparent
+    property color trackColor: Colors.transparent
     property real handleWidth: 6
     property real handleRadius: Style.radiusM
     property int verticalPolicy: ScrollBar.AsNeeded

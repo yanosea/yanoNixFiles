@@ -70,10 +70,10 @@ NBox {
                 NIconButton {
                     icon: AudioService.muted ? "volume-off" : "volume-high"
                     baseSize: Style.baseWidgetSize * 0.5
-                    colorFg: AudioService.muted ? Color.mError : Color.mOnSurface
-                    colorBg: Color.transparent
-                    colorBgHover: Color.mTertiary
-                    colorFgHover: Color.mOnTertiary
+                    colorFg: AudioService.muted ? Colors.mError : Colors.mOnSurface
+                    colorBg: Colors.transparent
+                    colorBgHover: Colors.mTertiary
+                    colorFgHover: Colors.mOnTertiary
                     onClicked: {
                         if (AudioService.sink && AudioService.sink.audio) {
                             AudioService.sink.audio.muted = !AudioService.muted;
@@ -84,7 +84,7 @@ NBox {
                 NText {
                     text: AudioService.sink ? AudioService.sink.description : "No output device"
                     pointSize: Style.fontSizeXS
-                    color: Color.mOnSurfaceVariant
+                    color: Colors.mOnSurfaceVariant
                     font.weight: Style.fontWeightMedium
                     elide: Text.ElideRight
                     Layout.fillWidth: true
@@ -122,17 +122,17 @@ NBox {
                 NIconButton {
                     icon: AudioService.inputMuted ? "microphone-off" : "microphone"
                     baseSize: Style.baseWidgetSize * 0.5
-                    colorFg: AudioService.inputMuted ? Color.mError : Color.mOnSurface
-                    colorBg: Color.transparent
-                    colorBgHover: Color.mTertiary
-                    colorFgHover: Color.mOnTertiary
+                    colorFg: AudioService.inputMuted ? Colors.mError : Colors.mOnSurface
+                    colorBg: Colors.transparent
+                    colorBgHover: Colors.mTertiary
+                    colorFgHover: Colors.mOnTertiary
                     onClicked: AudioService.setInputMuted(!AudioService.inputMuted)
                 }
 
                 NText {
                     text: AudioService.source ? AudioService.source.description : "No input device"
                     pointSize: Style.fontSizeXS
-                    color: Color.mOnSurfaceVariant
+                    color: Colors.mOnSurfaceVariant
                     font.weight: Style.fontWeightMedium
                     elide: Text.ElideRight
                     Layout.fillWidth: true

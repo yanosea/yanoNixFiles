@@ -16,9 +16,9 @@ NIconButton {
     icon: "power"
     tooltipText: I18n.tr("tooltips.session-menu")
     tooltipDirection: BarService.getTooltipDirection()
-    colorBg: (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
-    colorFg: Color.mError
-    colorBorder: Color.transparent
-    colorBorderHover: Color.transparent
+    colorBg: (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
+    colorFg: Colors.mError
+    colorBorder: Colors.transparent
+    colorBorderHover: Colors.transparent
     onClicked: PanelService.getPanel("sessionMenuPanel")?.toggle()
 }

@@ -21,17 +21,17 @@ Rectangle {
     visible: false
     opacity: 0
     scale: initialScale
-    color: Color.mSurface
+    color: Colors.mSurface
 
     // Colored border based on type
     border.color: {
         switch (type) {
         case "warning":
-            return Color.mPrimary;
+            return Colors.mPrimary;
         case "error":
-            return Color.mError;
+            return Colors.mError;
         default:
-            return Color.mOutline;
+            return Colors.mOutline;
         }
     }
     border.width: Math.max(2, Style.borderM)
@@ -93,11 +93,11 @@ Rectangle {
             color: {
                 switch (type) {
                 case "warning":
-                    return Color.mPrimary;
+                    return Colors.mPrimary;
                 case "error":
-                    return Color.mError;
+                    return Colors.mError;
                 default:
-                    return Color.mOnSurface;
+                    return Colors.mOnSurface;
                 }
             }
             pointSize: Style.fontSizeXXL * 1.5
@@ -113,7 +113,7 @@ Rectangle {
             NText {
                 Layout.fillWidth: true
                 text: root.message
-                color: Color.mOnSurface
+                color: Colors.mOnSurface
                 pointSize: Style.fontSizeL
                 font.weight: Style.fontWeightBold
                 wrapMode: Text.WordWrap
@@ -123,7 +123,7 @@ Rectangle {
             NText {
                 Layout.fillWidth: true
                 text: root.description
-                color: Color.mOnSurface
+                color: Colors.mOnSurface
                 pointSize: Style.fontSizeM
                 wrapMode: Text.WordWrap
                 visible: text.length > 0

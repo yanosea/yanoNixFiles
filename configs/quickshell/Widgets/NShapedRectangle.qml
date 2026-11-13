@@ -43,7 +43,7 @@ Item {
         color: root.backgroundColor
         radius: topLeftRadius // Use topLeftRadius as default
         border.width: Style.borderS
-        border.color: Color.mOutline
+        border.color: Colors.mOutline
         visible: !root.hasInvertedCorners
 
         topLeftRadius: root.topLeftRadius

@@ -21,7 +21,7 @@ Text {
     font.family: root.family
     font.weight: Style.fontWeightMedium
     font.pointSize: root.pointSize * fontScale
-    color: Color.mOnSurface
+    color: Colors.mOnSurface
     elide: Text.ElideRight
     wrapMode: Text.NoWrap
     verticalAlignment: Text.AlignVCenter

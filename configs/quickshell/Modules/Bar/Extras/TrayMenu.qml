@@ -23,7 +23,7 @@ PopupWindow {
     // Use the content height of the Flickable for implicit height
     implicitHeight: Math.min(screen ? screen.height * 0.9 : Screen.height * 0.9, flickable.contentHeight + (Style.marginS * 2))
     visible: false
-    color: Color.transparent
+    color: Colors.transparent
     anchor.item: anchorItem
     anchor.rect.x: anchorX
     anchor.rect.y: anchorY - (isSubMenu ? 0 : 4)
@@ -86,8 +86,8 @@ PopupWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: Color.mSurface
-        border.color: Color.mOutline
+        color: Colors.mSurface
+        border.color: Colors.mOutline
         border.width: Style.borderS
         radius: Style.radiusM
     }
@@ -123,7 +123,7 @@ PopupWindow {
                         }
                     }
 
-                    color: Color.transparent
+                    color: Colors.transparent
                     property var subMenu: null
 
                     NDivider {
@@ -134,7 +134,7 @@ PopupWindow {
 
                     Rectangle {
                         anchors.fill: parent
-                        color: mouseArea.containsMouse ? Color.mTertiary : Color.transparent
+                        color: mouseArea.containsMouse ? Colors.mTertiary : Colors.transparent
                         radius: Style.radiusS
                         visible: !(modelData?.isSeparator ?? false)
 
@@ -147,7 +147,7 @@ PopupWindow {
                             NText {
                                 id: text
                                 Layout.fillWidth: true
-                                color: (modelData?.enabled ?? true) ? (mouseArea.containsMouse ? Color.mOnTertiary : Color.mOnSurface) : Color.mOnSurfaceVariant
+                                color: (modelData?.enabled ?? true) ? (mouseArea.containsMouse ? Colors.mOnTertiary : Colors.mOnSurface) : Colors.mOnSurfaceVariant
                                 text: modelData?.text !== "" ? modelData?.text.replace(/[\n\r]+/g, ' ') : "..."
                                 pointSize: Style.fontSizeS
                                 verticalAlignment: Text.AlignVCenter
@@ -168,7 +168,7 @@ PopupWindow {
                                 applyUiScale: false
                                 verticalAlignment: Text.AlignVCenter
                                 visible: modelData?.hasChildren ?? false
-                                color: (mouseArea.containsMouse ? Color.mOnTertiary : Color.mOnSurface)
+                                color: (mouseArea.containsMouse ? Colors.mOnTertiary : Colors.mOnSurface)
                             }
                         }
 

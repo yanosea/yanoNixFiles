@@ -27,7 +27,7 @@ Variants {
 
             implicitHeight: (Settings.data.bar.position === "left" || Settings.data.bar.position === "right") ? screen.height : Style.barHeight
             implicitWidth: (Settings.data.bar.position === "left" || Settings.data.bar.position === "right") ? Style.barHeight : screen.width
-            color: Color.transparent
+            color: Colors.transparent
 
             anchors {
                 top: Settings.data.bar.position === "top" || Settings.data.bar.position === "left" || Settings.data.bar.position === "right"
@@ -60,7 +60,7 @@ Variants {
                     id: bar
 
                     anchors.fill: parent
-                    color: Qt.alpha(Color.mSurface, Settings.data.bar.backgroundOpacity)
+                    color: Qt.alpha(Colors.mSurface, Settings.data.bar.backgroundOpacity)
 
                     // Floating bar rounded corners
                     radius: Settings.data.bar.floating ? Style.radiusL : 0

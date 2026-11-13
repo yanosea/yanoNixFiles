@@ -196,7 +196,7 @@ Variants {
                 anchors.left: true
                 anchors.right: true
                 focusable: false
-                color: Color.transparent
+                color: Colors.transparent
 
                 WlrLayershell.namespace: "dock-peek"
                 WlrLayershell.exclusionMode: ExclusionMode.Ignore
@@ -234,7 +234,7 @@ Variants {
                 screen: modelData
 
                 focusable: false
-                color: Color.transparent
+                color: Colors.transparent
 
                 WlrLayershell.namespace: "dock-main"
                 WlrLayershell.exclusionMode: exclusive ? ExclusionMode.Auto : ExclusionMode.Ignore
@@ -286,11 +286,11 @@ Variants {
                         id: dockContainer
                         width: dockLayout.implicitWidth + Style.marginM * 2
                         height: Math.round(iconSize * 1.5)
-                        color: Qt.alpha(Color.mSurface, Settings.data.dock.backgroundOpacity)
+                        color: Qt.alpha(Colors.mSurface, Settings.data.dock.backgroundOpacity)
                         anchors.centerIn: parent
                         radius: Style.radiusL
                         border.width: Style.borderS
-                        border.color: Qt.alpha(Color.mOutline, Settings.data.dock.backgroundOpacity)
+                        border.color: Qt.alpha(Colors.mOutline, Settings.data.dock.backgroundOpacity)
 
                         MouseArea {
                             id: dockMouseArea
@@ -383,7 +383,7 @@ Variants {
                                             // Apply dock-specific colorization shader only to non-focused apps
                                             layer.enabled: !appButton.isActive && Settings.data.dock.colorizeIcons
                                             layer.effect: ShaderEffect {
-                                                property color targetColor: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mSurfaceVariant
+                                                property color targetColor: Settings.data.colorSchemes.darkMode ? Colors.mOnSurface : Colors.mSurfaceVariant
                                                 property real colorizeMode: 0.0 // Dock mode (grayscale)
 
                                                 fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/Shaders/qsb/appicon_colorize.frag.qsb")
@@ -411,7 +411,7 @@ Variants {
                                             visible: !appIcon.visible
                                             icon: "question-mark"
                                             pointSize: iconSize * 0.7
-                                            color: appButton.isActive ? Color.mPrimary : Color.mOnSurfaceVariant
+                                            color: appButton.isActive ? Colors.mPrimary : Colors.mOnSurfaceVariant
                                             opacity: appButton.isRunning ? 1.0 : 0.6
                                             scale: appButton.hovered ? 1.15 : 1.0
 
@@ -528,7 +528,7 @@ Variants {
                                             visible: isActive
                                             width: iconSize * 0.2
                                             height: iconSize * 0.1
-                                            color: Color.mPrimary
+                                            color: Colors.mPrimary
                                             radius: Style.radiusXS
                                             anchors.top: parent.bottom
                                             anchors.horizontalCenter: parent.horizontalCenter

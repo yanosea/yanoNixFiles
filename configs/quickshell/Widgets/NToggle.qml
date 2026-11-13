@@ -32,8 +32,8 @@ RowLayout {
         implicitWidth: Math.round(root.baseSize * .85) * 2
         implicitHeight: Math.round(root.baseSize * .5) * 2
         radius: height * 0.5
-        color: root.checked ? Color.mPrimary : Color.mSurface
-        border.color: Color.mOutline
+        color: root.checked ? Colors.mPrimary : Colors.mSurface
+        border.color: Colors.mOutline
         border.width: Style.borderS
 
         Behavior on color {
@@ -53,8 +53,8 @@ RowLayout {
             implicitWidth: Math.round(root.baseSize * 0.4) * 2
             implicitHeight: Math.round(root.baseSize * 0.4) * 2
             radius: height * 0.5
-            color: root.checked ? Color.mOnPrimary : Color.mPrimary
-            border.color: root.checked ? Color.mSurface : Color.mSurface
+            color: root.checked ? Colors.mOnPrimary : Colors.mPrimary
+            border.color: root.checked ? Colors.mSurface : Colors.mSurface
             border.width: Style.borderM
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: 0

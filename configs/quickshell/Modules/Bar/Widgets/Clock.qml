@@ -46,7 +46,7 @@ Rectangle {
     implicitHeight: isBarVertical ? Math.round(verticalLoader.implicitHeight + Style.marginS * 2) : Style.capsuleHeight
 
     radius: Style.radiusS
-    color: Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+    color: Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
 
     Item {
         id: clockContainer
@@ -78,7 +78,7 @@ Rectangle {
                         }
                         applyUiScale: false
                         font.weight: Style.fontWeightBold
-                        color: usePrimaryColor ? Color.mPrimary : Color.mOnSurface
+                        color: usePrimaryColor ? Colors.mPrimary : Colors.mOnSurface
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     }
@@ -106,7 +106,7 @@ Rectangle {
                         applyUiScale: false
 
                         font.weight: Style.fontWeightBold
-                        color: usePrimaryColor ? Color.mPrimary : Color.mOnSurface
+                        color: usePrimaryColor ? Colors.mPrimary : Colors.mOnSurface
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     }

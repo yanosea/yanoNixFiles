@@ -16,7 +16,7 @@ NPanel {
     panelKeyboardFocus: true
 
     panelContent: Rectangle {
-        color: Color.transparent
+        color: Colors.transparent
 
         ColumnLayout {
             anchors.fill: parent
@@ -31,14 +31,14 @@ NPanel {
                 NIcon {
                     icon: "bluetooth"
                     pointSize: Style.fontSizeXXL
-                    color: Color.mPrimary
+                    color: Colors.mPrimary
                 }
 
                 NText {
                     text: I18n.tr("bluetooth.panel.title")
                     pointSize: Style.fontSizeL
                     font.weight: Style.fontWeightBold
-                    color: Color.mOnSurface
+                    color: Colors.mOnSurface
                     Layout.fillWidth: true
                 }
 
@@ -79,7 +79,7 @@ NPanel {
                 visible: !(BluetoothService.adapter && BluetoothService.adapter.enabled)
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: Color.transparent
+                color: Colors.transparent
 
                 // Center the content within this rectangle
                 ColumnLayout {
@@ -89,21 +89,21 @@ NPanel {
                     NIcon {
                         icon: "bluetooth-off"
                         pointSize: 64
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     NText {
                         text: I18n.tr("bluetooth.panel.disabled")
                         pointSize: Style.fontSizeL
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     NText {
                         text: I18n.tr("bluetooth.panel.enable-message")
                         pointSize: Style.fontSizeS
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
                 }
@@ -187,7 +187,7 @@ NPanel {
                             NIcon {
                                 icon: "refresh"
                                 pointSize: Style.fontSizeXXL * 1.5
-                                color: Color.mPrimary
+                                color: Colors.mPrimary
 
                                 RotationAnimation on rotation {
                                     running: true
@@ -201,14 +201,14 @@ NPanel {
                             NText {
                                 text: I18n.tr("bluetooth.panel.scanning")
                                 pointSize: Style.fontSizeL
-                                color: Color.mOnSurface
+                                color: Colors.mOnSurface
                             }
                         }
 
                         NText {
                             text: I18n.tr("bluetooth.panel.pairing-mode")
                             pointSize: Style.fontSizeM
-                            color: Color.mOnSurfaceVariant
+                            color: Colors.mOnSurfaceVariant
                             Layout.alignment: Qt.AlignHCenter
                         }
                     }

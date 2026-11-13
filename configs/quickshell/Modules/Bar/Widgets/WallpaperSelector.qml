@@ -16,9 +16,9 @@ NIconButton {
     icon: "wallpaper-selector"
     tooltipText: I18n.tr("tooltips.open-wallpaper-selector")
     tooltipDirection: BarService.getTooltipDirection()
-    colorBg: (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
-    colorFg: Color.mOnSurface
-    colorBorder: Color.transparent
-    colorBorderHover: Color.transparent
+    colorBg: (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
+    colorFg: Colors.mOnSurface
+    colorBorder: Colors.transparent
+    colorBorderHover: Colors.transparent
     onClicked: PanelService.getPanel("wallpaperPanel")?.toggle(this)
 }

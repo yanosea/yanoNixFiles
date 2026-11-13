@@ -147,7 +147,7 @@ Rectangle {
     implicitWidth: isVertical ? Style.capsuleHeight : Math.round(trayFlow.implicitWidth + Style.marginM * 2)
     implicitHeight: isVertical ? Math.round(trayFlow.implicitHeight + Style.marginM * 2) : Style.capsuleHeight
     radius: Style.radiusM
-    color: Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+    color: Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
 
     Layout.alignment: Qt.AlignVCenter
 
@@ -194,7 +194,7 @@ Rectangle {
 
                     layer.enabled: widgetSettings.colorizeIcons !== false
                     layer.effect: ShaderEffect {
-                        property color targetColor: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mSurfaceVariant
+                        property color targetColor: Settings.data.colorSchemes.darkMode ? Colors.mOnSurface : Colors.mSurfaceVariant
                         property real colorizeMode: 1.0
 
                         fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/Shaders/qsb/appicon_colorize.frag.qsb")
@@ -274,7 +274,7 @@ Rectangle {
         anchors.right: true
         anchors.bottom: true
         visible: false
-        color: Color.transparent
+        color: Colors.transparent
         screen: screen
 
         function open() {

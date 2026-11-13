@@ -98,7 +98,7 @@ Item {
         height: isVertical ? (showPill ? pillMaxHeight : 1) : pillHeight
         opacity: showPill ? Style.opacityFull : Style.opacityNone
 
-        color: hovered ? Color.mTertiary : (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
+        color: hovered ? Colors.mTertiary : (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
         clip: true
 
         readonly property int halfPill: Math.round(pillHeight * 0.5)
@@ -180,7 +180,7 @@ Item {
                         icon: "cpu-usage"
                         pointSize: iconSize
                         applyUiScale: false
-                        color: root.hovered ? Color.mOnTertiary : Color.mOnSurface
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mOnSurface
                         Layout.alignment: Qt.AlignCenter
                         Layout.row: isVertical ? 1 : 0
                         Layout.column: 0
@@ -196,7 +196,7 @@ Item {
                         Layout.preferredWidth: isVertical ? -1 : percentTextWidth
                         horizontalAlignment: isVertical ? Text.AlignHCenter : Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        color: root.hovered ? Color.mOnTertiary : Color.mPrimary
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mPrimary
                         Layout.row: isVertical ? 0 : 0
                         Layout.column: isVertical ? 0 : 1
                         scale: isVertical ? Math.min(1.0, pillHeight / implicitWidth) : 1.0
@@ -224,7 +224,7 @@ Item {
                         icon: "cpu-temperature"
                         pointSize: iconSize
                         applyUiScale: false
-                        color: root.hovered ? Color.mOnTertiary : Color.mOnSurface
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mOnSurface
                         Layout.alignment: Qt.AlignCenter
                         Layout.row: isVertical ? 1 : 0
                         Layout.column: 0
@@ -240,7 +240,7 @@ Item {
                         Layout.preferredWidth: isVertical ? -1 : tempTextWidth
                         horizontalAlignment: isVertical ? Text.AlignHCenter : Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        color: root.hovered ? Color.mOnTertiary : Color.mPrimary
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mPrimary
                         Layout.row: isVertical ? 0 : 0
                         Layout.column: isVertical ? 0 : 1
                         scale: isVertical ? Math.min(1.0, pillHeight / implicitWidth) : 1.0
@@ -268,7 +268,7 @@ Item {
                         icon: "device-desktop-analytics"
                         pointSize: iconSize
                         applyUiScale: false
-                        color: root.hovered ? Color.mOnTertiary : Color.mOnSurface
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mOnSurface
                         Layout.alignment: Qt.AlignCenter
                         Layout.row: isVertical ? 1 : 0
                         Layout.column: 0
@@ -284,7 +284,7 @@ Item {
                         Layout.preferredWidth: isVertical ? -1 : percentTextWidth
                         horizontalAlignment: isVertical ? Text.AlignHCenter : Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        color: root.hovered ? Color.mOnTertiary : Color.mPrimary
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mPrimary
                         Layout.row: isVertical ? 0 : 0
                         Layout.column: isVertical ? 0 : 1
                         scale: isVertical ? Math.min(1.0, pillHeight / implicitWidth) : 1.0
@@ -312,7 +312,7 @@ Item {
                         icon: "temperature"
                         pointSize: iconSize
                         applyUiScale: false
-                        color: root.hovered ? Color.mOnTertiary : Color.mOnSurface
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mOnSurface
                         Layout.alignment: Qt.AlignCenter
                         Layout.row: isVertical ? 1 : 0
                         Layout.column: 0
@@ -328,7 +328,7 @@ Item {
                         Layout.preferredWidth: isVertical ? -1 : tempTextWidth
                         horizontalAlignment: isVertical ? Text.AlignHCenter : Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        color: root.hovered ? Color.mOnTertiary : Color.mPrimary
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mPrimary
                         Layout.row: isVertical ? 0 : 0
                         Layout.column: isVertical ? 0 : 1
                         scale: isVertical ? Math.min(1.0, pillHeight / implicitWidth) : 1.0
@@ -356,7 +356,7 @@ Item {
                         icon: "memory"
                         pointSize: iconSize
                         applyUiScale: false
-                        color: root.hovered ? Color.mOnTertiary : Color.mOnSurface
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mOnSurface
                         Layout.alignment: Qt.AlignCenter
                         Layout.row: isVertical ? 1 : 0
                         Layout.column: 0
@@ -372,7 +372,7 @@ Item {
                         Layout.preferredWidth: isVertical ? -1 : (showMemoryAsPercent ? percentTextWidth : memTextWidth)
                         horizontalAlignment: isVertical ? Text.AlignHCenter : Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        color: root.hovered ? Color.mOnTertiary : Color.mPrimary
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mPrimary
                         Layout.row: isVertical ? 0 : 0
                         Layout.column: isVertical ? 0 : 1
                         scale: isVertical ? Math.min(1.0, pillHeight / implicitWidth) : 1.0
@@ -400,7 +400,7 @@ Item {
                         icon: "storage"
                         pointSize: iconSize
                         applyUiScale: false
-                        color: root.hovered ? Color.mOnTertiary : Color.mOnSurface
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mOnSurface
                         Layout.alignment: Qt.AlignCenter
                         Layout.row: isVertical ? 1 : 0
                         Layout.column: 0
@@ -416,7 +416,7 @@ Item {
                         Layout.preferredWidth: isVertical ? -1 : percentTextWidth
                         horizontalAlignment: isVertical ? Text.AlignHCenter : Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        color: root.hovered ? Color.mOnTertiary : Color.mPrimary
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mPrimary
                         Layout.row: isVertical ? 0 : 0
                         Layout.column: isVertical ? 0 : 1
                         scale: isVertical ? Math.min(1.0, pillHeight / implicitWidth) : 1.0
@@ -444,7 +444,7 @@ Item {
                         icon: "download-speed"
                         pointSize: iconSize
                         applyUiScale: false
-                        color: root.hovered ? Color.mOnTertiary : Color.mOnSurface
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mOnSurface
                         Layout.alignment: Qt.AlignCenter
                         Layout.row: isVertical ? 1 : 0
                         Layout.column: 0
@@ -460,7 +460,7 @@ Item {
                         Layout.preferredWidth: isVertical ? -1 : memTextWidth
                         horizontalAlignment: isVertical ? Text.AlignHCenter : Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        color: root.hovered ? Color.mOnTertiary : Color.mPrimary
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mPrimary
                         Layout.row: isVertical ? 0 : 0
                         Layout.column: isVertical ? 0 : 1
                         scale: isVertical ? Math.min(1.0, pillHeight / implicitWidth) : 1.0
@@ -488,7 +488,7 @@ Item {
                         icon: "upload-speed"
                         pointSize: iconSize
                         applyUiScale: false
-                        color: root.hovered ? Color.mOnTertiary : Color.mOnSurface
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mOnSurface
                         Layout.alignment: Qt.AlignCenter
                         Layout.row: isVertical ? 1 : 0
                         Layout.column: 0
@@ -504,7 +504,7 @@ Item {
                         Layout.preferredWidth: isVertical ? -1 : memTextWidth
                         horizontalAlignment: isVertical ? Text.AlignHCenter : Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        color: root.hovered ? Color.mOnTertiary : Color.mPrimary
+                        color: root.hovered ? Colors.mOnTertiary : Colors.mPrimary
                         Layout.row: isVertical ? 0 : 0
                         Layout.column: isVertical ? 0 : 1
                         scale: isVertical ? Math.min(1.0, pillHeight / implicitWidth) : 1.0
@@ -520,7 +520,7 @@ Item {
         width: pillHeight
         height: pillHeight
         radius: width * 0.5
-        color: hovered ? Color.mTertiary : (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
+        color: hovered ? Colors.mTertiary : (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
 
         x: isVertical ? 0 : (oppositeDirection ? 0 : (parent.width - width))
         y: isVertical ? (!oppositeDirection ? (parent.height - height) : 0) : 0
@@ -538,7 +538,7 @@ Item {
             icon: "activity-heartbeat"
             pointSize: root.iconSize
             applyUiScale: false
-            color: hovered ? Color.mOnTertiary : Color.mOnSurface
+            color: hovered ? Colors.mOnTertiary : Colors.mOnSurface
             x: (iconCircle.width - width) / 2
             y: (iconCircle.height - height) / 2 + (height - contentHeight) / 2
         }

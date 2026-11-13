@@ -22,8 +22,8 @@ Loader {
     property real preferredHeight: 900
     property real preferredWidthRatio
     property real preferredHeightRatio
-    property color panelBackgroundColor: Color.mSurface
-    property color panelBorderColor: Color.mOutline
+    property color panelBackgroundColor: Colors.mSurface
+    property color panelBorderColor: Colors.mOutline
     property bool draggable: false
     property var buttonItem: null
     property string buttonName: ""
@@ -169,7 +169,7 @@ Loader {
                 }
             }
 
-            color: Color.transparent
+            color: Colors.transparent
 
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
             WlrLayershell.namespace: "panel"
@@ -606,8 +606,8 @@ Loader {
                 Rectangle {
                     anchors.fill: parent
                     anchors.margins: 0
-                    color: Color.transparent
-                    border.color: Color.mTertiary
+                    color: Colors.transparent
+                    border.color: Colors.mTertiary
                     border.width: Style.borderM
                     radius: Style.radiusL
                     visible: panelBackground.isDragged && dragHandler.active
@@ -618,8 +618,8 @@ Loader {
                     Rectangle {
                         anchors.fill: parent
                         anchors.margins: 0
-                        color: Color.transparent
-                        border.color: Color.mTertiary
+                        color: Colors.transparent
+                        border.color: Colors.mTertiary
                         border.width: Style.borderS
                         radius: Style.radiusL
                         opacity: 0.3

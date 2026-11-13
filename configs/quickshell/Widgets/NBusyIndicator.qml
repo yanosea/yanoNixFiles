@@ -6,7 +6,7 @@ Item {
     id: root
 
     property bool running: true
-    property color color: Color.mPrimary
+    property color color: Colors.mPrimary
     property int size: Style.baseWidgetSize
     property int strokeWidth: Style.borderL
     property int duration: Style.animationSlow * 2

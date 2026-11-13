@@ -158,7 +158,7 @@ Item {
         width: isVerticalBar ? (((!hasActivePlayer) && (hideMode === "hidden" || hideMode === "transparent")) ? 0 : calculatedVerticalDimension()) : (((!hasActivePlayer) && (hideMode === "hidden" || hideMode === "transparent")) ? 0 : dynamicWidth)
         height: isVerticalBar ? (((!hasActivePlayer) && (hideMode === "hidden" || hideMode === "transparent")) ? 0 : calculatedVerticalDimension()) : Style.capsuleHeight
         radius: isVerticalBar ? width / 2 : Style.radiusM
-        color: Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+        color: Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
 
         // Smooth width transition
         Behavior on width {
@@ -193,7 +193,7 @@ Item {
                     width: mainContainer.width - Style.marginS
                     height: 20
                     values: CavaService.values
-                    fillColor: Color.mPrimary
+                    fillColor: Colors.mPrimary
                     opacity: 0.4
                 }
             }
@@ -208,7 +208,7 @@ Item {
                     width: mainContainer.width - Style.marginS
                     height: mainContainer.height - Style.marginS
                     values: CavaService.values
-                    fillColor: Color.mPrimary
+                    fillColor: Colors.mPrimary
                     opacity: 0.4
                 }
             }
@@ -223,7 +223,7 @@ Item {
                     width: mainContainer.width - Style.marginS
                     height: mainContainer.height - Style.marginS
                     values: CavaService.values
-                    fillColor: Color.mPrimary
+                    fillColor: Colors.mPrimary
                     opacity: 0.4
                 }
             }
@@ -240,7 +240,7 @@ Item {
                 NIcon {
                     id: windowIcon
                     icon: hasActivePlayer ? (MediaService.isPlaying ? "media-pause" : "media-play") : "disc"
-                    color: hasActivePlayer ? Color.mOnSurface : Color.mOnSurfaceVariant
+                    color: hasActivePlayer ? Colors.mOnSurface : Colors.mOnSurfaceVariant
                     pointSize: Style.fontSizeL * scaling
                     verticalAlignment: Text.AlignVCenter
                     Layout.alignment: Qt.AlignVCenter
@@ -263,7 +263,7 @@ Item {
                             fallbackIcon: MediaService.isPlaying ? "media-pause" : "media-play"
                             fallbackIconSize: 10
                             borderWidth: 0
-                            border.color: Color.transparent
+                            border.color: Colors.transparent
                         }
                     }
                 }
@@ -371,7 +371,7 @@ Item {
                                 font.weight: Style.fontWeightMedium
                                 verticalAlignment: Text.AlignVCenter
                                 horizontalAlignment: hasActivePlayer ? Text.AlignLeft : Text.AlignHCenter
-                                color: hasActivePlayer ? Color.mOnSurface : Color.mOnSurfaceVariant
+                                color: hasActivePlayer ? Colors.mOnSurface : Colors.mOnSurfaceVariant
                                 onTextChanged: {
                                     titleContainer.isScrolling = false;
                                     titleContainer.isResetting = false;
@@ -389,7 +389,7 @@ Item {
                                 pointSize: Style.fontSizeS * scaling
                                 verticalAlignment: Text.AlignVCenter
                                 horizontalAlignment: hasActivePlayer ? Text.AlignLeft : Text.AlignHCenter
-                                color: hasActivePlayer ? Color.mOnSurface : Color.mOnSurfaceVariant
+                                color: hasActivePlayer ? Colors.mOnSurface : Colors.mOnSurfaceVariant
                                 visible: hasActivePlayer && titleContainer.needsScrolling && titleContainer.isScrolling
                             }
                         }
@@ -438,7 +438,7 @@ Item {
                         id: mediaIconVertical
                         anchors.fill: parent
                         icon: hasActivePlayer ? (MediaService.isPlaying ? "media-pause" : "media-play") : "disc"
-                        color: hasActivePlayer ? Color.mOnSurface : Color.mOnSurfaceVariant
+                        color: hasActivePlayer ? Colors.mOnSurface : Colors.mOnSurfaceVariant
                         pointSize: Style.fontSizeL * scaling
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter

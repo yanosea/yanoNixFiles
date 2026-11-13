@@ -90,7 +90,7 @@ Item {
         }
 
         opacity: revealed ? Style.opacityFull : Style.opacityNone
-        color: hovered ? Color.mTertiary : (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
+        color: hovered ? Colors.mTertiary : (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
 
         readonly property int halfPillHeight: Math.round(pillHeight * 0.5)
 
@@ -131,12 +131,12 @@ Item {
             font.weight: Style.fontWeightBold
             color: {
                 if (hovered) {
-                    return Color.mOnTertiary;
+                    return Colors.mOnTertiary;
                 }
                 if (root.textColor && root.textColor !== "") {
                     return root.textColor;
                 }
-                return forceOpen ? Color.mOnSurface : Color.mPrimary;
+                return forceOpen ? Colors.mOnSurface : Colors.mPrimary;
             }
             visible: revealed
 
@@ -169,7 +169,7 @@ Item {
         width: pillHeight
         height: pillHeight
         radius: width * 0.5
-        color: hovered ? Color.mTertiary : Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+        color: hovered ? Colors.mTertiary : Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
         anchors.verticalCenter: parent.verticalCenter
         visible: root.icon !== ""
 
@@ -186,7 +186,7 @@ Item {
             icon: root.icon
             pointSize: iconSize
             applyUiScale: false
-            color: (root.iconColor && root.iconColor !== "") ? root.iconColor : (hovered ? Color.mOnTertiary : Color.mOnSurface)
+            color: (root.iconColor && root.iconColor !== "") ? root.iconColor : (hovered ? Colors.mOnTertiary : Colors.mOnSurface)
             visible: root.icon !== ""
             // Center horizontally
             x: (iconCircle.width - width) / 2
