@@ -76,6 +76,17 @@ Singleton {
         }
     }
 
+    // QML XMLHttpRequest has no timeout, so a stalled request would block every later fetch
+    Timer {
+        id: fetchWatchdog
+        interval: 60 * 1000
+        onTriggered: {
+            if (isFetchingWeather) {
+                errorCallback("Location", "Weather fetch timed out");
+            }
+        }
+    }
+
     Timer {
         id: saveTimer
         running: false
@@ -131,6 +142,7 @@ Singleton {
     // --------------------------------
     function getFreshWeather() {
         isFetchingWeather = true;
+        fetchWatchdog.restart();
 
         // Check if location name has changed
         const locationChanged = data.name !== Settings.data.location.name;
@@ -162,15 +174,15 @@ Singleton {
     // --------------------------------
     function _geocodeLocation(locationName, callback, errorCallback) {
         Logger.d("Location", "Geocoding location name");
-        var geoUrl = "https://assets.noctalia.dev/geocode.php/geocode.php?city=" + encodeURIComponent(locationName) + "&language=en&format=json";
+        var geoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(locationName) + "&count=1&language=en&format=json";
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                     try {
-                        var geoData = JSON.parse(xhr.responseText);
-                        if (geoData.lat != null) {
-                            callback(geoData.lat, geoData.lng, geoData.name, geoData.country);
+                        var geoData = (JSON.parse(xhr.responseText).results || [])[0];
+                        if (geoData) {
+                            callback(geoData.latitude, geoData.longitude, geoData.name, geoData.country);
                         } else {
                             errorCallback("Location", "could not resolve location name");
                         }
