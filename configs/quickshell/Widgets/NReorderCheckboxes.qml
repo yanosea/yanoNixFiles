@@ -8,9 +8,9 @@ Item {
 
     // Public API
     property var model: []
-    property color activeColor: Color.mPrimary
-    property color activeOnColor: Color.mOnPrimary
-    property color dragHandleColor: Color.mOutline
+    property color activeColor: Colors.mPrimary
+    property color activeOnColor: Colors.mOnPrimary
+    property color dragHandleColor: Colors.mOutline
     property int baseSize: Style.baseWidgetSize * 0.7
     property int spacing: Style.marginM
 
@@ -95,7 +95,7 @@ Item {
                     Layout.preferredWidth: root.baseSize
                     Layout.preferredHeight: root.baseSize
                     radius: Style.radiusXS
-                    color: dragHandleMouseArea.containsMouse ? Color.mSurfaceVariant : Color.transparent
+                    color: dragHandleMouseArea.containsMouse ? Colors.mSurfaceVariant : Colors.transparent
 
                     Behavior on color {
                         ColorAnimation {
@@ -192,8 +192,8 @@ Item {
                     Layout.preferredWidth: root.baseSize
                     Layout.preferredHeight: root.baseSize
                     radius: Style.radiusXS
-                    color: delegateItem.enabled ? root.activeColor : Color.mSurface
-                    border.color: delegateItem.required ? root.activeColor : Color.mOutline
+                    color: delegateItem.enabled ? root.activeColor : Colors.mSurface
+                    border.color: delegateItem.required ? root.activeColor : Colors.mOutline
                     border.width: Style.borderS
                     opacity: delegateItem.required ? 0.7 : 1.0
 
@@ -233,7 +233,7 @@ Item {
                 NText {
                     Layout.fillWidth: true
                     text: delegateItem.text
-                    color: Color.mOnSurface
+                    color: Colors.mOnSurface
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                 }
@@ -242,7 +242,7 @@ Item {
                 NText {
                     visible: delegateItem.required
                     text: "(required)"
-                    color: Color.mOnSurfaceVariant
+                    color: Colors.mOnSurfaceVariant
                     verticalAlignment: Text.AlignVCenter
                 }
             }

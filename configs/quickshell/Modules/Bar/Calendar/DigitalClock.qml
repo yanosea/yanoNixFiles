@@ -7,9 +7,9 @@ import Quickshell
 Item {
 
     property var now
-    property color backgroundColor: Color.mPrimary
-    property color clockColor: Color.mOnPrimary
-    property color progressColor: Color.mError
+    property color backgroundColor: Colors.mPrimary
+    property color clockColor: Colors.mOnPrimary
+    property color progressColor: Colors.mError
 
     anchors.fill: parent
 

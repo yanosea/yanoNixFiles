@@ -24,6 +24,6 @@ Text {
     }
     font.family: Icons.fontFamily
     font.pointSize: applyUiScale ? root.pointSize * Style.uiScaleRatio : root.pointSize
-    color: Color.mOnSurface
+    color: Colors.mOnSurface
     verticalAlignment: Text.AlignVCenter
 }

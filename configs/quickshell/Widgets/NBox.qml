@@ -8,8 +8,8 @@ import qs.Services
 Rectangle {
     id: root
 
-    color: Color.mSurfaceVariant
+    color: Colors.mSurfaceVariant
     radius: Style.radiusM
-    border.color: Color.mOutline
+    border.color: Colors.mOutline
     border.width: Style.borderS
 }

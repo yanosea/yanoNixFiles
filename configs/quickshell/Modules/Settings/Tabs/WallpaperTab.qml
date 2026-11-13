@@ -65,8 +65,8 @@ ColumnLayout {
 
             Layout.fillWidth: true
             radius: Style.radiusM
-            color: Color.mSurface
-            border.color: Color.mOutline
+            color: Colors.mSurface
+            border.color: Colors.mOutline
             border.width: Style.borderS
             implicitHeight: contentCol.implicitHeight + Style.marginL * 2
 
@@ -83,7 +83,7 @@ ColumnLayout {
 
                         NText {
                             text: (modelData.name || "Unknown")
-                            color: Color.mPrimary
+                            color: Colors.mPrimary
                             font.weight: Style.fontWeightBold
                             pointSize: Style.fontSizeM
                         }
@@ -319,11 +319,11 @@ ColumnLayout {
         signal clicked
 
         radius: height * 0.5
-        color: selected ? Color.mPrimary : Color.mSurfaceVariant
+        color: selected ? Colors.mPrimary : Colors.mSurfaceVariant
         implicitHeight: Math.max(Style.baseWidgetSize * 0.55, 24)
         implicitWidth: chipLabel.implicitWidth + Style.marginM * 1.5
         border.width: 1
-        border.color: selected ? Color.transparent : Color.mOutline
+        border.color: selected ? Colors.transparent : Colors.mOutline
 
         MouseArea {
             anchors.fill: parent
@@ -336,7 +336,7 @@ ColumnLayout {
             anchors.centerIn: parent
             text: parent.label
             pointSize: Style.fontSizeS
-            color: parent.selected ? Color.mOnPrimary : Color.mOnSurface
+            color: parent.selected ? Colors.mOnPrimary : Colors.mOnSurface
         }
     }
 

@@ -14,9 +14,9 @@ NIconButton {
     density: Settings.data.bar.density
     baseSize: Style.capsuleHeight
     applyUiScale: false
-    colorBg: Settings.data.colorSchemes.darkMode ? (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent) : Color.mPrimary
-    colorFg: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mOnPrimary
-    colorBorder: Color.transparent
-    colorBorderHover: Color.transparent
+    colorBg: Settings.data.colorSchemes.darkMode ? (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent) : Colors.mPrimary
+    colorFg: Settings.data.colorSchemes.darkMode ? Colors.mOnSurface : Colors.mOnPrimary
+    colorBorder: Colors.transparent
+    colorBorderHover: Colors.transparent
     onClicked: Settings.data.colorSchemes.darkMode = !Settings.data.colorSchemes.darkMode
 }

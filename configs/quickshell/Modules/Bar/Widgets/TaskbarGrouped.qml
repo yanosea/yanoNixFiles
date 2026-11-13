@@ -89,11 +89,11 @@ Item {
             property bool hasWindows: workspaceModel.windows.count > 0
 
             radius: Style.radiusS
-            border.color: workspaceModel.isFocused ? Color.mPrimary : Color.mOutline
+            border.color: workspaceModel.isFocused ? Colors.mPrimary : Colors.mOutline
             border.width: 1
             width: (hasWindows ? iconsFlow.implicitWidth : root.itemSize * 0.8) + (root.isVerticalBar ? Style.marginXS : Style.marginL)
             height: (hasWindows ? iconsFlow.implicitHeight : root.itemSize * 0.8) + (root.isVerticalBar ? Style.marginL : Style.marginXS)
-            color: Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+            color: Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
 
             MouseArea {
                 anchors.fill: parent
@@ -158,12 +158,12 @@ Item {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 width: model.isFocused ? 4 : 0
                                 height: model.isFocused ? 4 : 0
-                                color: model.isFocused ? Color.mPrimary : Color.transparent
+                                color: model.isFocused ? Colors.mPrimary : Colors.transparent
                                 radius: width * 0.5
                             }
 
                             layer.effect: ShaderEffect {
-                                property color targetColor: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mSurfaceVariant
+                                property color targetColor: Settings.data.colorSchemes.darkMode ? Colors.mOnSurface : Colors.mSurfaceVariant
                                 property real colorizeMode: 0
                                 fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/Shaders/qsb/appicon_colorize.frag.qsb")
                             }

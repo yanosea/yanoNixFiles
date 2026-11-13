@@ -92,8 +92,8 @@ ColumnLayout {
                 id: itemBackground
                 anchors.fill: parent
                 anchors.margins: Style.marginXS
-                color: Color.transparent // Make background transparent
-                border.color: Color.mOutline
+                color: Colors.transparent // Make background transparent
+                border.color: Colors.mOutline
                 border.width: Style.borderS
                 radius: Style.radiusS
                 visible: model.rule !== undefined && model.rule !== "" // Only visible if rule exists
@@ -117,10 +117,10 @@ ColumnLayout {
                     height: 16
                     icon: "close"
                     baseSize: 8
-                    colorBg: Color.mSurfaceVariant
-                    colorFg: Color.mOnSurface
-                    colorBgHover: Color.mError
-                    colorFgHover: Color.mOnError
+                    colorBg: Colors.mSurfaceVariant
+                    colorFg: Colors.mOnSurface
+                    colorBgHover: Colors.mError
+                    colorFgHover: Colors.mOnError
                     onClicked: {
                         blacklistModel.remove(index);
                     }

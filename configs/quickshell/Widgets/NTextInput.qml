@@ -12,8 +12,8 @@ ColumnLayout {
     property string inputIconName: ""
     property bool readOnly: false
     property bool enabled: true
-    property color labelColor: Color.mOnSurface
-    property color descriptionColor: Color.mOnSurfaceVariant
+    property color labelColor: Colors.mOnSurface
+    property color descriptionColor: Colors.mOnSurfaceVariant
     property string fontFamily: Settings.data.ui.fontDefault
     property real fontSize: Style.fontSizeS
     property int fontWeight: Style.fontWeightRegular
@@ -52,8 +52,8 @@ ColumnLayout {
             id: frame
 
             radius: Style.radiusM
-            color: Color.mSurface
-            border.color: input.activeFocus ? Color.mSecondary : Color.mOutline
+            color: Colors.mSurface
+            border.color: input.activeFocus ? Colors.mSecondary : Colors.mOutline
             border.width: Style.borderS
 
             Behavior on border.color {
@@ -137,8 +137,8 @@ ColumnLayout {
                         echoMode: TextInput.Normal
                         readOnly: root.readOnly
                         enabled: root.enabled
-                        color: Color.mOnSurface
-                        placeholderTextColor: Qt.alpha(Color.mOnSurfaceVariant, 0.6)
+                        color: Colors.mOnSurface
+                        placeholderTextColor: Qt.alpha(Colors.mOnSurfaceVariant, 0.6)
 
                         selectByMouse: true
 
@@ -204,10 +204,10 @@ ColumnLayout {
 
                         border.width: 0
 
-                        colorBg: Color.transparent
-                        colorBgHover: Color.transparent
-                        colorFg: Color.mOnSurface
-                        colorFgHover: Color.mError
+                        colorBg: Colors.transparent
+                        colorBgHover: Colors.transparent
+                        colorFg: Colors.mOnSurface
+                        colorFgHover: Colors.mError
 
                         visible: input.text.length > 0 && !root.readOnly
                         enabled: input.text.length > 0 && !root.readOnly

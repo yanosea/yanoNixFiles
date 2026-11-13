@@ -117,7 +117,7 @@ NPanel {
                 Layout.fillWidth: true
                 Layout.preferredHeight: capsuleColumn.implicitHeight + Style.marginM * 2
                 radius: Style.radiusL
-                color: Color.mPrimary
+                color: Colors.mPrimary
 
                 ColumnLayout {
                     id: capsuleColumn
@@ -150,7 +150,7 @@ NPanel {
                             text: Time.date.getDate()
                             pointSize: Style.fontSizeXXXL * 1.5
                             font.weight: Style.fontWeightBold
-                            color: Color.mOnPrimary
+                            color: Colors.mOnPrimary
 
                             Behavior on opacity {
                                 NumberAnimation {
@@ -180,7 +180,7 @@ NPanel {
                                     text: I18n.locale.monthName(grid.month, Locale.LongFormat).toUpperCase()
                                     pointSize: Style.fontSizeXL * 1.1
                                     font.weight: Style.fontWeightBold
-                                    color: Color.mOnPrimary
+                                    color: Colors.mOnPrimary
                                     Layout.alignment: Qt.AlignBaseline
                                     elide: Text.ElideRight
                                 }
@@ -189,7 +189,7 @@ NPanel {
                                     text: `${grid.year}`
                                     pointSize: Style.fontSizeM
                                     font.weight: Style.fontWeightBold
-                                    color: Qt.alpha(Color.mOnPrimary, 0.7)
+                                    color: Qt.alpha(Colors.mOnPrimary, 0.7)
                                     Layout.alignment: Qt.AlignBaseline
                                 }
                             }
@@ -208,7 +208,7 @@ NPanel {
                                     }
                                     pointSize: Style.fontSizeM
                                     font.weight: Style.fontWeightMedium
-                                    color: Color.mOnPrimary
+                                    color: Colors.mOnPrimary
                                     Layout.maximumWidth: 150
                                     elide: Text.ElideRight
                                 }
@@ -217,7 +217,7 @@ NPanel {
                                     text: content.weatherReady ? ` (${LocationService.data.weather.timezone_abbreviation})` : ""
                                     pointSize: Style.fontSizeXS
                                     font.weight: Style.fontWeightMedium
-                                    color: Qt.alpha(Color.mOnPrimary, 0.7)
+                                    color: Qt.alpha(Colors.mOnPrimary, 0.7)
                                 }
                             }
                         }
@@ -235,7 +235,7 @@ NPanel {
                     anchors.right: parent.right
                     anchors.rightMargin: Style.marginXL
                     anchors.verticalCenter: parent.verticalCenter
-                    progressColor: Color.mOnPrimary
+                    progressColor: Colors.mOnPrimary
                     Layout.alignment: Qt.AlignVCenter
                     now: root.now
                 }
@@ -346,7 +346,7 @@ NPanel {
                                             const dayName = I18n.locale.dayName(dayIndex, Locale.ShortFormat);
                                             return dayName.substring(0, 2).toUpperCase();
                                         }
-                                        color: Color.mPrimary
+                                        color: Colors.mPrimary
                                         pointSize: Style.fontSizeS
                                         font.weight: Style.fontWeightBold
                                         horizontalAlignment: Text.AlignHCenter
@@ -415,11 +415,11 @@ NPanel {
                         // Helper function to get color for a specific event
                         function getEventColor(event, isToday) {
                             if (isMultiDayEvent(event)) {
-                                return isToday ? Color.mOnSecondary : Color.mTertiary;
+                                return isToday ? Colors.mOnSecondary : Colors.mTertiary;
                             } else if (isAllDayEvent(event)) {
-                                return isToday ? Color.mOnSecondary : Color.mSecondary;
+                                return isToday ? Colors.mOnSecondary : Colors.mSecondary;
                             } else {
-                                return isToday ? Color.mOnSecondary : Color.mPrimary;
+                                return isToday ? Colors.mOnSecondary : Colors.mPrimary;
                             }
                         }
 
@@ -479,7 +479,7 @@ NPanel {
                                     Layout.preferredHeight: Style.baseWidgetSize * 0.9
                                     NText {
                                         anchors.centerIn: parent
-                                        color: Qt.alpha(Color.mPrimary, 0.7)
+                                        color: Qt.alpha(Colors.mPrimary, 0.7)
                                         pointSize: Style.fontSizeXXS
                                         font.weight: Style.fontWeightMedium
                                         text: modelData
@@ -585,17 +585,17 @@ NPanel {
                                         height: Style.baseWidgetSize * 0.9
                                         anchors.centerIn: parent
                                         radius: Style.radiusM
-                                        color: modelData.today ? Color.mSecondary : Color.transparent
+                                        color: modelData.today ? Colors.mSecondary : Colors.transparent
 
                                         NText {
                                             anchors.centerIn: parent
                                             text: modelData.day
                                             color: {
                                                 if (modelData.today)
-                                                    return Color.mOnSecondary;
+                                                    return Colors.mOnSecondary;
                                                 if (modelData.currentMonth)
-                                                    return Color.mOnSurface;
-                                                return Color.mOnSurfaceVariant;
+                                                    return Colors.mOnSurface;
+                                                return Colors.mOnSurfaceVariant;
                                             }
                                             opacity: modelData.currentMonth ? 1.0 : 0.4
                                             pointSize: Style.fontSizeM

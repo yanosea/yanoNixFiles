@@ -111,9 +111,9 @@ Popup {
     }
 
     background: Rectangle {
-        color: Color.mSurface
+        color: Colors.mSurface
         radius: Style.radiusS
-        border.color: Color.mPrimary
+        border.color: Colors.mPrimary
         border.width: Style.borderM
     }
 
@@ -138,14 +138,14 @@ Popup {
                     NIcon {
                         icon: "color-picker"
                         pointSize: Style.fontSizeXXL
-                        color: Color.mPrimary
+                        color: Colors.mPrimary
                     }
 
                     NText {
                         text: I18n.tr("widgets.color-picker.title")
                         pointSize: Style.fontSizeXL
                         font.weight: Style.fontWeightBold
-                        color: Color.mPrimary
+                        color: Colors.mPrimary
                     }
                 }
 
@@ -165,7 +165,7 @@ Popup {
                 Layout.preferredHeight: 80
                 radius: Style.radiusS
                 color: root.selectedColor
-                border.color: Color.mOutline
+                border.color: Colors.mOutline
                 border.width: Style.borderS
 
                 ColumnLayout {
@@ -381,14 +381,14 @@ Popup {
                         flow: Flow.LeftToRight
 
                         Repeater {
-                            model: [Color.mPrimary, Color.mSecondary, Color.mTertiary, Color.mError, Color.mSurface, Color.mSurfaceVariant, Color.mOutline, "#FFFFFF", "#000000"]
+                            model: [Colors.mPrimary, Colors.mSecondary, Colors.mTertiary, Colors.mError, Colors.mSurface, Colors.mSurfaceVariant, Colors.mOutline, "#FFFFFF", "#000000"]
 
                             Rectangle {
                                 width: 24
                                 height: 24
                                 radius: 4
                                 color: modelData
-                                border.color: root.selectedColor === modelData ? Color.mPrimary : Color.mOutline
+                                border.color: root.selectedColor === modelData ? Colors.mPrimary : Colors.mOutline
                                 border.width: root.selectedColor === modelData ? 2 : 1
 
                                 MouseArea {
@@ -437,7 +437,7 @@ Popup {
                                 height: 24
                                 radius: Style.radiusXXS
                                 color: modelData
-                                border.color: root.selectedColor === modelData ? Color.mPrimary : Color.mOutline
+                                border.color: root.selectedColor === modelData ? Colors.mPrimary : Colors.mOutline
                                 border.width: Math.max(1, root.selectedColor === modelData ? Style.borderM : Style.borderS)
 
                                 MouseArea {

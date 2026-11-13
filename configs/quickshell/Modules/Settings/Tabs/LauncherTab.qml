@@ -63,13 +63,13 @@ ColumnLayout {
             text: I18n.tr("settings.launcher.settings.background-opacity.label")
             pointSize: Style.fontSizeL
             font.weight: Style.fontWeightBold
-            color: Color.mOnSurface
+            color: Colors.mOnSurface
         }
 
         NText {
             text: I18n.tr("settings.launcher.settings.background-opacity.description")
             pointSize: Style.fontSizeXS
-            color: Color.mOnSurfaceVariant
+            color: Colors.mOnSurfaceVariant
             wrapMode: Text.WordWrap
             Layout.fillWidth: true
         }

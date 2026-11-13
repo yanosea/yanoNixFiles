@@ -296,7 +296,7 @@ NPanel {
     }
 
     panelContent: Rectangle {
-        color: Color.transparent
+        color: Colors.transparent
 
         // Main layout container that fills the panel
         ColumnLayout {
@@ -372,8 +372,8 @@ NPanel {
                     Layout.preferredWidth: 220 * Style.uiScaleRatio
                     Layout.fillHeight: true
                     Layout.alignment: Qt.AlignTop
-                    color: Color.mSurfaceVariant
-                    border.color: Color.mOutline
+                    color: Colors.mSurfaceVariant
+                    border.color: Colors.mOutline
                     border.width: Style.borderS
                     radius: Style.radiusM
 
@@ -407,10 +407,10 @@ NPanel {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: tabEntryRow.implicitHeight + Style.marginM * 2
                                 radius: Style.radiusS
-                                color: selected ? Color.mPrimary : (tabItem.hovering ? Color.mTertiary : Color.transparent)
+                                color: selected ? Colors.mPrimary : (tabItem.hovering ? Colors.mTertiary : Colors.transparent)
                                 readonly property bool selected: index === currentTabIndex
                                 property bool hovering: false
-                                property color tabTextColor: selected ? Color.mOnPrimary : (tabItem.hovering ? Color.mOnTertiary : Color.mOnSurface)
+                                property color tabTextColor: selected ? Colors.mOnPrimary : (tabItem.hovering ? Colors.mOnTertiary : Colors.mOnSurface)
 
                                 Behavior on color {
                                     ColorAnimation {
@@ -474,8 +474,8 @@ NPanel {
                     Layout.fillHeight: true
                     Layout.alignment: Qt.AlignTop
                     radius: Style.radiusM
-                    color: Color.mSurfaceVariant
-                    border.color: Color.mOutline
+                    color: Colors.mSurfaceVariant
+                    border.color: Colors.mOutline
                     border.width: Style.borderS
 
                     ColumnLayout {
@@ -493,7 +493,7 @@ NPanel {
                             // Main icon
                             NIcon {
                                 icon: root.tabsModel[currentTabIndex]?.icon
-                                color: Color.mPrimary
+                                color: Colors.mPrimary
                                 pointSize: Style.fontSizeXXL
                             }
 
@@ -502,7 +502,7 @@ NPanel {
                                 text: I18n.tr(root.tabsModel[currentTabIndex]?.label) || ""
                                 pointSize: Style.fontSizeXL
                                 font.weight: Style.fontWeightBold
-                                color: Color.mPrimary
+                                color: Colors.mPrimary
                                 Layout.fillWidth: true
                                 Layout.alignment: Qt.AlignVCenter
                             }
@@ -525,7 +525,7 @@ NPanel {
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            color: Color.transparent
+                            color: Colors.transparent
 
                             Repeater {
                                 model: root.tabsModel

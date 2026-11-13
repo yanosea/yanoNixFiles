@@ -7,7 +7,7 @@ import qs.Services
 Slider {
     id: root
 
-    property var cutoutColor: Color.mSurface
+    property var cutoutColor: Colors.mSurface
     property bool snapAlways: true
     property real heightRatio: 0.7
     property string tooltipText
@@ -31,8 +31,8 @@ Slider {
         width: root.availableWidth
         height: implicitHeight
         radius: height / 2
-        color: Qt.alpha(Color.mSurface, 0.5)
-        border.color: Qt.alpha(Color.mOutline, 0.5)
+        color: Qt.alpha(Colors.mSurface, 0.5)
+        border.color: Qt.alpha(Colors.mOutline, 0.5)
         border.width: Style.borderS
 
         // A container composite shape that puts a semicircle on the end
@@ -46,7 +46,7 @@ Slider {
                 width: parent.height
                 height: parent.height
                 radius: width / 2
-                color: Qt.darker(Color.mPrimary, 1.2) //starting color of gradient
+                color: Qt.darker(Colors.mPrimary, 1.2) //starting color of gradient
             }
 
             // The main rectangle
@@ -60,7 +60,7 @@ Slider {
                     orientation: Gradient.Horizontal
                     GradientStop {
                         position: 0.0
-                        color: Qt.darker(Color.mPrimary, 1.2)
+                        color: Qt.darker(Colors.mPrimary, 1.2)
                         Behavior on color {
                             ColorAnimation {
                                 duration: 300
@@ -69,7 +69,7 @@ Slider {
                     }
                     GradientStop {
                         position: 0.5
-                        color: Color.mPrimary
+                        color: Colors.mPrimary
                         SequentialAnimation on position {
                             loops: Animation.Infinite
                             NumberAnimation {
@@ -88,7 +88,7 @@ Slider {
                     }
                     GradientStop {
                         position: 1.0
-                        color: Qt.lighter(Color.mPrimary, 1.2)
+                        color: Qt.lighter(Colors.mPrimary, 1.2)
                     }
                 }
             }
@@ -100,7 +100,7 @@ Slider {
             implicitWidth: knobDiameter + cutoutExtra
             implicitHeight: knobDiameter + cutoutExtra
             radius: width / 2
-            color: root.cutoutColor !== undefined ? root.cutoutColor : Color.mSurface
+            color: root.cutoutColor !== undefined ? root.cutoutColor : Colors.mSurface
             x: root.leftPadding + root.visualPosition * (root.availableWidth - root.knobDiameter) - cutoutExtra
             anchors.verticalCenter: parent.verticalCenter
         }
@@ -117,8 +117,8 @@ Slider {
             implicitWidth: knobDiameter
             implicitHeight: knobDiameter
             radius: width / 2
-            color: root.pressed ? Color.mTertiary : Color.mSurface
-            border.color: Color.mPrimary
+            color: root.pressed ? Colors.mTertiary : Colors.mSurface
+            border.color: Colors.mPrimary
             border.width: Style.borderL
             anchors.centerIn: parent
 

@@ -122,8 +122,8 @@ RowLayout {
         background: Rectangle {
             implicitWidth: Style.baseWidgetSize * 3.75 * Style.uiScaleRatio
             implicitHeight: preferredHeight
-            color: Color.mSurface
-            border.color: combo.activeFocus ? Color.mSecondary : Color.mOutline
+            color: Colors.mSurface
+            border.color: combo.activeFocus ? Colors.mSecondary : Colors.mOutline
             border.width: Style.borderS
             radius: Style.radiusM
 
@@ -140,7 +140,7 @@ RowLayout {
             pointSize: Style.fontSizeM
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
-            color: (combo.currentIndex >= 0 && combo.currentIndex < filteredModel.count) ? Color.mOnSurface : Color.mOnSurfaceVariant
+            color: (combo.currentIndex >= 0 && combo.currentIndex < filteredModel.count) ? Colors.mOnSurface : Colors.mOnSurfaceVariant
             text: (combo.currentIndex >= 0 && combo.currentIndex < filteredModel.count) ? filteredModel.get(combo.currentIndex).name : root.placeholder
         }
 
@@ -216,7 +216,7 @@ RowLayout {
                                 NText {
                                     text: name
                                     pointSize: Style.fontSizeM
-                                    color: highlighted ? Color.mOnTertiary : Color.mOnSurface
+                                    color: highlighted ? Colors.mOnTertiary : Colors.mOnSurface
                                     verticalAlignment: Text.AlignVCenter
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
@@ -243,7 +243,7 @@ RowLayout {
                                                 text: modelData
                                                 pointSize: Style.fontSizeXXS
                                                 font.weight: Style.fontWeightBold
-                                                color: highlighted ? Color.mOnTertiary : Color.mOnSurface
+                                                color: highlighted ? Colors.mOnTertiary : Colors.mOnSurface
                                             }
                                         }
                                     }
@@ -251,7 +251,7 @@ RowLayout {
                             }
                             background: Rectangle {
                                 width: listView.width
-                                color: highlighted ? Color.mTertiary : Color.transparent
+                                color: highlighted ? Colors.mTertiary : Colors.transparent
                                 radius: Style.radiusS
                                 Behavior on color {
                                     ColorAnimation {
@@ -265,8 +265,8 @@ RowLayout {
             }
 
             background: Rectangle {
-                color: Color.mSurfaceVariant
-                border.color: Color.mOutline
+                color: Colors.mSurfaceVariant
+                border.color: Colors.mOutline
                 border.width: Style.borderS
                 radius: Style.radiusM
             }

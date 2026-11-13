@@ -89,7 +89,7 @@ Rectangle {
     implicitWidth: visible ? (isVerticalBar ? Style.capsuleHeight : Math.round(taskbarLayout.implicitWidth + Style.marginM * 2)) : 0
     implicitHeight: visible ? (isVerticalBar ? Math.round(taskbarLayout.implicitHeight + Style.marginM * 2) : Style.capsuleHeight) : 0
     radius: Style.radiusM
-    color: Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+    color: Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
 
     GridLayout {
         id: taskbarLayout
@@ -135,7 +135,7 @@ Rectangle {
                     // Apply dock shader to all taskbar icons
                     layer.enabled: widgetSettings.colorizeIcons !== false
                     layer.effect: ShaderEffect {
-                        property color targetColor: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mSurfaceVariant
+                        property color targetColor: Settings.data.colorSchemes.darkMode ? Colors.mOnSurface : Colors.mSurfaceVariant
                         property real colorizeMode: 0.0 // Dock mode (grayscale)
 
                         fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/Shaders/qsb/appicon_colorize.frag.qsb")
@@ -148,7 +148,7 @@ Rectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: 4
                         height: 4
-                        color: modelData.isFocused ? Color.mPrimary : Color.transparent
+                        color: modelData.isFocused ? Colors.mPrimary : Colors.transparent
                         radius: width * 0.5
                     }
                 }

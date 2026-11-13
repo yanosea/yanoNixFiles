@@ -46,7 +46,7 @@ Variants {
                 }
             }
 
-            color: Color.transparent
+            color: Colors.transparent
             screen: modelData
             WlrLayershell.layer: WlrLayer.Background
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
@@ -80,7 +80,7 @@ Variants {
                 blur: 1.0
                 blurMax: 64
                 colorization: Style.opacityMedium
-                colorizationColor: Settings.data.colorSchemes.darkMode ? Color.mSurface : Color.mOnSurface
+                colorizationColor: Settings.data.colorSchemes.darkMode ? Colors.mSurface : Colors.mOnSurface
             }
         }
     }

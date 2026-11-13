@@ -15,8 +15,8 @@ RadioButton {
         implicitWidth: Style.baseWidgetSize * 0.625 * pointSize / Style.fontSizeM
         implicitHeight: Style.baseWidgetSize * 0.625 * pointSize / Style.fontSizeM
         radius: width * 0.5
-        color: Color.transparent
-        border.color: root.checked ? Color.mPrimary : Color.mOnSurface
+        color: Colors.transparent
+        border.color: root.checked ? Colors.mPrimary : Colors.mOnSurface
         border.width: Style.borderM
         anchors.verticalCenter: parent.verticalCenter
 
@@ -25,7 +25,7 @@ RadioButton {
             anchors.margins: parent.width * 0.3
 
             radius: width * 0.5
-            color: Qt.alpha(Color.mPrimary, root.checked ? 1 : 0)
+            color: Qt.alpha(Colors.mPrimary, root.checked ? 1 : 0)
 
             Behavior on color {
                 ColorAnimation {

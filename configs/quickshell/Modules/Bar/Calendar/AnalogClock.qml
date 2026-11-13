@@ -4,9 +4,9 @@ import Quickshell
 
 Item {
     property var now
-    property color backgroundColor: Color.mPrimary
-    property color clockColor: Color.mOnPrimary
-    property color secondHandColor: Color.mError
+    property color backgroundColor: Colors.mPrimary
+    property color clockColor: Colors.mOnPrimary
+    property color secondHandColor: Colors.mError
     anchors.fill: parent
 
     Canvas {

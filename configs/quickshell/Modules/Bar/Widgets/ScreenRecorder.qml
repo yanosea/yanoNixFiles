@@ -17,10 +17,10 @@ NIconButton {
     density: Settings.data.bar.density
     baseSize: Style.capsuleHeight
     applyUiScale: false
-    colorBg: isThisMonitorRecording ? Color.mPrimary : (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
-    colorFg: isThisMonitorRecording ? Color.mOnPrimary : Color.mOnSurface
-    colorBorder: Color.transparent
-    colorBorderHover: Color.transparent
+    colorBg: isThisMonitorRecording ? Colors.mPrimary : (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
+    colorFg: isThisMonitorRecording ? Colors.mOnPrimary : Colors.mOnSurface
+    colorBorder: Colors.transparent
+    colorBorderHover: Colors.transparent
 
     function handleClick() {
         if (!ScreenRecorderService.isAvailable) {

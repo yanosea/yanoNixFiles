@@ -17,7 +17,7 @@ NPanel {
     preferredHeightRatio: 0.5
 
     panelKeyboardFocus: true
-    panelBackgroundColor: Qt.alpha(Color.mSurface, Settings.data.appLauncher.backgroundOpacity)
+    panelBackgroundColor: Qt.alpha(Colors.mSurface, Settings.data.appLauncher.backgroundOpacity)
 
     // Positioning
     readonly property string launcherPosition: Settings.data.appLauncher.position
@@ -154,7 +154,7 @@ NPanel {
     // UI
     panelContent: Rectangle {
         id: ui
-        color: Color.transparent
+        color: Colors.transparent
         opacity: resultsReady ? 1.0 : 0.0
 
         // Global MouseArea to detect mouse movement
@@ -414,7 +414,7 @@ NPanel {
                     width: resultsList.width - Style.marginS
                     implicitHeight: entryHeight
                     radius: Style.radiusM
-                    color: entry.isSelected ? Color.mTertiary : Color.mSurface
+                    color: entry.isSelected ? Colors.mTertiary : Colors.mSurface
 
                     Behavior on color {
                         ColorAnimation {
@@ -439,7 +439,7 @@ NPanel {
                                 Layout.preferredWidth: badgeSize
                                 Layout.preferredHeight: badgeSize
                                 radius: Style.radiusM
-                                color: Color.mSurfaceVariant
+                                color: Colors.mSurfaceVariant
 
                                 // Image preview for clipboard images
                                 NImageRounded {
@@ -462,7 +462,7 @@ NPanel {
                                     Rectangle {
                                         anchors.fill: parent
                                         visible: parent.status === Image.Loading
-                                        color: Color.mSurfaceVariant
+                                        color: Colors.mSurfaceVariant
 
                                         BusyIndicator {
                                             anchors.centerIn: parent
@@ -507,7 +507,7 @@ NPanel {
                                     text: modelData.name ? modelData.name.charAt(0).toUpperCase() : "?"
                                     pointSize: Style.fontSizeXXL
                                     font.weight: Style.fontWeightBold
-                                    color: Color.mOnPrimary
+                                    color: Colors.mOnPrimary
                                 }
 
                                 // Image type indicator overlay
@@ -519,7 +519,7 @@ NPanel {
                                     width: formatLabel.width + 6
                                     height: formatLabel.height + 2
                                     radius: Style.radiusM
-                                    color: Color.mSurfaceVariant
+                                    color: Colors.mSurfaceVariant
 
                                     NText {
                                         id: formatLabel
@@ -532,7 +532,7 @@ NPanel {
                                             return parts[0] || "IMG";
                                         }
                                         pointSize: Style.fontSizeXXS
-                                        color: Color.mPrimary
+                                        color: Colors.mPrimary
                                     }
                                 }
                             }
@@ -546,7 +546,7 @@ NPanel {
                                     text: modelData.name || "Unknown"
                                     pointSize: Style.fontSizeL
                                     font.weight: Style.fontWeightBold
-                                    color: entry.isSelected ? Color.mOnTertiary : Color.mOnSurface
+                                    color: entry.isSelected ? Colors.mOnTertiary : Colors.mOnSurface
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
                                 }
@@ -554,7 +554,7 @@ NPanel {
                                 NText {
                                     text: modelData.description || ""
                                     pointSize: Style.fontSizeS
-                                    color: entry.isSelected ? Color.mOnTertiary : Color.mOnSurfaceVariant
+                                    color: entry.isSelected ? Colors.mOnTertiary : Colors.mOnSurfaceVariant
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
                                     visible: text !== ""
@@ -609,7 +609,7 @@ NPanel {
                     return prefix + `${results.length} result${results.length !== 1 ? 's' : ''}`;
                 }
                 pointSize: Style.fontSizeXS
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
                 horizontalAlignment: Text.AlignCenter
             }
         }

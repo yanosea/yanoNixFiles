@@ -40,9 +40,9 @@ Popup {
     background: Rectangle {
         id: bgRect
 
-        color: Color.mSurface
+        color: Colors.mSurface
         radius: Style.radiusL
-        border.color: Color.mPrimary
+        border.color: Colors.mPrimary
         border.width: Style.borderM
     }
 
@@ -62,7 +62,7 @@ Popup {
                 })
                 pointSize: Style.fontSizeL
                 font.weight: Style.fontWeightBold
-                color: Color.mPrimary
+                color: Colors.mPrimary
                 Layout.fillWidth: true
             }
 
@@ -77,7 +77,7 @@ Popup {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 1
-            color: Color.mOutline
+            color: Colors.mOutline
         }
 
         // Settings based on widget type

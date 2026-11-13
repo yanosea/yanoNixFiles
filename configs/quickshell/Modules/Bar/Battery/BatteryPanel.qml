@@ -39,7 +39,7 @@ NPanel {
     }
 
     panelContent: Rectangle {
-        color: Color.transparent
+        color: Colors.transparent
 
         ColumnLayout {
             anchors.fill: parent
@@ -55,7 +55,7 @@ NPanel {
                     text: I18n.tr("battery.panel.title")
                     pointSize: Style.fontSizeL
                     font.weight: Style.fontWeightBold
-                    color: Color.mOnSurface
+                    color: Colors.mOnSurface
                     Layout.fillWidth: true
                 }
 
@@ -87,7 +87,7 @@ NPanel {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: Color.transparent
+                color: Colors.transparent
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -124,7 +124,7 @@ NPanel {
                     NText {
                         text: I18n.tr("battery.panel.disabled")
                         pointSize: Style.fontSizeL
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         Layout.alignment: Qt.AlignHCenter
                     }
 

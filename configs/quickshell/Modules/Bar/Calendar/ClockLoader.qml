@@ -9,14 +9,14 @@ Item {
     property var now
 
     // Default colors
-    property color backgroundColor: Color.mPrimary
-    property color clockColor: Color.mOnPrimary
+    property color backgroundColor: Colors.mPrimary
+    property color clockColor: Colors.mOnPrimary
 
     property color secondHandColor: {
-        var defaultColor = Color.mError;
+        var defaultColor = Colors.mError;
         var bestContrast = 1.0; // 1.0 is "no contrast"
         var bestColor = defaultColor;
-        var candidates = [Color.mSecondary, Color.mTertiary, Color.mError];
+        var candidates = [Colors.mSecondary, Colors.mTertiary, Colors.mError];
 
         const minContrast = 1.149;
 

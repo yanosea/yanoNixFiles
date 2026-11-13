@@ -18,11 +18,11 @@ Loader {
             required property ShellScreen modelData
             screen: modelData
 
-            property color cornerColor: Settings.data.general.forceBlackScreenCorners ? Qt.rgba(0, 0, 0, 1) : Qt.alpha(Color.mSurface, Settings.data.bar.backgroundOpacity)
+            property color cornerColor: Settings.data.general.forceBlackScreenCorners ? Qt.rgba(0, 0, 0, 1) : Qt.alpha(Colors.mSurface, Settings.data.bar.backgroundOpacity)
             property real cornerRadius: Style.screenRadius
             property real cornerSize: Style.screenRadius
 
-            color: Color.transparent
+            color: Colors.transparent
 
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
             WlrLayershell.namespace: "quickshell-corner"

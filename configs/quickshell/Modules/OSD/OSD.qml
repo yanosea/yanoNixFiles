@@ -95,22 +95,22 @@ Variants {
         function getProgressColor() {
             if (currentOSDType === "volume") {
                 if (isMuted)
-                    return Color.mError;
-                return Color.mPrimary;
+                    return Colors.mError;
+                return Colors.mPrimary;
             } else if (currentOSDType === "inputVolume") {
                 if (isInputMuted)
-                    return Color.mError;
-                return Color.mPrimary;
+                    return Colors.mError;
+                return Colors.mPrimary;
             }
-            return Color.mPrimary;
+            return Colors.mPrimary;
         }
 
         // Get icon color
         function getIconColor() {
             if ((currentOSDType === "volume" && isMuted) || (currentOSDType === "inputVolume" && isInputMuted)) {
-                return Color.mError;
+                return Colors.mError;
             }
-            return Color.mOnSurface;
+            return Colors.mOnSurface;
         }
 
         sourceComponent: PanelWindow {
@@ -187,7 +187,7 @@ Variants {
             implicitWidth: verticalMode ? hHeight : hWidth
             implicitHeight: osdItem.height
 
-            color: Color.transparent
+            color: Colors.transparent
 
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
             WlrLayershell.layer: (Settings.data.osd && Settings.data.osd.overlayLayer) ? WlrLayer.Overlay : WlrLayer.Top
@@ -199,8 +199,8 @@ Variants {
                 width: parent.width
                 height: panel.verticalMode ? panel.vHeight : Math.round(64 * Style.uiScaleRatio)
                 radius: Style.radiusL
-                color: Color.mSurface
-                border.color: Color.mOutline
+                color: Colors.mSurface
+                border.color: Colors.mOutline
                 border.width: {
                     const bw = Math.max(2, Style.borderM);
                     return (bw % 2 === 0) ? bw : bw + 1;
@@ -286,7 +286,7 @@ Variants {
                                 Layout.fillWidth: true
                                 height: panel.barThickness
                                 radius: Math.round(panel.barThickness / 2)
-                                color: Color.mSurfaceVariant
+                                color: Colors.mSurfaceVariant
                                 Layout.alignment: Qt.AlignVCenter
 
                                 Rectangle {
@@ -315,7 +315,7 @@ Variants {
                             // Percentage text
                             NText {
                                 text: root.getDisplayPercentage()
-                                color: Color.mOnSurface
+                                color: Colors.mOnSurface
                                 pointSize: Style.fontSizeS
                                 family: Settings.data.ui.fontFixed
                                 Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
@@ -353,7 +353,7 @@ Variants {
                                 NText {
                                     id: percentText
                                     text: root.getDisplayPercentage()
-                                    color: Color.mOnSurface
+                                    color: Colors.mOnSurface
                                     pointSize: Style.fontSizeS
                                     family: Settings.data.ui.fontFixed
                                     width: Math.round(50 * Style.uiScaleRatio)
@@ -374,7 +374,7 @@ Variants {
                                     anchors.bottom: parent.bottom
                                     width: panel.barThickness
                                     radius: Math.round(panel.barThickness / 2)
-                                    color: Color.mSurfaceVariant
+                                    color: Colors.mSurfaceVariant
 
                                     Rectangle {
                                         anchors.left: parent.left

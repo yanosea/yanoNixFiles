@@ -19,9 +19,9 @@ Rectangle {
 
     width: 68
     height: 92
-    color: flat ? Color.transparent : Color.mSurface
+    color: flat ? Colors.transparent : Colors.mSurface
     radius: Style.radiusS
-    border.color: flat ? Color.transparent : Color.mSurfaceVariant
+    border.color: flat ? Colors.transparent : Colors.mSurfaceVariant
     border.width: flat ? 0 : Style.borderS
 
     // Repaint gauge when the bound value changes
@@ -62,7 +62,7 @@ Rectangle {
                     ctx.lineWidth = 6 * contentScale;
 
                     // Track uses surface for stronger contrast
-                    ctx.strokeStyle = Color.mSurface;
+                    ctx.strokeStyle = Colors.mSurface;
                     ctx.beginPath();
                     ctx.arc(cx, cy, r, start, endBg);
                     ctx.stroke();
@@ -82,8 +82,8 @@ Rectangle {
                     const endY = cy + r * Math.sin(endBg);
 
                     const gradient = ctx.createLinearGradient(startX, startY, endX, endY);
-                    gradient.addColorStop(0, Color.mPrimary);
-                    gradient.addColorStop(1, Color.mOnSurface);
+                    gradient.addColorStop(0, Colors.mPrimary);
+                    gradient.addColorStop(1, Colors.mOnSurface);
 
                     ctx.strokeStyle = gradient;
                     ctx.beginPath();
@@ -100,7 +100,7 @@ Rectangle {
                 text: `${root.value}${root.suffix}`
                 pointSize: Style.fontSizeM * contentScale * 0.9
                 font.weight: Style.fontWeightBold
-                color: Color.mOnSurface
+                color: Colors.mOnSurface
                 horizontalAlignment: Text.AlignHCenter
             }
 
@@ -110,7 +110,7 @@ Rectangle {
                 anchors.top: valueLabel.bottom
                 anchors.topMargin: 8 * contentScale
                 icon: root.icon
-                color: Color.mPrimary
+                color: Colors.mPrimary
                 pointSize: Style.fontSizeM
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

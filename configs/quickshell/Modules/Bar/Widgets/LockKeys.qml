@@ -41,7 +41,7 @@ Rectangle {
     Layout.alignment: Qt.AlignVCenter
 
     radius: Style.radiusM
-    color: Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+    color: Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
 
     Item {
         id: layout
@@ -61,17 +61,17 @@ Rectangle {
             NIcon {
                 visible: root.showCaps
                 icon: layout.indicatorStyle[0]
-                color: LockKeysService.capsLockOn ? Color.mTertiary : Qt.alpha(Color.mOnSurfaceVariant, 0.3)
+                color: LockKeysService.capsLockOn ? Colors.mTertiary : Qt.alpha(Colors.mOnSurfaceVariant, 0.3)
             }
             NIcon {
                 visible: root.showNum
                 icon: layout.indicatorStyle[1]
-                color: LockKeysService.numLockOn ? Color.mTertiary : Qt.alpha(Color.mOnSurfaceVariant, 0.3)
+                color: LockKeysService.numLockOn ? Colors.mTertiary : Qt.alpha(Colors.mOnSurfaceVariant, 0.3)
             }
             NIcon {
                 visible: root.showScroll
                 icon: layout.indicatorStyle[2]
-                color: LockKeysService.scrollLockOn ? Color.mTertiary : Qt.alpha(Color.mOnSurfaceVariant, 0.3)
+                color: LockKeysService.scrollLockOn ? Colors.mTertiary : Qt.alpha(Colors.mOnSurfaceVariant, 0.3)
             }
         }
 
@@ -83,17 +83,17 @@ Rectangle {
             NIcon {
                 visible: root.showCaps
                 icon: layout.indicatorStyle[0]
-                color: LockKeysService.capsLockOn ? Color.mTertiary : Qt.alpha(Color.mOnSurfaceVariant, 0.3)
+                color: LockKeysService.capsLockOn ? Colors.mTertiary : Qt.alpha(Colors.mOnSurfaceVariant, 0.3)
             }
             NIcon {
                 visible: root.showNum
                 icon: layout.indicatorStyle[1]
-                color: LockKeysService.numLockOn ? Color.mTertiary : Qt.alpha(Color.mOnSurfaceVariant, 0.3)
+                color: LockKeysService.numLockOn ? Colors.mTertiary : Qt.alpha(Colors.mOnSurfaceVariant, 0.3)
             }
             NIcon {
                 visible: root.showScroll
                 icon: layout.indicatorStyle[2]
-                color: LockKeysService.scrollLockOn ? Color.mTertiary : Qt.alpha(Color.mOnSurfaceVariant, 0.3)
+                color: LockKeysService.scrollLockOn ? Colors.mTertiary : Qt.alpha(Colors.mOnSurfaceVariant, 0.3)
             }
         }
     }

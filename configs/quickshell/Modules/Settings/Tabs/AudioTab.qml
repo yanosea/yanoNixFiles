@@ -285,8 +285,8 @@ ColumnLayout {
                         // Padding around the inner row
                         property real pad: Style.marginS
                         // Visuals
-                        color: Qt.alpha(Color.mOnSurface, 0.125)
-                        border.color: Qt.alpha(Color.mOnSurface, Style.opacityLight)
+                        color: Qt.alpha(Colors.mOnSurface, 0.125)
+                        border.color: Qt.alpha(Colors.mOnSurface, Style.opacityLight)
                         border.width: Style.borderS
 
                         // Content
@@ -298,7 +298,7 @@ ColumnLayout {
 
                             NText {
                                 text: modelData
-                                color: Color.mOnSurface
+                                color: Colors.mOnSurface
                                 pointSize: Style.fontSizeS
                                 Layout.alignment: Qt.AlignVCenter
                                 Layout.leftMargin: Style.marginS

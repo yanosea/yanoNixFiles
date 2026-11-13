@@ -9,7 +9,7 @@ Rectangle {
     id: root
 
     property string imagePath: ""
-    property color borderColor: Color.transparent
+    property color borderColor: Colors.transparent
     property real borderWidth: 0
     property real imageRadius: width * 0.5
     property string fallbackIcon: ""
@@ -19,12 +19,12 @@ Rectangle {
 
     signal statusChanged(int status)
 
-    color: Color.transparent
+    color: Colors.transparent
     radius: scaledRadius
     anchors.margins: Style.marginXXS
 
     Rectangle {
-        color: Color.transparent
+        color: Colors.transparent
         anchors.fill: parent
 
         Image {
@@ -66,7 +66,7 @@ Rectangle {
             Rectangle {
                 id: background
                 anchors.fill: parent
-                color: Color.transparent
+                color: Colors.transparent
                 z: -1
             }
         }
@@ -88,7 +88,7 @@ Rectangle {
     Rectangle {
         anchors.fill: parent
         radius: parent.radius
-        color: Color.transparent
+        color: Colors.transparent
         border.color: parent.borderColor
         border.width: parent.borderWidth
         antialiasing: true

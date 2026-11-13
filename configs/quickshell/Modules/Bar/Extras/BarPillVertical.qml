@@ -95,7 +95,7 @@ Item {
         y: openUpward ? (iconCircle.y + iconCircle.height / 2 - height) : (iconCircle.y + iconCircle.height / 2)
 
         opacity: revealed ? Style.opacityFull : Style.opacityNone
-        color: hovered ? Color.mTertiary : (Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent)
+        color: hovered ? Colors.mTertiary : (Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent)
 
         readonly property int halfButtonSize: Math.round(buttonSize * 0.5)
 
@@ -135,12 +135,12 @@ Item {
             verticalAlignment: Text.AlignVCenter
             color: {
                 if (hovered) {
-                    return Color.mOnTertiary;
+                    return Colors.mOnTertiary;
                 }
                 if (root.textColor && root.textColor !== "") {
                     return root.textColor;
                 }
-                return forceOpen ? Color.mOnSurface : Color.mPrimary;
+                return forceOpen ? Colors.mOnSurface : Colors.mPrimary;
             }
             visible: revealed
 
@@ -180,7 +180,7 @@ Item {
         width: buttonSize
         height: buttonSize
         radius: width * 0.5
-        color: hovered ? Color.mTertiary : Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+        color: hovered ? Colors.mTertiary : Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
         visible: root.icon !== ""
 
         // Icon positioning based on direction
@@ -199,7 +199,7 @@ Item {
             icon: root.icon
             pointSize: iconSize
             applyUiScale: false
-            color: (root.iconColor && root.iconColor !== "") ? root.iconColor : (hovered ? Color.mOnTertiary : Color.mOnSurface)
+            color: (root.iconColor && root.iconColor !== "") ? root.iconColor : (hovered ? Colors.mOnTertiary : Colors.mOnSurface)
             visible: root.icon !== ""
             // Center horizontally
             x: (iconCircle.width - width) / 2

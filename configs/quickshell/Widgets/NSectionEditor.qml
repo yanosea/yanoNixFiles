@@ -30,7 +30,7 @@ NBox {
     signal dragPotentialStarted
     signal dragPotentialEnded
 
-    color: Color.mSurface
+    color: Colors.mSurface
     Layout.fillWidth: true
     Layout.minimumHeight: {
         // header + minimal content area
@@ -62,17 +62,17 @@ NBox {
         }, 0);
         switch (totalSum % 6) {
         case 0:
-            return [Color.mPrimary, Color.mOnPrimary];
+            return [Colors.mPrimary, Colors.mOnPrimary];
         case 1:
-            return [Color.mSecondary, Color.mOnSecondary];
+            return [Colors.mSecondary, Colors.mOnSecondary];
         case 2:
-            return [Color.mTertiary, Color.mOnTertiary];
+            return [Colors.mTertiary, Colors.mOnTertiary];
         case 3:
-            return [Color.mError, Color.mOnError];
+            return [Colors.mError, Colors.mOnError];
         case 4:
-            return [Color.mOnSurface, Color.mSurface];
+            return [Colors.mOnSurface, Colors.mSurface];
         case 5:
-            return [Color.mOnSurfaceVariant, Color.mSurfaceVariant];
+            return [Colors.mOnSurfaceVariant, Colors.mSurfaceVariant];
         }
     }
 
@@ -88,7 +88,7 @@ NBox {
                 text: sectionName
                 pointSize: Style.fontSizeL
                 font.weight: Style.fontWeightBold
-                color: Color.mOnSurface
+                color: Colors.mOnSurface
                 Layout.alignment: Qt.AlignVCenter
             }
 
@@ -97,7 +97,7 @@ NBox {
                 visible: root.maxWidgets > 0
                 text: "(" + widgetModel.length + "/" + root.maxWidgets + ")"
                 pointSize: Style.fontSizeS
-                color: root.isAtMaxCapacity ? Color.mError : Color.mOnSurfaceVariant
+                color: root.isAtMaxCapacity ? Colors.mError : Colors.mOnSurfaceVariant
                 Layout.alignment: Qt.AlignVCenter
                 Layout.leftMargin: Style.marginXS
             }
@@ -134,10 +134,10 @@ NBox {
 
             NIconButton {
                 icon: "add"
-                colorBg: Color.mPrimary
-                colorFg: Color.mOnPrimary
-                colorBgHover: Color.mSecondary
-                colorFgHover: Color.mOnSecondary
+                colorBg: Colors.mPrimary
+                colorFg: Colors.mOnPrimary
+                colorBgHover: Colors.mSecondary
+                colorFgHover: Colors.mOnSecondary
                 enabled: comboBox.currentKey !== "" && !root.isAtMaxCapacity
                 tooltipText: root.isAtMaxCapacity ? I18n.tr("tooltips.max-widgets-reached") : I18n.tr("tooltips.add-widget")
                 Layout.alignment: Qt.AlignVCenter
@@ -176,7 +176,7 @@ NBox {
                         height: Style.baseWidgetSize * 1.15 * Style.uiScaleRatio
                         radius: Style.radiusL
                         color: root.getWidgetColor(modelData)[0]
-                        border.color: Color.mOutline
+                        border.color: Colors.mOutline
                         border.width: Style.borderS
 
                         // Store the widget index for drag operations
@@ -272,11 +272,11 @@ NBox {
                                         icon: "settings"
                                         tooltipText: I18n.tr("tooltips.widget-settings")
                                         baseSize: miniButtonSize
-                                        colorBorder: Qt.alpha(Color.mOutline, Style.opacityLight)
-                                        colorBg: Color.mOnSurface
-                                        colorFg: Color.mOnPrimary
-                                        colorBgHover: Qt.alpha(Color.mOnPrimary, Style.opacityLight)
-                                        colorFgHover: Color.mOnPrimary
+                                        colorBorder: Qt.alpha(Colors.mOutline, Style.opacityLight)
+                                        colorBg: Colors.mOnSurface
+                                        colorFg: Colors.mOnPrimary
+                                        colorBgHover: Qt.alpha(Colors.mOnPrimary, Style.opacityLight)
+                                        colorFgHover: Colors.mOnPrimary
                                         onClicked: {
                                             var component = Qt.createComponent(Qt.resolvedUrl(root.settingsDialogComponent));
                                             function instantiateAndOpen() {
@@ -314,11 +314,11 @@ NBox {
                                     icon: "close"
                                     tooltipText: I18n.tr("tooltips.remove-widget")
                                     baseSize: miniButtonSize
-                                    colorBorder: Qt.alpha(Color.mOutline, Style.opacityLight)
-                                    colorBg: Color.mOnSurface
-                                    colorFg: Color.mOnPrimary
-                                    colorBgHover: Qt.alpha(Color.mOnPrimary, Style.opacityLight)
-                                    colorFgHover: Color.mOnPrimary
+                                    colorBorder: Qt.alpha(Colors.mOutline, Style.opacityLight)
+                                    colorBg: Colors.mOnSurface
+                                    colorFg: Colors.mOnPrimary
+                                    colorBgHover: Qt.alpha(Colors.mOnPrimary, Style.opacityLight)
+                                    colorFgHover: Colors.mOnPrimary
                                     onClicked: {
                                         removeWidget(sectionId, index);
                                     }
@@ -335,8 +335,8 @@ NBox {
                 width: 0
                 height: Style.baseWidgetSize * 1.15
                 radius: Style.radiusL
-                color: Color.transparent
-                border.color: Color.mOutline
+                color: Colors.transparent
+                border.color: Colors.mOutline
                 border.width: Style.borderS
                 opacity: 0.7
                 visible: flowDragArea.dragStarted
@@ -347,7 +347,7 @@ NBox {
                     id: ghostText
                     anchors.centerIn: parent
                     pointSize: Style.fontSizeS
-                    color: Color.mOnPrimary
+                    color: Colors.mOnPrimary
                 }
             }
 
@@ -357,7 +357,7 @@ NBox {
                 width: 3
                 height: Style.baseWidgetSize * 1.15
                 radius: width / 2
-                color: Color.mPrimary
+                color: Colors.mPrimary
                 opacity: 0
                 visible: opacity > 0
                 z: 1999

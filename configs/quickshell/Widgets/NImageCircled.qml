@@ -9,17 +9,17 @@ Rectangle {
     id: root
 
     property string imagePath: ""
-    property color borderColor: Color.transparent
+    property color borderColor: Colors.transparent
     property real borderWidth: 0
     property string fallbackIcon: ""
     property real fallbackIconSize: Style.fontSizeXXL
 
-    color: Color.transparent
+    color: Colors.transparent
     radius: parent.width * 0.5
     anchors.margins: Style.marginXXS
 
     Rectangle {
-        color: Color.transparent
+        color: Colors.transparent
         anchors.fill: parent
 
         Image {
@@ -68,7 +68,7 @@ Rectangle {
     Rectangle {
         anchors.fill: parent
         radius: parent.radius
-        color: Color.transparent
+        color: Colors.transparent
         border.color: parent.borderColor
         border.width: parent.borderWidth
         antialiasing: true

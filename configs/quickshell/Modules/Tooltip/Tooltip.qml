@@ -31,7 +31,7 @@ PopupWindow {
     property bool animatingOut: true
 
     visible: false
-    color: Color.transparent
+    color: Colors.transparent
 
     anchor.item: targetItem
     anchor.rect.x: anchorX
@@ -394,8 +394,8 @@ PopupWindow {
 
         Rectangle {
             anchors.fill: parent
-            color: Color.mSurface
-            border.color: Color.mOutline
+            color: Colors.mSurface
+            border.color: Colors.mOutline
             border.width: Style.borderS
             radius: Style.radiusS
 
@@ -408,7 +408,7 @@ PopupWindow {
                 anchors.margins: root.padding
                 text: root.text
                 pointSize: Style.fontSizeS
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap

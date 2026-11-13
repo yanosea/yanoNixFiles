@@ -186,7 +186,7 @@ NPanel {
 
     panelContent: Rectangle {
         id: ui
-        color: Color.transparent
+        color: Colors.transparent
 
         // Keyboard shortcuts
         Shortcut {
@@ -305,7 +305,7 @@ NPanel {
                         }) : I18n.tr("session-menu.title")
                         font.weight: Style.fontWeightBold
                         pointSize: Style.fontSizeL
-                        color: timerActive ? Color.mPrimary : Color.mOnSurface
+                        color: timerActive ? Colors.mPrimary : Colors.mOnSurface
                         Layout.alignment: Qt.AlignVCenter
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -319,8 +319,8 @@ NPanel {
                         tooltipText: timerActive ? I18n.tr("tooltips.cancel-timer") : I18n.tr("tooltips.close")
                         Layout.alignment: Qt.AlignVCenter
                         baseSize: Style.baseWidgetSize * 0.7
-                        colorBg: timerActive ? Qt.alpha(Color.mError, 0.08) : Color.transparent
-                        colorFg: timerActive ? Color.mError : Color.mOnSurface
+                        colorBg: timerActive ? Qt.alpha(Colors.mError, 0.08) : Colors.transparent
+                        colorFg: timerActive ? Colors.mError : Colors.mOnSurface
                         onClicked: {
                             if (timerActive) {
                                 cancelTimer();
@@ -377,16 +377,16 @@ NPanel {
         radius: Style.radiusS
         color: {
             if (pending) {
-                return Qt.alpha(Color.mPrimary, 0.08);
+                return Qt.alpha(Colors.mPrimary, 0.08);
             }
             if (isSelected || mouseArea.containsMouse) {
-                return Color.mTertiary;
+                return Colors.mTertiary;
             }
-            return Color.transparent;
+            return Colors.transparent;
         }
 
         border.width: pending ? Math.max(Style.borderM) : 0
-        border.color: pending ? Color.mPrimary : Color.mOutline
+        border.color: pending ? Colors.mPrimary : Colors.mOutline
 
         Behavior on color {
             ColorAnimation {
@@ -407,12 +407,12 @@ NPanel {
                 icon: buttonRoot.icon
                 color: {
                     if (buttonRoot.pending)
-                        return Color.mPrimary;
+                        return Colors.mPrimary;
                     if (buttonRoot.isShutdown && !buttonRoot.isSelected && !mouseArea.containsMouse)
-                        return Color.mError;
+                        return Colors.mError;
                     if (buttonRoot.isSelected || mouseArea.containsMouse)
-                        return Color.mOnTertiary;
-                    return Color.mOnSurface;
+                        return Colors.mOnTertiary;
+                    return Colors.mOnSurface;
                 }
                 pointSize: Style.fontSizeXXL
                 width: Style.baseWidgetSize * 0.5
@@ -442,12 +442,12 @@ NPanel {
                     pointSize: Style.fontSizeM
                     color: {
                         if (buttonRoot.pending)
-                            return Color.mPrimary;
+                            return Colors.mPrimary;
                         if (buttonRoot.isShutdown && !buttonRoot.isSelected && !mouseArea.containsMouse)
-                            return Color.mError;
+                            return Colors.mError;
                         if (buttonRoot.isSelected || mouseArea.containsMouse)
-                            return Color.mOnTertiary;
-                        return Color.mOnSurface;
+                            return Colors.mOnTertiary;
+                        return Colors.mOnSurface;
                     }
 
                     Behavior on color {
@@ -467,7 +467,7 @@ NPanel {
                 width: 20
                 height: 20
                 radius: width * 0.5
-                color: Color.mPrimary
+                color: Colors.mPrimary
                 visible: buttonRoot.pending
 
                 NText {
@@ -475,7 +475,7 @@ NPanel {
                     text: Math.ceil(timeRemaining / 1000)
                     pointSize: Style.fontSizeS
                     font.weight: Style.fontWeightBold
-                    color: Color.mOnPrimary
+                    color: Colors.mOnPrimary
                 }
             }
         }

@@ -53,7 +53,7 @@ Item {
         id: background
         anchors.fill: parent
         radius: Style.radiusS
-        color: Settings.data.bar.showCapsule ? Color.mSurfaceVariant : Color.transparent
+        color: Settings.data.bar.showCapsule ? Colors.mSurfaceVariant : Colors.transparent
     }
 
     // Store visualizer type to force re-evaluation
@@ -109,7 +109,7 @@ Item {
             anchors.fill: parent
             values: CavaService.values
             showMinimumSignal: true
-            fillColor: Color.mPrimary
+            fillColor: Colors.mPrimary
         }
     }
 
@@ -119,7 +119,7 @@ Item {
             anchors.fill: parent
             values: CavaService.values
             showMinimumSignal: true
-            fillColor: Color.mPrimary
+            fillColor: Colors.mPrimary
         }
     }
 
@@ -129,7 +129,7 @@ Item {
             anchors.fill: parent
             values: CavaService.values
             showMinimumSignal: true
-            fillColor: Color.mPrimary
+            fillColor: Colors.mPrimary
         }
     }
 }

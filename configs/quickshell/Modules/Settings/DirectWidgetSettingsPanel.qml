@@ -13,8 +13,8 @@ NPanel {
 
     preferredWidth: 0
     preferredHeight: 0
-    panelBackgroundColor: Color.transparent
-    panelBorderColor: Color.transparent
+    panelBackgroundColor: Colors.transparent
+    panelBorderColor: Colors.transparent
 
     property var requestedWidgetSettings: []
 

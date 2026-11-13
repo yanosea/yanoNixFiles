@@ -22,7 +22,7 @@ NPanel {
 
     panelContent: Rectangle {
         id: notificationRect
-        color: Color.transparent
+        color: Colors.transparent
 
         ColumnLayout {
             anchors.fill: parent
@@ -37,14 +37,14 @@ NPanel {
                 NIcon {
                     icon: "bell"
                     pointSize: Style.fontSizeXXL
-                    color: Color.mPrimary
+                    color: Colors.mPrimary
                 }
 
                 NText {
                     text: I18n.tr("notifications.panel.title")
                     pointSize: Style.fontSizeL
                     font.weight: Style.fontWeightBold
-                    color: Color.mOnSurface
+                    color: Colors.mOnSurface
                     Layout.fillWidth: true
                 }
 
@@ -93,21 +93,21 @@ NPanel {
                 NIcon {
                     icon: "bell-off"
                     pointSize: 64
-                    color: Color.mOnSurfaceVariant
+                    color: Colors.mOnSurfaceVariant
                     Layout.alignment: Qt.AlignHCenter
                 }
 
                 NText {
                     text: I18n.tr("notifications.panel.no-notifications")
                     pointSize: Style.fontSizeL
-                    color: Color.mOnSurfaceVariant
+                    color: Colors.mOnSurfaceVariant
                     Layout.alignment: Qt.AlignHCenter
                 }
 
                 NText {
                     text: I18n.tr("notifications.panel.description")
                     pointSize: Style.fontSizeS
-                    color: Color.mOnSurfaceVariant
+                    color: Colors.mOnSurfaceVariant
                     Layout.alignment: Qt.AlignHCenter
                     Layout.fillWidth: true
                     wrapMode: Text.Wrap
@@ -143,8 +143,8 @@ NPanel {
                     width: notificationList.width
                     height: notificationLayout.implicitHeight + (Style.marginM * 2)
                     radius: Style.radiusM
-                    color: Color.mSurfaceVariant
-                    border.color: Qt.alpha(Color.mOutline, Style.opacityMedium)
+                    color: Colors.mSurfaceVariant
+                    border.color: Qt.alpha(Colors.mOutline, Style.opacityMedium)
                     border.width: Style.borderS
 
                     Behavior on height {
@@ -192,7 +192,7 @@ NPanel {
                                 Layout.alignment: Qt.AlignTop
                                 Layout.topMargin: 20
                                 imagePath: model.cachedImage || model.originalImage || ""
-                                borderColor: Color.transparent
+                                borderColor: Colors.transparent
                                 borderWidth: 0
                                 fallbackIcon: "bell"
                                 fallbackIconSize: 24
@@ -223,24 +223,24 @@ NPanel {
                                     visible: model.urgency !== 1
                                     color: {
                                         if (model.urgency === 2)
-                                            return Color.mError;
+                                            return Colors.mError;
                                         else if (model.urgency === 0)
-                                            return Color.mOnSurfaceVariant;
+                                            return Colors.mOnSurfaceVariant;
                                         else
-                                            return Color.transparent;
+                                            return Colors.transparent;
                                     }
                                 }
 
                                 NText {
                                     text: model.appName || "Unknown App"
                                     pointSize: Style.fontSizeXS
-                                    color: Color.mSecondary
+                                    color: Colors.mSecondary
                                 }
 
                                 NText {
                                     text: Time.formatRelativeTime(model.timestamp)
                                     pointSize: Style.fontSizeXS
-                                    color: Color.mSecondary
+                                    color: Colors.mSecondary
                                 }
 
                                 Item {
@@ -254,7 +254,7 @@ NPanel {
                                 text: model.summary || I18n.tr("general.no-summary")
                                 pointSize: Style.fontSizeM
                                 font.weight: Font.Medium
-                                color: Color.mOnSurface
+                                color: Colors.mOnSurface
                                 textFormat: Text.PlainText
                                 wrapMode: Text.Wrap
                                 Layout.fillWidth: true
@@ -267,7 +267,7 @@ NPanel {
                                 id: bodyText
                                 text: model.body || ""
                                 pointSize: Style.fontSizeS
-                                color: Color.mOnSurfaceVariant
+                                color: Colors.mOnSurfaceVariant
                                 textFormat: Text.PlainText
                                 wrapMode: Text.Wrap
                                 Layout.fillWidth: true
@@ -295,14 +295,14 @@ NPanel {
                                 NText {
                                     text: I18n.tr("notifications.panel.click-to-expand") || "Click to expand"
                                     pointSize: Style.fontSizeXS
-                                    color: Color.mPrimary
+                                    color: Colors.mPrimary
                                     font.weight: Font.Medium
                                 }
 
                                 NIcon {
                                     icon: "chevron-down"
                                     pointSize: Style.fontSizeS
-                                    color: Color.mPrimary
+                                    color: Colors.mPrimary
                                 }
                             }
                         }

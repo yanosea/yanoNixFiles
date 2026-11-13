@@ -27,7 +27,7 @@ PopupWindow {
 
     implicitWidth: Math.max(160, contextMenuColumn.implicitWidth)
     implicitHeight: contextMenuColumn.implicitHeight + (Style.marginM * 2)
-    color: Color.transparent
+    color: Colors.transparent
     visible: false
 
     function initItems() {
@@ -206,9 +206,9 @@ PopupWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: Color.mSurfaceVariant
+        color: Colors.mSurfaceVariant
         radius: Style.radiusS
-        border.color: Color.mOutline
+        border.color: Colors.mOutline
         border.width: Style.borderS
 
         // Single MouseArea to handle both auto-close and menu interactions
@@ -254,7 +254,7 @@ PopupWindow {
                 Rectangle {
                     Layout.fillWidth: true
                     height: 32
-                    color: root.hoveredItem === index ? Color.mTertiary : Color.transparent
+                    color: root.hoveredItem === index ? Colors.mTertiary : Colors.transparent
                     radius: Style.radiusXS
 
                     RowLayout {
@@ -266,14 +266,14 @@ PopupWindow {
                         NIcon {
                             icon: modelData.icon
                             pointSize: Style.fontSizeL
-                            color: root.hoveredItem === index ? Color.mOnTertiary : Color.mOnSurfaceVariant
+                            color: root.hoveredItem === index ? Colors.mOnTertiary : Colors.mOnSurfaceVariant
                             Layout.alignment: Qt.AlignVCenter
                         }
 
                         NText {
                             text: modelData.text
                             pointSize: Style.fontSizeS
-                            color: root.hoveredItem === index ? Color.mOnTertiary : Color.mOnSurfaceVariant
+                            color: root.hoveredItem === index ? Colors.mOnTertiary : Colors.mOnSurfaceVariant
                             Layout.alignment: Qt.AlignVCenter
                             elide: Text.ElideRight
                         }

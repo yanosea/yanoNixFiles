@@ -24,11 +24,11 @@ ColumnLayout {
         Layout.preferredHeight: headerContent.implicitHeight + (Style.marginM * 2)
 
         // Material 3 style background
-        color: root.expanded ? Color.mSecondary : Color.mSurfaceVariant
+        color: root.expanded ? Colors.mSecondary : Colors.mSurfaceVariant
         radius: Style.radiusL
 
         // Subtle border
-        border.color: root.expanded ? Color.mOnSecondary : Color.mOutline
+        border.color: root.expanded ? Colors.mOnSecondary : Colors.mOutline
         border.width: Style.borderS
 
         // Smooth color transitions
@@ -60,7 +60,7 @@ ColumnLayout {
             // Hover effect overlay
             Rectangle {
                 anchors.fill: parent
-                color: headerArea.containsMouse ? Color.mOnSurface : Color.transparent
+                color: headerArea.containsMouse ? Colors.mOnSurface : Colors.transparent
                 opacity: headerArea.containsMouse ? 0.08 : 0
                 radius: headerContainer.radius // Reference the container's radius directly
 
@@ -83,7 +83,7 @@ ColumnLayout {
                 id: chevronIcon
                 icon: "chevron-right"
                 pointSize: Style.fontSizeL
-                color: root.expanded ? Color.mOnSecondary : Color.mOnSurfaceVariant
+                color: root.expanded ? Colors.mOnSecondary : Colors.mOnSurfaceVariant
                 Layout.alignment: Qt.AlignVCenter
 
                 rotation: root.expanded ? 90 : 0
@@ -111,7 +111,7 @@ ColumnLayout {
                     text: root.label
                     pointSize: Style.fontSizeL
                     font.weight: Style.fontWeightSemiBold
-                    color: root.expanded ? Color.mOnSecondary : Color.mOnSurface
+                    color: root.expanded ? Colors.mOnSecondary : Colors.mOnSurface
                     wrapMode: Text.WordWrap
 
                     Behavior on color {
@@ -125,7 +125,7 @@ ColumnLayout {
                     text: root.description
                     pointSize: Style.fontSizeS
                     font.weight: Style.fontWeightRegular
-                    color: root.expanded ? Color.mOnSecondary : Color.mOnSurfaceVariant
+                    color: root.expanded ? Colors.mOnSecondary : Colors.mOnSurfaceVariant
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                     visible: root.description !== ""
@@ -148,9 +148,9 @@ ColumnLayout {
         Layout.topMargin: Style.marginS
 
         visible: root.expanded
-        color: Color.mSurface
+        color: Colors.mSurface
         radius: Style.radiusL
-        border.color: Color.mOutline
+        border.color: Colors.mOutline
         border.width: Style.borderS
 
         // Dynamic height based on content

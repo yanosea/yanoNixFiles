@@ -49,7 +49,7 @@ NBox {
         // Dark overlay for readability
         Rectangle {
             anchors.fill: parent
-            color: Color.mSurfaceVariant
+            color: Colors.mSurfaceVariant
             opacity: 0.85
             radius: Style.radiusM
         }
@@ -57,8 +57,8 @@ NBox {
         // Border
         Rectangle {
             anchors.fill: parent
-            color: Color.transparent
-            border.color: Color.mOutline
+            color: Colors.transparent
+            border.color: Colors.mOutline
             border.width: 1
             radius: Style.radiusM
         }
@@ -87,7 +87,7 @@ NBox {
                 LinearSpectrum {
                     anchors.fill: parent
                     values: CavaService.values
-                    fillColor: Color.mPrimary
+                    fillColor: Colors.mPrimary
                     opacity: 0.5
                 }
             }
@@ -97,7 +97,7 @@ NBox {
                 MirroredSpectrum {
                     anchors.fill: parent
                     values: CavaService.values
-                    fillColor: Color.mPrimary
+                    fillColor: Colors.mPrimary
                     opacity: 0.5
                 }
             }
@@ -107,7 +107,7 @@ NBox {
                 WaveSpectrum {
                     anchors.fill: parent
                     values: CavaService.values
-                    fillColor: Color.mPrimary
+                    fillColor: Colors.mPrimary
                     opacity: 0.5
                 }
             }
@@ -126,7 +126,7 @@ NBox {
         height: Style.barHeight
         visible: MediaService.getAvailablePlayers().length > 1
         radius: Style.radiusM
-        color: Color.transparent
+        color: Colors.transparent
 
         property var currentPlayer: MediaService.getAvailablePlayers()[MediaService.selectedPlayerIndex]
 
@@ -137,13 +137,13 @@ NBox {
             NIcon {
                 icon: "caret-down"
                 pointSize: Style.fontSizeXXL
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
             }
 
             NText {
                 text: playerSelectorButton.currentPlayer ? playerSelectorButton.currentPlayer.identity : ""
                 pointSize: Style.fontSizeXS
-                color: Color.mOnSurfaceVariant
+                color: Colors.mOnSurfaceVariant
                 Layout.fillWidth: true
             }
         }
@@ -224,7 +224,7 @@ NBox {
                                 height: width
                                 radius: width / 2
                                 color: "transparent"
-                                border.color: Color.mOnSurfaceVariant
+                                border.color: Colors.mOnSurfaceVariant
                                 border.width: 2
                                 opacity: 0
 
@@ -263,7 +263,7 @@ NBox {
                             anchors.centerIn: parent
                             icon: "disc"
                             pointSize: Style.fontSizeXXXL * 3
-                            color: Color.mOnSurfaceVariant
+                            color: Colors.mOnSurfaceVariant
 
                             RotationAnimator on rotation {
                                 from: 0
@@ -321,7 +321,7 @@ NBox {
                 NText {
                     visible: MediaService.trackArtist !== ""
                     text: MediaService.trackArtist
-                    color: Color.mPrimary
+                    color: Colors.mPrimary
                     pointSize: Style.fontSizeS
                     elide: Text.ElideRight
                     Layout.fillWidth: true
@@ -330,7 +330,7 @@ NBox {
                 NText {
                     visible: MediaService.trackAlbum !== ""
                     text: MediaService.trackAlbum
-                    color: Color.mOnSurfaceVariant
+                    color: Colors.mOnSurfaceVariant
                     pointSize: Style.fontSizeM
                     elide: Text.ElideRight
                     Layout.fillWidth: true

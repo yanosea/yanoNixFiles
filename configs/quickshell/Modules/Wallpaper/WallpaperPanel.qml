@@ -38,7 +38,7 @@ NPanel {
         property var currentScreen: Quickshell.screens[currentScreenIndex]
         property string filterText: ""
 
-        color: Color.transparent
+        color: Colors.transparent
 
         // Debounce timer for search
         Timer {
@@ -69,14 +69,14 @@ NPanel {
                 NIcon {
                     icon: "settings-wallpaper-selector"
                     pointSize: Style.fontSizeXXL
-                    color: Color.mPrimary
+                    color: Colors.mPrimary
                 }
 
                 NText {
                     text: I18n.tr("wallpaper.panel.title")
                     pointSize: Style.fontSizeL
                     font.weight: Style.fontWeightBold
-                    color: Color.mOnSurface
+                    color: Colors.mOnSurface
                     Layout.fillWidth: true
                 }
 
@@ -128,7 +128,7 @@ NPanel {
                 spacing: Style.marginM
 
                 background: Rectangle {
-                    color: Color.transparent
+                    color: Colors.transparent
                 }
 
                 Repeater {
@@ -138,10 +138,10 @@ NPanel {
                         width: implicitWidth + Style.marginS * 2
 
                         background: Rectangle {
-                            color: screenTabBar.currentIndex === index ? Color.mSecondary : Color.transparent
+                            color: screenTabBar.currentIndex === index ? Colors.mSecondary : Colors.transparent
                             radius: Style.radiusS
                             border.width: screenTabBar.currentIndex === index ? 0 : Style.borderS
-                            border.color: Color.mOutline
+                            border.color: Colors.mOutline
 
                             Behavior on color {
                                 ColorAnimation {
@@ -155,7 +155,7 @@ NPanel {
                             pointSize: Style.fontSizeL
                             font.weight: screenTabBar.currentIndex === index ? Style.fontWeightBold : Style.fontWeightRegular
                             family: Settings.data.ui.fontDefault
-                            color: screenTabBar.currentIndex === index ? Color.mOnSecondary : Color.mOnSurfaceVariant
+                            color: screenTabBar.currentIndex === index ? Colors.mOnSecondary : Colors.mOnSurfaceVariant
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }
@@ -167,7 +167,7 @@ NPanel {
 
                         Rectangle {
                             anchors.fill: parent
-                            color: Color.mOnSurface
+                            color: Colors.mOnSurface
                             opacity: tabHover.hovered && screenTabBar.currentIndex !== index ? 0.08 : 0
                             radius: Style.radiusS
 
@@ -204,7 +204,7 @@ NPanel {
 
                 NText {
                     text: I18n.tr("wallpaper.panel.search")
-                    color: Color.mOnSurface
+                    color: Colors.mOnSurface
                     pointSize: Style.fontSizeM
                     Layout.preferredWidth: implicitWidth
                 }
@@ -384,7 +384,7 @@ NPanel {
                         id: imageContainer
                         Layout.fillWidth: true
                         Layout.preferredHeight: Math.round(wallpaperGridView.itemSize * 0.67)
-                        color: Color.transparent
+                        color: Colors.transparent
 
                         NImageCached {
                             id: img
@@ -396,15 +396,15 @@ NPanel {
 
                         Rectangle {
                             anchors.fill: parent
-                            color: Color.transparent
+                            color: Colors.transparent
                             border.color: {
                                 if (isSelected) {
-                                    return Color.mSecondary;
+                                    return Colors.mSecondary;
                                 }
                                 if (wallpaperGridView.currentIndex === index) {
-                                    return Color.mTertiary;
+                                    return Colors.mTertiary;
                                 }
-                                return Color.mSurface;
+                                return Colors.mSurface;
                             }
                             border.width: Math.max(1, Style.borderL * 1.5)
                         }
@@ -416,22 +416,22 @@ NPanel {
                             width: 28
                             height: 28
                             radius: width / 2
-                            color: Color.mSecondary
-                            border.color: Color.mOutline
+                            color: Colors.mSecondary
+                            border.color: Colors.mOutline
                             border.width: Style.borderS
                             visible: isSelected
 
                             NIcon {
                                 icon: "check"
                                 pointSize: Style.fontSizeM
-                                color: Color.mOnSecondary
+                                color: Colors.mOnSecondary
                                 anchors.centerIn: parent
                             }
                         }
 
                         Rectangle {
                             anchors.fill: parent
-                            color: Color.mSurface
+                            color: Colors.mSurface
                             opacity: (hoverHandler.hovered || isSelected || wallpaperGridView.currentIndex === index) ? 0 : 0.3
                             radius: parent.radius
                             Behavior on opacity {
@@ -460,7 +460,7 @@ NPanel {
 
                     NText {
                         text: filename
-                        color: (hoverHandler.hovered || isSelected || wallpaperGridView.currentIndex === index) ? Color.mOnSurface : Color.mOnSurfaceVariant
+                        color: (hoverHandler.hovered || isSelected || wallpaperGridView.currentIndex === index) ? Colors.mOnSurface : Colors.mOnSurfaceVariant
                         pointSize: Style.fontSizeXS
                         Layout.fillWidth: true
                         Layout.leftMargin: Style.marginS
@@ -474,9 +474,9 @@ NPanel {
 
             // Empty / scanning state
             Rectangle {
-                color: Color.mSurface
+                color: Colors.mSurface
                 radius: Style.radiusM
-                border.color: Color.mOutline
+                border.color: Colors.mOutline
                 border.width: Style.borderS
                 visible: (filteredWallpapers.length === 0 && !WallpaperService.scanning) || WallpaperService.scanning
                 Layout.fillWidth: true
@@ -499,18 +499,18 @@ NPanel {
                     NIcon {
                         icon: "folder-open"
                         pointSize: Style.fontSizeXXL
-                        color: Color.mOnSurface
+                        color: Colors.mOnSurface
                         Layout.alignment: Qt.AlignHCenter
                     }
                     NText {
                         text: (wallpaperPanel.filterText && wallpaperPanel.filterText.length > 0) ? I18n.tr("wallpaper.no-match") : I18n.tr("wallpaper.no-wallpaper")
-                        color: Color.mOnSurface
+                        color: Colors.mOnSurface
                         font.weight: Style.fontWeightBold
                         Layout.alignment: Qt.AlignHCenter
                     }
                     NText {
                         text: (wallpaperPanel.filterText && wallpaperPanel.filterText.length > 0) ? I18n.tr("wallpaper.try-different-search") : I18n.tr("wallpaper.configure-directory")
-                        color: Color.mOnSurfaceVariant
+                        color: Colors.mOnSurfaceVariant
                         wrapMode: Text.WordWrap
                         Layout.alignment: Qt.AlignHCenter
                     }

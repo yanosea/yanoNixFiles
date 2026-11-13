@@ -11,9 +11,9 @@ Rectangle {
     property string text: ""
     property string icon: ""
     property string tooltipText
-    property color backgroundColor: Color.mPrimary
-    property color textColor: Color.mOnPrimary
-    property color hoverColor: Color.mTertiary
+    property color backgroundColor: Colors.mPrimary
+    property color textColor: Colors.mOnPrimary
+    property color hoverColor: Colors.mTertiary
     property bool enabled: true
     property real fontSize: Style.fontSizeM
     property int fontWeight: Style.fontWeightBold
@@ -39,19 +39,19 @@ Rectangle {
     radius: Style.radiusS
     color: {
         if (!enabled)
-            return outlined ? Color.transparent : Qt.lighter(Color.mSurfaceVariant, 1.2);
+            return outlined ? Colors.transparent : Qt.lighter(Colors.mSurfaceVariant, 1.2);
         if (hovered)
             return hoverColor;
-        return outlined ? Color.transparent : backgroundColor;
+        return outlined ? Colors.transparent : backgroundColor;
     }
 
     border.width: outlined ? Style.borderS : 0
     border.color: {
         if (!enabled)
-            return Color.mOutline;
+            return Colors.mOutline;
         if (hovered)
             return backgroundColor;
-        return outlined ? backgroundColor : Color.transparent;
+        return outlined ? backgroundColor : Colors.transparent;
     }
 
     opacity: enabled ? 1.0 : 0.6
@@ -87,7 +87,7 @@ Rectangle {
             pointSize: root.iconSize
             color: {
                 if (!root.enabled)
-                    return Color.mOnSurfaceVariant;
+                    return Colors.mOnSurfaceVariant;
                 if (root.outlined) {
                     if (root.hovered)
                         return root.textColor;
@@ -113,7 +113,7 @@ Rectangle {
             font.weight: root.fontWeight
             color: {
                 if (!root.enabled)
-                    return Color.mOnSurfaceVariant;
+                    return Colors.mOnSurfaceVariant;
                 if (root.outlined) {
                     if (root.hovered)
                         return root.textColor;
