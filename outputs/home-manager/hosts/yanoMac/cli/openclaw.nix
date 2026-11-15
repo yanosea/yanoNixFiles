@@ -385,6 +385,11 @@ in
         }
         export OPENCLAW_CONFIG_PATH="${config.programs.openclaw.stateDir}/openclaw.json"
         export OPENCLAW_STATE_DIR="${config.programs.openclaw.stateDir}"
+        # the cli's paired device token holds operator.read and write only,
+        # and `automations add` needs operator.admin. the shared token is what
+        # the gateway's own command jobs authenticate with
+        OPENCLAW_GATEWAY_TOKEN="$(${pkgs.coreutils}/bin/cat "${secretPath "OPENCLAW_GATEWAY_TOKEN"}")"
+        export OPENCLAW_GATEWAY_TOKEN
         # the gateway was just kicked; the cli talks to it over the socket, so
         # wait for it to answer before declaring anything
         ready=""
