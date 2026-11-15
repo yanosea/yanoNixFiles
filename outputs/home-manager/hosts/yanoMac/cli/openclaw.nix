@@ -14,31 +14,6 @@
 let
   # the gateway listens here; the control ui is served off the same port
   gatewayPort = 18789;
-  # openclaw 2026.9.5 resolves every relative `.js` import under `dist/` as
-  # ESM, and nix-openclaw copies the discord plugin's node_modules in there,
-  # so the CJS `discord-api-types/v10.js` fails to load. the hook stands down
-  # when NODE_OPTIONS carries an `--import` (openclaw#128663), so import this
-  # empty file. drop it once a release ships openclaw#169543, which removes
-  # the hook
-  esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
-  # the cli on PATH, the gateway wrapper, activation and the jobs all exec
-  # this one, so each gets the shim. `--prefix` keeps a NODE_OPTIONS of my
-  # own and never adds the shim twice; it splits on the separator, hence the
-  # single `--import=` token. hiPrio wins `bin/openclaw` over the plain
-  # package ai.nix installs
-  openclawPackage = lib.hiPrio (
-    pkgs.symlinkJoin {
-      name = "${pkgs.openclaw.name}-esm-loader-shim";
-      paths = [ pkgs.openclaw ];
-      nativeBuildInputs = [ pkgs.makeWrapper ];
-      postBuild = ''
-        rm "$out/bin/openclaw"
-        makeWrapper ${pkgs.openclaw}/bin/openclaw "$out/bin/openclaw" \
-          --prefix NODE_OPTIONS " " "--import=file://${esmLoaderShim}"
-      '';
-      meta.mainProgram = "openclaw";
-    }
-  );
   # the agents share my claude config, so they would load every plugin
   # settings.json enables. the ones marked `-openclaw` in
   # configs/agents/plugins.conf run hooks on every session and prompt, which
@@ -244,12 +219,6 @@ let
       (secretPath "OPENCLAW_DISCORD_DEV_CHANNEL_ID")
     ]
   );
-  # wakes an agent's main session for its check-in unless the workspace pauses
-  # it. the agents' `checkin` skill writes `state/checkin-pause` (an epoch
-  # second, or `off`) when asked to stay quiet, so a paused hour starts no
-  # model turn at all. a job can wake only the default agent's main session,
-  # so the gate sends the system event itself: both agents check in from the
-  # session their conversation lives in
   # sends a system event into a session and wakes it now. a job can wake
   # only the default agent's main session, so dev's session-bound turns go
   # through this instead
@@ -275,6 +244,11 @@ let
         text
       ]
     );
+  # wakes an agent's main session for its check-in unless the workspace pauses
+  # it. the agents' `checkin` skill writes `state/checkin-pause` (an epoch
+  # second, or `off`) when asked to stay quiet, so a paused hour starts no
+  # model turn at all. both agents check in from the session their
+  # conversation lives in
   checkinGate = pkgs.writeShellApplication {
     name = "openclaw-checkin-gate";
     runtimeInputs = [
@@ -452,17 +426,7 @@ in
           # unless mizuki has paused the check-ins (dev-checkin-gate below does
           # the same for dev). 7 and 19 belong to `trends`, the 0:00 one comes
           # from the daily-thread skill once the thread is up, and none from 1
-          # to 5. `checkin` and `dev-checkin` were the jobs the gates used to
-          # run, and `dev-daily-thread` ran dev's 0:00 turn in a fresh session;
-          # the sessions are woken directly now, so drop them
-          for job in checkin dev-checkin dev-daily-thread; do
-            for id in $(${lib.getExe config.programs.openclaw.package} cron list --all --json </dev/null 2>/dev/null \
-              | ${lib.getExe pkgs.jq} -r --arg name "$job" '(.jobs // .)[] | select(.name == $name) | .id'); do
-              if ! $DRY_RUN_CMD openclaw cron rm "$id"; then
-                echo "failed to remove the $job automation" >&2
-              fi
-            done
-          done
+          # to 5
           if ! $DRY_RUN_CMD openclaw automations add \
             --name checkin-gate \
             --display-name "Check-in gate" \
@@ -615,7 +579,6 @@ in
   programs = {
     openclaw = {
       enable = true;
-      package = openclawPackage;
       # the mac app ships as a bundle of ~80k files, and upstream places it
       # through `home.file` with `recursive = true`, so every rebuild relinked
       # all of them one at a time — 99% of this generation's links and most of
@@ -685,9 +648,9 @@ in
             # the model writes before its tools would otherwise land in the
             # channel as is
             # no interval of its own: its minute is a hash of the device and
-            # agent ids, so the `checkin` job wakes main's on the hour instead,
-            # from 6 to 23 (a cron wake skips `activeHours`); dev's check-in is
-            # an isolated `dev-checkin` job
+            # agent ids, so `checkin-gate` and `dev-checkin-gate` wake each
+            # agent's main session on the hour instead (a cron wake skips
+            # `activeHours`)
             heartbeat = {
               every = "0m";
               target = "none";
@@ -940,7 +903,7 @@ in
             # `programs.openclaw.runtimePlugins` refuses to sit beside the raw
             # paths above, so its package goes in here directly
             "${pkgs.openclawRuntimePlugins.parallel}"
-            # 2026.11.3 no longer bundles discord, so it loads from here too
+            # 2026.11.3 no longer bundles discord
             "${pkgs.openclawRuntimePlugins.discord}"
           ];
           # bundled but off until named here
@@ -997,9 +960,6 @@ in
               enabled = true;
             };
             "web-readability" = {
-              enabled = true;
-            };
-            "webhooks" = {
               enabled = true;
             };
             "workboard" = {
