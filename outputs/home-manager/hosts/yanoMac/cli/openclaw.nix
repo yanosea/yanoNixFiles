@@ -14,31 +14,6 @@
 let
   # the gateway listens here; the control ui is served off the same port
   gatewayPort = 18789;
-  # openclaw 2026.9.5 resolves every relative `.js` import under `dist/` as
-  # ESM, and nix-openclaw copies the discord plugin's node_modules in there,
-  # so the CJS `discord-api-types/v10.js` fails to load. the hook stands down
-  # when NODE_OPTIONS carries an `--import` (openclaw#128663), so import this
-  # empty file. drop it once a release ships openclaw#169543, which removes
-  # the hook
-  esmLoaderShim = pkgs.writeText "openclaw-esm-loader-shim.mjs" "";
-  # the cli on PATH, the gateway wrapper, activation and the jobs all exec
-  # this one, so each gets the shim. `--prefix` keeps a NODE_OPTIONS of my
-  # own and never adds the shim twice; it splits on the separator, hence the
-  # single `--import=` token. hiPrio wins `bin/openclaw` over the plain
-  # package ai.nix installs
-  openclawPackage = lib.hiPrio (
-    pkgs.symlinkJoin {
-      name = "${pkgs.openclaw.name}-esm-loader-shim";
-      paths = [ pkgs.openclaw ];
-      nativeBuildInputs = [ pkgs.makeWrapper ];
-      postBuild = ''
-        rm "$out/bin/openclaw"
-        makeWrapper ${pkgs.openclaw}/bin/openclaw "$out/bin/openclaw" \
-          --prefix NODE_OPTIONS " " "--import=file://${esmLoaderShim}"
-      '';
-      meta.mainProgram = "openclaw";
-    }
-  );
   # the agents share my claude config, so they would load every plugin
   # settings.json enables. the ones marked `-openclaw` in
   # configs/agents/plugins.conf run hooks on every session and prompt, which
@@ -83,18 +58,10 @@ let
         "${workspace}/skills/feeds/config.json"
       ]
     );
-  # main and dev each name theirs, so one can move without the other. dev
-  # runs the same model as opencode's manager
-  devModel = "opencode-go/deepseek-v4.1-flash";
+  # main and dev run the same model as opencode's manager
+  managerModel = "opencode-go/deepseek-v4.1-flash";
   # explore and worker
   goModel = "opencode-go/claude-haiku-5-5";
-  # haiku did not keep main's long japanese persona rules, and qwen answered
-  # the intimate roleplay turns with http 400. grok runs on the supergrok
-  # login (models.providers.xai), which the grok cli and the feeds share
-  mainModel = "xai/grok-4.7";
-  # when the supergrok weekly allowance runs out (402) or the login is gone,
-  # the same model on go answers instead
-  mainFallback = "opencode-go/grok-4.7";
   # the opencode roles (configs/opencode/agents), as agents main and dev spawn
   # across agents: a child of the same agent keeps the parent's tools, so
   # only a separate agent can be read-only. each reads the AGENTS.md in its
@@ -172,8 +139,7 @@ let
         tools = lib.optionalAttrs (spec.deny != [ ]) { inherit (spec) deny; };
       }
     ) helperRoles;
-  # dev stays on go, like opencode's manager, and main falls back to it;
-  # fallbacks skip this policy, so main's one fallback stays on go
+  # main and dev stay on go, like opencode's manager
   goOnly = {
     allow = [ "opencode-go/*" ];
   };
@@ -253,12 +219,6 @@ let
       (secretPath "OPENCLAW_DISCORD_DEV_CHANNEL_ID")
     ]
   );
-  # wakes an agent's main session for its check-in unless the workspace pauses
-  # it. the agents' `checkin` skill writes `state/checkin-pause` (an epoch
-  # second, or `off`) when asked to stay quiet, so a paused hour starts no
-  # model turn at all. a job can wake only the default agent's main session,
-  # so the gate sends the system event itself: both agents check in from the
-  # session their conversation lives in
   # sends a system event into a session and wakes it now. a job can wake
   # only the default agent's main session, so dev's session-bound turns go
   # through this instead
@@ -284,6 +244,11 @@ let
         text
       ]
     );
+  # wakes an agent's main session for its check-in unless the workspace pauses
+  # it. the agents' `checkin` skill writes `state/checkin-pause` (an epoch
+  # second, or `off`) when asked to stay quiet, so a paused hour starts no
+  # model turn at all. both agents check in from the session their
+  # conversation lives in
   checkinGate = pkgs.writeShellApplication {
     name = "openclaw-checkin-gate";
     runtimeInputs = [
@@ -420,6 +385,11 @@ in
         }
         export OPENCLAW_CONFIG_PATH="${config.programs.openclaw.stateDir}/openclaw.json"
         export OPENCLAW_STATE_DIR="${config.programs.openclaw.stateDir}"
+        # the cli's paired device token holds operator.read and write only,
+        # and `automations add` needs operator.admin. the shared token is what
+        # the gateway's own command jobs authenticate with
+        OPENCLAW_GATEWAY_TOKEN="$(${pkgs.coreutils}/bin/cat "${secretPath "OPENCLAW_GATEWAY_TOKEN"}")"
+        export OPENCLAW_GATEWAY_TOKEN
         # the gateway was just kicked; the cli talks to it over the socket, so
         # wait for it to answer before declaring anything
         ready=""
@@ -461,17 +431,7 @@ in
           # unless mizuki has paused the check-ins (dev-checkin-gate below does
           # the same for dev). 7 and 19 belong to `trends`, the 0:00 one comes
           # from the daily-thread skill once the thread is up, and none from 1
-          # to 5. `checkin` and `dev-checkin` were the jobs the gates used to
-          # run, and `dev-daily-thread` ran dev's 0:00 turn in a fresh session;
-          # the sessions are woken directly now, so drop them
-          for job in checkin dev-checkin dev-daily-thread; do
-            for id in $(${lib.getExe config.programs.openclaw.package} cron list --all --json </dev/null 2>/dev/null \
-              | ${lib.getExe pkgs.jq} -r --arg name "$job" '(.jobs // .)[] | select(.name == $name) | .id'); do
-              if ! $DRY_RUN_CMD openclaw cron rm "$id"; then
-                echo "failed to remove the $job automation" >&2
-              fi
-            done
-          done
+          # to 5
           if ! $DRY_RUN_CMD openclaw automations add \
             --name checkin-gate \
             --display-name "Check-in gate" \
@@ -624,7 +584,6 @@ in
   programs = {
     openclaw = {
       enable = true;
-      package = openclawPackage;
       # the mac app ships as a bundle of ~80k files, and upstream places it
       # through `home.file` with `recursive = true`, so every rebuild relinked
       # all of them one at a time — 99% of this generation's links and most of
@@ -694,15 +653,15 @@ in
             # the model writes before its tools would otherwise land in the
             # channel as is
             # no interval of its own: its minute is a hash of the device and
-            # agent ids, so the `checkin` job wakes main's on the hour instead,
-            # from 6 to 23 (a cron wake skips `activeHours`); dev's check-in is
-            # an isolated `dev-checkin` job
+            # agent ids, so `checkin-gate` and `dev-checkin-gate` wake each
+            # agent's main session on the hour instead (a cron wake skips
+            # `activeHours`)
             heartbeat = {
               every = "0m";
               target = "none";
             };
             model = {
-              primary = devModel;
+              primary = managerModel;
             };
             modelPolicy = goOnly;
             # children are leaves, like opencode's subagents; a run has no
@@ -726,16 +685,6 @@ in
           entries = {
             main = {
               workspace = config.programs.openclaw.workspaceDir;
-              # a string model is strict; only the object form takes
-              # fallbacks, which skip modelPolicy
-              model = {
-                primary = mainModel;
-                fallbacks = [ mainFallback ];
-              };
-              # go plus this one grok, so `/model` cannot reach other xai rows
-              modelPolicy = {
-                allow = goOnly.allow ++ [ mainModel ];
-              };
               # the xai login also turns these on, and they call api.x.ai,
               # the separately billed console, rather than the supergrok proxy.
               # web_search stays: tools.web.search pins it to parallel-free
@@ -760,8 +709,6 @@ in
             };
             dev = {
               workspace = devWorkspaceDir;
-              model = devModel;
-              modelPolicy = goOnly;
               heartbeat = {
                 prompt = heartbeatPrompt;
               };
@@ -888,79 +835,6 @@ in
                     cacheWrite = 0.125;
                   };
                 }
-                # main's fallback, the row openclaw projects from
-                # models.opencode.ai: go serves grok on the responses api.
-                # openclaw sends no x-opencode-session to this url, and go
-                # answered those requests without it. on that same route the
-                # catalog's compat wins over this one, so it repeats the
-                # catalog's for when the catalog is offline
-                {
-                  id = "grok-4.7";
-                  name = "Grok 4.7";
-                  api = "openai-responses";
-                  baseUrl = "https://opencode.ai/inference/go/openai/v1";
-                  reasoning = true;
-                  input = [
-                    "text"
-                    "image"
-                  ];
-                  contextWindow = 500000;
-                  # past 200K tokens the price doubles, so the sessions compact
-                  # before that
-                  contextTokens = 200000;
-                  maxTokens = 500000;
-                  compat = {
-                    supportsUsageInStreaming = true;
-                    maxTokensField = "max_tokens";
-                    supportsTools = true;
-                    # grok cannot turn reasoning off
-                    supportsReasoningEffort = true;
-                    supportedReasoningEfforts = [
-                      "low"
-                      "medium"
-                      "high"
-                      "xhigh"
-                    ];
-                  };
-                  cost = {
-                    input = 2;
-                    output = 6;
-                    cacheRead = 0.5;
-                    cacheWrite = 0;
-                  };
-                }
-              ];
-            };
-            # what `openclaw models auth login --provider xai --method oauth`
-            # would write here if this file were not nix-managed: the
-            # supergrok route rather than the console api (api.x.ai). the
-            # sign-in sits in main's own auth store; openclaw does not read
-            # the grok cli's. the bundled catalog stops at 4.6
-            xai = {
-              baseUrl = "https://cli-chat-proxy.grok.com/v1";
-              api = "openai-responses";
-              auth = "oauth";
-              models = [
-                {
-                  id = "grok-4.7";
-                  name = "Grok 4.7";
-                  reasoning = true;
-                  input = [
-                    "text"
-                    "image"
-                  ];
-                  # the window the grok cli's catalog lists for this route
-                  contextWindow = 256000;
-                  maxTokens = 64000;
-                  # list prices, the same as go's row; the turns draw on the
-                  # weekly allowance the feeds share
-                  cost = {
-                    input = 2;
-                    output = 6;
-                    cacheRead = 0.5;
-                    cacheWrite = 0;
-                  };
-                }
               ];
             };
             # console pay-as-you-go on the service-account key, the same route
@@ -1034,7 +908,7 @@ in
             # `programs.openclaw.runtimePlugins` refuses to sit beside the raw
             # paths above, so its package goes in here directly
             "${pkgs.openclawRuntimePlugins.parallel}"
-            # 2026.11.3 no longer bundles discord, so it loads from here too
+            # 2026.11.3 no longer bundles discord
             "${pkgs.openclawRuntimePlugins.discord}"
           ];
           # bundled but off until named here
@@ -1091,9 +965,6 @@ in
               enabled = true;
             };
             "web-readability" = {
-              enabled = true;
-            };
-            "webhooks" = {
               enabled = true;
             };
             "workboard" = {
