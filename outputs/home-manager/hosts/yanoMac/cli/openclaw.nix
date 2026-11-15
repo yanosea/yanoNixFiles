@@ -383,6 +383,17 @@ in
           ${lib.getExe config.programs.openclaw.package} "$@" \
             </dev/null >/dev/null 2>&1
         }
+        # the gateway answers reads before each agent's startup inspection
+        # ends, and refuses writes with UNAVAILABLE until then
+        declareAutomation() {
+          for _ in $(${pkgs.coreutils}/bin/seq 1 30); do
+            if openclaw automations add "$@"; then
+              return 0
+            fi
+            ${pkgs.coreutils}/bin/sleep 2
+          done
+          return 1
+        }
         export OPENCLAW_CONFIG_PATH="${config.programs.openclaw.stateDir}/openclaw.json"
         export OPENCLAW_STATE_DIR="${config.programs.openclaw.stateDir}"
         # the cli's paired device token holds operator.read and write only,
@@ -406,7 +417,7 @@ in
         else
           # the main session, not an isolated one: an isolated run would sit
           # next to the heartbeat instead of in the conversation it continues
-          if ! $DRY_RUN_CMD openclaw automations add \
+          if ! $DRY_RUN_CMD declareAutomation \
             --name daily-thread \
             --display-name "Daily thread" \
             --declaration-key workspace:daily-thread \
@@ -416,7 +427,7 @@ in
             echo "failed to declare the daily-thread automation" >&2
           fi
           # a minute after the new threads open, close the older daily ones
-          if ! $DRY_RUN_CMD openclaw automations add \
+          if ! $DRY_RUN_CMD declareAutomation \
             --name close-daily-threads \
             --display-name "Close daily threads" \
             --declaration-key workspace:close-daily-threads \
@@ -432,7 +443,7 @@ in
           # the same for dev). 7 and 19 belong to `trends`, the 0:00 one comes
           # from the daily-thread skill once the thread is up, and none from 1
           # to 5
-          if ! $DRY_RUN_CMD openclaw automations add \
+          if ! $DRY_RUN_CMD declareAutomation \
             --name checkin-gate \
             --display-name "Check-in gate" \
             --declaration-key workspace:checkin-gate \
@@ -449,7 +460,7 @@ in
           mainChannel="${secretPath "OPENCLAW_DISCORD_CHANNEL_ID"}"
           if [ ! -s "$mainChannel" ]; then
             echo "missing $mainChannel; skipped declaring the trends automation" >&2
-          elif ! $DRY_RUN_CMD openclaw automations add \
+          elif ! $DRY_RUN_CMD declareAutomation \
             --name trends \
             --display-name "Trends" \
             --declaration-key workspace:trends \
@@ -466,7 +477,7 @@ in
           # alone may take 20. GROK_HOME is where grok signs in, and
           # OPENCLAW_FEEDS keeps my grok hooks out of the run. once each morning:
           # the grok sections have to fit the plan's weekly allowance
-          if ! $DRY_RUN_CMD openclaw automations add \
+          if ! $DRY_RUN_CMD declareAutomation \
             --name feeds \
             --display-name "Feeds" \
             --declaration-key workspace:feeds \
@@ -479,7 +490,7 @@ in
             --command-env OPENCLAW_FEEDS=1; then
             echo "failed to declare the feeds automation" >&2
           fi
-          if ! $DRY_RUN_CMD openclaw automations add \
+          if ! $DRY_RUN_CMD declareAutomation \
             --name dev-feeds \
             --display-name "Dev feeds" \
             --declaration-key workspace-dev:feeds \
@@ -500,7 +511,7 @@ in
           if [ ! -s "$devChannel" ]; then
             echo "missing $devChannel; skipped declaring the dev jobs" >&2
           else
-            if ! $DRY_RUN_CMD openclaw automations add \
+            if ! $DRY_RUN_CMD declareAutomation \
               --name dev-trends \
               --display-name "Dev trends" \
               --declaration-key workspace-dev:dev-trends \
@@ -514,7 +525,7 @@ in
             fi
             # like main's daily-thread, dev's 0:00 turn runs in the session its
             # conversation lives in, woken directly
-            if ! $DRY_RUN_CMD openclaw automations add \
+            if ! $DRY_RUN_CMD declareAutomation \
               --name dev-daily-thread-wake \
               --display-name "Dev daily thread" \
               --declaration-key workspace-dev:daily-thread-wake \
@@ -528,7 +539,7 @@ in
             # dev's hourly check-in, woken in dev's own session by the gate.
             # 7 and 19 belong to dev-trends, 0 is the daily-thread skill's, and
             # none from 1 to 5
-            if ! $DRY_RUN_CMD openclaw automations add \
+            if ! $DRY_RUN_CMD declareAutomation \
               --name dev-checkin-gate \
               --display-name "Dev check-in gate" \
               --declaration-key workspace-dev:checkin-gate \
@@ -541,7 +552,7 @@ in
             fi
             # the updater opens the flake.lock pr around 5:00 and darwin takes
             # up to two hours, so by 7:00 the run has settled either way
-            if ! $DRY_RUN_CMD openclaw automations add \
+            if ! $DRY_RUN_CMD declareAutomation \
               --name dev-triage-update-pr \
               --display-name "Dev triage update PR" \
               --declaration-key workspace-dev:triage-update-pr \
