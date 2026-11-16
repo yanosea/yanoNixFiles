@@ -1,5 +1,5 @@
 # home ai module
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   # home
   home = {
@@ -15,7 +15,8 @@
       grok-build
       graphify
       kiro-cli
-      openclaw
+      # yanoMac builds its own (programs.openclaw.package) with discord bundled
+      (lib.lowPrio openclaw)
       opencode
       spec-kit
     ];
