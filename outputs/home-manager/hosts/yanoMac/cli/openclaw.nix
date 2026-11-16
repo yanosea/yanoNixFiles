@@ -58,7 +58,11 @@ let
         "${workspace}/skills/feeds/config.json"
       ]
     );
-  # main and dev run the same model as opencode's manager
+  # main and dev run the same model as opencode's manager. a job that ran on
+  # an oauth provider keeps that account in its `inferenceBinding`, and a later
+  # change of provider here fails it ("incompatible with its recorded inference
+  # account"); re-declaring keeps the binding, so `openclaw automations rm` it
+  # and switch again
   managerModel = "opencode-go/deepseek-v4.1-flash";
   # explore and worker
   goModel = "opencode-go/claude-haiku-5-5";
