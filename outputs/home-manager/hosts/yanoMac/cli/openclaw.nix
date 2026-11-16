@@ -58,7 +58,11 @@ let
         "${workspace}/skills/feeds/config.json"
       ]
     );
-  # main and dev run the same model as opencode's manager
+  # main and dev run the same model as opencode's manager. a job that ran on
+  # an oauth provider keeps that account in its `inferenceBinding`, and a later
+  # change of provider here fails it ("incompatible with its recorded inference
+  # account"); re-declaring keeps the binding, so `openclaw automations rm` it
+  # and switch again
   managerModel = "opencode-go/deepseek-v4.1-flash";
   # explore and worker
   goModel = "opencode-go/claude-haiku-5-5";
@@ -314,6 +318,37 @@ let
     path.write_text(text)
     PY
   '';
+  # 2026.11.3 no longer bundles discord, and a plugin from `plugins.load.paths`
+  # counts as external: its `message read` / `thread-list` from a cron or agent
+  # turn reach only the conversation that turn runs in, so the skills could not
+  # read yesterday's or today's thread. copy it under the gateway's
+  # dist/extensions the way upstream bundles acpx (built without the peer
+  # link), so the loader treats it as bundled. the module swaps in its
+  # tool-filtered package only while `package` is the overlay's, so build that
+  # one here
+  openclawPackage =
+    let
+      cfg = config.programs.openclaw;
+      discord = pkgs.callPackage "${inputs.openclaw}/nix/lib/openclaw-runtime-plugin.nix" {
+        inherit (pkgs.openclawPackages) nodejs_24;
+        linkOpenClawPeer = false;
+      } (import "${inputs.openclaw}/nix/generated/openclaw-runtime-plugins").discord;
+      gateway = pkgs.openclawPackages.openclaw-gateway.overrideAttrs (old: {
+        installPhase = ''
+          ${old.installPhase}
+          discordRoot="$out/lib/node_modules/openclaw/dist/extensions/discord"
+          mkdir -p "$discordRoot"
+          cp -R ${discord}/. "$discordRoot/"
+        '';
+      });
+    in
+    (pkgs.openclawPackages.withTools {
+      toolNamesOverride = cfg.toolNames;
+      excludeToolNames = lib.unique (
+        cfg.excludeTools ++ lib.optionals config.programs.git.enable [ "git" ]
+      );
+    }).openclaw.override
+      { openclaw-gateway = gateway; };
 in
 {
   imports = [
@@ -595,6 +630,7 @@ in
   programs = {
     openclaw = {
       enable = true;
+      package = openclawPackage;
       # the mac app ships as a bundle of ~80k files, and upstream places it
       # through `home.file` with `recursive = true`, so every rebuild relinked
       # all of them one at a time — 99% of this generation's links and most of
@@ -919,8 +955,7 @@ in
             # `programs.openclaw.runtimePlugins` refuses to sit beside the raw
             # paths above, so its package goes in here directly
             "${pkgs.openclawRuntimePlugins.parallel}"
-            # 2026.11.3 no longer bundles discord
-            "${pkgs.openclawRuntimePlugins.discord}"
+            # discord is bundled into `programs.openclaw.package` above
           ];
           # bundled but off until named here
           entries = {
