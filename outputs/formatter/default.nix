@@ -124,6 +124,9 @@ genAttrs [ "x86_64-linux" "aarch64-darwin" ] (
           "configs/git/templates/hooks/*"
           "configs/quickshell/Bin/battery-manager/templates/uninstall-template"
         ];
+        # upstream dropped these defaults in numtide/treefmt-nix#561
+        indent_size = 2;
+        simplify = true;
       };
       # nix
       statix = {
