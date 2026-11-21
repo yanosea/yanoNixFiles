@@ -1,9 +1,17 @@
 # nixos desktop game module
-_: {
+{ pkgs, ... }:
+{
   # boot
   boot = {
     kernelModules = [
       "hid_sony"
+    ];
+  };
+  # environment
+  environment = {
+    systemPackages = with pkgs; [
+      # minecraft
+      prismlauncher
     ];
   };
   # hardware
