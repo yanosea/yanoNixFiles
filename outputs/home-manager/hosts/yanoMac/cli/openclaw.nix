@@ -43,11 +43,12 @@ let
   # beside the main workspace in the same repository
   devWorkspaceDir = "${config.home.homeDirectory}/ghq/github.com/${username}/openclaw/workspace-dev";
   # the private details live in the workspace skills AGENTS.md names, so the
-  # prompt itself says nothing private. the stock one ends by asking for
-  # `NO_REPLY` when nothing needs attention, which those skills contradict.
-  # the main session is long-lived, so the prompt makes the agent load the
-  # skill again each turn; otherwise it skips check-ins from stale context
-  heartbeatPrompt = "Read the SKILL.md of the check-in skill named in AGENTS.md now (it may have changed), read today's thread, and send exactly one check-in with the message tool unless that skill says to stay silent. Then reply exactly NO_REPLY.";
+  # prompt itself says nothing private. the check-in goes out through the
+  # message tool into the day's thread, so the turn itself ends in `NO_REPLY`,
+  # which discord does not deliver. the main session is long-lived, so the
+  # prompt makes the agent load the skill again each turn; otherwise it skips
+  # check-ins from stale context
+  checkinPrompt = "Read the SKILL.md of the check-in skill named in AGENTS.md now (it may have changed), read today's thread, and send exactly one check-in with the message tool unless that skill says to stay silent. Then reply exactly NO_REPLY.";
   # feedsArgv <workspace>: the command a feeds job runs; its config is private
   # and sits in the workspace
   feedsArgv =
@@ -143,9 +144,22 @@ let
         tools = lib.optionalAttrs (spec.deny != [ ]) { inherit (spec) deny; };
       }
     ) helperRoles;
-  # main and dev stay on go, like opencode's manager
-  goOnly = {
-    allow = [ "opencode-go/*" ];
+  # main and dev run on go, like opencode's manager, and a session may switch
+  # to grok on the supergrok login (models.providers.xai) with `/model`
+  managerPolicy = {
+    allow = [
+      "opencode-go/*"
+      "xai/grok-4.7"
+    ];
+  };
+  # the xai login also turns these on, and they call api.x.ai, the separately
+  # billed console, rather than the supergrok proxy. web_search stays:
+  # tools.web.search pins it to parallel-free
+  xaiConsoleTools = {
+    deny = [
+      "x_search"
+      "code_execution"
+    ];
   };
   secretKeys = [
     # a personal console key: it calls models as me, so go's allowance applies
@@ -252,7 +266,9 @@ let
   # it. the agents' `checkin` skill writes `state/checkin-pause` (an epoch
   # second, or `off`) when asked to stay quiet, so a paused hour starts no
   # model turn at all. both agents check in from the session their
-  # conversation lives in
+  # conversation lives in. the wake is an ordinary turn of that session, and
+  # its reply goes to the session's discord channel unless it is exactly
+  # `NO_REPLY`
   checkinGate = pkgs.writeShellApplication {
     name = "openclaw-checkin-gate";
     runtimeInputs = [
@@ -284,7 +300,7 @@ let
         (lib.getExe checkinGate)
         workspace
         sessionKey
-        heartbeatPrompt
+        checkinPrompt
       ]
     );
   # `imports` is resolved before the module system settles, so the `pkgs`
@@ -451,7 +467,7 @@ in
           echo "openclaw gateway did not answer; skipped declaring automations" >&2
         else
           # the main session, not an isolated one: an isolated run would sit
-          # next to the heartbeat instead of in the conversation it continues
+          # apart from the conversation it continues
           if ! $DRY_RUN_CMD declareAutomation \
             --name daily-thread \
             --display-name "Daily thread" \
@@ -695,22 +711,10 @@ in
       config = {
         agents = {
           defaults = {
-            # the check-ins go out through the message tool into the day's
-            # thread, so nothing from the turn itself is delivered: a preamble
-            # the model writes before its tools would otherwise land in the
-            # channel as is
-            # no interval of its own: its minute is a hash of the device and
-            # agent ids, so `checkin-gate` and `dev-checkin-gate` wake each
-            # agent's main session on the hour instead (a cron wake skips
-            # `activeHours`)
-            heartbeat = {
-              every = "0m";
-              target = "none";
-            };
             model = {
               primary = managerModel;
             };
-            modelPolicy = goOnly;
+            modelPolicy = managerPolicy;
             # children are leaves, like opencode's subagents; a run has no
             # time limit by default
             subagents = {
@@ -725,25 +729,12 @@ in
             };
           };
           ownership = "explicit";
-          # once any entry carries a heartbeat block, only the entries that
-          # carry one run heartbeats, so main needs its own as well. the
-          # helpers carry none and no binding, so neither cron nor discord
-          # reaches them
+          # the helpers carry no binding, so neither cron nor discord reaches
+          # them
           entries = {
             main = {
               workspace = config.programs.openclaw.workspaceDir;
-              # the xai login also turns these on, and they call api.x.ai,
-              # the separately billed console, rather than the supergrok proxy.
-              # web_search stays: tools.web.search pins it to parallel-free
-              tools = {
-                deny = [
-                  "x_search"
-                  "code_execution"
-                ];
-              };
-              heartbeat = {
-                prompt = heartbeatPrompt;
-              };
+              tools = xaiConsoleTools;
               # requireAgentId keeps it from spawning copies of itself
               subagents = {
                 allowAgents = helperIds "main";
@@ -756,9 +747,7 @@ in
             };
             dev = {
               workspace = devWorkspaceDir;
-              heartbeat = {
-                prompt = heartbeatPrompt;
-              };
+              tools = xaiConsoleTools;
               subagents = {
                 allowAgents = helperIds "dev";
                 requireAgentId = true;
@@ -939,6 +928,38 @@ in
                   cost = {
                     input = 8;
                     output = 40;
+                  };
+                }
+              ];
+            };
+            # what `openclaw models auth login --provider xai --method oauth`
+            # would write here if this file were not nix-managed: the
+            # supergrok route rather than the console api (api.x.ai). the
+            # sign-in sits in each agent's own auth store; openclaw does not
+            # read the grok cli's
+            xai = {
+              baseUrl = "https://cli-chat-proxy.grok.com/v1";
+              api = "openai-responses";
+              auth = "oauth";
+              models = [
+                {
+                  id = "grok-4.7";
+                  name = "Grok 4.7";
+                  reasoning = true;
+                  input = [
+                    "text"
+                    "image"
+                  ];
+                  # the window the grok cli's catalog lists for this route
+                  contextWindow = 256000;
+                  maxTokens = 64000;
+                  # list prices; the turns draw on the weekly allowance the
+                  # feeds share
+                  cost = {
+                    input = 2;
+                    output = 6;
+                    cacheRead = 0.5;
+                    cacheWrite = 0;
                   };
                 }
               ];
