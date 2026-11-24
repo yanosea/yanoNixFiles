@@ -37,7 +37,9 @@ let
           }
         }"
     '';
-    meta.mainProgram = "claude";
+    meta = {
+      mainProgram = "claude";
+    };
   };
   launchdLabel = config.programs.openclaw.launchd.label;
   # beside the main workspace in the same repository
@@ -973,15 +975,17 @@ in
         plugins = {
           # Use the complete source directory: per-file Home Manager symlinks
           # escape the plugin root and fail OpenClaw's path-safety validation.
-          load.paths = [
-            "${../../../../../configs/agents/hooks/bridges/openclaw}"
-            "${../../../../../configs/agents/hooks/bridges/openclaw-paid-guard}"
-            # the external parallel plugin, for the key-free web search.
-            # `programs.openclaw.runtimePlugins` refuses to sit beside the raw
-            # paths above, so its package goes in here directly
-            "${pkgs.openclawRuntimePlugins.parallel}"
-            # discord is bundled into `programs.openclaw.package` above
-          ];
+          load = {
+            paths = [
+              "${../../../../../configs/agents/hooks/bridges/openclaw}"
+              "${../../../../../configs/agents/hooks/bridges/openclaw-paid-guard}"
+              # the external parallel plugin, for the key-free web search.
+              # `programs.openclaw.runtimePlugins` refuses to sit beside the raw
+              # paths above, so its package goes in here directly
+              "${pkgs.openclawRuntimePlugins.parallel}"
+              # discord is bundled into `programs.openclaw.package` above
+            ];
+          };
           # bundled but off until named here
           entries = {
             "common-hooks" = {
@@ -1051,10 +1055,14 @@ in
         };
         # a custom stateDir excludes home skill roots. use the shared source
         # directly: home-manager's per-file symlinks escape the skill root.
-        skills.load.extraDirs = [
-          "${../../../../../configs/agents/skills}"
-          "${inputs.yomiyasu}/skills"
-        ];
+        skills = {
+          load = {
+            extraDirs = [
+              "${../../../../../configs/agents/skills}"
+              "${inputs.yomiyasu}/skills"
+            ];
+          };
+        };
         tools = {
           # the two agents keep separate workspaces and memories; neither
           # should be able to drive the other

@@ -16,5 +16,13 @@
   # session also tries to start it and fails with "No subuid ranges found".
   # Disable the global autostart and start it explicitly from the real
   # user's Hyprland session instead (see configs/hypr/hyprland.lua).
-  systemd.user.services.docker.wantedBy = lib.mkForce [ ];
+  systemd = {
+    user = {
+      services = {
+        docker = {
+          wantedBy = lib.mkForce [ ];
+        };
+      };
+    };
+  };
 }

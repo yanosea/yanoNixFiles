@@ -72,7 +72,9 @@ inputs: [
       src = inputs.deja-vu;
       vendorHash = null;
       subPackages = [ "cmd/deja" ];
-      env.CGO_ENABLED = "0";
+      env = {
+        CGO_ENABLED = "0";
+      };
       # the suite wires every agent it finds into a scratch home and still
       # fails on the linux builders; homebrew-core skips it too, so check
       # the built binary instead

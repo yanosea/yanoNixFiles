@@ -163,9 +163,11 @@ let
     extraKnownMarketplaces = builtins.listToAttrs (
       map (row: {
         name = builtins.elemAt row 1;
-        value.source = {
-          source = "github";
-          repo = builtins.elemAt row 2;
+        value = {
+          source = {
+            source = "github";
+            repo = builtins.elemAt row 2;
+          };
         };
       }) claudeMarketplaceRows
     );
@@ -187,7 +189,9 @@ let
     lib.mapAttrs'
       (name: _: {
         name = "${prefix}/${name}";
-        value.source = "${src}/${name}";
+        value = {
+          source = "${src}/${name}";
+        };
       })
       (lib.filterAttrs (name: type: type == "directory" && !lib.elem name skip) (builtins.readDir src));
   # the skill folders (skill:, skills:) and kiro steering files (steering:)
@@ -243,13 +247,15 @@ let
         in
         {
           name = "${prefix}/${if lib.hasPrefix "pkg:" spec then package.name else baseNameOf spec}";
-          value.source =
-            if spec == "pkg:graphify" then
-              graphifyVariants.${cli}
-            else if lib.hasPrefix "pkg:" spec then
-              throw "configs/agents/plugins.conf: no skill builder for ${spec}"
-            else
-              inputPath spec;
+          value = {
+            source =
+              if spec == "pkg:graphify" then
+                graphifyVariants.${cli}
+              else if lib.hasPrefix "pkg:" spec then
+                throw "configs/agents/plugins.conf: no skill builder for ${spec}"
+              else
+                inputPath spec;
+          };
         }
       ) (agentPackages.skillsFor cli)
     );
