@@ -364,7 +364,11 @@ let
         cfg.excludeTools ++ lib.optionals config.programs.git.enable [ "git" ]
       );
     }).openclaw.override
-      { openclaw-gateway = gateway; };
+      {
+        # `installApp = false` below, so skip fetching the unused app bundle
+        openclaw-app = null;
+        openclaw-gateway = gateway;
+      };
 in
 {
   imports = [

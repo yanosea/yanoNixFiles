@@ -16,7 +16,8 @@
       graphify
       kiro-cli
       # yanoMac builds its own (programs.openclaw.package) with discord bundled
-      (lib.lowPrio openclaw)
+      # cli only, so leave out the darwin app bundle
+      (lib.lowPrio (openclaw.override { openclaw-app = null; }))
       opencode
       spec-kit
     ];
