@@ -371,7 +371,11 @@ let
 in
 {
   # openclaw.nix runs it from the gateway's scheduled jobs
-  _module.args.openclawFeeds = openclaw-feeds;
+  _module = {
+    args = {
+      openclawFeeds = openclaw-feeds;
+    };
+  };
   # home
   home = {
     packages = [
